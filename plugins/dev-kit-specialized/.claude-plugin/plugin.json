@@ -1,0 +1,10 @@
+{
+  "name": "dev-kit-specialized",
+  "description": "Specialized domain packs: embedded, games, Salesforce, CLI/MCP/devtools, Slack, Atlassian, and niche industries",
+  "version": "0.2.0",
+  "author": { "name": "sekshey", "email": "sekshey@gmail.com" },
+  "homepage": "https://github.com/seksheyb/dev-kit",
+  "repository": "https://github.com/seksheyb/dev-kit",
+  "license": "MIT",
+  "keywords": ["sdd", "skills", "agents", "dev-kit-specialized"]
+}

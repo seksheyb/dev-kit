@@ -1,0 +1,10 @@
+{
+  "name": "dev-kit-data-ai",
+  "description": "Data and AI packs plus AI-lane agents: RAG, LLM architecture, prompt engineering, ML/MLOps, NLP, data engineering, evals",
+  "version": "0.2.0",
+  "author": { "name": "sekshey", "email": "sekshey@gmail.com" },
+  "homepage": "https://github.com/seksheyb/dev-kit",
+  "repository": "https://github.com/seksheyb/dev-kit",
+  "license": "MIT",
+  "keywords": ["sdd", "skills", "agents", "dev-kit-data-ai"]
+}

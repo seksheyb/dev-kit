@@ -1,0 +1,10 @@
+{
+  "name": "dev-kit-product",
+  "description": "Product analytics and compliance: A/B testing, cohort analysis, growth loops, GDPR/CCPA, HIPAA",
+  "version": "0.2.0",
+  "author": { "name": "sekshey", "email": "sekshey@gmail.com" },
+  "homepage": "https://github.com/seksheyb/dev-kit",
+  "repository": "https://github.com/seksheyb/dev-kit",
+  "license": "MIT",
+  "keywords": ["sdd", "skills", "agents", "dev-kit-product"]
+}

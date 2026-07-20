@@ -1,20 +1,66 @@
 {
-  "name": "dev-kit-marketplace",
-  "description": "Marketplace for dev-kit: consolidated SDD skills, agents, and commands",
+  "name": "dev-kit",
+  "description": "dev-kit marketplace: consolidated SDD skills, agents, and commands split into lane-scoped plugins — install core everywhere, add lanes per project",
   "owner": {
     "name": "sekshey",
     "email": "sekshey@gmail.com"
   },
   "plugins": [
     {
-      "name": "dev-kit",
-      "description": "Consolidated skills, agents, and commands for spec-driven development",
-      "version": "0.1.0",
-      "source": "./",
-      "author": {
-        "name": "sekshey",
-        "email": "sekshey@gmail.com"
-      }
+      "name": "dev-kit-core",
+      "description": "Core SDD toolkit: process discipline, SDD spine, lens-based plan review, dev-loop workflows, lifecycle agents, gates, and commands (always install)",
+      "version": "0.2.0",
+      "source": "./plugins/dev-kit-core",
+      "author": { "name": "sekshey", "email": "sekshey@gmail.com" }
+    },
+    {
+      "name": "dev-kit-web",
+      "description": "Web frontend knowledge packs: React, Next.js, Vue, Angular, TypeScript, Playwright, Shopify, WordPress, Electron",
+      "version": "0.2.0",
+      "source": "./plugins/dev-kit-web",
+      "author": { "name": "sekshey", "email": "sekshey@gmail.com" }
+    },
+    {
+      "name": "dev-kit-mobile",
+      "description": "Mobile knowledge packs: Flutter, React Native, Swift, Kotlin",
+      "version": "0.2.0",
+      "source": "./plugins/dev-kit-mobile",
+      "author": { "name": "sekshey", "email": "sekshey@gmail.com" }
+    },
+    {
+      "name": "dev-kit-backend",
+      "description": "Backend and language knowledge packs: Java/Spring, Python, Node, Go, Rust, PHP, Ruby, .NET, Elixir, SQL/Postgres, API/GraphQL/microservices design",
+      "version": "0.2.0",
+      "source": "./plugins/dev-kit-backend",
+      "author": { "name": "sekshey", "email": "sekshey@gmail.com" }
+    },
+    {
+      "name": "dev-kit-data-ai",
+      "description": "Data and AI packs plus the 4 AI-lane agents: RAG, LLM architecture, prompt engineering, ML/MLOps, NLP, data engineering, evals",
+      "version": "0.2.0",
+      "source": "./plugins/dev-kit-data-ai",
+      "author": { "name": "sekshey", "email": "sekshey@gmail.com" }
+    },
+    {
+      "name": "dev-kit-infra",
+      "description": "Infrastructure knowledge packs: Kubernetes, Terraform, Docker, cloud architecture, Azure, networking, SRE, monitoring, PowerShell, Microsoft ops",
+      "version": "0.2.0",
+      "source": "./plugins/dev-kit-infra",
+      "author": { "name": "sekshey", "email": "sekshey@gmail.com" }
+    },
+    {
+      "name": "dev-kit-specialized",
+      "description": "Specialized domain packs: embedded, games, Salesforce, CLI/MCP/devtools, Slack, Atlassian, and niche industries (blockchain, fintech, payments, healthcare, legal, SEO)",
+      "version": "0.2.0",
+      "source": "./plugins/dev-kit-specialized",
+      "author": { "name": "sekshey", "email": "sekshey@gmail.com" }
+    },
+    {
+      "name": "dev-kit-product",
+      "description": "Product analytics and compliance: A/B testing, cohort analysis, growth loops, GDPR/CCPA, HIPAA",
+      "version": "0.2.0",
+      "source": "./plugins/dev-kit-product",
+      "author": { "name": "sekshey", "email": "sekshey@gmail.com" }
     }
   ]
 }

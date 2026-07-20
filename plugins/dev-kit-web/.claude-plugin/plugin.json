@@ -1,0 +1,10 @@
+{
+  "name": "dev-kit-web",
+  "description": "Web frontend knowledge packs: React, Next.js, Vue, Angular, TypeScript, Playwright, Shopify, WordPress, Electron",
+  "version": "0.2.0",
+  "author": { "name": "sekshey", "email": "sekshey@gmail.com" },
+  "homepage": "https://github.com/seksheyb/dev-kit",
+  "repository": "https://github.com/seksheyb/dev-kit",
+  "license": "MIT",
+  "keywords": ["sdd", "skills", "agents", "dev-kit-web"]
+}

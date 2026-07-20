@@ -1,0 +1,20 @@
+{
+  "name": "dev-kit-marketplace",
+  "description": "Marketplace for dev-kit: consolidated SDD skills, agents, and commands",
+  "owner": {
+    "name": "sekshey",
+    "email": "sekshey@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "dev-kit",
+      "description": "Consolidated skills, agents, and commands for spec-driven development",
+      "version": "0.1.0",
+      "source": "./",
+      "author": {
+        "name": "sekshey",
+        "email": "sekshey@gmail.com"
+      }
+    }
+  ]
+}

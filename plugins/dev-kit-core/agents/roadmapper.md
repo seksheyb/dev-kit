@@ -128,10 +128,10 @@ For "Users can securely access their accounts":
 
 **Step 3: Cross-Check Against Requirements**
 For each success criterion:
-- Does at least one requirement support this?
+- Does at least one requirement (or US-xxx story, for hierarchy-based specs) support this?
 - If not → gap found
 
-For each requirement mapped to this phase:
+For each requirement/story mapped to this phase:
 - Does it contribute to at least one success criterion?
 - If not → question if it belongs here
 
@@ -249,6 +249,22 @@ Phase 2: All API endpoints ← Can't verify independently
 Phase 3: All UI components ← Nothing works until end
 ```
 
+## Vertical-Slice Gate (hard requirement)
+
+Every phase must be a **vertical slice**, not a horizontal layer. Apply the acceptance
+test from `@references/vertical-slice.md` to each phase:
+
+> After this phase completes, can a real user *do* something they could not do before?
+
+- **Yes** → the phase is a valid slice.
+- **"No, but the foundation is laid"** → it is a horizontal layer disguised as a slice.
+  Restructure it before proceeding.
+
+**Do not proceed while any phase is a horizontal layer.** The one exception — a genuinely
+shared foundation that unblocks named downstream slices (e.g. project scaffold) — must be
+declared explicitly with the slices it unblocks; "it's cleaner to build the layer first"
+is not a justification. See `@references/vertical-slice.md` for the full rule.
+
 </phase_identification>
 
 <coverage_validation>
@@ -272,6 +288,10 @@ CONT-02 → Phase 4
 Mapped: 12/12 ✓
 ```
 
+When the source specs use the Theme→Pillar→US-xxx hierarchy, key the coverage map on
+US-xxx IDs instead of REQ-IDs (same format: `US-001 → Phase 2`). Mix only when a project
+has both — never map the same story under two different ID schemes.
+
 **If orphaned requirements found:**
 
 ```
@@ -287,6 +307,10 @@ Options:
 
 **Do not proceed until coverage = 100%.**
 
+**Do not proceed while any phase fails the vertical-slice acceptance test** (see the
+Vertical-Slice Gate above and `@references/vertical-slice.md`). Coverage and slice
+validity are both hard gates — a roadmap can fail on either independently.
+
 ## Traceability Update
 
 After roadmap creation, REQUIREMENTS.md gets updated with phase mappings:
@@ -301,6 +325,9 @@ After roadmap creation, REQUIREMENTS.md gets updated with phase mappings:
 | PROF-01 | Phase 3 | Pending |
 ...
 ```
+
+For hierarchy-based specs, the table's first column is `US-xxx` (e.g. `US-001`) instead
+of `Requirement` — the parser handles either header.
 
 </coverage_validation>
 
@@ -447,7 +474,7 @@ Parse and confirm understanding before proceeding.
 
 ## Step 2: Extract Requirements
 
-Parse REQUIREMENTS.md:
+Parse REQUIREMENTS.md (or the spec(s) it was derived from):
 - Count total v1 requirements
 - Extract categories (AUTH, CONTENT, etc.)
 - Build requirement list with IDs
@@ -461,6 +488,14 @@ Categories: 4
 
 Total v1: 11 requirements
 ```
+
+**When specs use the Theme→Pillar→US-xxx hierarchy** (see `skills/specify/SKILL.md`):
+parse each story's `US-xxx` ID and, if present, its `**Pillar**:` field, instead of (or
+alongside) REQ-IDs. Group by Pillar the same way you'd group by category above; a Theme
+is a higher-level grouping of Pillars when the project's scale warrants it. US-xxx IDs
+are global and never renumbered — coverage mapping and traceability (Step 6, below) key
+on US-xxx when it's present, falling back to REQ-IDs for specs that don't use the
+hierarchy.
 
 ## Step 3: Load Research Context (if exists)
 
@@ -639,6 +674,9 @@ When unable to proceed:
 **Don't use horizontal layers:**
 - Bad: Phase 1: Models, Phase 2: APIs, Phase 3: UI
 - Good: Phase 1: Complete Auth feature, Phase 2: Complete Content feature
+- This is a hard gate, not a preference — see the Vertical-Slice Gate above and
+  `@references/vertical-slice.md`. The only exception is a declared shared foundation
+  that names the slices it unblocks.
 
 **Don't skip coverage validation:**
 - Bad: "Looks like we covered everything"
@@ -671,6 +709,7 @@ Roadmap is complete when:
 - [ ] Success criteria derived for each phase (2-5 observable behaviors)
 - [ ] Success criteria cross-checked against requirements (gaps resolved)
 - [ ] 100% requirement coverage validated (no orphans)
+- [ ] Every phase passes the vertical-slice acceptance test (no undeclared horizontal layers)
 - [ ] ROADMAP.md structure complete
 - [ ] STATE.md structure complete
 - [ ] REQUIREMENTS.md traceability update prepared

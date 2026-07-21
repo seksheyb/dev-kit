@@ -9,6 +9,8 @@ Both directions of code review: dispatching a reviewer to catch issues before th
 
 **Core principles:** Review early, review often. Verify before implementing. Technical correctness over social comfort.
 
+**Note:** Part 1 below covers ad-hoc, in-session review requests via a `general-purpose` subagent and the local `code-reviewer.md` prompt template. For orchestrator/pipeline-gated reviews (plan-phase gates, sprint execution, the `/review` command, adversarial review rounds), the pipeline dispatches `agents/code-review-gate` instead — it selects a review engine per `@references/independent-review.md` and produces the canonical `findings.json`. Both directions of this skill (requesting and receiving) still apply regardless of which reviewer produced the feedback.
+
 ---
 
 ## Part 1: Requesting Code Review

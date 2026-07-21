@@ -1,7 +1,7 @@
 # dev-kit Role Catalog
 
 A role-based map of every skill, agent, and command across all 8 `dev-kit` plugins —
-193 entries total. No plugin boundaries changed; this is a reading guide layered on
+192 entries total. No plugin boundaries changed; this is a reading guide layered on
 top of the existing marketplace structure (see the [root README](../../README.md) for
 install instructions).
 
@@ -25,13 +25,13 @@ A backend engineer planning a phase is "Architect/Planner" (core) + "Backend Eng
 | Role | What they're doing | Catalog | Items |
 |---|---|---|---|
 | Product / Requirements Owner | Turning an idea into a validated, unambiguous spec | [core-discovery-and-design.md](core-discovery-and-design.md#role-product--requirements-owner) | 18 |
-| Architect / Planner | Designing the system and breaking it into an executable, reviewed plan | [core-discovery-and-design.md](core-discovery-and-design.md#role-architect--planner) | 19 |
+| Architect / Planner | Designing the system and breaking it into an executable, reviewed plan | [core-discovery-and-design.md](core-discovery-and-design.md#role-architect--planner) | 18 |
 | UX / Design | Turning an approved design into a real, accessible interface | [core-discovery-and-design.md](core-discovery-and-design.md#role-ux--design) | 10 |
 | Engineer (Build & Debug) | Implementing, debugging, and verifying the plan against reality | [core-build-and-ship.md](core-build-and-ship.md#role-engineer-build--debug) | 27 |
 | Security / Compliance Reviewer | Checking the implementation against threat models and regulatory bars | [core-build-and-ship.md](core-build-and-ship.md#role-security--compliance-reviewer) | 8 |
 | Docs / Release / Ops Manager | Documenting, shipping, and monitoring what got built | [core-build-and-ship.md](core-build-and-ship.md#role-docs--release--ops-manager) | 15 |
 
-**97 items** — 51 skills, 38 agents, 8 commands.
+**96 items** — 51 skills, 37 agents, 8 commands.
 
 ## Part 2 — Stack lanes (lane plugins)
 

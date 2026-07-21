@@ -24,12 +24,12 @@ the spec must not conflict with it.
 ## Choose an Entry Mode
 
 - **Mode A — Direct generation**: The user gave a reasonably concrete feature
-  description. Generate the spec directly (steps 1–6 below), using informed defaults and
+  description. Generate the spec directly (steps 1–7 below), using informed defaults and
   at most 3 targeted clarification questions.
 - **Mode B — Interrogation (vague intent → executable spec)**: The request is a
   one-liner, an idea, or otherwise too vague to draft from ("make the app faster",
   "we need better onboarding"). Run the five-phase interrogation first (see
-  "Mode B: Interrogation" below), then write the spec through the same steps 1–6.
+  "Mode B: Interrogation" below), then write the spec through the same steps 1–7.
 
 When unsure, default to Mode A with clarification markers — do not over-interrogate a
 description that is already specific.
@@ -58,11 +58,24 @@ Given the feature description, do this:
      as `spec.md` — this is `SPEC_FILE`
    - Only create one feature per invocation
 
-3. Load the spec template to understand required sections.
+3. **Assigning US-xxx IDs (global allocation)**:
+   - Glob every `spec.md` under the specs directory (all feature subdirectories, not just
+     this one) and extract every `US-\d+` heading found.
+   - Take the highest number found across ALL specs, and allocate the next sequential
+     numbers to this feature's stories (e.g. if the highest existing is `US-014`, this
+     feature's stories start at `US-015`).
+   - If no existing specs have US-xxx headings yet, start at `US-001`.
+   - **IDs are never renumbered or reused** — even if a story is later deleted, split, or
+     reordered within its spec, its number is retired, not recycled. This keeps US-xxx a
+     stable cross-spec key for roadmap/traceability tooling.
+   - If the project uses a Theme→Pillar→US-xxx hierarchy, ask (or infer from context) which
+     Pillar each story belongs to and fill the story's `**Pillar**:` field; otherwise omit it.
 
-4. **IF EXISTS**: Load the project constitution for principles and governance constraints.
+4. Load the spec template to understand required sections.
 
-5. Follow this execution flow:
+5. **IF EXISTS**: Load the project constitution for principles and governance constraints.
+
+6. Follow this execution flow:
     1. Parse the user's feature description
        If empty: ERROR "No feature description provided"
     2. Extract key concepts from description
@@ -87,7 +100,7 @@ Given the feature description, do this:
     7. Identify Key Entities (if data involved)
     8. Return: SUCCESS (spec ready for planning)
 
-6. Write the specification to `SPEC_FILE` using the template structure, replacing
+7. Write the specification to `SPEC_FILE` using the template structure, replacing
    placeholders with concrete details derived from the feature description while
    preserving section order and headings.
 
@@ -281,7 +294,7 @@ you want? What did I get wrong?"** Iterate until the user confirms.
 
 ### Phase 5: Write the Spec
 
-With the interrogation answers locked, write the specification through Mode A steps 1–6
+With the interrogation answers locked, write the specification through Mode A steps 1–7
 (short name, feature directory, template fill, quality checklist). The interrogation
 answers become the user scenarios, requirements, success criteria, out-of-scope
 declarations, and assumptions — expressed in the template's user-focused,

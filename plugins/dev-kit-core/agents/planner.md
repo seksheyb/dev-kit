@@ -365,7 +365,7 @@ Record in `user_setup` frontmatter. Only include what Claude literally cannot do
 
 **Example:** A→C, B→D, C+D→E, E→F(checkpoint). Waves: {A,B} → {C,D} → {E} → {F}.
 
-**Prefer vertical slices** (User feature: model+API+UI) over horizontal layers (all models → all APIs → all UIs). Vertical = parallel. Horizontal = sequential. Use horizontal only when shared foundation is required.
+**Prefer vertical slices** (User feature: model+API+UI) over horizontal layers (all models → all APIs → all UIs). Vertical = parallel. Horizontal = sequential. Use horizontal only when a shared foundation is genuinely required — and name the slices it unblocks; see `@references/vertical-slice.md` for the acceptance test and the anti-patterns to reject.
 
 ## File Ownership for Parallel Execution
 
@@ -471,6 +471,7 @@ Invoke the `sprint-execution` skill to execute this plan (plugins/dev-kit-core/s
   <action>[Specific implementation]</action>
   <verify>[Command or check]</verify>
   <done>[Acceptance criteria]</done>
+  <complexity_signals>files: [complete list, including files this task CREATES]; novelty: none|low|high; logic: low|medium|high; ambiguity: low|medium|high; tests: none|existing|new</complexity_signals>
 </task>
 
 </tasks>
@@ -520,6 +521,12 @@ Create `.planning/phases/XX-name/{padded_phase}-{plan}-SUMMARY.md` when done
 | `must_haves` | Yes | Goal-backward verification criteria |
 
 Wave numbers are pre-computed during planning. Execute-phase reads `wave` directly from frontmatter.
+
+Every task also emits a `<complexity_signals>` block (see the task template above) using
+the canonical vocabulary in `@references/complexity-signals.md` — `files` (complete,
+including files the task CREATES), `novelty`, `logic`, `ambiguity`, `tests`. These signals
+are what `gate-plan-review` and `sprint-execution` use to validate or select model/effort;
+emit them honestly rather than deriving model/effort first and back-filling signals to match.
 
 ## Interface Context for Executors
 
@@ -620,7 +627,7 @@ Only include what Claude literally cannot do.
 ## The Process
 
 **Step 0: Extract Requirement IDs**
-Read ROADMAP.md `**Requirements:**` line for this phase. Strip brackets if present (e.g., `[AUTH-01, AUTH-02]` → `AUTH-01, AUTH-02`). Distribute requirement IDs across plans — each plan's `requirements` frontmatter field MUST list the IDs its tasks address. **CRITICAL:** Every requirement ID MUST appear in at least one plan. Plans with an empty `requirements` field are invalid.
+Read ROADMAP.md `**Requirements:**` line for this phase. Strip brackets if present (e.g., `[AUTH-01, AUTH-02]` → `AUTH-01, AUTH-02`). IDs may be REQ-form or `US-xxx` (Theme→Pillar→US-xxx hierarchy) — treat either as a valid requirement ID. Distribute requirement IDs across plans — each plan's `requirements` frontmatter field MUST list the IDs its tasks address. **CRITICAL:** Every requirement ID MUST appear in at least one plan. Plans with an empty `requirements` field are invalid.
 
 **Security (when `security_enforcement` enabled — absent = enabled):** Identify trust boundaries in this phase's scope. Map STRIDE categories to applicable tech stack from RESEARCH.md security domain. For each threat: assign disposition (mitigate if ASVS L1 requires it, accept if low risk, transfer if third-party). Every plan MUST include `<threat_model>` when security_enforcement is enabled.
 
@@ -1010,7 +1017,7 @@ Map dependencies explicitly before grouping into plans. Record needs/creates/has
 
 Identify parallelization: No deps = Wave 1, depends only on Wave 1 = Wave 2, shared file conflict = sequential.
 
-Prefer vertical slices over horizontal layers.
+Prefer vertical slices over horizontal layers — apply the acceptance test in `@references/vertical-slice.md`.
 </step>
 
 <step name="assign_waves">

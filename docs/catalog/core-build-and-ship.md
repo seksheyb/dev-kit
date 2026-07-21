@@ -63,7 +63,7 @@
 - **Why not vanilla Claude Code:** Vanilla Claude Code has no notion of grouping bugs into non-conflicting tracks or waves, no per-fix atomic-commit-with-rollback discipline, and no structural-fix requirement — it would either fix bugs serially or parallelize naively into merge conflicts and unreviewable diffs.
 - **When to use:** Triggered by a pasted bug list with severity tags, or explicit requests like "fix these", "execute these findings", "run the fix wave".
 - **Then what:** Every fixable finding lands as its own atomic, verified commit with a regression guard; unresolved findings are reported with rationale; in structured (`findings.json`) mode, a `fixes.json` summary is emitted for the next pipeline stage.
-- **Notes:** Built directly on `dispatching-parallel-agents` and `using-git-worktrees`; commonly the consumer of `code-reviewer`/`security-auditor` output.
+- **Notes:** Built directly on `dispatching-parallel-agents` and `using-git-worktrees`; commonly the consumer of `code-review-gate`/`security-auditor` output.
 
 #### `feature-forge` (skill)
 
@@ -146,14 +146,14 @@
 - **Then what:** A resolved (or explicitly inconclusive/checkpointed) debug session file moved to `.planning/debug/resolved/`, a knowledge-base entry appended for future pattern matching, and a commit with the fix and root cause in the message.
 - **Notes:** Requires explicit human confirmation ("confirmed fixed") before archiving — it will not self-certify a fix as done.
 
-#### `code-reviewer` (agent)
+#### `code-review-gate` (agent)
 
-- **Why needed:** Code review that isn't adversarial by default tends to stop at obvious issues and accept plausible-looking logic without tracing edge cases, letting real bugs and security gaps ship.
-- **What it does:** Reviews source files or a pre-landing diff at one of three depths (quick/standard/deep), classifies every finding as Critical/Warning/Info with a 1-10 confidence score, runs a pre-emit verification gate requiring the motivating code line to be quoted before a finding can be promoted, and — in branch/diff mode — also checks scope drift and plan-completion before the main review. Produces a structured REVIEW.md.
-- **Why not vanilla Claude Code:** Vanilla Claude Code reviewing code on request tends to soften findings and accept "looks fine" without evidence; this agent's forced adversarial stance, severity taxonomy, and quote-the-motivating-line verification gate specifically exist to kill the "field doesn't exist" class of false-positive and the "stopping at surface issues" failure mode.
-- **When to use:** Dispatched by the orchestrator/pipeline as the fallback reviewer when an external cross-model reviewer is unavailable; also backs the `/review` command.
-- **Then what:** A REVIEW.md with YAML frontmatter (finding counts by severity, files reviewed) and structured Critical/Warning/Info sections, each finding carrying a concrete fix suggestion; the orchestrator handles any commit.
-- **Notes:** Read-only — it never modifies source files, only writes REVIEW.md; `code-review-protocol` is the skill governing how a caller should dispatch this agent and respond to its feedback.
+- **Why needed:** Code review that isn't adversarial by default tends to stop at obvious issues and accept plausible-looking logic without tracing edge cases, letting real bugs and security gaps ship — and a single hardcoded reviewer provider means no independent second opinion when that provider isn't installed.
+- **What it does:** Reviews source files or a pre-landing diff at one of three depths (quick/standard/deep), classifies every finding as Critical/Warning/Info (mapped to a P0–P4 ladder) with a 1-10 confidence score, runs a pre-emit verification gate requiring the motivating code line to be quoted before a finding can be promoted, and — in branch/diff mode — also checks scope drift and plan-completion before the main review. Runs in **single mode** (one-shot review, default engine `claude`) or **round mode** (one round of a ≤6-round adversarial loop against a sprint branch, default engine `codex`, with defect-class grouping and `previously_seen_classes` tracking) — the engine is selected per `references/independent-review.md`. Produces a canonical `findings.json` with a human-readable review rendered from it.
+- **Why not vanilla Claude Code:** Vanilla Claude Code reviewing code on request tends to soften findings and accept "looks fine" without evidence; this agent's forced adversarial stance, severity taxonomy, and quote-the-motivating-line verification gate specifically exist to kill the "field doesn't exist" class of false-positive and the "stopping at surface issues" failure mode. Its engine registry also means "independent review" degrades gracefully instead of failing outright when no external CLI is installed.
+- **When to use:** Dispatched by the orchestrator/pipeline for plan/sprint reviews and adversarial rounds; also backs the `/review` command.
+- **Then what:** A canonical `findings.json` plus a REVIEW.md (single mode) or `findings.md` (round mode) rendered from it, with YAML frontmatter (finding counts by severity, files reviewed, engine used) and structured Critical/Warning/Info sections, each finding carrying a concrete fix suggestion; the orchestrator handles any commit.
+- **Notes:** Read-only — it never modifies source files, only writes the findings/review files; `code-review-protocol` is the skill governing how a caller should dispatch this agent and respond to its feedback. Supersedes the former `code-reviewer` and `gate-codex-round` agents.
 
 #### `qa` (agent)
 
@@ -228,10 +228,10 @@
 #### `review` (command)
 
 - **Why needed:** Requesting a code review on the current diff should not require manually assembling SHAs and file lists every time.
-- **What it does:** Parses `$ARGUMENTS` for an optional diff range or scope (default: current uncommitted/branch diff) and dispatches the `code-reviewer` agent on that diff.
-- **Why not vanilla Claude Code:** Without a dedicated command, getting an adversarial, severity-classified review with a reusable format each time requires re-explaining the desired review process; this command locks in the `code-reviewer` agent's behavior as a one-line invocation.
+- **What it does:** Parses `$ARGUMENTS` for an optional diff range or scope (default: current uncommitted/branch diff) and an optional `--engine` override, and dispatches the `code-review-gate` agent (single mode) on that diff.
+- **Why not vanilla Claude Code:** Without a dedicated command, getting an adversarial, severity-classified review with a reusable format each time requires re-explaining the desired review process; this command locks in the `code-review-gate` agent's behavior as a one-line invocation.
 - **When to use:** Before merging, after completing a task, or any time a second, adversarial pass over the current diff is wanted.
-- **Then what:** Severity-classified review findings with file:line references, per the `code-reviewer` agent's REVIEW.md.
+- **Then what:** Severity-classified review findings with file:line references, rendered from the `code-review-gate` agent's canonical `findings.json`.
 
 #### `verify` (command)
 
@@ -277,7 +277,7 @@
 - **Why not vanilla Claude Code:** Vanilla Claude Code tends to either skip requesting review on "simple" changes or, when receiving feedback, respond with reflexive agreement and implement suggestions without first checking whether they're actually correct for this codebase — this skill's forbidden-response list and verify-before-implementing pattern directly counter both habits.
 - **When to use:** "Use when requesting a code review (after completing tasks, implementing major features, or before merging) or when receiving review feedback, especially if feedback seems unclear or technically questionable."
 - **Then what:** Either a dispatched review with a documented response to its findings (fixed / pushed back with reasoning), or feedback received and acted on item-by-item with unclear items clarified before any implementation begins.
-- **Notes:** Governs how to interact with the `code-reviewer` agent — it is the protocol layer, while `code-reviewer` is the agent doing the reviewing.
+- **Notes:** Governs how to interact with a code reviewer — it is the protocol layer, while `code-review-gate` (pipeline-dispatched reviews) or the skill's own local `code-reviewer.md` template (ad-hoc, in-session requests) does the reviewing.
 
 #### `security-auditor` (agent)
 

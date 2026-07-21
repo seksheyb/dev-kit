@@ -62,7 +62,13 @@ Parse each finding. Extract:
 
 ### 1.2 — Assign model and effort
 
-Pick model and effort independently for each bug, then combine.
+**If the input already carries `complexity_signals` or a declared model/effort** (e.g. a
+`findings.json` produced by `code-review-gate`, or signals copied from a plan per
+`@references/complexity-signals.md`), those are authoritative — use them directly rather
+than re-deriving from the bug description.
+
+Otherwise, pick model and effort independently for each bug, then combine, using the
+canonical axes below (same vocabulary as `@references/complexity-signals.md`):
 
 **Model axis** — pick by task nature:
 
@@ -388,8 +394,8 @@ path). Write JSON matching the schema referenced by the caller (typically
 
 ### 4.4 — Compute next_action
 
-- If `unresolved` is empty: `"dispatch gate-codex-round (round <K+1>)"` (or caller-specified
-  follow-up).
+- If `unresolved` is empty: `"dispatch code-review-gate in round mode (round <K+1>)"` (or
+  caller-specified follow-up).
 - Else: `"escalate <count> unresolved classes"`.
 
 ### 4.5 — Return to caller

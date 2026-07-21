@@ -73,6 +73,8 @@ A story is sprint-ready when:
 - [ ] Estimated by the team
 - [ ] Fits within one sprint
 - [ ] Test scenarios drafted
+- [ ] If the project uses the Theme→Pillar→US-xxx hierarchy, the story carries its
+      global US-xxx ID and Pillar (see `skills/specify/SKILL.md`)
 
 ## Backlog Categories
 

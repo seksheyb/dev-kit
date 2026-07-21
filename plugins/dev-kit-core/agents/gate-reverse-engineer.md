@@ -29,7 +29,7 @@ Your job: Deep-scan an existing, undocumented (or poorly documented) codebase an
 ## Rules
 - Be empirical. If the code uses Express, the SDD must say Express, even if the user wanted something else.
 - Prioritize current state over "intended" state.
-- If you find hidden technical debt or security risks, highlight them for the subsequent `gate-codex-round`.
+- If you find hidden technical debt or security risks, highlight them for the subsequent `code-review-gate` round-mode pass.
 
 ## Methodology reference — spec-miner
 

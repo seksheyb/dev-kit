@@ -28,7 +28,7 @@ Before defining tasks, map out which files will be created or modified and what 
 
 - Design units with clear boundaries and well-defined interfaces. Each file should have one clear responsibility.
 - You reason best about code you can hold in context at once, and your edits are more reliable when files are focused. Prefer smaller, focused files over large ones that do too much.
-- Files that change together should live together. Split by responsibility, not by technical layer.
+- Files that change together should live together. Split by responsibility, not by technical layer — task order should follow vertical slices, not horizontal layers (see `@references/vertical-slice.md`).
 - In existing codebases, follow established patterns. If the codebase uses large files, don't unilaterally restructure - but if a file you're modifying has grown unwieldy, including a split in the plan is reasonable.
 
 This structure informs the task decomposition. Each task should produce self-contained changes that make sense independently.
@@ -71,7 +71,9 @@ independently testable deliverable.
 [The spec's project-wide requirements — version floors, dependency limits,
 naming and copy rules, platform requirements — one line each, with exact
 values copied verbatim from the spec. Every task's requirements implicitly
-include this section.]
+include this section. If the spec uses US-xxx IDs (Theme→Pillar→US-xxx
+hierarchy), reference them the same way you'd reference REQ-IDs elsewhere
+in the plan.]
 
 ---
 ```
@@ -85,6 +87,12 @@ include this section.]
 - Create: `exact/path/to/file.py`
 - Modify: `exact/path/to/existing.py:123-145`
 - Test: `tests/exact/path/to/test.py`
+
+**Signals:** (canonical vocabulary: `@references/complexity-signals.md`)
+- `novelty`: none | low | high
+- `logic`: low | medium | high
+- `ambiguity`: low | medium | high
+- `tests`: none | existing | new
 
 **Interfaces:**
 - Consumes: [what this task uses from earlier tasks — exact signatures]

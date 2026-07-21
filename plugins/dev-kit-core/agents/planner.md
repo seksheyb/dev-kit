@@ -365,7 +365,7 @@ Record in `user_setup` frontmatter. Only include what Claude literally cannot do
 
 **Example:** A→C, B→D, C+D→E, E→F(checkpoint). Waves: {A,B} → {C,D} → {E} → {F}.
 
-**Prefer vertical slices** (User feature: model+API+UI) over horizontal layers (all models → all APIs → all UIs). Vertical = parallel. Horizontal = sequential. Use horizontal only when shared foundation is required.
+**Prefer vertical slices** (User feature: model+API+UI) over horizontal layers (all models → all APIs → all UIs). Vertical = parallel. Horizontal = sequential. Use horizontal only when a shared foundation is genuinely required — and name the slices it unblocks; see `@references/vertical-slice.md` for the acceptance test and the anti-patterns to reject.
 
 ## File Ownership for Parallel Execution
 
@@ -1010,7 +1010,7 @@ Map dependencies explicitly before grouping into plans. Record needs/creates/has
 
 Identify parallelization: No deps = Wave 1, depends only on Wave 1 = Wave 2, shared file conflict = sequential.
 
-Prefer vertical slices over horizontal layers.
+Prefer vertical slices over horizontal layers — apply the acceptance test in `@references/vertical-slice.md`.
 </step>
 
 <step name="assign_waves">

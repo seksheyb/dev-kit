@@ -73,6 +73,7 @@ Your job: invoke Gemini against the sprint plan, capture the review on disk, and
      - **ADR Gaps**: Are there new architectural decisions in the plan that LACK a corresponding ADR?
      - **Scope Coverage**: Does the plan address the requirement scopes (Lanes) defined in CLAUDE.md?
      - **Structural Soundness**: Dependency-graph errors, wave-decomposition mistakes, and hidden coupling.
+     - **Vertical-Slice Compliance**: Are any tracks horizontal layers (all-models / all-APIs / all-UI) disguised as slices, per `@references/vertical-slice.md`'s acceptance test? Flag undeclared horizontal layers as HIGH — the one exception is an explicitly declared shared foundation that names the slices it unblocks.
      - **Signal Honesty**: Do the `complexity:` blocks faithfully reflect each track's tasks?
        File lists must be complete (including files the track will CREATE), and the
        novelty/logic/ambiguity/tests enums must be plausible for the described work.

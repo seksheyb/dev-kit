@@ -249,6 +249,22 @@ Phase 2: All API endpoints ← Can't verify independently
 Phase 3: All UI components ← Nothing works until end
 ```
 
+## Vertical-Slice Gate (hard requirement)
+
+Every phase must be a **vertical slice**, not a horizontal layer. Apply the acceptance
+test from `@references/vertical-slice.md` to each phase:
+
+> After this phase completes, can a real user *do* something they could not do before?
+
+- **Yes** → the phase is a valid slice.
+- **"No, but the foundation is laid"** → it is a horizontal layer disguised as a slice.
+  Restructure it before proceeding.
+
+**Do not proceed while any phase is a horizontal layer.** The one exception — a genuinely
+shared foundation that unblocks named downstream slices (e.g. project scaffold) — must be
+declared explicitly with the slices it unblocks; "it's cleaner to build the layer first"
+is not a justification. See `@references/vertical-slice.md` for the full rule.
+
 </phase_identification>
 
 <coverage_validation>
@@ -286,6 +302,10 @@ Options:
 ```
 
 **Do not proceed until coverage = 100%.**
+
+**Do not proceed while any phase fails the vertical-slice acceptance test** (see the
+Vertical-Slice Gate above and `@references/vertical-slice.md`). Coverage and slice
+validity are both hard gates — a roadmap can fail on either independently.
 
 ## Traceability Update
 
@@ -639,6 +659,9 @@ When unable to proceed:
 **Don't use horizontal layers:**
 - Bad: Phase 1: Models, Phase 2: APIs, Phase 3: UI
 - Good: Phase 1: Complete Auth feature, Phase 2: Complete Content feature
+- This is a hard gate, not a preference — see the Vertical-Slice Gate above and
+  `@references/vertical-slice.md`. The only exception is a declared shared foundation
+  that names the slices it unblocks.
 
 **Don't skip coverage validation:**
 - Bad: "Looks like we covered everything"
@@ -671,6 +694,7 @@ Roadmap is complete when:
 - [ ] Success criteria derived for each phase (2-5 observable behaviors)
 - [ ] Success criteria cross-checked against requirements (gaps resolved)
 - [ ] 100% requirement coverage validated (no orphans)
+- [ ] Every phase passes the vertical-slice acceptance test (no undeclared horizontal layers)
 - [ ] ROADMAP.md structure complete
 - [ ] STATE.md structure complete
 - [ ] REQUIREMENTS.md traceability update prepared

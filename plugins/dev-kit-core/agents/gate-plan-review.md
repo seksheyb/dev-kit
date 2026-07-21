@@ -63,7 +63,7 @@ Your job: dispatch an independent review engine (selected per `@references/indep
 
 1. Read `docs/dev-kit/SCHEMAS.md` for the `review-summary.json` shape and the HIGH / MEDIUM / LOW classification.
 
-2. Select a review engine per `@references/independent-review.md` (role: Plan-gate review — default `gemini`, fallback order `gemini` → `codex` → `claude`). Run the chosen engine's availability check; fall back per the registry order if unavailable. Invoke the selected engine (e.g. via the `cc-gemini-plugin:gemini` Skill, the `codex:rescue` Skill, or an internal `claude` subagent) with a brief that must:
+2. Select a review engine per `@references/independent-review.md` (role: Plan-gate review — default `gemini`, fallback order `gemini` → `codex` → `claude`). Run the chosen engine's availability check and invoke it per its adapter in `references/review-engines/`; fall back per the registry order if unavailable. Give the selected engine a brief that must:
    - List the input file paths only — **never inline plan, SDD, or spec content**.
    - Tell the engine to read each path and review for:
      - **ADD Alignment**: Does the plan implement decisions documented in the SDD and ADRs?

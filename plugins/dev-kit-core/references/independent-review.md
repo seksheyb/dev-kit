@@ -11,20 +11,27 @@ A reviewer that shares the implementer's context (same model, same conversation,
 blind spots) is weaker evidence than one that doesn't. Where possible, prefer a **different
 model** from whatever wrote the work under review. `claude` is always available as a full
 peer reviewer — not merely a fallback — but a cross-model engine (`gemini`, `codex`,
-`cursor`) is stronger independence when installed.
+`cursor`, `antigravity`) is stronger independence when installed.
 
 ## Engine Registry
 
-| Engine | Invocation | Availability check | Notes |
-|---|---|---|---|
-| `claude` | Internal subagent (Task/Agent tool, `general-purpose` or a purpose-built agent) | Always available | Full peer reviewer, not a degraded fallback. Runs the complete methodology in-process — no plugin dependency, no Bash shell-out. |
-| `gemini` | `cc-gemini-plugin:gemini` Skill | The `cc-gemini-plugin` is installed (skill resolvable via the Skill tool) | Best for large-context, structured-data-heavy review passes (architecture, cross-file consistency). |
-| `codex` | `codex:rescue` Skill | The `codex` plugin is installed (skill resolvable via the Skill tool) | Runs its own `git diff`/file reads independently — pass paths only, never inline diff/plan content. |
-| `cursor` | Bash CLI (`cursor-agent` or project-configured equivalent) | `command -v cursor-agent` (or project's configured binary) succeeds | Project-supplied recipe; treat the same as `codex` for content-passing rules (paths only). |
+Each engine's **concrete binding lives in its own adapter file** under
+`references/review-engines/` — the registry and every gate reference an engine **by name
+only**, never its binding inline. This keeps plugin/CLI names out of the gates: swapping,
+renaming, or wiring an engine touches exactly one adapter file.
 
-**Adding an engine:** any CLI or Skill that can (1) be given a brief by file path, (2)
-read the diff/plan/spec itself, and (3) write its findings to a file the gate then reads
-back satisfies this contract. No registry code change is needed beyond adding a row here.
+| Engine | Adapter (the binding) | Independence | When to prefer |
+|---|---|---|---|
+| `claude` | `review-engines/claude.md` | Self-family (always available) | Default one-shot review; terminal fallback for every role |
+| `gemini` | `review-engines/gemini.md` | Cross-model | Large-context, structured-data-heavy passes; default plan-gate review |
+| `codex` | `review-engines/codex.md` | Cross-model | Independent adversarial diff passes; default for review rounds & docs-drift |
+| `cursor` | `review-engines/cursor.md` | Cross-model | Explicit override where a Cursor agent is wired up (recipe stub) |
+| `antigravity` | `review-engines/antigravity.md` | Cross-model | Explicit override where an Antigravity agent is wired up (recipe stub) |
+
+**Adding an engine:** drop a new adapter file in `references/review-engines/` that (1)
+takes a brief by file path, (2) reads the diff/plan/spec itself, and (3) writes its
+findings to a file the gate then reads back. Add one row here pointing at it. No gate
+changes needed.
 
 ## Default Engine per Role
 
@@ -35,9 +42,12 @@ back satisfies this contract. No registry code change is needed beyond adding a 
 | Adversarial review rounds (`code-review-gate`, round mode) | `codex` | `codex` → `gemini` → `claude` |
 | Docs-vs-code drift review (`document-release`) | `codex` | `codex` → `claude` (general-purpose subagent) |
 
-A caller may override the default explicitly (e.g. `/review --engine gemini`). When the
-default engine's availability check fails, fall back to the next engine in that role's
-order — `claude` terminates every fallback chain since it has no external dependency.
+A caller may override the default explicitly (e.g. `/review --engine gemini`, or
+`--engine cursor` / `--engine antigravity` where those are wired up). When the default
+engine's availability check fails, fall back to the next engine in that role's order —
+`claude` terminates every fallback chain since it has no external dependency. `cursor` and
+`antigravity` are not in any default chain (their availability is environment-specific);
+select them explicitly.
 
 ## Content-Passing Rules (apply to every engine)
 
@@ -53,9 +63,10 @@ order — `claude` terminates every fallback chain since it has no external depe
 
 ## Selecting an Engine (what a gate does)
 
-1. Determine the role (see table above) and its default engine.
-2. Run that engine's availability check.
+1. Determine the role (see table above) and its default engine (or honor an explicit override).
+2. Open that engine's adapter file (`references/review-engines/<engine>.md`) and run its
+   availability check.
 3. If unavailable, advance to the next engine in the fallback order; log which engine
    was actually used (gates should record this in their output, e.g. an `engine:` field
    in the JSON summary) so a fallback is visible to the caller, not silent.
-4. Dispatch per that engine's invocation method with a path-only brief.
+4. Dispatch per the adapter's invocation method with a path-only brief.

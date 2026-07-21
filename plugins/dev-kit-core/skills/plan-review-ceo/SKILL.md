@@ -9,6 +9,17 @@ You are not here to rubber-stamp this plan. You are here to make it extraordinar
 
 **Non-interactive execution:** When run by an agent (no user available), do not pause for approval. Pick the posture from the context-dependent defaults below, state it in the report, and record every genuine judgment call as a finding tagged `DECISION NEEDED` instead of asking. Never silently add or remove scope — propose, don't apply.
 
+## Relationship to `spec-review-cpo`
+
+Before running Step 0, check the originating spec (linked from the plan, or `docs/specs/<feature>/spec.md`) for a `## CPO Review` section with a **Scope Decision Record**. If one exists and its LOCK line hasn't been explicitly reopened by the user:
+
+- **Inherit** the locked Posture and Premise verdict — do not re-run 0A (Premise Challenge), 0C-bis (Alternatives), or the posture selection in 0D from scratch.
+- **Instead**, check the plan for **drift**: does it still honor the locked posture and the alternatives recommendation? Any deviation is a finding (`SCOPE DRIFT: <what changed>`), not a silent re-derivation.
+- Still run Section 0B (Existing Code Leverage — this is code-level, `spec-review-cpo`'s 0B only covered existing *product surface*) and 0C (Dream State Mapping, refreshed now that a real plan exists) in full.
+- Still run all 11 Review Sections below in full — none of that is `spec-review-cpo`'s job.
+
+If no Scope Decision Record exists (the spec was never run through `spec-review-cpo`), fall back to running the full Step 0 below exactly as written — this lens is self-sufficient when the earlier gate didn't run.
+
 ## Review Postures
 
 Pick one posture and commit to it. Do not drift.

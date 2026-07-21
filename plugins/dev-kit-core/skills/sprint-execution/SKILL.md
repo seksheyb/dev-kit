@@ -25,7 +25,7 @@ Never hardcode another project's paths. Read the plan header first; it wins.
 
 ## 1 — Load and Review the Plan (before any dispatch)
 
-1. Read the plan file fully. Note context, global constraints, tracks, waves, and dependencies.
+1. Read the plan file fully. Note context, global constraints, tracks, waves, and dependencies. Requirement IDs referenced may be REQ-form or `US-xxx` (Theme→Pillar→US-xxx hierarchy) — treat either as valid.
 2. **Review critically.** Scan once for conflicts: tasks that contradict each other or the global constraints, and anything the plan mandates that a reviewer would flag as a defect. Present all findings to the user as ONE batched question — each finding beside the plan text that mandates it, asking which governs — before execution begins, not one interrupt per discovery mid-plan. If the scan is clean, proceed without comment.
 3. Create todos for all tasks. Check the progress ledger: tasks already marked complete are DONE — do not re-dispatch them; resume at the first incomplete task.
 4. Verify you are NOT on the default branch without explicit user consent; create/verify the sprint working branch or worktree.

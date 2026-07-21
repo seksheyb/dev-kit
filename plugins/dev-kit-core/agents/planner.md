@@ -627,7 +627,7 @@ Only include what Claude literally cannot do.
 ## The Process
 
 **Step 0: Extract Requirement IDs**
-Read ROADMAP.md `**Requirements:**` line for this phase. Strip brackets if present (e.g., `[AUTH-01, AUTH-02]` → `AUTH-01, AUTH-02`). Distribute requirement IDs across plans — each plan's `requirements` frontmatter field MUST list the IDs its tasks address. **CRITICAL:** Every requirement ID MUST appear in at least one plan. Plans with an empty `requirements` field are invalid.
+Read ROADMAP.md `**Requirements:**` line for this phase. Strip brackets if present (e.g., `[AUTH-01, AUTH-02]` → `AUTH-01, AUTH-02`). IDs may be REQ-form or `US-xxx` (Theme→Pillar→US-xxx hierarchy) — treat either as a valid requirement ID. Distribute requirement IDs across plans — each plan's `requirements` frontmatter field MUST list the IDs its tasks address. **CRITICAL:** Every requirement ID MUST appear in at least one plan. Plans with an empty `requirements` field are invalid.
 
 **Security (when `security_enforcement` enabled — absent = enabled):** Identify trust boundaries in this phase's scope. Map STRIDE categories to applicable tech stack from RESEARCH.md security domain. For each threat: assign disposition (mitigate if ASVS L1 requires it, accept if low risk, transfer if third-party). Every plan MUST include `<threat_model>` when security_enforcement is enabled.
 

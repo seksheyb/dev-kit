@@ -68,7 +68,7 @@ Your job: dispatch an independent review engine (selected per `@references/indep
    - Tell the engine to read each path and review for:
      - **ADD Alignment**: Does the plan implement decisions documented in the SDD and ADRs?
      - **ADR Gaps**: Are there new architectural decisions in the plan that LACK a corresponding ADR?
-     - **Scope Coverage**: Does the plan address the requirement scopes (Lanes) defined in CLAUDE.md?
+     - **Scope Coverage**: Does the plan address the requirement scopes (Lanes) defined in CLAUDE.md? Requirements expressed as US-xxx IDs (Theme→Pillar→US-xxx hierarchy) are checked the same way as REQ-IDs.
      - **Structural Soundness**: Dependency-graph errors, wave-decomposition mistakes, and hidden coupling.
      - **Vertical-Slice Compliance**: Are any tracks horizontal layers (all-models / all-APIs / all-UI) disguised as slices, per `@references/vertical-slice.md`'s acceptance test? Flag undeclared horizontal layers as HIGH — the one exception is an explicitly declared shared foundation that names the slices it unblocks.
      - **Signal Honesty**: Do the `complexity:` blocks faithfully reflect each track's tasks?

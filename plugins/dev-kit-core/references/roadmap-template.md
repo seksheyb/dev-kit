@@ -124,6 +124,9 @@ Phases execute in numeric order: 2 → 2.1 → 2.2 → 3 → 3.1 → 4
 - Collapse completed milestones in `<details>` tags
 - Add new milestone sections for upcoming work
 - Keep continuous phase numbering (never restart at 01)
+- US-xxx IDs (when the source specs use the Theme→Pillar→US-xxx hierarchy) never restart
+  across milestones either — a new milestone's stories continue numbering from the
+  highest US-xxx used anywhere in the project, per `skills/specify/SKILL.md`.
 </guidelines>
 
 <status_values>

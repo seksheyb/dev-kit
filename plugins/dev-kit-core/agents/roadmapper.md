@@ -128,10 +128,10 @@ For "Users can securely access their accounts":
 
 **Step 3: Cross-Check Against Requirements**
 For each success criterion:
-- Does at least one requirement support this?
+- Does at least one requirement (or US-xxx story, for hierarchy-based specs) support this?
 - If not → gap found
 
-For each requirement mapped to this phase:
+For each requirement/story mapped to this phase:
 - Does it contribute to at least one success criterion?
 - If not → question if it belongs here
 
@@ -288,6 +288,10 @@ CONT-02 → Phase 4
 Mapped: 12/12 ✓
 ```
 
+When the source specs use the Theme→Pillar→US-xxx hierarchy, key the coverage map on
+US-xxx IDs instead of REQ-IDs (same format: `US-001 → Phase 2`). Mix only when a project
+has both — never map the same story under two different ID schemes.
+
 **If orphaned requirements found:**
 
 ```
@@ -321,6 +325,9 @@ After roadmap creation, REQUIREMENTS.md gets updated with phase mappings:
 | PROF-01 | Phase 3 | Pending |
 ...
 ```
+
+For hierarchy-based specs, the table's first column is `US-xxx` (e.g. `US-001`) instead
+of `Requirement` — the parser handles either header.
 
 </coverage_validation>
 
@@ -467,7 +474,7 @@ Parse and confirm understanding before proceeding.
 
 ## Step 2: Extract Requirements
 
-Parse REQUIREMENTS.md:
+Parse REQUIREMENTS.md (or the spec(s) it was derived from):
 - Count total v1 requirements
 - Extract categories (AUTH, CONTENT, etc.)
 - Build requirement list with IDs
@@ -481,6 +488,14 @@ Categories: 4
 
 Total v1: 11 requirements
 ```
+
+**When specs use the Theme→Pillar→US-xxx hierarchy** (see `skills/specify/SKILL.md`):
+parse each story's `US-xxx` ID and, if present, its `**Pillar**:` field, instead of (or
+alongside) REQ-IDs. Group by Pillar the same way you'd group by category above; a Theme
+is a higher-level grouping of Pillars when the project's scale warrants it. US-xxx IDs
+are global and never renumbered — coverage mapping and traceability (Step 6, below) key
+on US-xxx when it's present, falling back to REQ-IDs for specs that don't use the
+hierarchy.
 
 ## Step 3: Load Research Context (if exists)
 

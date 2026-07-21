@@ -22,13 +22,21 @@
   - Tested independently
   - Deployed independently
   - Demonstrated to users independently
+
+  Each story carries a globally unique US-xxx ID (see "Assigning US-xxx IDs" in
+  skills/specify/SKILL.md) — allocated by scanning every existing spec for the highest
+  number in use, never renumbered or reused even if a story is later deleted or reordered.
+  The optional Pillar field names the parent pillar/theme this story serves, for projects
+  using a Theme→Pillar→US-xxx hierarchy; omit it for flat, single-spec projects.
 -->
 
-### User Story 1 - [Brief Title] (Priority: P1)
+### US-001 - [Brief Title] (Priority: P1)
 
 [Describe this user journey in plain language]
 
 **Why this priority**: [Explain the value and why it has this priority level]
+
+**Pillar**: [optional — parent pillar/theme this story serves; omit if not using a hierarchy]
 
 **Independent Test**: [Describe how this can be tested independently - e.g., "Can be fully tested by [specific action] and delivers [specific value]"]
 
@@ -39,11 +47,13 @@
 
 ---
 
-### User Story 2 - [Brief Title] (Priority: P2)
+### US-002 - [Brief Title] (Priority: P2)
 
 [Describe this user journey in plain language]
 
 **Why this priority**: [Explain the value and why it has this priority level]
+
+**Pillar**: [optional — parent pillar/theme this story serves; omit if not using a hierarchy]
 
 **Independent Test**: [Describe how this can be tested independently]
 
@@ -53,11 +63,13 @@
 
 ---
 
-### User Story 3 - [Brief Title] (Priority: P3)
+### US-003 - [Brief Title] (Priority: P3)
 
 [Describe this user journey in plain language]
 
 **Why this priority**: [Explain the value and why it has this priority level]
+
+**Pillar**: [optional — parent pillar/theme this story serves; omit if not using a hierarchy]
 
 **Independent Test**: [Describe how this can be tested independently]
 
@@ -67,7 +79,7 @@
 
 ---
 
-[Add more user stories as needed, each with an assigned priority]
+[Add more user stories as needed, each with an assigned priority and the next allocated US-xxx ID]
 
 ### Edge Cases
 

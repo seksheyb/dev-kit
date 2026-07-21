@@ -71,7 +71,9 @@ independently testable deliverable.
 [The spec's project-wide requirements — version floors, dependency limits,
 naming and copy rules, platform requirements — one line each, with exact
 values copied verbatim from the spec. Every task's requirements implicitly
-include this section.]
+include this section. If the spec uses US-xxx IDs (Theme→Pillar→US-xxx
+hierarchy), reference them the same way you'd reference REQ-IDs elsewhere
+in the plan.]
 
 ---
 ```

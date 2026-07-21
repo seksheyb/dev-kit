@@ -98,6 +98,11 @@ dependencies between milestones — no milestone should depend on a later one. S
 ship together" from "nice to ship together." For each proposed split: what does the user see
 at the end of milestone 1? If the answer is "nothing yet," the split is wrong.
 
+**This is not just a recommendation — descoped items get written to the backlog, not just
+mentioned in prose.** Whatever this milestone doesn't ship gets removed from `spec.md`'s
+active scope and appended to `docs/BACKLOG.md` (create if it doesn't exist yet) as real,
+findable entries for whichever future milestone picks them up — see "Backlog Handoff" below.
+
 **Risk and timing:** Is now the right time (market timing, dependency maturity, team
 capacity)? What is the cost of delay vs the cost of premature shipping?
 
@@ -181,6 +186,34 @@ else deferred, no exceptions. What can be a follow-up spec?
 decisions — those are out of scope for a WHAT/WHY spec and belong to `planner`/`plan-review-ceo`
 once real architecture exists.*
 
+## Backlog Handoff
+
+If the posture and prioritization work above identifies anything this milestone should NOT
+ship (a SCOPE REDUCTION cut, a SELECTIVE EXPANSION proposal not taken, or a proposed later
+milestone from the split above), write it to `docs/BACKLOG.md` — create the file if it doesn't
+exist, using `backlog-grooming`'s existing category taxonomy so the two skills share one
+convention:
+
+```markdown
+## Now / Next / Later / Icebox / Won't Do
+
+### BL-<NNN>: [title]
+- **Category:** Now / Next / Later / Icebox / Won't Do
+- **From:** [spec.md path] — [posture that produced this, e.g. "SCOPE REDUCTION cut" /
+  "milestone split, deferred to milestone 2"]
+- **US-xxx / Pillar:** [if the story-bank hierarchy is in use, carry the ID and Pillar forward
+  — never re-derive a new ID for a story that already has one]
+- **Why deferred:** [one line — cost/timing/dependency, not "wasn't important"]
+- **Date:** [today]
+```
+
+`BL-<NNN>` is a flat, global, never-reused counter — same discipline as `US-xxx` in `specify`.
+Append only; never delete or renumber existing entries (`backlog-grooming` owns archival of
+stale ones, per its own 90-day rule). This file is the seed for the **next** milestone's Stage
+1 — when a new milestone starts, `specify` reads `docs/BACKLOG.md`'s Now/Next items as its
+primary input instead of (or alongside) a fresh PRD, and this skill runs again against
+whatever didn't fit into `spec.md` this time.
+
 ## Required Outputs — the Scope Decision Record
 
 Write this as a `## CPO Review` section appended to the spec file (same append-in-place
@@ -195,12 +228,15 @@ content):
 **What already exists:** [existing solutions considered, reused vs. not]
 **Alternatives considered:** [Framing A/B/C summary + recommendation]
 **Prioritization:** RICE/Kano/JTBD scores, North Star metric named
-**Milestone split:** [plan, or "N/A — ships as one release"]
-**NOT in scope:** [work considered and explicitly deferred, one-line rationale each]
+**Milestone split:** [THIS milestone's scope in one line], remainder deferred to
+  `docs/BACKLOG.md` — [BL-xxx, BL-xxx, ...], or "N/A — ships as one release"
+**NOT in scope:** [work considered and explicitly deferred, one-line rationale each — anything
+  deferred to a future milestone must also appear in `docs/BACKLOG.md` with the same ID; this
+  list is the spec-local pointer, `docs/BACKLOG.md` is the durable record]
 
-**LOCK:** This Scope Decision Record is binding on `plan-review-ceo` — it inherits this
-posture and premise verdict rather than re-deriving them, unless the user explicitly reopens
-this review.
+**LOCK:** This Scope Decision Record is binding — this spec's scope does not get re-litigated
+downstream (no plan-stage review re-opens posture or premise) unless the user explicitly
+reopens this review.
 ```
 
 ## Lens Verdict

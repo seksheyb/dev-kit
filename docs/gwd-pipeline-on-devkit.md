@@ -25,14 +25,21 @@ Skill/Agent/Command spine those glue layers would drive.
 
 ## The pipeline at a glance
 
-Stages 0–4 run **once per project/milestone**. Stages 5–13 are the **per-phase loop** (repeat for every
+Stages 0–4 run **once per milestone**. Stages 5–13 are the **per-phase loop** (repeat for every
 vertical slice the roadmap produced). Stages 14–16 close out the branch, the milestone, and the operate/learn
 cycle. Conditional stages are marked *(if …)*.
+
+**A milestone is the whole pipeline, not a phase.** One full Stage 0→16 traversal delivers one milestone. A new
+milestone is **not** a special continuation path — it re-enters Stage 0 and runs the entire pipeline again,
+treated exactly like a new project. The only thing that changes is where Stage 1 gets its requirements from: a
+first milestone starts from a PRD; every milestone after that starts from `docs/BACKLOG.md` — the durable,
+cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it descopes something. See
+[New milestone = new project](#new-milestone--new-project) below.
 
 | # | Stage | Primary dev-kit assets | In → Out |
 |---|-------|------------------------|----------|
 | **0** | Bootstrap & governance | `constitution` · *(legacy)* `spec-miner` → `gate-reverse-engineer` · *(existing docs)* `doc-classifier` → `doc-synthesizer` · `graphify` | repo/PRD → `constitution.md`, recovered SDD/PRD/ADRs, `graph.json` |
-| **1** | Requirements & product framing | `first-principles-thinking` · `brainstorming` · `specify` · `clarify` · `feature-forge` · `assumption-mapping` → `backlog-grooming` · `market-researcher` · `spec-review-cpo` | PRD → `spec.md` (+ `US-xxx` story bank) + locked Scope Decision Record |
+| **1** | Requirements & product framing | `first-principles-thinking` · `brainstorming` · `specify` · `clarify` · `feature-forge` · `assumption-mapping` → `backlog-grooming` · `market-researcher` · `spec-review-cpo` | PRD (or `docs/BACKLOG.md` for milestone 2+) → `spec.md` (+ `US-xxx` story bank) + locked Scope Decision Record + updated `docs/BACKLOG.md` |
 | **2** | Architecture & tech stack | `architecture-designer` · `diagram` · `cso` · `plan-review-eng` (lens) | requirements → `SDD.md` + ADRs + threat posture |
 | **3** | Research & roadmap | `project-researcher` ×4 → `research-synthesizer` · `roadmapper` | requirements + research → `ROADMAP.md` (vertical slices) + `STATE.md` |
 | **4** | Design system *(if UI)* | `design-consultation` → `design-html` → `design-handoff` · `plan-review-design` (lens) | product → `DESIGN.md` + build prompts |
@@ -63,18 +70,26 @@ loop. This section is the single place that states, for every branch point, **wh
 it doesn't**. (Evaluating these predicates and skipping cleanly is the not-yet-built **Orchestration** layer's job;
 dev-kit supplies the assets, not the branch logic.)
 
-### Two structural branches
+### Three structural branches
 
-1. **Entry path (Stage 0)** — mutually exclusive by repo state:
-   - *Greenfield* (new project, no code, no docs) → skip the legacy and existing-docs sub-paths entirely; run only
-     `constitution` (+ `graphify` once code exists).
+1. **Entry path (Stage 0)** — mutually exclusive by repo state, evaluated fresh **every milestone**, not just the
+   first:
+   - *Greenfield* (first milestone, no code, no docs) → skip the legacy and existing-docs sub-paths entirely; run
+     only `constitution` (+ `graphify` once code exists).
    - *Legacy / inherited / undocumented code* → run `spec-miner` → `gate-reverse-engineer` to recover SDD/PRD/ADRs
      before Stage 1.
    - *Existing planning docs* (a pile of ADRs/PRDs/specs) → run `doc-classifier` → `doc-synthesizer` to ingest them.
      These two sub-paths are independent — a repo can trigger both, neither, or one.
+   - *Continuing milestone* (milestone 2+ of a project this pipeline already built) → none of the three sub-paths
+     above really apply — there's no undocumented legacy pile, the project's own docs are already current.
+     `constitution` runs in **update** mode (not init), `graphify` runs an **incremental** update (not a first
+     build), and neither `spec-miner` nor the doc-ingest pair fire. This is the common case after milestone 1.
 2. **The per-phase loop (Stages 5–13)** — runs **once per roadmap phase** produced by Stage 3. Loop position lives in
-   `STATE.md`. Stages 0–4 run once per project/milestone; Stages 14–16 run once at close-out. Every per-phase
+   `STATE.md`. Stages 0–4 run once per milestone; Stages 14–16 run once at milestone close-out. Every per-phase
    conditional below is re-evaluated **for each phase**.
+3. **The milestone loop (Stages 0→16)** — a full pipeline traversal is one milestone. Stage 16's close-out doesn't
+   terminate the project — it checks `docs/BACKLOG.md`: if enough Now/Next items exist to justify one, the pipeline
+   re-enters Stage 0 for the next milestone. See [New milestone = new project](#new-milestone--new-project).
 
 ### Conditional gate table
 
@@ -89,6 +104,8 @@ dev-kit supplies the assets, not the branch logic.)
 | `plan-review-devex` (S7) | The plan has a developer-facing surface (API/CLI/SDK) | Auto-reports "not applicable", auto-approve N/A |
 | `plan-review-eng` / `-goal-backward` (S7) | **Always** (unconditional lenses) | — |
 | `spec-review-cpo` (S1) | A spec exists and a real scope/strategy call is needed before planning | Skip; no strategic/scope challenge happens for this spec at all — nothing downstream re-checks it |
+| `docs/BACKLOG.md` write (part of S1's `spec-review-cpo`) | The posture/milestone-split work identifies anything descoped from this milestone | Skip — nothing writes/updates the file this run; a milestone that descopes nothing leaves it untouched |
+| **Milestone loop** (after S16) | `docs/BACKLOG.md` has Now/Next items after close-out | Skip — project ends here; the backlog (if any) sits idle until someone manually starts a new milestone |
 | `refactoring-specialist` (S8) | A track touches existing code | Skip; new-file tracks don't need it |
 | `secure-code-guardian` (S8) | Track implements auth / input handling / crypto | Skip |
 | `fullstack-guardian` (S8) | Feature spans frontend + backend together | Use narrower lane skills instead |
@@ -131,29 +148,37 @@ Establish the rules of the game before any spec exists, and recover ground truth
 
 ### Stage 1 — Requirements & product framing *(GWD steps 1–3)*
 
-Turn a PRD/idea into a validated, unambiguous, testable spec with a numbered story bank.
+Turn a PRD/idea into a validated, unambiguous, testable spec with a numbered story bank. **First milestone:**
+input is a fresh PRD. **Every milestone after that:** input is `docs/BACKLOG.md`'s Now/Next items — see
+[New milestone = new project](#new-milestone--new-project).
 
 1. **`first-principles-thinking`** *(if the framing itself is suspect)* — strip the problem to irreducible truths
    before accepting the request's framing.
 2. **`brainstorming`** — the hard gate: no implementation may begin until a design is explored and approved.
    Includes YC-office-hours and go/no-go idea-validation modes for pre-code product ideas.
-3. **`specify`** — convert the description into a structured `spec.md` (WHAT/WHY only), allocating global,
-   never-renumbered **`US-xxx`** story IDs (Theme→Pillar→Story-bank hierarchy).
+3. **`specify`** — convert the description (the PRD, or `docs/BACKLOG.md`'s top items for milestone 2+) into a
+   structured `spec.md` (WHAT/WHY only), allocating global, never-renumbered **`US-xxx`** story IDs
+   (Theme→Pillar→Story-bank hierarchy) — carrying forward any ID a backlog item already had, never re-minting one.
 4. **`clarify`** — bounded 5-question ambiguity scan, writing answers back into the spec's `## Clarifications`.
 5. **`feature-forge`** *(per feature)* — PM+Dev requirements workshop producing EARS-format functional +
    non-functional requirements and Given/When/Then acceptance criteria.
 6. **`assumption-mapping`** → **`backlog-grooming`** — surface & rank the riskiest VUBF assumptions, design the
-   cheapest experiment for the top few; validated assumptions become groomed, sprint-ready backlog items.
+   cheapest experiment for the top few; validated assumptions become groomed, sprint-ready backlog items in the
+   same `docs/BACKLOG.md` `spec-review-cpo` writes to below — one file, one taxonomy (Now/Next/Later/Icebox/Won't
+   Do), fed by two different skills for two different reasons (new candidate ideas vs. descoped existing scope).
 7. **`market-researcher`** *(agent)* — sourced market-sizing / competitive / trends intelligence → `MARKET.md`,
    consumed by `spec-review-cpo` below rather than re-derived.
 8. **`spec-review-cpo`** *(skill)* — the pipeline's **only** product/strategy gate, and it runs here, once, before
    any plan exists: challenges the premise, commits to a scope posture (expand/hold/cut), scores prioritization
    (RICE/Kano/JTBD/North Star) against the `US-xxx` Theme→Pillar hierarchy if present, and writes a **Scope
-   Decision Record** into `spec.md`'s `## CPO Review` section. Nothing downstream re-litigates strategy once this
-   has run — Stage 7's lenses (`eng`/`design`/`devex`/`goal-backward`) are execution-quality checks, not scope
-   checks; the pipeline deliberately does not run `plan-review-ceo` at any stage (see the note at the top of
-   Stage 7). `the-fool`'s adversarial modes (pre-mortem, red-team) remain available as an optional extra
-   pressure-test for unusually high-stakes specs, but are no longer required by default now that CPO's own posture
+   Decision Record** into `spec.md`'s `## CPO Review` section. **Whatever it descopes gets written to
+   `docs/BACKLOG.md`** (created if missing), not just noted in prose — every descoped item is an ID-tracked entry
+   carrying its `US-xxx`/Pillar forward, ready to seed the *next* milestone's Stage 1. Nothing downstream
+   re-litigates strategy once this has run — Stage 7's lenses (`eng`/`design`/`devex`/`goal-backward`) are
+   execution-quality checks, not scope checks; the pipeline deliberately does not run `plan-review-ceo` at any
+   stage (see the note at the top of Stage 7). `the-fool`'s adversarial modes (pre-mortem, red-team) remain
+   available as an optional extra pressure-test for unusually high-stakes specs, but are no longer required by
+   default now that CPO's own posture
    is inherently adversarial.
 
 ### Stage 2 — Architecture & tech stack *(GWD steps 4–5)*
@@ -360,8 +385,26 @@ the lighter tier, with the full set still available as an explicit escalation.
 - **`retro`** *(command)* → **`retro`** *(agent)* — periodic engineering retrospective mined from git history.
 - **Product lane** analytics — `ab-test-analysis`, `cohort-analysis`, `growth-loops` — close the loop back to Stage 1's
   assumption bank with real usage evidence.
-- **Milestone archive + git tag** — the terminal state (dev-kit has no `/complete-milestone` command; this is the
-  Orchestration layer's job, driven by `STATE.md`).
+- **Milestone archive + git tag** — the milestone's phases and `STATE.md` get archived (dev-kit has no
+  `/complete-milestone` command; the archival mechanics are the Orchestration layer's job). This is **not** the
+  pipeline's terminal state, though — see below.
+
+### New milestone = new project
+
+Archiving a milestone doesn't end the pipeline; it decides whether to loop. Check `docs/BACKLOG.md`:
+
+- **Now/Next items exist** → start the next milestone by re-entering **Stage 0**, run the entire pipeline again.
+  Treat it exactly like a new project — same `constitution` check (now in update mode per the "Continuing
+  milestone" entry-path branch), same `graphify` (incremental), same Stage 1 → 16 sequence. The only structural
+  difference from milestone 1 is Stage 1's input: `specify` reads `docs/BACKLOG.md`'s top items instead of
+  waiting for a fresh PRD, and `spec-review-cpo` runs again against whatever didn't fit last time — posture,
+  premise, and prioritization all get re-evaluated fresh for this milestone, not inherited from the last one.
+- **Backlog is empty, or only Later/Icebox items remain** → the project is genuinely done for now. Terminal state,
+  same as before.
+
+This is why Stage 0's entry path (see [Three structural branches](#three-structural-branches)) has to be
+re-evaluated every milestone, not just once: a repo mid-way through its third milestone is never "greenfield"
+again.
 
 ---
 

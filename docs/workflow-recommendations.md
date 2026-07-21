@@ -44,7 +44,7 @@ lifecycle layer dev-kit could add) · **Skip**.
 | 20 | State-file sync nudges (remind to update STATE.md, print at session start) | **Hooks** | Depends on #12 — only wire once dev-kit has an enforced (not just templated) `STATE.md` convention |
 | 21 | External knowledge-base sync (Obsidian vault ingest/save + kill switches) | **Hooks** (optional) | Only worth it if dev-kit takes a real dependency on the external `claude-obsidian` plugin |
 | 22 | Independent (non-Claude) review bridge — the dispatch/retry loop | **Workflow** | An agent stage with Bash access shelling out to the external CLI fits a Workflow stage's retry/loop control |
-| 23 | Independent (non-Claude) review bridge — the generic rule | **Agent/Skill** ✅ DONE | `references/independent-review.md` is the engine registry (claude/gemini/codex/cursor, default-per-role, fallback order); `gate-plan-review.md` and the merged `code-review-gate.md` select from it instead of hardcoding `cc-gemini-plugin:gemini` |
+| 23 | Independent (non-Claude) review bridge — the generic rule | **Agent/Skill** ✅ DONE | `references/independent-review.md` is the engine registry (claude/gemini/codex/cursor/antigravity, default-per-role, fallback order) with one adapter file per engine under `references/review-engines/`; `gate-plan-review.md` and the merged `code-review-gate.md` select from it by engine name instead of hardcoding a single vendor plugin |
 | 24 | New-repo scaffolding (lint/tsconfig templates, bootstrap/adopt/audit scripts, kickoff/adoption guides) | **Agent/Skill/Command** (not Workflow, not built) | Needs live user Q&A (lane selection, clarifying questions) mid-flow — Workflow has no interactive back-and-forth; dev-kit also has no scaffolding surface at all today |
 
 **Tally:** 6 Orchestration-only, 6 Agent/Skill, 5 Workflow, 6 Hooks, 1 Skip (some
@@ -62,9 +62,10 @@ capabilities split across two homes, so this sums to more than 24).
    structured output, a Workflow script's plain JS computes the deterministic model/effort
    bands — closing the gap with `gate-plan-review`/`sprint-execution`, which already know
    how to *consume* a `complexity-score.mjs`-style signal but have nothing producing one.
-4. ✅ **DONE** — **`gate-plan-review`** generalized the hardcoded `cc-gemini-plugin:gemini`
+4. ✅ **DONE** — **`gate-plan-review`** generalized the hardcoded single-vendor
    independence check to engine selection via `references/independent-review.md` (default
-   Gemini, fallback Codex then Claude). A Workflow `agent()` stage with Bash access remains
+   Gemini, fallback Codex then Claude), with per-engine binding adapters under
+   `references/review-engines/`. A Workflow `agent()` stage with Bash access remains
    one valid way to host that dispatch/retry loop, not the only one — still open for a
    future Workflow-script pass.
 

@@ -2,8 +2,8 @@
 
 > Generic rule for any gate that needs an **independent** (non-self) review pass: dispatch
 > a review engine chosen from this registry, not a hardcoded plugin. Referenced by
-> `agents/gate-plan-review.md`, `agents/code-review-gate.md`, `skills/document-release/SKILL.md`,
-> `skills/sprint-execution/SKILL.md`, and `skills/bugfix-wave/SKILL.md`.
+> `agents/gate-plan-review.md`, `agents/code-review-gate.md`, `commands/review.md`,
+> `skills/code-review-protocol/SKILL.md`, and `skills/document-release/SKILL.md`.
 
 ## Why Independence Matters
 

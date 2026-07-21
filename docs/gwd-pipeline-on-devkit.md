@@ -7,7 +7,8 @@ step to an *external* library (Spec-Kit / gstack / GSD / fullstack-dev-skills / 
 this document answers the sibling question: **if you were to stand the same pipeline up using only
 dev-kit, which asset fires at each step, and in what order?**
 
-Every one of dev-kit's **96 core assets** (51 skills, 37 agents, 8 commands) is placed somewhere below,
+Every one of dev-kit's **97 core assets** (52 skills, 37 agents, 8 commands — including `spec-review-cpo`, added
+alongside this document to close the spec-stage product-review gap) is placed somewhere below,
 and the **96 lane assets** (the 7 stack-reference plugins) are routed in at the stages where they apply.
 "I assume all should be utilised" — they are; see the [coverage appendix](#coverage-appendix--every-asset-placed).
 
@@ -31,7 +32,7 @@ cycle. Conditional stages are marked *(if …)*.
 | # | Stage | Primary dev-kit assets | In → Out |
 |---|-------|------------------------|----------|
 | **0** | Bootstrap & governance | `constitution` · *(legacy)* `spec-miner` → `gate-reverse-engineer` · *(existing docs)* `doc-classifier` → `doc-synthesizer` · `graphify` | repo/PRD → `constitution.md`, recovered SDD/PRD/ADRs, `graph.json` |
-| **1** | Requirements & product framing | `first-principles-thinking` · `brainstorming` · `specify` · `clarify` · `feature-forge` · `assumption-mapping` → `backlog-grooming` · `market-researcher` · `the-fool` | PRD → `spec.md` (+ `US-xxx` story bank), validated assumptions |
+| **1** | Requirements & product framing | `first-principles-thinking` · `brainstorming` · `specify` · `clarify` · `feature-forge` · `assumption-mapping` → `backlog-grooming` · `market-researcher` · `spec-review-cpo` | PRD → `spec.md` (+ `US-xxx` story bank) + locked Scope Decision Record |
 | **2** | Architecture & tech stack | `architecture-designer` · `diagram` · `cso` · `plan-review-eng` (lens) | requirements → `SDD.md` + ADRs + threat posture |
 | **3** | Research & roadmap | `project-researcher` ×4 → `research-synthesizer` · `roadmapper` | requirements + research → `ROADMAP.md` (vertical slices) + `STATE.md` |
 | **4** | Design system *(if UI)* | `design-consultation` → `design-html` → `design-handoff` · `plan-review-design` (lens) | product → `DESIGN.md` + build prompts |
@@ -86,7 +87,9 @@ dev-kit supplies the assets, not the branch logic.)
 | **UI spec** (S6): `ui-researcher` → `ui-checker` | The phase has UI work | Skip; no `UI-SPEC.md`. If run, `ui-checker` **BLOCKED** halts planning until fixed |
 | `plan-review-design` (S7) | The plan has any UI scope | Auto-reports "not applicable", verdict APPROVE, completeness N/A |
 | `plan-review-devex` (S7) | The plan has a developer-facing surface (API/CLI/SDK) | Auto-reports "not applicable", auto-approve N/A |
-| `plan-review-ceo` / `-eng` / `-goal-backward` (S7) | **Always** (unconditional lenses) | — |
+| `plan-review-eng` / `-goal-backward` (S7) | **Always** (unconditional lenses) | — |
+| `plan-review-ceo` (S7) | **Always** runs, but *how* varies: a locked Scope Decision Record from `spec-review-cpo` exists | Inherits posture/premise, checks only for drift (light). No record exists → runs its own full Step 0 (heavy, self-sufficient fallback) |
+| `spec-review-cpo` (S1) | A spec exists and a real scope/strategy call is needed before planning | Skip; Stage 7's `plan-review-ceo` falls back to running its own Step 0 from scratch (heavier, later) |
 | `refactoring-specialist` (S8) | A track touches existing code | Skip; new-file tracks don't need it |
 | `secure-code-guardian` (S8) | Track implements auth / input handling / crypto | Skip |
 | `fullstack-guardian` (S8) | Feature spans frontend + backend together | Use narrower lane skills instead |
@@ -104,7 +107,7 @@ dev-kit supplies the assets, not the branch logic.)
 | **Lane skills** (S8 mostly) | The project's actual stack matches the lane | Unmatched lanes never fire — a Python+React app invokes `python-pro`/`react-expert`, not `golang-pro`/`swift-expert` |
 
 **Rule of thumb:** the *unconditional* backbone every project runs is Stages 1 → 2 → 3 → 5 → 7 → 8 → 10 → 11 → 14 →
-15 → 16. Everything else keys off a predicate above. This is exactly why "192 assets placed" ≠ "192 assets fire for
+15 → 16. Everything else keys off a predicate above. This is exactly why "193 assets placed" ≠ "193 assets fire for
 any one project" — most runs exercise a minority of the catalog, selected by these gates.
 
 ---
@@ -143,10 +146,14 @@ Turn a PRD/idea into a validated, unambiguous, testable spec with a numbered sto
 6. **`assumption-mapping`** → **`backlog-grooming`** — surface & rank the riskiest VUBF assumptions, design the
    cheapest experiment for the top few; validated assumptions become groomed, sprint-ready backlog items.
 7. **`market-researcher`** *(agent)* — sourced market-sizing / competitive / trends intelligence → `MARKET.md`,
-   for any product-direction decision.
-8. **`the-fool`** — adversarial pass (Socratic / pre-mortem / red-team / falsification) that steelmans then
-   stress-tests the requirements before they harden. *(This is dev-kit's product-review lens at the requirements
-   stage; the CEO scope lens proper runs on the plan in Stage 7.)*
+   consumed by `spec-review-cpo` below rather than re-derived.
+8. **`spec-review-cpo`** *(skill)* — the real product/strategy gate at this stage: challenges the premise, commits
+   to a scope posture (expand/hold/cut), scores prioritization (RICE/Kano/JTBD/North Star) against the `US-xxx`
+   Theme→Pillar hierarchy if present, and writes a locked **Scope Decision Record** into `spec.md`'s `## CPO Review`
+   section. `plan-review-ceo` at Stage 7 *inherits* this record instead of re-litigating strategy once a plan
+   exists — see that lens's own "Relationship to `spec-review-cpo`" section. `the-fool`'s adversarial modes
+   (pre-mortem, red-team) remain available as an optional extra pressure-test for unusually high-stakes specs, but
+   are no longer required by default now that CPO's own posture is inherently adversarial.
 
 ### Stage 2 — Architecture & tech stack *(GWD steps 4–5)*
 
@@ -174,10 +181,20 @@ Turn a PRD/idea into a validated, unambiguous, testable spec with a numbered sto
 ### Stage 4 — Design system *(GWD step 6 — once, only if the project has a UI lane and no `DESIGN.md`)*
 
 1. **`design-consultation`** — establish typography/color/layout/spacing/motion as one coherent system
-   (anti-AI-slop discipline), write `DESIGN.md`. Includes "Variant shotgun" mode for competing directions.
-2. **`design-html`** — turn the approved system into a real, responsive, accessible, self-contained HTML preview.
+   (anti-AI-slop discipline), write `DESIGN.md`. Includes "Variant shotgun" mode for competing directions. **When
+   the `claude-design` MCP is available**, the preview/handoff artifact is a claude-design project instead of (or
+   alongside) a local self-contained HTML file — see "Claude Design MCP path" below.
+2. **`design-html`** — turn the approved system into a real, responsive, accessible, self-contained HTML preview;
+   reuses the same claude-design project (never creates a second one) if one exists.
 3. **`design-handoff`** — translate `DESIGN.md` into copy-paste-ready component build prompts for implementing agents.
 4. **`plan-review-design`** *(design lens)* — becomes load-bearing again in Stage 7 for any plan with UI scope.
+
+**Claude Design MCP path:** `design-consultation` checks `DESIGN.md` for a stored
+`<!-- claude_design_project_id: ... -->` comment before ever calling `create_project` — reuse, never duplicate.
+The first run that creates a project persists its ID into `DESIGN.md`'s frontmatter comment and Decisions Log, so
+every later stage that touches the design system (`design-html`, `design-handoff`, and any UI work in Stage 8)
+references the same collaborative workspace instead of drifting into disconnected local files. Falls back to a
+plain local HTML file automatically when the MCP isn't wired in — this path is optional, never required.
 
 ---
 
@@ -210,13 +227,25 @@ Build the context a planner needs, cheaply, before writing tasks.
    dependency-ordered **waves + tracks**, derive goal-backward must-haves, forbid scope-reduction language, emit
    per-task `complexity_signals`. Output: `PLAN.md`.
 2. **`plan-review`** *(command)* → **`plan-reviewer`** *(agent)*, dispatched once per lens **in parallel**:
-   **`plan-review-ceo`** (scope/strategy), **`plan-review-eng`** (soundness/tests), **`plan-review-design`** (UI),
-   **`plan-review-devex`** (developer-facing surface), **`plan-review-goal-backward`** (will it actually hit the goal).
+   **`plan-review-ceo`** (scope/strategy — inherits the locked Scope Decision Record from `spec-review-cpo` at
+   Stage 1 instead of re-deriving posture/premise from scratch; only checks the plan for drift against it, then
+   runs its own 11 technical-adjacent sections in full), **`plan-review-eng`** (soundness/tests),
+   **`plan-review-design`** (UI), **`plan-review-devex`** (developer-facing surface),
+   **`plan-review-goal-backward`** (will it actually hit the goal).
 3. **`gate-plan-review`** *(agent)* — independent, deterministic complexity-score gate on every track's declared
    Model/Effort, plus a **non-Claude** review engine (Gemini → Codex → Claude fallback, per
    `references/independent-review.md`). `gate_passed: true` unlocks Wave 1.
 4. **`analyze`** — read-only cross-artifact audit (spec ↔ plan ↔ tasks ↔ constitution) with a requirement-to-task
    coverage table before any code is written.
+
+**Default review tier (cost vs. rigor):** running every applicable lens plus `gate-plan-review` is the maximum-rigor
+setting; the conditional-gates table already auto-prunes `plan-review-design`/`-devex` for phases with no UI/dev-facing
+surface. For everyday phases, the **minimum bar** is `gate-plan-review` + `plan-review-goal-backward` — the one gate
+that verifies the plan actually achieves its goal, paired with the one that verifies complexity/effort honesty and
+architectural alignment. Escalate to the full lens set (`ceo`, `eng`, plus `design`/`devex` when applicable) for
+higher-stakes phases: new architecture, security/payments/auth surface, or anything touching >15 files. This is a
+project-level policy choice, not a hard rule — set it once in `CLAUDE.md` and `plan-review` (command) can default to
+the lighter tier, with the full set still available as an explicit escalation.
 
 > **Boundary ‖** — natural `/clear` point (mirrors GWD's boundary after step 11/plan).
 
@@ -323,6 +352,11 @@ Build the context a planner needs, cheaply, before writing tasks.
   production breaks; hands off to `compliance-auditor` for breach-notification obligations. `chaos-engineer` (infra
   lane) proactively rehearses these failures.
 - **`retro`** *(command)* → **`retro`** *(agent)* — periodic engineering retrospective mined from git history.
+- **`plan-review-ceo`** *(optional, reused — not a new skill)* — a light strategic-drift checkpoint: does the shipped
+  milestone still match the Scope Decision Record `spec-review-cpo` locked at Stage 1? This is deliberately
+  **in addition to**, not instead of, the Stage 7 pass — catching a scope/strategy problem in a written plan is
+  cheap; catching the same problem only after code, tests, and a deploy exist is not. Skip if the milestone already
+  passed a Stage 7 CEO check with no drift and nothing has since changed.
 - **Product lane** analytics — `ab-test-analysis`, `cohort-analysis`, `growth-loops` — close the loop back to Stage 1's
   assumption bank with real usage evidence.
 - **Milestone archive + git tag** — the terminal state (dev-kit has no `/complete-milestone` command; this is the
@@ -380,10 +414,10 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 
 ## Coverage appendix — every asset placed
 
-**All 96 core assets** (51 skills · 37 agents · 8 commands), by the stage that owns them:
+**All 97 core assets** (52 skills · 37 agents · 8 commands), by the stage that owns them:
 
 - **Stage 0:** `constitution`, `spec-miner`, `gate-reverse-engineer`, `doc-classifier`, `doc-synthesizer`, `graphify`
-- **Stage 1:** `first-principles-thinking`, `brainstorming`, `specify`, `clarify`, `feature-forge`, `assumption-mapping`, `backlog-grooming`, `market-researcher`, `the-fool`
+- **Stage 1:** `first-principles-thinking`, `brainstorming`, `specify`, `clarify`, `feature-forge`, `assumption-mapping`, `backlog-grooming`, `market-researcher`, `spec-review-cpo` (`the-fool` remains available as an optional extra pressure-test, no longer in the default list)
 - **Stage 2:** `architecture-designer`, `diagram`, `cso`, `plan-review-eng`
 - **Stage 3:** `project-researcher`, `research-synthesizer`, `roadmapper`
 - **Stage 4:** `design-consultation`, `design-html`, `design-handoff`, `plan-review-design`
@@ -440,8 +474,10 @@ Stage 0/8:
 **Product** (`dev-kit-product`, 5) — Stage 1 assumptions + Stage 13 compliance + Stage 16 analytics:
 `ab-test-analysis`, `cohort-analysis`, `growth-loops`, `gdpr-ccpa-compliance`, `hipaa-compliance`.
 
-**Total: 192 / 192 dev-kit assets placed** (96 core + 96 lane) — verified by diffing every catalog header against
-this document.
+**Total: 193 / 193 dev-kit assets placed** (97 core + 96 lane) — verified by diffing every catalog header against
+this document. `spec-review-cpo` is the 97th core asset, added alongside this pipeline doc to close the spec-stage
+product-review gap (see [Conditional gates & branches](#conditional-gates--branches) and its full entry in
+[`core-discovery-and-design.md`](catalog/core-discovery-and-design.md#role-product--requirements-owner)).
 
 ---
 

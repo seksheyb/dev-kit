@@ -63,7 +63,9 @@ Detect what design context exists, in this order:
    design-consultation first if they'd rather establish a system before building.
 
 Always also check for `DESIGN.md` in the repo root — its tokens take priority for
-system-level values (fonts, brand colors, spacing scale).
+system-level values (fonts, brand colors, spacing scale). If it contains a
+`<!-- claude_design_project_id: ... -->` comment, this project has an existing claude-design
+MCP workspace — reuse it in Step 3.5 rather than only serving a local preview.
 
 Output a context summary: **Mode** (approved-mockup | plan-driven | freeform | evolve),
 **Visual reference**, **Design tokens** (DESIGN.md or none), **Screen name**.
@@ -156,6 +158,12 @@ cd <output-dir> && python3 -m http.server 0 --bind 127.0.0.1 &
 Report the URL (or fall back to `open <path>/finalized.html` if python3 is unavailable).
 Tell the user: "Live preview running — after each edit, refresh the browser to see changes."
 Kill the server when the refinement loop ends.
+
+**If a `claude_design_project_id` was found in Step 0** and `mcp__claude-design__*` tools are
+available: also `write_files` the finalized HTML into that same project (never `create_project`
+here — this skill only ever writes into a project design-consultation already created) and
+`render_preview` for a shareable link, offered alongside the local preview rather than
+replacing it.
 
 ---
 

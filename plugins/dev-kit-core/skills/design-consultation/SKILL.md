@@ -31,7 +31,9 @@ ls DESIGN.md design-system.md 2>/dev/null || echo "NO_DESIGN_FILE"
 ```
 
 - If a DESIGN.md exists: read it, then ask: "You already have a design system. Want to
-  **update** it, **start fresh**, or **cancel**?"
+  **update** it, **start fresh**, or **cancel**?" Also check for a
+  `<!-- claude_design_project_id: ... -->` comment near the top — if present, this project
+  already has a claude-design workspace; reuse it (see Phase 5) rather than creating a new one.
 - If none: continue.
 
 **Gather product context from the codebase:**
@@ -251,6 +253,26 @@ body text, generic stock-photo vibe, system-ui font, gradient CTA, bubble-radius
 
 If the user says skip the preview, go directly to Phase 6.
 
+### Claude Design MCP path (optional, if `mcp__claude-design__*` tools are available)
+
+If the claude-design MCP is wired in and the user wants a shareable, collaborative workspace
+instead of (or alongside) a local HTML file:
+
+1. **Reuse, don't duplicate.** Check DESIGN.md for an existing `claude_design_project_id`
+   comment. If present, `get_project` it and confirm it's still valid before writing to it —
+   never call `create_project` when a valid stored ID already exists.
+2. If none exists, `create_project` for this design system and capture the returned project ID
+   immediately — it's needed in Phase 6 before anything else touches DESIGN.md.
+3. `write_files` the preview content (font specimens, palette swatches, mockups — same content
+   as the self-contained HTML page above) into the project.
+4. `render_preview` to generate the live view and report its link to the user in place of (or
+   next to) the local `open <file>` step.
+5. This path replaces the *delivery mechanism* only — every other rule in this phase (self-gate,
+   anti-slop checklist, SAFE/RISK framing) still applies to what gets written.
+
+If the MCP isn't available, or the user prefers a plain local file, fall back to the
+self-contained HTML page above — that path is always the default and needs no tooling.
+
 ---
 
 ## Variant Shotgun mode
@@ -314,6 +336,8 @@ proposal/variant, not just text descriptions):
 ```markdown
 # Design System — [Project Name]
 
+<!-- claude_design_project_id: [proj_xxx, only if the Claude Design MCP path was used] -->
+
 ## Product Context
 - **What this is:** [1-2 sentences]
 - **Who it's for:** [target users]
@@ -363,6 +387,7 @@ proposal/variant, not just text descriptions):
 | Date | Decision | Rationale |
 |------|----------|-----------|
 | [today] | Initial design system created | Created by design-consultation based on [context] |
+| [today] | Claude Design project created: [proj_xxx] | Only if the MCP path was used — omit this row otherwise |
 ```
 
 **Update CLAUDE.md** (create if missing) — append:

@@ -11,7 +11,7 @@ color: "#E879F9"
 #           command: "npx eslint --fix $FILE 2>/dev/null || true"
 ---
 
-> **SDK note:** `gsd-sdk` / `gsd-tools.cjs` commands below are optional accelerators from the GSD runtime (`~/.claude/get-shit-done`). If not installed, perform the equivalent with plain file reads/writes, WebSearch, and `git commit` — behavior, not tooling, is the contract.
+> **No external dependency:** dev-kit has zero runtime dependency on any external SDK. Every operation below has a native equivalent using only this agent's own granted tools — see `references/native-equivalents.md` for the full mapping.
 
 > Note: GSD artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
 
@@ -245,7 +245,7 @@ Apply UX-research discipline when making or accepting design decisions:
 
 ## Output: UI-SPEC.md
 
-Use template from `~/.claude/get-shit-done/templates/UI-SPEC.md`.
+Use template from `@references/ui-spec-template.md`.
 
 Write to: `$PHASE_DIR/$PADDED_PHASE-UI-SPEC.md`
 
@@ -304,14 +304,14 @@ Batch questions into a single interaction where possible.
 
 ## Step 5: Compile UI-SPEC.md
 
-Read template: `~/.claude/get-shit-done/templates/UI-SPEC.md`
+Read template: `@references/ui-spec-template.md`
 
 Fill all sections. Write to `$PHASE_DIR/$PADDED_PHASE-UI-SPEC.md`.
 
 ## Step 6: Commit (optional)
 
 ```bash
-gsd-sdk query commit "docs($PHASE): UI design contract" --files "$PHASE_DIR/$PADDED_PHASE-UI-SPEC.md"
+git add "$PHASE_DIR/$PADDED_PHASE-UI-SPEC.md" && git commit -m "docs($PHASE): UI design contract"
 ```
 
 ## Step 7: Return Structured Result

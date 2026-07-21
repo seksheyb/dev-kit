@@ -11,7 +11,7 @@ color: green
 #           command: "npx eslint --fix $FILE 2>/dev/null || true"
 ---
 
-> **SDK note:** `gsd-sdk` / `gsd-tools.cjs` commands below are optional accelerators from the GSD runtime (`~/.claude/get-shit-done`). If not installed, perform the equivalent with plain file reads/writes, WebSearch, and `git commit` — behavior, not tooling, is the contract.
+> **Note:** dev-kit has no dependency on any external SDK. Every operation below is performed with native tools (Read/Write/Bash/Grep/Glob/WebSearch) — see `references/native-equivalents.md` for the canonical mapping from each operation to its native implementation.
 
 > Note: GSD artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
 
@@ -450,8 +450,8 @@ Output: [Artifacts created]
 </objective>
 
 <execution_context>
-@~/.claude/get-shit-done/workflows/execute-plan.md
-@~/.claude/get-shit-done/templates/summary.md
+Invoke the `sprint-execution` skill to execute this plan (plugins/dev-kit-core/skills/sprint-execution/SKILL.md).
+@references/summary-template.md
 </execution_context>
 
 <context>
@@ -830,20 +830,18 @@ start of execution when `--reviews` flag is present or reviews mode is active.
 <execution_flow>
 
 <step name="load_project_state" priority="first">
-Load planning context:
+Load planning context natively (see `references/native-equivalents.md`):
 
+**Phase bootstrap (native equivalent of `init.plan-phase`):**
 ```bash
-INIT=$(gsd-sdk query init.plan-phase "${PHASE}")
-if [[ "$INIT" == @file:* ]]; then INIT=$(cat "${INIT#@file:}"); fi
+ls .planning/phases/  2>/dev/null
 ```
+`Glob`/`ls` the phase directory (default `.planning/phases/<NNN>-<slug>/`), then `Read` `.planning/ROADMAP.md`, `.planning/REQUIREMENTS.md`, and any existing `CONTEXT.md`/`RESEARCH.md`/`PLAN.md` already inside that phase directory. Treat missing files as "not yet produced," not an error.
 
-Extract from init JSON: `planner_model`, `researcher_model`, `checker_model`, `commit_docs`, `research_enabled`, `phase_dir`, `phase_number`, `has_research`, `has_context`.
+Derive from what you read: `phase_dir` (the directory path), `phase_number` (from the directory name), `has_research` (RESEARCH.md present), `has_context` (CONTEXT.md present). Config-style values (`planner_model`, `researcher_model`, `checker_model`, `commit_docs`, `research_enabled`) come directly from the orchestrator's dispatch prompt — there is no separate query for them; if the dispatch prompt is silent on one, use the project default.
 
-Also load planning state (position, decisions, blockers) via the SDK — **use `node` to invoke the CLI** (not `npx`):
-```bash
-gsd-sdk query state.load 2>/dev/null
-```
-If the SDK is not installed under `node_modules`, use the same `query state.load` argv with your local `gsd-sdk` CLI on `PATH`.
+**Planning state (native equivalent of `state.load`):**
+`Read` `.planning/STATE.md` directly. If absent, state is empty — proceed with what the dispatch prompt provided.
 
 If STATE.md missing but .planning/ exists, offer to reconstruct or continue without.
 </step>
@@ -888,23 +886,11 @@ Check for knowledge graph:
 ls .planning/graphs/graph.json 2>/dev/null
 ```
 
-If graph.json exists, check freshness:
+If graph.json exists, invoke the `graphify` skill directly (native equivalent of `graphify status` / `graphify query` — it owns this capability natively in dev-kit, no external binary) to check freshness and query phase-relevant dependency context.
 
-```bash
-node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" graphify status
-```
+If the skill reports the graph as stale, note for later: "Graph is {age_hours}h old -- treat semantic relationships as approximate." Include this annotation inline with any graph context injected below.
 
-If the status response has `stale: true`, note for later: "Graph is {age_hours}h old -- treat semantic relationships as approximate." Include this annotation inline with any graph context injected below.
-
-Query the graph for phase-relevant dependency context (single query per D-06):
-
-```bash
-node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" graphify query "<phase-goal-keyword>" --budget 2000
-```
-
-(graphify is not exposed on `gsd-sdk query` yet; use `gsd-tools.cjs` for graphify only.)
-
-Use the keyword that best captures the phase goal. Examples:
+Query the graph for phase-relevant dependency context (single query per D-06) via the `graphify` skill, using the keyword that best captures the phase goal. Examples:
 - Phase "User Authentication" -> query term "auth"
 - Phase "Payment Integration" -> query term "payment"
 - Phase "Database Migration" -> query term "migration"
@@ -937,10 +923,12 @@ Apply discovery level protocol (see discovery_levels section).
 <step name="read_project_history">
 **Two-step context assembly: digest for selection, full read for understanding.**
 
-**Step 1 — Generate digest index:**
+**Step 1 — Generate digest index (native equivalent of `history-digest`):**
 ```bash
-gsd-sdk query history-digest
+git log --oneline -20
+ls .planning/phases/*/*-SUMMARY.md 2>/dev/null
 ```
+`Read` the frontmatter (first ~25 lines) of each SUMMARY.md found — `affects`, `provides`, `tech-stack`, `patterns-established`, and `key-decisions` fields give a cheap digest without reading full bodies. Synthesize the digest yourself from these frontmatter blocks plus the commit log.
 
 **Step 2 — Select relevant phases (typically 2-4):**
 
@@ -984,7 +972,7 @@ Read the most recent milestone retrospective and cross-milestone trends. Extract
 </step>
 
 <step name="inject_global_learnings">
-If `features.global_learnings` is `true`: run `gsd-sdk query learnings.query --tag <tag> --limit 5` once per tag from PLAN.md frontmatter `tags` (or use the single most specific keyword). The handler matches one `--tag` at a time. Prefix matches with `[Prior learning from <project>]` as weak priors. Project-local decisions take precedence. Skip silently if disabled or no matches.
+If `features.global_learnings` is `true`: for each tag from PLAN.md frontmatter `tags` (or the single most specific keyword), native equivalent of `learnings.query --tag <tag> --limit 5` — `grep` the learnings ledger (default `.claude/learnings.jsonl`, per the `learn` skill) for entries whose `tags` field matches, and take the most recent 5. One tag per grep pass. Prefix matches with `[Prior learning from <project>]` as weak priors. Project-local decisions take precedence. Skip silently if disabled or no matches.
 </step>
 
 <step name="gather_phase_context">
@@ -1110,26 +1098,15 @@ Include all frontmatter fields.
 </step>
 
 <step name="validate_plan">
-Validate each created PLAN.md using `gsd-sdk query`:
+Validate each created PLAN.md natively (see `references/native-equivalents.md`):
 
-```bash
-VALID=$(gsd-sdk query frontmatter.validate "$PLAN_PATH" --schema plan)
-```
+**Frontmatter check (native equivalent of `frontmatter.validate "$PLAN_PATH" --schema plan`):**
+`Read` the PLAN.md file and parse the YAML frontmatter block between the first two `---` lines. Confirm these required fields are present: `phase`, `plan`, `type`, `wave`, `depends_on`, `files_modified`, `autonomous`, `must_haves`. Report which fields are missing rather than a pass/fail boolean.
 
-Returns JSON: `{ valid, missing, present, schema }`
+**If any required field is missing:** Fix it before proceeding.
 
-**If `valid=false`:** Fix missing required fields before proceeding.
-
-Required plan frontmatter fields:
-- `phase`, `plan`, `type`, `wave`, `depends_on`, `files_modified`, `autonomous`, `must_haves`
-
-Also validate plan structure:
-
-```bash
-STRUCTURE=$(gsd-sdk query verify.plan-structure "$PLAN_PATH")
-```
-
-Returns JSON: `{ valid, errors, warnings, task_count, tasks }`
+**Structure check (native equivalent of `verify.plan-structure "$PLAN_PATH"`):**
+`Grep` the same file for the required task-level tags (`<name>`, `<files>`, `<action>`, `<verify>`, `<done>`) and top-level sections (`<objective>`, `<context>`, `<tasks>`, `<success_criteria>`). Flag missing or out-of-order sections/tags directly in your output — don't silently accept.
 
 **If errors exist:** Fix before committing:
 - Missing `<name>` in task → add name element
@@ -1162,9 +1139,11 @@ Plans:
 </step>
 
 <step name="git_commit">
+Native equivalent of `commit`: stage the explicit paths this operation names — never `git add -A` — then commit.
+
 ```bash
-gsd-sdk query commit "docs($PHASE): create phase plan" --files \
-  .planning/phases/$PHASE-*/$PHASE-*-PLAN.md .planning/ROADMAP.md
+git add .planning/phases/$PHASE-*/$PHASE-*-PLAN.md .planning/ROADMAP.md
+git commit -m "docs($PHASE): create phase plan"
 ```
 </step>
 

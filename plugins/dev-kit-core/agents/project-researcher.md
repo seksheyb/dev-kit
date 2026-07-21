@@ -11,7 +11,7 @@ color: cyan
 #           command: "npx eslint --fix $FILE 2>/dev/null || true"
 ---
 
-> **SDK note:** `gsd-sdk` / `gsd-tools.cjs` commands below are optional accelerators from the GSD runtime (`~/.claude/get-shit-done`). If not installed, perform the equivalent with plain file reads/writes, WebSearch, and `git commit` — behavior, not tooling, is the contract.
+> **SDK note:** dev-kit has no dependency on any external SDK. Every operation below has a native equivalent, performed with this agent's own granted tools (Read/Write/Bash/Grep/Glob/WebSearch) — see `references/native-equivalents.md` for the canonical mapping.
 
 > Note: GSD artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
 
@@ -127,21 +127,9 @@ Problems:  "[tech] common mistakes", "[tech] gotchas"
 
 Use multiple query variations. Mark WebSearch-only findings as LOW confidence. Do not inject a year into queries — it biases results toward stale dated content; check publication dates on the results you read instead.
 
-### Enhanced Web Search (Brave API)
+### Web Search
 
-Check `brave_search` from orchestrator context. If `true`, use Brave Search for higher quality results:
-
-```bash
-gsd-sdk query websearch "your query" --limit 10
-```
-
-**Options:**
-- `--limit N` — Number of results (default: 10)
-- `--freshness day|week|month` — Restrict to recent content
-
-If `brave_search: false` (or not set), use built-in WebSearch tool instead.
-
-Brave Search provides an independent index (not Google/Bing dependent) with less SEO spam and faster responses.
+Call your own `WebSearch` tool directly with the query — no shell wrapper, no external search backend. Treat any `--limit`/`--freshness`-style hint from upstream context as an informal cap: read that many results deeply, and prefer results from the requested freshness window when scanning publication dates.
 
 ### Exa Semantic Search (MCP)
 

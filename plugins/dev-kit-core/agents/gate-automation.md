@@ -1,6 +1,6 @@
 ---
 name: gate-automation
-description: Sprint Automation Coverage gate. Identifies primary user flows added or materially changed in the sprint by examining the sprint diff, determines the project's automation surface (Playwright for web lanes, Maestro for mobile), dispatches the matching fullstack-dev-skills test skill to generate golden + critical edge-case flows, runs them locally, checks for an on-demand e2e CI run, and returns only a schema-compliant JSON summary. Spawned after the adversarial review loop terminates cleanly, before sprint tag.
+description: Sprint Automation Coverage gate. Identifies primary user flows added or materially changed in the sprint by examining the sprint diff, determines the project's automation surface (Playwright for web lanes, Maestro for mobile), invokes the matching test-design skill (playwright-expert or test-master) to generate golden + critical edge-case flows, runs them locally, checks for an on-demand e2e CI run, and returns only a schema-compliant JSON summary. Spawned after the adversarial review loop terminates cleanly, before sprint tag.
 tools: Read, Write, Edit, Bash, Skill, Glob, Grep
 ---
 
@@ -38,8 +38,8 @@ Your job: ensure every primary user flow added or materially changed in the spri
 4. Inspect existing flows (under `e2e/maestro/` and/or the Playwright test dir) to learn the project's conventions before authoring.
 
 5. For each primary flow, author one **golden-path** flow and — when the feature has a meaningful failure mode (auth-required-but-signed-out, empty state, network error / offline, permission denied, etc.) — one **critical edge-case** flow, on the surface that owns it:
-   - **Playwright** flows: invoke the `fullstack-dev-skills:playwright-expert` skill via the Skill tool and follow its guidance; place specs per the project's existing convention.
-   - **Maestro** flows: invoke the `fullstack-dev-skills:test-master` skill via the Skill tool for test-design guidance and write the Maestro YAML under `e2e/maestro/`.
+   - **Playwright** flows: invoke the `playwright-expert` skill via the Skill tool and follow its guidance; place specs per the project's existing convention.
+   - **Maestro** flows: invoke the `test-master` skill via the Skill tool for test-design guidance and write the Maestro YAML under `e2e/maestro/`.
 
 6. Run the new flows locally:
    - Playwright: use the project's runner script (`package.json` scripts) — typically `npx playwright test <files>`.

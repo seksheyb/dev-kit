@@ -11,7 +11,7 @@ color: cyan
 #           command: "npx eslint --fix $FILE 2>/dev/null || true"
 ---
 
-> **SDK note:** `gsd-sdk` / `gsd-tools.cjs` commands below are optional accelerators from the GSD runtime (`~/.claude/get-shit-done`). If not installed, perform the equivalent with plain file reads/writes, WebSearch, and `git commit` — behavior, not tooling, is the contract.
+> **SDK note:** dev-kit has no dependency on any external SDK. Every operation below has a native equivalent, performed with this agent's own granted tools (Read/Write/Bash/Grep/Glob/WebSearch) — see `references/native-equivalents.md` for the canonical mapping.
 
 > Note: GSD artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
 
@@ -162,21 +162,9 @@ When researching "best library for X": find what the ecosystem actually uses, do
 
 **WebSearch tips:** Use multiple query variations. Cross-verify with authoritative sources. Do not inject a year into queries — it biases results toward stale dated content; check publication dates on the results you read instead.
 
-## Enhanced Web Search (Brave API)
+## Web Search
 
-Check `brave_search` from init context. If `true`, use Brave Search for higher quality results:
-
-```bash
-gsd-sdk query websearch "your query" --limit 10
-```
-
-**Options:**
-- `--limit N` — Number of results (default: 10)
-- `--freshness day|week|month` — Restrict to recent content
-
-If `brave_search: false` (or not set), use built-in WebSearch tool instead.
-
-Brave Search provides an independent index (not Google/Bing dependent) with less SEO spam and faster responses.
+Call your own `WebSearch` tool directly with the query — no shell wrapper, no external search backend. Treat any `--limit`/`--freshness`-style hint from upstream context as an informal cap: read that many results deeply, and prefer results from the requested freshness window when scanning publication dates.
 
 ### Exa Semantic Search (MCP)
 
@@ -597,20 +585,14 @@ At research decision points, apply structured reasoning:
 Orchestrator provides: phase number/name, description/goal, requirements, constraints, output path.
 - Phase requirement IDs (e.g., AUTH-01, AUTH-02) — the specific requirements this phase MUST address
 
-Load phase context using init command:
-```bash
-INIT=$(gsd-sdk query init.phase-op "${PHASE}")
-if [[ "$INIT" == @file:* ]]; then INIT=$(cat "${INIT#@file:}"); fi
-```
+Load phase context natively (no init call — see `references/native-equivalents.md`):
+1. `Glob` `.planning/phases/*<PHASE>*/` (or use the orchestrator-provided output path directly) to resolve `phase_dir`. The `<NNN>` prefix of the matched directory name gives `phase_number`/`padded_phase`.
+2. `Read` `phase_dir/ROADMAP.md` and `phase_dir/REQUIREMENTS.md` if present — treat missing files as "not yet produced," not an error.
+3. `Read` `.planning/config.json` for `commit_docs` (default `true` if the key is absent).
 
-Extract from init JSON: `phase_dir`, `padded_phase`, `phase_number`, `commit_docs`.
+Also from `.planning/config.json` — include Validation Architecture section in RESEARCH.md unless `workflow.nyquist_validation` is explicitly `false`. If the key is absent or `true`, include the section.
 
-Also read `.planning/config.json` — include Validation Architecture section in RESEARCH.md unless `workflow.nyquist_validation` is explicitly `false`. If the key is absent or `true`, include the section.
-
-Then read CONTEXT.md if exists:
-```bash
-cat "$phase_dir"/*-CONTEXT.md 2>/dev/null
-```
+Then `Read` `phase_dir/*-CONTEXT.md` if it exists (treat absence as empty — no locked decisions yet).
 
 **If CONTEXT.md exists**, it constrains research:
 
@@ -633,19 +615,11 @@ Check for knowledge graph:
 ls .planning/graphs/graph.json 2>/dev/null
 ```
 
-If graph.json exists, check freshness:
-
-```bash
-node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" graphify status
-```
+If graph.json exists, check freshness by invoking the `graphify` skill directly (it owns this capability natively in dev-kit — no external binary) with a status request.
 
 If the status response has `stale: true`, note for later: "Graph is {age_hours}h old -- treat semantic relationships as approximate." Include this annotation inline with any graph context injected below.
 
-Query the graph for each major capability in the phase scope (2-3 queries per D-05, discovery-focused):
-
-```bash
-node "$HOME/.claude/get-shit-done/bin/gsd-tools.cjs" graphify query "<capability-keyword>" --budget 1500
-```
+Query the graph for each major capability in the phase scope (2-3 queries per D-05, discovery-focused) by invoking the `graphify` skill with each query term.
 
 Derive query terms from the phase goal and requirement descriptions. Examples:
 - Phase "user authentication and session management" -> query "authentication", "session", "token"
@@ -846,7 +820,7 @@ Write to: `$PHASE_DIR/$PADDED_PHASE-RESEARCH.md`
 ## Step 7: Commit Research (optional)
 
 ```bash
-gsd-sdk query commit "docs($PHASE): research phase domain" --files "$PHASE_DIR/$PADDED_PHASE-RESEARCH.md"
+git add "$PHASE_DIR/$PADDED_PHASE-RESEARCH.md" && git commit -m "docs($PHASE): research phase domain"
 ```
 
 ## Step 8: Return Structured Result

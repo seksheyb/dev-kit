@@ -11,7 +11,7 @@ color: purple
 #           command: "npx eslint --fix $FILE 2>/dev/null || true"
 ---
 
-> **SDK note:** `gsd-sdk` / `gsd-tools.cjs` commands below are optional accelerators from the GSD runtime (`~/.claude/get-shit-done`). If not installed, perform the equivalent with plain file reads/writes, WebSearch, and `git commit` — behavior, not tooling, is the contract.
+> **SDK note:** dev-kit has no dependency on any external SDK. Every operation below is performed natively with this agent's own granted tools (Read/Write/Bash/Glob/Grep) — see `references/native-equivalents.md` for the exact replacement of each operation.
 
 > Note: GSD artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
 
@@ -376,11 +376,11 @@ This annotation is consumed by downstream workflows (`new-project`, `progress`) 
 | 2. Name | 0/2 | Not started | - |
 ```
 
-Reference full template: `~/.claude/get-shit-done/templates/roadmap.md`
+Reference full template: `@references/roadmap-template.md`
 
 ## STATE.md Structure
 
-Use template from `~/.claude/get-shit-done/templates/state.md`.
+Use template from `@references/state-template.md`.
 
 Key sections:
 - Project Reference (core value, current focus)
@@ -562,7 +562,7 @@ When files are written and returning to orchestrator:
 
 ### Files Ready for Review
 
-User can review actual files in the editor or via SDK queries (e.g. `gsd-sdk query roadmap.analyze` and `gsd-sdk query state.load`) instead of ad-hoc shell `cat`.
+User can review actual files in the editor. To re-derive this summary later, `Read` ROADMAP.md directly and reason over its phase table/dependencies yourself, and `Read` STATE.md for current position — no separate analysis step exists to call (see `references/native-equivalents.md`).
 
 {If gaps found during creation:}
 

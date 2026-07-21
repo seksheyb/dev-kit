@@ -11,7 +11,7 @@ color: purple
 #           command: "npx eslint --fix $FILE 2>/dev/null || true"
 ---
 
-> **SDK note:** `gsd-sdk` / `gsd-tools.cjs` commands below are optional accelerators from the GSD runtime (`~/.claude/get-shit-done`). If not installed, perform the equivalent with plain file reads/writes, WebSearch, and `git commit` — behavior, not tooling, is the contract.
+> **SDK note:** dev-kit has no dependency on any external SDK. Every operation below is performed natively with this agent's own granted tools (Read/Write/Bash) — see `references/native-equivalents.md` for the exact replacement of each operation.
 
 > Note: GSD artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
 
@@ -59,8 +59,6 @@ cat .planning/research/STACK.md
 cat .planning/research/FEATURES.md
 cat .planning/research/ARCHITECTURE.md
 cat .planning/research/PITFALLS.md
-
-# Planning config loaded via gsd-sdk query (or gsd-tools.cjs) in commit step
 ```
 
 Parse each file to extract:
@@ -132,7 +130,7 @@ Identify gaps that couldn't be resolved and need attention during planning.
 
 **ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-Use template: ~/.claude/get-shit-done/templates/research-project/SUMMARY.md
+Use template: @references/research-summary-template.md
 
 Write to `.planning/research/SUMMARY.md`
 
@@ -140,8 +138,11 @@ Write to `.planning/research/SUMMARY.md`
 
 The 4 parallel researcher agents write files but do NOT commit. You commit everything together.
 
+Per `references/native-equivalents.md` (`commit`):
+
 ```bash
-gsd-sdk query commit "docs: complete project research" --files .planning/research/
+git add .planning/research/
+git commit -m "docs: complete project research"
 ```
 
 ## Step 8: Return Summary
@@ -152,7 +153,7 @@ Return brief confirmation with key points for the orchestrator.
 
 <output_format>
 
-Use template: ~/.claude/get-shit-done/templates/research-project/SUMMARY.md
+Use template: @references/research-summary-template.md
 
 Key sections:
 - Executive Summary (2-3 paragraphs)

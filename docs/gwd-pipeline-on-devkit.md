@@ -38,7 +38,7 @@ cycle. Conditional stages are marked *(if …)*.
 | **4** | Design system *(if UI)* | `design-consultation` → `design-html` → `design-handoff` · `plan-review-design` (lens) | product → `DESIGN.md` + build prompts |
 | **5** | Phase discovery | `codebase-mapper` ×4 · `pattern-mapper` · `assumptions-analyzer` · `advisor-researcher` · `phase-researcher` · `graphify` (query) | phase → `CONTEXT.md`, `PATTERNS.md`, `RESEARCH.md`, codebase maps |
 | **6** | AI / UI phase specs *(conditional)* | *(AI)* `domain-researcher` → `eval-planner`/`eval-auditor` (data-ai lane) · *(UI)* `ui-researcher` → `ui-checker` | phase → `AI-SPEC.md` / `UI-SPEC.md` |
-| **7** | Plan the phase | `writing-plans` · `planner` · `plan-review` (cmd) → `plan-reviewer` → 5 lenses · `gate-plan-review` · `analyze` | context → `PLAN.md` (waves + tracks), reviewed & complexity-gated |
+| **7** | Plan the phase | `writing-plans` · `planner` · `plan-review` (cmd) → `plan-reviewer` → 4 lenses · `gate-plan-review` · `analyze` | context → `PLAN.md` (waves + tracks), reviewed & complexity-gated |
 | **8** | Execute the phase | `using-git-worktrees` · `sprint-execution` · `test-driven-development` · `dispatching-parallel-agents` · `fullstack-guardian`/`secure-code-guardian` · `refactoring-specialist` · `guard` · `verification-before-completion` · **lane skills** | plan → code + tests, per-track parallel |
 | **9** | Debug *(as needed)* | `debug` (cmd) → `debugger` ← `systematic-debugging` · `learn` | failure → root-cause fix + regression test |
 | **10** | Adversarial review ↔ fix loop | `review` (cmd) → `code-review-gate` (round) ↔ `bugfix-wave` · `code-review-protocol` · `qa` (cmd/agent) · `design-reviewer` · `ui-auditor` · `accessibility-tester` · `devex-review` | code → fixes (loop ≤6) |
@@ -88,8 +88,7 @@ dev-kit supplies the assets, not the branch logic.)
 | `plan-review-design` (S7) | The plan has any UI scope | Auto-reports "not applicable", verdict APPROVE, completeness N/A |
 | `plan-review-devex` (S7) | The plan has a developer-facing surface (API/CLI/SDK) | Auto-reports "not applicable", auto-approve N/A |
 | `plan-review-eng` / `-goal-backward` (S7) | **Always** (unconditional lenses) | — |
-| `plan-review-ceo` (S7) | **Always** runs, but *how* varies: a locked Scope Decision Record from `spec-review-cpo` exists | Inherits posture/premise, checks only for drift (light). No record exists → runs its own full Step 0 (heavy, self-sufficient fallback) |
-| `spec-review-cpo` (S1) | A spec exists and a real scope/strategy call is needed before planning | Skip; Stage 7's `plan-review-ceo` falls back to running its own Step 0 from scratch (heavier, later) |
+| `spec-review-cpo` (S1) | A spec exists and a real scope/strategy call is needed before planning | Skip; no strategic/scope challenge happens for this spec at all — nothing downstream re-checks it |
 | `refactoring-specialist` (S8) | A track touches existing code | Skip; new-file tracks don't need it |
 | `secure-code-guardian` (S8) | Track implements auth / input handling / crypto | Skip |
 | `fullstack-guardian` (S8) | Feature spans frontend + backend together | Use narrower lane skills instead |
@@ -147,13 +146,15 @@ Turn a PRD/idea into a validated, unambiguous, testable spec with a numbered sto
    cheapest experiment for the top few; validated assumptions become groomed, sprint-ready backlog items.
 7. **`market-researcher`** *(agent)* — sourced market-sizing / competitive / trends intelligence → `MARKET.md`,
    consumed by `spec-review-cpo` below rather than re-derived.
-8. **`spec-review-cpo`** *(skill)* — the real product/strategy gate at this stage: challenges the premise, commits
-   to a scope posture (expand/hold/cut), scores prioritization (RICE/Kano/JTBD/North Star) against the `US-xxx`
-   Theme→Pillar hierarchy if present, and writes a locked **Scope Decision Record** into `spec.md`'s `## CPO Review`
-   section. `plan-review-ceo` at Stage 7 *inherits* this record instead of re-litigating strategy once a plan
-   exists — see that lens's own "Relationship to `spec-review-cpo`" section. `the-fool`'s adversarial modes
-   (pre-mortem, red-team) remain available as an optional extra pressure-test for unusually high-stakes specs, but
-   are no longer required by default now that CPO's own posture is inherently adversarial.
+8. **`spec-review-cpo`** *(skill)* — the pipeline's **only** product/strategy gate, and it runs here, once, before
+   any plan exists: challenges the premise, commits to a scope posture (expand/hold/cut), scores prioritization
+   (RICE/Kano/JTBD/North Star) against the `US-xxx` Theme→Pillar hierarchy if present, and writes a **Scope
+   Decision Record** into `spec.md`'s `## CPO Review` section. Nothing downstream re-litigates strategy once this
+   has run — Stage 7's lenses (`eng`/`design`/`devex`/`goal-backward`) are execution-quality checks, not scope
+   checks; the pipeline deliberately does not run `plan-review-ceo` at any stage (see the note at the top of
+   Stage 7). `the-fool`'s adversarial modes (pre-mortem, red-team) remain available as an optional extra
+   pressure-test for unusually high-stakes specs, but are no longer required by default now that CPO's own posture
+   is inherently adversarial.
 
 ### Stage 2 — Architecture & tech stack *(GWD steps 4–5)*
 
@@ -223,15 +224,20 @@ Build the context a planner needs, cheaply, before writing tasks.
 
 ### Stage 7 — Plan the phase *(GWD step 11)*
 
+**No scope/strategy lens here, by design.** That question was already settled at Stage 1 by `spec-review-cpo` and
+locked into the spec's Scope Decision Record. `plan-review-ceo` is deliberately **not** part of this pipeline at
+any stage — running a second founder-mode scope review after the spec has already committed to a posture would
+re-litigate a decision that's already made, on an artifact (the plan) whose job is execution, not strategy. The 4
+lenses below are all execution-quality checks.
+
 1. **`writing-plans`** *(skill)* / **`planner`** *(agent)* — decompose the phase into 2–3-task plans grouped into
    dependency-ordered **waves + tracks**, derive goal-backward must-haves, forbid scope-reduction language, emit
    per-task `complexity_signals`. Output: `PLAN.md`.
 2. **`plan-review`** *(command)* → **`plan-reviewer`** *(agent)*, dispatched once per lens **in parallel**:
-   **`plan-review-ceo`** (scope/strategy — inherits the locked Scope Decision Record from `spec-review-cpo` at
-   Stage 1 instead of re-deriving posture/premise from scratch; only checks the plan for drift against it, then
-   runs its own 11 technical-adjacent sections in full), **`plan-review-eng`** (soundness/tests),
+   **`plan-review-eng`** (architectural soundness / code quality / test coverage / performance),
    **`plan-review-design`** (UI), **`plan-review-devex`** (developer-facing surface),
-   **`plan-review-goal-backward`** (will it actually hit the goal).
+   **`plan-review-goal-backward`** (will it actually hit the goal — requirement coverage, dependency correctness,
+   scope-reduction detection).
 3. **`gate-plan-review`** *(agent)* — independent, deterministic complexity-score gate on every track's declared
    Model/Effort, plus a **non-Claude** review engine (Gemini → Codex → Claude fallback, per
    `references/independent-review.md`). `gate_passed: true` unlocks Wave 1.
@@ -242,7 +248,7 @@ Build the context a planner needs, cheaply, before writing tasks.
 setting; the conditional-gates table already auto-prunes `plan-review-design`/`-devex` for phases with no UI/dev-facing
 surface. For everyday phases, the **minimum bar** is `gate-plan-review` + `plan-review-goal-backward` — the one gate
 that verifies the plan actually achieves its goal, paired with the one that verifies complexity/effort honesty and
-architectural alignment. Escalate to the full lens set (`ceo`, `eng`, plus `design`/`devex` when applicable) for
+architectural alignment. Escalate to the full lens set (`eng`, plus `design`/`devex` when applicable) for
 higher-stakes phases: new architecture, security/payments/auth surface, or anything touching >15 files. This is a
 project-level policy choice, not a hard rule — set it once in `CLAUDE.md` and `plan-review` (command) can default to
 the lighter tier, with the full set still available as an explicit escalation.
@@ -352,11 +358,6 @@ the lighter tier, with the full set still available as an explicit escalation.
   production breaks; hands off to `compliance-auditor` for breach-notification obligations. `chaos-engineer` (infra
   lane) proactively rehearses these failures.
 - **`retro`** *(command)* → **`retro`** *(agent)* — periodic engineering retrospective mined from git history.
-- **`plan-review-ceo`** *(optional, reused — not a new skill)* — a light strategic-drift checkpoint: does the shipped
-  milestone still match the Scope Decision Record `spec-review-cpo` locked at Stage 1? This is deliberately
-  **in addition to**, not instead of, the Stage 7 pass — catching a scope/strategy problem in a written plan is
-  cheap; catching the same problem only after code, tests, and a deploy exist is not. Skip if the milestone already
-  passed a Stage 7 CEO check with no drift and nothing has since changed.
 - **Product lane** analytics — `ab-test-analysis`, `cohort-analysis`, `growth-loops` — close the loop back to Stage 1's
   assumption bank with real usage evidence.
 - **Milestone archive + git tag** — the terminal state (dev-kit has no `/complete-milestone` command; this is the
@@ -423,7 +424,7 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 - **Stage 4:** `design-consultation`, `design-html`, `design-handoff`, `plan-review-design`
 - **Stage 5:** `codebase-mapper`, `pattern-mapper`, `assumptions-analyzer`, `advisor-researcher`, `phase-researcher`
 - **Stage 6:** `domain-researcher`, `ui-researcher`, `ui-checker`
-- **Stage 7:** `writing-plans`, `planner`, `plan-review` (cmd), `plan-reviewer`, `plan-review-ceo`, `plan-review-devex`, `plan-review-goal-backward`, `gate-plan-review`, `analyze`
+- **Stage 7:** `writing-plans`, `planner`, `plan-review` (cmd), `plan-reviewer`, `plan-review-devex`, `plan-review-goal-backward`, `gate-plan-review`, `analyze` (`plan-review-eng`/`plan-review-design` already counted under Stage 2/4; `plan-review-ceo` intentionally excluded from this pipeline — see Stage 7's opening note)
 - **Stage 8:** `using-git-worktrees`, `sprint-execution`, `test-driven-development`, `dispatching-parallel-agents`, `fullstack-guardian`, `secure-code-guardian`, `refactoring-specialist`, `guard`, `verification-before-completion`
 - **Stage 9:** `debug` (cmd), `debugger`, `systematic-debugging`
 - **Stage 10:** `review` (cmd), `code-review-gate`, `bugfix-wave`, `code-review-protocol`, `qa` (cmd), `qa` (agent), `design-reviewer`, `ui-auditor`, `accessibility-tester`, `devex-review`

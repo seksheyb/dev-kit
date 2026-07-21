@@ -25,8 +25,8 @@ renaming, or wiring an engine touches exactly one adapter file.
 | `claude` | `review-engines/claude.md` | Self-family (always available) | Default one-shot review; terminal fallback for every role |
 | `gemini` | `review-engines/gemini.md` | Cross-model | Large-context, structured-data-heavy passes; default plan-gate review |
 | `codex` | `review-engines/codex.md` | Cross-model | Independent adversarial diff passes; default for review rounds & docs-drift |
-| `cursor` | `review-engines/cursor.md` | Cross-model | Explicit override where a Cursor agent is wired up (recipe stub) |
-| `antigravity` | `review-engines/antigravity.md` | Cross-model | Explicit override where an Antigravity agent is wired up (recipe stub) |
+| `cursor` | `review-engines/cursor.md` | Cross-model | Bash-CLI reviewer (`cursor-agent`); explicit override where installed |
+| `antigravity` | `review-engines/antigravity.md` | Cross-model | Bash-CLI reviewer running Gemini; explicit override, and a valid `gemini` binding where installed |
 
 **Adding an engine:** drop a new adapter file in `references/review-engines/` that (1)
 takes a brief by file path, (2) reads the diff/plan/spec itself, and (3) writes its

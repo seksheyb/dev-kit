@@ -3,10 +3,6 @@
 > One of the review-engine adapters indexed by `references/independent-review.md`. This
 > file is the single place the concrete Cursor binding lives. Gates reference this engine
 > by name (`cursor`) only — never its binding inline.
->
-> **Recipe stub:** dev-kit ships no built-in Cursor binding. This adapter is an
-> availability-gated recipe — wire it to your environment's Cursor agent, or leave it
-> unavailable and callers fall back.
 
 **Engine id:** `cursor`
 
@@ -17,10 +13,11 @@ Claude-authored work.
 binary) succeeds. If the binary is absent, this engine is unavailable and callers fall
 back per the role's chain.
 
-**Invocation:** Shell out to the Cursor agent CLI (`cursor-agent` or the project-configured
-equivalent) with a path-only brief, telling it to read the diff/plan/spec paths itself and
-write its review to the gate-specified output file. Same content-passing discipline as
-`codex`.
+**Invocation:** Shell out via **Bash** to the Cursor agent CLI (`cursor-agent …`, or the
+project-configured equivalent) with a path-only brief, telling it to read the diff/plan/spec
+paths itself and write its review to the gate-specified output file. dev-kit does not bundle
+the CLI — it must be installed in the environment; the availability check gates on that.
+Same content-passing discipline as `codex`.
 
 **Content-passing:** paths only — never inline diff, plan, or spec content. The agent
 reads the files (and runs `git diff` where relevant) itself.

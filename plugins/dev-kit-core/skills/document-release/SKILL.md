@@ -347,11 +347,12 @@ missed. This step is informational only; it never edits anything without approva
    flags, config keys, endpoints) that shipped undocumented, stale examples/paths/counts/
    version numbers, and CHANGELOG entries that over- or under-sell what shipped. Be terse —
    just the gaps." Include the list of touched doc paths.
-3. If the `codex` plugin is installed, invoke its review skill (e.g. `codex:rescue`) via the
-   Skill tool with that brief — it runs the diff and review independently in its own context.
-   If it isn't installed or the call fails, dispatch the same brief to a general-purpose
-   subagent (Task tool) instead. Either way, this step is best-effort: if neither path is
-   available, skip it and say so.
+3. Select an external review engine per `@references/independent-review.md` (role: Docs-vs-code
+   drift review — default `codex`, fallback order `codex` → `claude`). If the default engine's
+   plugin (e.g. `codex`, via its `codex:rescue` skill) is installed, invoke it via the Skill tool
+   with that brief — it runs the diff and review independently in its own context. If it isn't
+   installed or the call fails, dispatch the same brief to a general-purpose subagent (Task tool)
+   instead. Either way, this step is best-effort: if neither path is available, skip it and say so.
 4. If the review finds zero gaps, say "Docs match what shipped — no gaps." and continue.
    Otherwise present the findings, then ask the user how to handle them: apply all the fixes
    now, skip and leave docs as-is, or decide per-finding. Apply only what's approved.

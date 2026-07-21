@@ -388,8 +388,8 @@ path). Write JSON matching the schema referenced by the caller (typically
 
 ### 4.4 — Compute next_action
 
-- If `unresolved` is empty: `"dispatch gate-codex-round (round <K+1>)"` (or caller-specified
-  follow-up).
+- If `unresolved` is empty: `"dispatch code-review-gate in round mode (round <K+1>)"` (or
+  caller-specified follow-up).
 - Else: `"escalate <count> unresolved classes"`.
 
 ### 4.5 — Return to caller

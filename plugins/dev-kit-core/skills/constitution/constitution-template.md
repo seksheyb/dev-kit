@@ -38,7 +38,8 @@
 <!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
 
 [SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+<!-- Example: Code review requirements, testing gates, deployment approval process, independent
+     (multi-engine) review for high-risk changes, etc. -->
 
 ## Governance
 <!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->

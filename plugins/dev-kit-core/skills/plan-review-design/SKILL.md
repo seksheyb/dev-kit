@@ -36,13 +36,13 @@ You are not here to rubber-stamp this plan's UI. You are here to ensure that whe
 5. **The question reflex** — First instinct is questions, not opinions. "Who is this for? What did they try before this?"
 6. **Edge case paranoia** — 47 chars? Zero results? Network fails? Colorblind? RTL language?
 7. **The "Would I notice?" test** — Invisible = perfect. The highest compliment is not noticing the design.
-8. **Principled taste** — "This feels wrong" must be traceable to a broken principle. Taste is debuggable, not subjective.
+8. **Principled taste** — "This feels wrong" must be traceable to a broken principle. Taste is debuggable, not subjective (Zhuo: "A great designer defends her work based on principles that last").
 9. **Subtraction default** — "As little design as possible" (Rams). "Subtract the obvious, add the meaningful" (Maeda).
 10. **Time-horizon design** — First 5 seconds (visceral), 5 minutes (behavioral), 5-year relationship (reflective) — design for all three (Norman).
 11. **Design for trust** — Pixel-level intentionality about safety, identity, and belonging (Gebbia).
 12. **Storyboard the journey** — Every moment is a scene with a mood, not just a screen with a layout.
 
-Key references: Rams' 10 Principles, Norman's 3 Levels, Nielsen's 10 Heuristics, Gestalt principles, Krug (Don't Make Me Think — 3-second scan test, trunk test, satisficing, goodwill reservoir), Redish (writing for scanning), Jarrett (forms), Ive ("People can sense care and carelessness"). Never say "this feels off" without tracing it to a broken principle. When something seems cluttered, apply subtraction before suggesting additions.
+Key references: Rams' 10 Principles, Norman's 3 Levels, Nielsen's 10 Heuristics, Gestalt principles, Krug (Don't Make Me Think — 3-second scan test, trunk test, satisficing, goodwill reservoir), Redish (writing for scanning), Jarrett (forms), Glass ("Your taste is why your work disappoints you"), Ive ("People can sense care and carelessness"), Gebbia (designing for trust between strangers, storyboarding emotional journeys). Never say "this feels off" without tracing it to a broken principle. When something seems cluttered, apply subtraction before suggesting additions.
 
 ## UX Principles: How Users Actually Behave
 
@@ -62,6 +62,10 @@ Observed behavior, not preferences.
 **The goodwill reservoir:** Every friction point depletes it. Depletes faster: hiding info users want (pricing, contact), punishing users for not doing it your way (input format requirements), asking for unnecessary information, sizzle in the way (splash screens, forced tours), sloppy appearance. Replenishes: make the main thing obvious, answer questions upfront, save steps, easy error recovery.
 
 **Mobile: same rules, higher stakes.** Never sacrifice usability for space. Affordances must be VISIBLE. Touch targets 44px minimum. Ruthless prioritization: things needed in a hurry close at hand.
+
+## Priority Hierarchy Under Context Pressure
+
+If context or time runs short, review in this order and never skip the front of the list: Step 0 (scope) > Interaction State Coverage (Pass 2) > AI Slop Risk (Pass 4) > Information Architecture (Pass 1) > User Journey (Pass 3) > everything else. A plan that nails states and dodges AI slop but skips journey polish still ships intentional; the reverse does not.
 
 ## Step 0: Design Scope Assessment
 
@@ -130,7 +134,7 @@ Rate 0-10: Does the plan describe specific, intentional UI — or generic patter
 6. Does motion improve hierarchy or atmosphere?
 7. Would the design feel premium with all decorative shadows removed?
 
-**Landing page rules:** first viewport reads as one composition, not a dashboard; brand-first hierarchy (brand > headline > body > CTA); expressive, purposeful typography — no default stacks (Inter, Roboto, Arial, system); no flat single-color backgrounds; hero full-bleed, edge-to-edge; hero budget = brand, one headline, one supporting sentence, one CTA group, one image; no cards in hero — cards only when the card IS the interaction; one job per section; 2-3 intentional motions minimum (entrance, scroll-linked, hover/reveal); CSS variables for color, one accent color default; copy is product language, not design commentary — "if deleting 30% improves it, keep deleting."
+**Landing page rules:** first viewport reads as one composition, not a dashboard; brand-first hierarchy (brand > headline > body > CTA); expressive, purposeful typography — no default stacks (Inter, Roboto, Arial, system); no flat single-color backgrounds; hero full-bleed, edge-to-edge; hero budget = brand, one headline, one supporting sentence, one CTA group, one image; no cards in hero — cards only when the card IS the interaction; one job per section; 2-3 intentional motions minimum (entrance, scroll-linked, hover/reveal); CSS variables for color, one accent color default; copy is product language, not design commentary — "if deleting 30% improves it, keep deleting." Beautiful defaults: composition-first, brand as the loudest text on the page, two typefaces max, cardless by default, first viewport reads as a poster, not a document.
 
 **App UI rules:** calm surface hierarchy, strong typography, few colors; dense but readable, minimal chrome; organize into primary workspace, navigation, secondary context, one accent; avoid dashboard-card mosaics, thick borders, decorative gradients, ornamental icons; copy is utility language (orientation, status, action), not mood/brand/aspiration; section headings state what an area is or what the user can do.
 
@@ -173,7 +177,7 @@ Each entry becomes a finding with a recommendation + WHY + alternatives. Deferre
 
 * **"NOT in scope"** — design decisions considered and explicitly deferred, one-line rationale each.
 * **"What already exists"** — existing design system, UI patterns, and components the plan should reuse.
-* **Design debt items** — missing a11y, unresolved responsive behavior, deferred empty states; each with What / Why / Pros / Cons / Context.
+* **Design debt items** — missing a11y, unresolved responsive behavior, deferred empty states; each with What / Why / Pros / Cons / Context / Depends-on-or-blocked-by.
 * **Unresolved decisions** — from Pass 7, with consequences.
 
 ## Completion Summary

@@ -147,12 +147,16 @@ Once you have a root cause hypothesis, lock your edits to the narrowest director
 
    | Pattern | Signature | Where to look |
    |---------|-----------|---------------|
-   | Race condition | Intermittent, timing-dependent | Concurrent access to shared state |
-   | Nil/null propagation | NoMethodError, TypeError | Missing guards on optional values |
+   | Race condition | Intermittent, timing-dependent | Concurrent access to shared state, missing `await` |
+   | Nil/null propagation | NoMethodError, TypeError, "undefined is not..." | Missing guards on optional values |
    | State corruption | Inconsistent data, partial updates | Transactions, callbacks, hooks |
    | Integration failure | Timeout, unexpected response | External API calls, service boundaries |
    | Configuration drift | Works locally, fails in staging/prod | Env vars, feature flags, DB state |
    | Stale cache | Shows old data, fixes on cache clear | Redis, CDN, browser cache |
+   | Off-by-one / boundary error | Missing first/last item, index out of range | Loop bounds, `<` vs `<=`, array indices |
+   | Closure / stale state | Wrong or stale value inside a callback | Loop variable capture, React state closures |
+   | Memory leak | Growing memory, gradual slowdown | Uncleaned listeners, intervals, subscriptions |
+   | Type coercion | Unexpected truthy/falsy or comparison result | `==` vs `===`, implicit conversions |
 
 2. **Find Working Examples**
    - Locate similar working code in same codebase

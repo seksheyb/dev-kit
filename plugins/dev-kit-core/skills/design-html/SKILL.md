@@ -38,6 +38,13 @@ consistency.
 what are the major sections, where am I, how do I search. Trunk test: cover everything except
 the navigation; you should still know the answers.
 
+**The goodwill reservoir:** users start with a reservoir of goodwill; every friction point
+depletes it. Depletes faster: hiding info users want (pricing, contact, shipping); punishing
+users for not doing things your way (rigid input formatting); asking for unnecessary
+information; sizzle in their way (splash screens, forced tours, interstitials); sloppy
+appearance. Replenishes: make the main thing obvious; answer what users want to know
+upfront; save them steps; make errors easy to recover from.
+
 **Mobile:** same rules, higher stakes. Touch targets ≥44px. Affordances must be visible.
 Prioritize ruthlessly.
 

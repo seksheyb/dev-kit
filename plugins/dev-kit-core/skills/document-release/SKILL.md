@@ -296,11 +296,22 @@ If TODOS.md (or equivalent) does not exist, skip.
    - **Documentation debt** — if the coverage map found gaps, a subsection listing:
      critical gaps (new public surface with zero coverage), common gaps (reference-only
      coverage), and stale diagrams (entity names that drifted from the code). Each item gets
-     a one-line description of what's missing and which Diataxis quadrant would fill it.
+     a one-line description of what's missing and which Diataxis quadrant would fill it. If
+     any debt items exist, suggest adding a `docs-debt` label to the PR/MR.
 4. Before writing the body back, scan it for secrets/credentials/PII — do not push a body
    containing anything sensitive.
 5. Write it back with `gh pr edit --body-file` or `glab mr update -d`. If no PR/MR exists,
    skip with a message. If the edit fails, warn and continue — the changes are in the commit.
+
+**PR/MR title sync:** if the project follows a `v<VERSION> <type>: <summary>` title
+convention (check how existing PR/MR titles or the ship/release workflow format theirs) and
+Step 8 bumped VERSION after the PR/MR was already opened, the title's version prefix is now
+stale. Read the current title (`gh pr view --json title -q .title` /
+`glab mr view -F json` → `.title`) and the current VERSION file. If the title has no version
+prefix, prepend `v<VERSION> `; if it has a different version prefix, replace it; if it
+already matches, leave it alone. Push the corrected title (`gh pr edit --title` /
+`glab mr update -t`). If no PR/MR exists or VERSION doesn't exist, skip this sub-step. If the
+edit fails, warn and continue — do not block on title sync failure.
 
 **Structured doc health summary (final output):**
 
@@ -319,6 +330,31 @@ Status is one of: Updated / Current / Voice polished / Not bumped / Already bump
 If the coverage map identified gaps, append the coverage table and any diagram drift notes.
 If all coverage is complete and no diagrams drifted: "Coverage: all shipped features have
 adequate documentation."
+
+---
+
+## Step 10: Independent Documentation Review
+
+After the updates above are written, run one independent second-opinion pass that checks the
+docs against what actually shipped — a different reviewer catches drift the primary pass
+missed. This step is informational only; it never edits anything without approval.
+
+1. Recompute the diff range (`git merge-base <base> HEAD`, or fall back to `<base>`) rather
+   than trusting an in-memory value from an earlier step.
+2. Build a review brief: "Run `git diff` yourself against this range to see what changed on
+   this branch, then read the docs this run touched (plus any doc whose claims the diff
+   affects). Find: doc claims that no longer match the code, new public surface (commands,
+   flags, config keys, endpoints) that shipped undocumented, stale examples/paths/counts/
+   version numbers, and CHANGELOG entries that over- or under-sell what shipped. Be terse —
+   just the gaps." Include the list of touched doc paths.
+3. If the `codex` plugin is installed, invoke its review skill (e.g. `codex:rescue`) via the
+   Skill tool with that brief — it runs the diff and review independently in its own context.
+   If it isn't installed or the call fails, dispatch the same brief to a general-purpose
+   subagent (Task tool) instead. Either way, this step is best-effort: if neither path is
+   available, skip it and say so.
+4. If the review finds zero gaps, say "Docs match what shipped — no gaps." and continue.
+   Otherwise present the findings, then ask the user how to handle them: apply all the fixes
+   now, skip and leave docs as-is, or decide per-finding. Apply only what's approved.
 
 ---
 

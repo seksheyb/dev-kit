@@ -20,6 +20,7 @@ Learnings live in an append-only JSONL file at `.claude/learnings.jsonl` in the 
 - **Types:** `pattern` (reusable approach), `pitfall` (what NOT to do), `preference` (user stated), `architecture` (structural decision), `tool` (library/framework insight), `operational` (project environment/CLI/workflow knowledge).
 - **Sources:** `observed` (found in the code), `user-stated`, `inferred` (AI deduction).
 - **Confidence:** 1-10, honest. A verified observed pattern is 8-9; an unsure inference is 4-5; an explicit user preference is 10.
+- **Confidence decay (display-time only):** when showing an entry, `observed` and `inferred` entries lose 1 point per 30 days since their `ts` (floored at 0) — an unconfirmed observation fades if nothing reconfirms it. `user-stated` entries never decay. Compute this at read time from the stored `confidence`; never rewrite the value on disk.
 - **Dedup rule:** same `key`+`type` → the latest entry wins (append-only; never rewrite except in prune).
 
 Any workflow (review, ship, debugging) may append to this ledger when it discovers something non-obvious. **Only log genuine discoveries** — the test is "would this insight save time in a future session?"
@@ -35,11 +36,11 @@ Any workflow (review, ship, debugging) may append to this ledger when it discove
 
 ## Show recent (default)
 
-Read the last ~20 deduped entries (`tail -40 .claude/learnings.jsonl`, dedup by key+type keeping the latest) and present them grouped by type, with key, insight, confidence, and date. If the file doesn't exist: "No learnings recorded yet. As you work, insights get captured here — or add one with `/learn add`."
+Read the last ~20 deduped entries (`tail -40 .claude/learnings.jsonl`, dedup by key+type keeping the latest), apply confidence decay to get each entry's effective confidence, and present them grouped by type — within each type, ordered by effective confidence descending then by recency — with key, insight, effective confidence, and date. If the file doesn't exist: "No learnings recorded yet. As you work, insights get captured here — or add one with `/learn add`."
 
 ## Search
 
-Case-insensitive match of the query against `key`, `insight`, and `files` (grep the JSONL, or `jq` if available: `jq -c 'select((.key + " " + .insight) | test("QUERY"; "i"))' .claude/learnings.jsonl`). Dedup, then present matches clearly. No matches → say so.
+Case-insensitive match of the query against `key`, `insight`, and `files` (grep the JSONL, or `jq` if available: `jq -c 'select((.key + " " + .insight) | test("QUERY"; "i"))' .claude/learnings.jsonl`). Dedup, apply confidence decay, sort by effective confidence descending then recency, then present matches clearly. No matches → say so.
 
 ## Prune
 

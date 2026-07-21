@@ -106,8 +106,10 @@ After each wave's subagents return, and before Wave N+1:
 - **Per-track/per-wave review:** after merging, generate a review package (commit list + diff stat + full diff written to one file) and dispatch a reviewer subagent with the file path — never ask a reviewer to re-derive the diff, and never use `HEAD~1` as base (it silently drops all but the last commit); use the base commit recorded before dispatch.
 - **Fix loop:** dispatch fix subagents for Critical/Important findings; each fix dispatch names the covering test files and carries the contract to re-run them and report results. Re-review after fixes. Record Minor findings in the ledger for final-review triage. Don't move on with open Critical/Important issues.
 - **Final whole-branch review:** after all waves, run one broad review over `merge-base..HEAD` on the most capable model. If it returns findings, dispatch ONE fix subagent with the complete findings list — not one fixer per finding (per-finding fixers each rebuild context and re-run suites, costing more than all the tasks combined).
+- **"Cannot verify from diff" items:** a reviewer may report requirements it can't confirm from the diff alone — things that live in unchanged code or span multiple tracks/waves. These don't block the rest of the review, but resolve each one yourself before marking the review clean: you hold the plan and cross-track context the reviewer lacks. If you confirm one is a real gap, treat it as a failed review finding — dispatch the fix and re-review.
 - If the project defines additional gates (plan review before Wave 1, adversarial/codex review after merges, automation gates before tagging), run them in the plan's stated order at wave boundaries only — never mid-review.
 - If a gate produces a calibration or process-change proposal, **surface it to the user at the next checkpoint** — it's a genuine decision point. Apply on approval; archive if declined.
+- **After the final whole-branch review comes back clean**, the sprint's implementation work is done — invoke the finishing-a-development-branch skill to verify tests one last time and present the merge/PR/keep/discard decision. Don't decide that disposition yourself; it's the skill's call to make with the user.
 
 ## Red Flags
 
@@ -121,3 +123,4 @@ After each wave's subagents return, and before Wave N+1:
 - Paste session history into dispatch prompts, or make subagents read the whole plan
 - Skip verifications the plan specifies, or accept "close enough" on spec compliance
 - Proceed past a BLOCKED status without changing something (context, model, task size, or plan)
+- Merge, PR, or discard the sprint branch yourself after the final review — hand off to finishing-a-development-branch instead

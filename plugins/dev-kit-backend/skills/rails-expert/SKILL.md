@@ -16,7 +16,7 @@ metadata:
 
 ## Core Workflow
 
-1. **Analyze requirements** — Identify models, routes, real-time needs, background jobs
+1. **Analyze requirements** — Identify models, routes, real-time needs, background jobs. Check `Gemfile.lock` for the Rails version first — Rails 8.x and 7.x default to different tooling (see Version-Specific Defaults below) and recommendations should match what the project is actually running
 2. **Scaffold resources** — `rails generate model User name:string email:string`, `rails generate controller Users`
 3. **Run migrations** — `rails db:migrate` and verify schema with `rails db:schema:dump`
    - If migration fails: inspect `db/schema.rb` for conflicts, rollback with `rails db:rollback`, fix and retry
@@ -37,6 +37,22 @@ Load detailed guidance based on context:
 | Background Jobs | `references/background-jobs.md` | Sidekiq, job design, queues, error handling |
 | Testing | `references/rspec-testing.md` | Model/request/system specs, factories |
 | API Development | `references/api-development.md` | API-only mode, serialization, authentication |
+
+## Version-Specific Defaults
+
+Rails 8.x replaced several Redis-backed defaults with database-backed "Solid" adapters. Match recommendations to the project's actual version:
+
+| Concern | Rails 8.x (default) | Rails 7.x (default) |
+|---------|---------------------|----------------------|
+| Background jobs | Solid Queue (DB-backed, no Redis) | Sidekiq (Redis-backed) or GoodJob |
+| Caching | Solid Cache (DB-backed) | Redis or Memcached |
+| Action Cable | Solid Cable (DB-backed adapter) | Redis adapter |
+| Authentication | `rails generate authentication` (native) | Devise or `has_secure_password` |
+| Rate limiting | Native `rate_limit` in controllers | `rack-attack` |
+| Asset pipeline | Propshaft | Sprockets or Propshaft |
+| Deployment | Kamal 2 + Thruster (HTTP/2, auto-SSL) | Capistrano, Docker, or PaaS |
+
+Redis-backed tools (Sidekiq, Redis Action Cable adapter) still work fine on Rails 8 and are a reasonable choice at higher scale — but don't assume them by default on a Rails 8 project when the Gemfile shows Solid Queue/Cache/Cable already wired up.
 
 ## Common Patterns
 
@@ -135,12 +151,14 @@ end
 - Write comprehensive specs targeting >95% coverage
 - Use service objects for complex business logic; keep controllers thin
 - Add database indexes for every column used in `WHERE`, `ORDER BY`, or `JOIN`
-- Offload slow operations to Sidekiq — never run them synchronously in a request cycle
+- Offload slow operations to background jobs (Sidekiq or Solid Queue, per Gemfile) — never run them synchronously in a request cycle
+- Run `brakeman` and `bundle audit` before shipping — static security analysis and dependency vulnerability scanning are not optional
 
 ### MUST NOT DO
 - Skip migrations for schema changes
 - Use raw SQL without sanitization (`sanitize_sql` or parameterized queries only)
 - Expose internal IDs in URLs without consideration
+- Assume Rails 7-era tooling (Sidekiq, Redis, Devise) on a Rails 8 project without checking the Gemfile first
 
 ## Output Templates
 

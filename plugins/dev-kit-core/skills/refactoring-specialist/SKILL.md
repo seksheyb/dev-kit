@@ -58,6 +58,12 @@ Identify smell → Ensure test coverage → Make one change → Run tests → Co
 
 **Architecture moves (larger scope, same discipline):** Layer extraction · Module boundary definition · Dependency inversion · Interface segregation · Service extraction · API surface simplification (with backward compatibility)
 
+## Domain-Specific Refactoring
+
+- **Performance-sensitive code** — profile first, don't guess where the cost is; prefer algorithmic or data-structure fixes (better complexity class, right cache/lazy-eval strategy) over micro-tuning; benchmark before and after per the Safety Contract
+- **Database code** — simplify queries and consolidate views incrementally; treat schema changes (normalization, constraints, stored-procedure rewrites) as their own reviewable steps; make data migrations reversible and run them behind the same test net as code changes
+- **API surfaces** — consolidate endpoints and simplify parameters without breaking existing contracts; add contract tests before reshaping requests/responses; version and deprecate rather than break callers in place
+
 ## Legacy Code (no tests, scary code)
 
 1. **Identify seams** — places where behavior can be observed or substituted without editing the code

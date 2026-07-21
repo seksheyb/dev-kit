@@ -26,6 +26,21 @@ Never stop for: choosing the merge method (auto-detect from repo settings) or ti
 
 **Voice:** narrate what's happening now; explain why before asking; be specific ("your Fly.io app 'myapp' is healthy", not "deploy looks good"). First run = teacher mode, explain every check. Subsequent runs = efficient mode, brief status updates.
 
+## Step 0: Detect platform and base branch
+
+Detect the git hosting platform from `git remote get-url origin`:
+- URL contains "github.com" → **GitHub**; contains "gitlab" → **GitLab**
+- Otherwise: `gh auth status` succeeds → GitHub (covers Enterprise); `glab auth status` succeeds → GitLab; neither → unknown (git-native commands only)
+
+Determine the base branch (the branch the PR targets, or the repo default):
+- **GitHub:** `gh pr view --json baseRefName -q .baseRefName`, else `gh repo view --json defaultBranchRef -q .defaultBranchRef.name`
+- **GitLab:** `glab mr view -F json` → `target_branch`, else `glab repo view -F json` → `default_branch`
+- **Git-native fallback:** `git symbolic-ref refs/remotes/origin/HEAD | sed 's|refs/remotes/origin/||'`; else check `origin/main`, then `origin/master`; else `main`.
+
+Print the detected base branch. Substitute it wherever the steps below say `<base>`.
+
+**If the platform is GitLab or unknown, STOP:** "GitLab support for land-and-deploy isn't implemented yet — the merge-queue and CI-polling logic below is GitHub-specific. Run `/ship` to create the MR, then merge manually via the GitLab web UI." This skill only proceeds on GitHub.
+
 ## First-run setup (one-time deploy configuration)
 
 If CLAUDE.md has no `## Deploy Configuration` section, run this wizard before the first deploy (also offer it any time the user asks to "set up deploys"). After it runs once, every future `/land-and-deploy` reads CLAUDE.md and skips detection entirely.
@@ -104,6 +119,8 @@ Record the start time. Try auto-merge first (respects repo settings and merge qu
 - `OPEN` with null auto-merge → genuine failure; surface both the stderr and the state, **STOP**.
 - `CLOSED` → closed without merging, **STOP**.
 
+**Worktree cleanup (non-destructive, candidate-based):** once MERGED is confirmed, `git worktree list --porcelain` and look for stale candidates — a worktree qualifies only if it's checked out on the base branch, isn't the user's current working tree, and `git status --porcelain` inside it is empty (no uncommitted work). For each clean candidate, offer to remove it: "There's a stale worktree at `<path>` checked out on `<branch>` with no uncommitted work. Remove it?" — remove only on confirmation (`git worktree remove <path> && git worktree prune`). If a candidate has uncommitted work, list it and leave it alone. Never use `--force`, never touch the primary working tree.
+
 **Merge queue:** if auto-merge was accepted but the PR isn't MERGED yet, tell the user the repo uses a merge queue (CI runs once more on the final merge commit), then poll `gh pr view --json state` every 30 seconds, up to 30 minutes, with a progress note every 2 minutes. Removed from the queue (back to OPEN) → **STOP** (a check failed on the merge commit). Merged → capture the SHA and duration.
 
 **CI auto-deploy detection:** `gh run list --branch <base> --limit 5 --json name,status,workflowName,headSha` — look for a run matching the merge SHA. Found → "a deploy workflow kicked off automatically; monitoring it." Not found → the project may deploy differently; figure it out in Step 5.
@@ -172,7 +189,7 @@ VERDICT: <DEPLOYED AND VERIFIED / DEPLOYED (UNVERIFIED) / STAGING VERIFIED / REV
 
 Save a copy under `.deploy-reports/{date}-pr{number}-deploy.md` (gitignore the directory).
 
-**Follow-ups:** verified → "Your changes are live. Nice ship." Unverified → "Merged and deploying — check the site manually when you can." Reverted → "Changes are off {base}; the branch is still there to fix and re-ship." Suggest extended monitoring or doc syncing where relevant.
+**Follow-ups:** verified → "Your changes are live. Nice ship." Unverified → "Merged and deploying — check the site manually when you can." Reverted → "Changes are off {base}; the branch is still there to fix and re-ship." If new features shipped without a CHANGELOG/VERSION update, suggest `/document-release` to sync docs with what just went out.
 
 ## Important Rules
 
@@ -183,5 +200,6 @@ Save a copy under `.deploy-reports/{date}-pr{number}-deploy.md` (gitignore the d
 - **Auto-detect everything** — PR number, merge method, deploy strategy, merge queues, staging. Ask only when it genuinely can't be inferred.
 - **Poll with backoff.** 30-second intervals, reasonable timeouts. Don't hammer the API.
 - **Revert is always an option.** Offer it at every failure point and explain what it does in plain English.
+- **Clean up.** Delete the feature branch after merge (`--delete-branch`); offer to remove stale, clean worktrees left pointing at the base branch — never a dirty one, never with `--force`.
 - **Single-pass verification.** This skill checks once; extended monitoring is a separate follow-up.
 - **First run = teacher mode; repeat runs = efficient mode.** First-timers should think "this is thorough — I trust it"; repeat users should think "that was fast — it just works."

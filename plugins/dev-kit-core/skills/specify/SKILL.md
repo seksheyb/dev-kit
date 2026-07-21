@@ -205,6 +205,19 @@ begin immediately, do not ask them to repeat themselves.
 
 Run the phases STRICTLY in order — do not skip or combine them:
 
+### How to Ask Questions
+
+- **3-5 questions per round, max.** Prioritize highest-ambiguity first.
+- **Number every question.** Don't bury them in paragraphs.
+- **End every message with your questions.** Last thing the user reads.
+- **Call out assumptions explicitly.** "I'm assuming this only affects the admin
+  role — is that right?"
+- **Reference specific code when you can.** Don't ask "does this touch the
+  database?" — look at the code and ask "this needs a new column on `orders` —
+  or is a separate table better?"
+- **Verify current state before proposing changes.** Check the code, cite what
+  you found with file paths. Don't assume from memory.
+
 ### Phase 1: Understand the "Why"
 
 Ask until you can crisply answer all five:

@@ -38,7 +38,22 @@ Using the gathered state plus the conversation history, produce a summary coveri
 
 Infer a concise title (3-6 words) if none was given.
 
-### Step 3: Write the saved-context file
+### Step 3: Compute session duration (best-effort)
+
+```bash
+if [ -n "$PPID" ]; then
+  START_EPOCH=$(ps -o lstart= -p "$PPID" 2>/dev/null | xargs -I{} date -jf "%c" "{}" "+%s" 2>/dev/null || true)
+fi
+if [ -n "$START_EPOCH" ]; then
+  echo "SESSION_DURATION_S=$(( $(date +%s) - START_EPOCH ))"
+else
+  echo "SESSION_DURATION_S=unknown"
+fi
+```
+
+If unknown, omit `session_duration_s` from the saved file entirely — don't write a placeholder.
+
+### Step 4: Write the saved-context file
 
 Saved contexts live outside the repo so they survive branch switches and worktree handoffs: `~/.claude/context/<project-slug>/`. Compute the path in bash — never splice a raw user title into a command (the sanitizer is an allowlist: only `a-z 0-9 - .` survive):
 
@@ -67,6 +82,7 @@ Write the file to the exact `$FILE` path printed (do not reconstruct it):
 status: in-progress
 branch: {current branch name}
 timestamp: {ISO-8601 timestamp}
+session_duration_s: {SESSION_DURATION_S from Step 3; omit this line if unknown}
 files_modified:
   - path/to/file1
   - path/to/file2
@@ -89,7 +105,7 @@ files_modified:
 
 `files_modified` comes from `git status --short` (staged and unstaged), relative to the repo root.
 
-Confirm to the user: title, branch, file path, number of modified files. "Restore later with /context-restore."
+Confirm to the user: title, branch, file path, number of modified files, session duration (if known). "Restore later with /context-restore."
 
 ## List flow
 

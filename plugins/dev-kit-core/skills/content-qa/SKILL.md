@@ -120,3 +120,10 @@ intended meaning.
    the suggested fix.
 2. **Rewritten version:** the full content with all issues fixed.
 3. **Change summary:** what changed and why, grouped by category (brief — a few lines).
+
+---
+
+*Detection categories and tiered vocabulary adapted from the open-source
+[conorbronsdon/avoid-ai-writing](https://github.com/conorbronsdon/avoid-ai-writing) skill (MIT
+License), with vocabulary research from brandonwise/humanizer, via the ai-writing-auditor and
+content-quality-editor agent patterns.*

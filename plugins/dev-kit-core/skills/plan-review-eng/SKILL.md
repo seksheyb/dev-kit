@@ -55,6 +55,10 @@ System-level review discipline — evaluate designs at the macro level before dr
 
 **Integration patterns:** API strategy, message patterns, event streaming, service discovery, circuit breakers, retry mechanisms, data synchronization, transaction handling across boundaries.
 
+**Security architecture:** authentication design, authorization model, data encryption (at rest and in transit), network security, secrets management, audit logging, compliance requirements, threat modeling.
+
+**Data architecture:** data model choices, storage strategy, consistency requirements, backup and archive policy, data governance, privacy compliance, analytics integration.
+
 **Technical debt assessment:** architecture smells, outdated patterns, complexity metrics, maintenance burden, remediation priority. For legacy touchpoints prefer strangler pattern, branch by abstraction, parallel run.
 
 **Evolutionary architecture:** favor reversible decisions, incremental evolution, and explicit architectural decision records. Principles: separation of concerns, single responsibility, interface segregation, dependency inversion, open/closed, DRY, KISS, YAGNI.

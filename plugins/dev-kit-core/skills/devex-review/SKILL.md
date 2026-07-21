@@ -98,6 +98,13 @@ requiring real credentials, IDE integration.
 For untestable dimensions, mark scores as INFERRED from artifacts. Never guess. **State your
 evidence source for every score.**
 
+## Calibration Reference
+
+`references/dx-calibration.md` holds the gold-standard examples, anti-patterns, and stats
+used to calibrate each step's score against a real-world bar (what a 9-10 actually looks
+like, concretely). Read ONLY the section for the step you're currently scoring (e.g. "Step 1"
+while running the Getting Started audit) — don't load the whole file at once.
+
 ---
 
 ## Step 0: Target Discovery
@@ -134,7 +141,18 @@ Score 0-10.
 Trigger common error scenarios: run the CLI with missing args, invalid flags, bad input;
 hit 404 pages and invalid form submissions where web-testable. For each error, grade against
 the three-part model: does it identify the **problem**, explain the **cause**, and show the
-**fix** (Elm/Rust/Stripe tier)? Score 0-10.
+**fix**? Calibrate against three tiers of error quality (worked examples in
+`references/dx-calibration.md` Step 3):
+
+- **Tier 1 — conversational compiler:** first person, complete sentences, exact location,
+  a suggested fix, further reading (Elm's type-mismatch errors are the reference point).
+- **Tier 2 — annotated source:** an error code linking to a fuller explainer, primary +
+  secondary labels, a help section showing the exact edit (Rust's compiler errors).
+- **Tier 3 — structured with doc_url:** JSON with type, code, message, offending param,
+  and a doc link — zero ambiguity (Stripe API's error objects).
+
+The formula for a 10: what happened + why + how to fix it + where to learn more + the
+actual values that caused it. Score 0-10.
 
 ## Step 4: Documentation Audit
 

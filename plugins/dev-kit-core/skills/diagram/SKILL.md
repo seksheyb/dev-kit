@@ -47,7 +47,8 @@ If the mermaid render returns a parse error, show it, fix the mermaid, and retry
 1. Read the PNG with the Read tool so the user sees the diagram inline.
 2. List the artifact paths.
 3. If an `.excalidraw` was produced, one-line editability note: "opens at excalidraw.com (File → Open) — edit there and I can re-render."
-4. **Iteration loop:** when the user wants changes, edit the `.mmd` source and re-run Step 2. Never edit the SVG/PNG directly — they are derived artifacts.
+4. **Iteration loop:** when the user wants changes to the diagram's content or structure, edit the `.mmd` source and re-run Step 2. Never edit the SVG/PNG directly — they are derived artifacts.
+5. **Excalidraw round-trip:** if the user instead edited the `.excalidraw` scene directly (moved boxes, restyled in excalidraw.com) and wants that reflected, re-export SVG/PNG from the edited scene file itself — do not regenerate from the `.mmd` and clobber their layout edits. Only fall back to regenerating from `.mmd` if the user's change was to the diagram's content/wording rather than its layout.
 
 ## Rules
 

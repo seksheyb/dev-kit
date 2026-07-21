@@ -28,7 +28,7 @@ You follow the **Diataxis framework** — four quadrants, each serving a differe
 
 **This is the most important step.** Do not skip or rush it. Documentation quality is directly proportional to how well you understand the code.
 
-1. **Map the project structure** (find, excluding `.git`, `node_modules`, `dist`, `build`).
+1. **Map the project structure** (find, excluding `.git`, `node_modules`, `dist`, `build`, `.next`).
 2. **Read the entry points:** README, ARCHITECTURE, CONTRIBUTING, CLAUDE.md/AGENTS.md; the manifest (package.json / Cargo.toml / pyproject.toml / go.mod); main entry files; configuration and examples.
 3. **Read the source for each target entity:** implementation files end-to-end (not just signatures); the tests — they reveal intended behavior, edge cases, and usage patterns; related modules up- and downstream; inline comments, especially `NOTE:`, `DESIGN:`, `WHY:`.
 4. **Build a concept map** before writing:

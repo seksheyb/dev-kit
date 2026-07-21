@@ -1,0 +1,674 @@
+[
+ {
+  "type": "skill",
+  "plugin": "dev-kit-core",
+  "name": "ship",
+  "path": "plugins/dev-kit-core/skills/ship/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-core",
+  "name": "specify",
+  "path": "plugins/dev-kit-core/skills/specify/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-core",
+  "name": "writing-plans",
+  "path": "plugins/dev-kit-core/skills/writing-plans/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-core",
+  "name": "writing-skills",
+  "path": "plugins/dev-kit-core/skills/writing-skills/SKILL.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "accessibility-tester",
+  "path": "plugins/dev-kit-core/agents/accessibility-tester.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "advisor-researcher",
+  "path": "plugins/dev-kit-core/agents/advisor-researcher.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "assumptions-analyzer",
+  "path": "plugins/dev-kit-core/agents/assumptions-analyzer.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "code-reviewer",
+  "path": "plugins/dev-kit-core/agents/code-reviewer.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "codebase-mapper",
+  "path": "plugins/dev-kit-core/agents/codebase-mapper.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "compliance-auditor",
+  "path": "plugins/dev-kit-core/agents/compliance-auditor.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "debugger",
+  "path": "plugins/dev-kit-core/agents/debugger.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "dependency-manager",
+  "path": "plugins/dev-kit-core/agents/dependency-manager.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "design-reviewer",
+  "path": "plugins/dev-kit-core/agents/design-reviewer.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "doc-classifier",
+  "path": "plugins/dev-kit-core/agents/doc-classifier.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "doc-synthesizer",
+  "path": "plugins/dev-kit-core/agents/doc-synthesizer.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "doc-verifier",
+  "path": "plugins/dev-kit-core/agents/doc-verifier.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "domain-researcher",
+  "path": "plugins/dev-kit-core/agents/domain-researcher.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "gate-automation",
+  "path": "plugins/dev-kit-core/agents/gate-automation.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "gate-codex-round",
+  "path": "plugins/dev-kit-core/agents/gate-codex-round.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "gate-plan-review",
+  "path": "plugins/dev-kit-core/agents/gate-plan-review.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "gate-reverse-engineer",
+  "path": "plugins/dev-kit-core/agents/gate-reverse-engineer.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "health-reporter",
+  "path": "plugins/dev-kit-core/agents/health-reporter.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "incident-responder",
+  "path": "plugins/dev-kit-core/agents/incident-responder.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "integration-checker",
+  "path": "plugins/dev-kit-core/agents/integration-checker.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "market-researcher",
+  "path": "plugins/dev-kit-core/agents/market-researcher.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "nyquist-auditor",
+  "path": "plugins/dev-kit-core/agents/nyquist-auditor.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "pattern-mapper",
+  "path": "plugins/dev-kit-core/agents/pattern-mapper.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "penetration-tester",
+  "path": "plugins/dev-kit-core/agents/penetration-tester.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "performance-engineer",
+  "path": "plugins/dev-kit-core/agents/performance-engineer.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "phase-researcher",
+  "path": "plugins/dev-kit-core/agents/phase-researcher.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "plan-reviewer",
+  "path": "plugins/dev-kit-core/agents/plan-reviewer.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "planner",
+  "path": "plugins/dev-kit-core/agents/planner.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "project-researcher",
+  "path": "plugins/dev-kit-core/agents/project-researcher.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "qa",
+  "path": "plugins/dev-kit-core/agents/qa.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "research-synthesizer",
+  "path": "plugins/dev-kit-core/agents/research-synthesizer.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "retro",
+  "path": "plugins/dev-kit-core/agents/retro.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "roadmapper",
+  "path": "plugins/dev-kit-core/agents/roadmapper.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "security-auditor",
+  "path": "plugins/dev-kit-core/agents/security-auditor.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "ui-auditor",
+  "path": "plugins/dev-kit-core/agents/ui-auditor.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "ui-checker",
+  "path": "plugins/dev-kit-core/agents/ui-checker.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "ui-researcher",
+  "path": "plugins/dev-kit-core/agents/ui-researcher.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-core",
+  "name": "verifier",
+  "path": "plugins/dev-kit-core/agents/verifier.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-data-ai",
+  "name": "data-analyst",
+  "path": "plugins/dev-kit-data-ai/skills/data-analyst/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-data-ai",
+  "name": "data-engineer",
+  "path": "plugins/dev-kit-data-ai/skills/data-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-data-ai",
+  "name": "data-scientist",
+  "path": "plugins/dev-kit-data-ai/skills/data-scientist/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-data-ai",
+  "name": "fine-tuning-expert",
+  "path": "plugins/dev-kit-data-ai/skills/fine-tuning-expert/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-data-ai",
+  "name": "llm-architect",
+  "path": "plugins/dev-kit-data-ai/skills/llm-architect/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-data-ai",
+  "name": "ml-engineer",
+  "path": "plugins/dev-kit-data-ai/skills/ml-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-data-ai",
+  "name": "ml-pipeline",
+  "path": "plugins/dev-kit-data-ai/skills/ml-pipeline/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-data-ai",
+  "name": "nlp-engineer",
+  "path": "plugins/dev-kit-data-ai/skills/nlp-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-data-ai",
+  "name": "pandas-pro",
+  "path": "plugins/dev-kit-data-ai/skills/pandas-pro/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-data-ai",
+  "name": "prompt-engineer",
+  "path": "plugins/dev-kit-data-ai/skills/prompt-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-data-ai",
+  "name": "rag-architect",
+  "path": "plugins/dev-kit-data-ai/skills/rag-architect/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-data-ai",
+  "name": "reinforcement-learning-engineer",
+  "path": "plugins/dev-kit-data-ai/skills/reinforcement-learning-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-data-ai",
+  "name": "spark-engineer",
+  "path": "plugins/dev-kit-data-ai/skills/spark-engineer/SKILL.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-data-ai",
+  "name": "ai-researcher",
+  "path": "plugins/dev-kit-data-ai/agents/ai-researcher.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-data-ai",
+  "name": "eval-auditor",
+  "path": "plugins/dev-kit-data-ai/agents/eval-auditor.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-data-ai",
+  "name": "eval-planner",
+  "path": "plugins/dev-kit-data-ai/agents/eval-planner.md"
+ },
+ {
+  "type": "agent",
+  "plugin": "dev-kit-data-ai",
+  "name": "framework-selector",
+  "path": "plugins/dev-kit-data-ai/agents/framework-selector.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-infra",
+  "name": "azure-infra-engineer",
+  "path": "plugins/dev-kit-infra/skills/azure-infra-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-infra",
+  "name": "chaos-engineer",
+  "path": "plugins/dev-kit-infra/skills/chaos-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-infra",
+  "name": "cloud-architect",
+  "path": "plugins/dev-kit-infra/skills/cloud-architect/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-infra",
+  "name": "database-administrator",
+  "path": "plugins/dev-kit-infra/skills/database-administrator/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-infra",
+  "name": "devops-engineer",
+  "path": "plugins/dev-kit-infra/skills/devops-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-infra",
+  "name": "docker-expert",
+  "path": "plugins/dev-kit-infra/skills/docker-expert/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-infra",
+  "name": "kubernetes-specialist",
+  "path": "plugins/dev-kit-infra/skills/kubernetes-specialist/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-infra",
+  "name": "microsoft-ops",
+  "path": "plugins/dev-kit-infra/skills/microsoft-ops/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-infra",
+  "name": "monitoring-expert",
+  "path": "plugins/dev-kit-infra/skills/monitoring-expert/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-infra",
+  "name": "network-engineer",
+  "path": "plugins/dev-kit-infra/skills/network-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-infra",
+  "name": "platform-engineer",
+  "path": "plugins/dev-kit-infra/skills/platform-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-infra",
+  "name": "powershell-pro",
+  "path": "plugins/dev-kit-infra/skills/powershell-pro/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-infra",
+  "name": "sre-engineer",
+  "path": "plugins/dev-kit-infra/skills/sre-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-infra",
+  "name": "terraform-engineer",
+  "path": "plugins/dev-kit-infra/skills/terraform-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-mobile",
+  "name": "flutter-expert",
+  "path": "plugins/dev-kit-mobile/skills/flutter-expert/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-mobile",
+  "name": "kotlin-specialist",
+  "path": "plugins/dev-kit-mobile/skills/kotlin-specialist/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-mobile",
+  "name": "react-native-expert",
+  "path": "plugins/dev-kit-mobile/skills/react-native-expert/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-mobile",
+  "name": "swift-expert",
+  "path": "plugins/dev-kit-mobile/skills/swift-expert/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-product",
+  "name": "ab-test-analysis",
+  "path": "plugins/dev-kit-product/skills/ab-test-analysis/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-product",
+  "name": "cohort-analysis",
+  "path": "plugins/dev-kit-product/skills/cohort-analysis/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-product",
+  "name": "gdpr-ccpa-compliance",
+  "path": "plugins/dev-kit-product/skills/gdpr-ccpa-compliance/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-product",
+  "name": "growth-loops",
+  "path": "plugins/dev-kit-product/skills/growth-loops/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-product",
+  "name": "hipaa-compliance",
+  "path": "plugins/dev-kit-product/skills/hipaa-compliance/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "atlassian-mcp",
+  "path": "plugins/dev-kit-specialized/skills/atlassian-mcp/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "blockchain-developer",
+  "path": "plugins/dev-kit-specialized/skills/blockchain-developer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "cli-developer",
+  "path": "plugins/dev-kit-specialized/skills/cli-developer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "devtools-engineer",
+  "path": "plugins/dev-kit-specialized/skills/devtools-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "embedded-systems",
+  "path": "plugins/dev-kit-specialized/skills/embedded-systems/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "fintech-engineer",
+  "path": "plugins/dev-kit-specialized/skills/fintech-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "game-developer",
+  "path": "plugins/dev-kit-specialized/skills/game-developer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "healthcare-admin",
+  "path": "plugins/dev-kit-specialized/skills/healthcare-admin/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "iot-engineer",
+  "path": "plugins/dev-kit-specialized/skills/iot-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "legal-advisor",
+  "path": "plugins/dev-kit-specialized/skills/legal-advisor/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "license-engineer",
+  "path": "plugins/dev-kit-specialized/skills/license-engineer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "mcp-developer",
+  "path": "plugins/dev-kit-specialized/skills/mcp-developer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "payment-integration",
+  "path": "plugins/dev-kit-specialized/skills/payment-integration/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "quant-analyst",
+  "path": "plugins/dev-kit-specialized/skills/quant-analyst/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "risk-manager",
+  "path": "plugins/dev-kit-specialized/skills/risk-manager/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "salesforce-developer",
+  "path": "plugins/dev-kit-specialized/skills/salesforce-developer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "seo-specialist",
+  "path": "plugins/dev-kit-specialized/skills/seo-specialist/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "slack-expert",
+  "path": "plugins/dev-kit-specialized/skills/slack-expert/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-specialized",
+  "name": "visual-asset-generator",
+  "path": "plugins/dev-kit-specialized/skills/visual-asset-generator/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-web",
+  "name": "angular-architect",
+  "path": "plugins/dev-kit-web/skills/angular-architect/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-web",
+  "name": "electron-pro",
+  "path": "plugins/dev-kit-web/skills/electron-pro/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-web",
+  "name": "javascript-pro",
+  "path": "plugins/dev-kit-web/skills/javascript-pro/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-web",
+  "name": "nextjs-developer",
+  "path": "plugins/dev-kit-web/skills/nextjs-developer/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-web",
+  "name": "playwright-expert",
+  "path": "plugins/dev-kit-web/skills/playwright-expert/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-web",
+  "name": "react-expert",
+  "path": "plugins/dev-kit-web/skills/react-expert/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-web",
+  "name": "shopify-expert",
+  "path": "plugins/dev-kit-web/skills/shopify-expert/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-web",
+  "name": "typescript-pro",
+  "path": "plugins/dev-kit-web/skills/typescript-pro/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-web",
+  "name": "vue-expert",
+  "path": "plugins/dev-kit-web/skills/vue-expert/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-web",
+  "name": "vue-expert-js",
+  "path": "plugins/dev-kit-web/skills/vue-expert-js/SKILL.md"
+ },
+ {
+  "type": "skill",
+  "plugin": "dev-kit-web",
+  "name": "wordpress-pro",
+  "path": "plugins/dev-kit-web/skills/wordpress-pro/SKILL.md"
+ }
+]

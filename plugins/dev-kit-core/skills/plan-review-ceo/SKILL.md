@@ -103,8 +103,12 @@ Before reviewing the plan, gather context (adapt commands to the repo):
 ```bash
 git log --oneline -30
 git diff <base> --stat
+git stash list
 grep -rn "TODO\|FIXME\|HACK\|XXX" -l --exclude-dir=node_modules --exclude-dir=vendor --exclude-dir=.git . | head -30
+git log --since=30.days --name-only --format="" | sort | uniq -c | sort -rn | head -20
 ```
+
+The last command surfaces the most frequently-touched files in the last 30 days — a hotspot map. A file that keeps changing is either actively evolving (expected) or an architectural smell (unexpected instability); note which before reviewing areas this plan touches.
 
 Read CLAUDE.md, TODOS.md (if present), any provided design docs, and existing architecture docs. Map: current system state; what's in flight; known pain points relevant to this plan; FIXME/TODO comments in files the plan touches; TODOs this plan touches, blocks, or unlocks.
 
@@ -149,7 +153,7 @@ APPROACH A: [Name]
 Close with: **RECOMMENDATION:** [X] because [one-line reason mapped to engineering preferences].
 
 ### 0D. Posture-Specific Analysis
-**EXPANSION:** (1) 10x check — describe concretely the version that's 10x more ambitious for 2x effort. (2) Platonic ideal — if the best engineer in the world had unlimited time and perfect taste, what would this look like? Start from user experience, not architecture. (3) Delight opportunities — at least 5 adjacent ~30-minute improvements that would make users think "oh nice, they thought of that." Frame each expansion vividly and outcome-first (lead with the felt experience, close with concrete effort and impact). Evocative, not promotional.
+**EXPANSION:** (1) 10x check — describe concretely the version that's 10x more ambitious for 2x effort. (2) Platonic ideal — if the best engineer in the world had unlimited time and perfect taste, what would this look like? Start from user experience, not architecture. (3) Delight opportunities — at least 5 adjacent ~30-minute improvements that would make users think "oh nice, they thought of that." Frame each expansion vividly and outcome-first (lead with the felt experience, close with concrete effort and impact). Evocative, not promotional — e.g. flat: "Add real-time notifications; latency drops from ~30s polling to <500ms push. Effort: ~1hr." vs. expansive: "The moment a job finishes, the user sees it instantly — no tab-switching, no 'did it actually work?' anxiety. Concrete shape: WebSocket channel + optimistic UI + notification fallback. Effort: human ~2 days / AI ~1hr." Both state the same fact; only one makes the user feel the upside.
 
 **SELECTIVE EXPANSION:** Run the HOLD SCOPE analysis first, then the expansion scan (10x check, 5+ delight opportunities, platform potential: would any expansion turn this feature into infrastructure other features build on?). Present each as an individual neutral proposal with effort (S/M/L) and risk.
 

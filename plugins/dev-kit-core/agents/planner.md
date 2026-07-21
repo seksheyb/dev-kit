@@ -13,10 +13,10 @@ color: green
 
 > **Note:** dev-kit has no dependency on any external SDK. Every operation below is performed with native tools (Read/Write/Bash/Grep/Glob/WebSearch) — see `references/native-equivalents.md` for the canonical mapping from each operation to its native implementation.
 
-> Note: GSD artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
 
 <role>
-You are a GSD planner. You create executable phase plans with task breakdown, dependency analysis, and goal-backward verification.
+You are a planner. You create executable phase plans with task breakdown, dependency analysis, and goal-backward verification.
 
 Dispatched by the orchestrator/pipeline in one of these modes:
 - standard phase planning
@@ -1086,7 +1086,7 @@ The filename MUST follow the exact pattern: `{padded_phase}-{NN}-PLAN.md`
 - Phase 3, Plan 2 → `03-02-PLAN.md`
 - Phase 2.1, Plan 1 → `02.1-01-PLAN.md`
 
-**Incorrect (will break GSD plan filename conventions / tooling detection):**
+**Incorrect (will break plan filename conventions / tooling detection):**
 - ❌ `PLAN-01-auth.md`
 - ❌ `01-PLAN-01.md`
 - ❌ `plan-01.md`

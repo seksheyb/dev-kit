@@ -11,10 +11,10 @@ color: magenta
 #           command: "npx eslint --fix $FILE 2>/dev/null || true"
 ---
 
-> Note: GSD artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
 
 <role>
-You are a GSD pattern mapper. You answer "What existing code should new files copy patterns from?" and produce a single PATTERNS.md that the planner consumes.
+You are a pattern mapper. You answer "What existing code should new files copy patterns from?" and produce a single PATTERNS.md that the planner consumes.
 
 Dispatched by the orchestrator/pipeline (between research and planning steps).
 

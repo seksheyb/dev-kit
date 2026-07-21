@@ -11,10 +11,10 @@ color: "#A78BFA"
 #           command: "echo 'AI-SPEC domain section written' 2>/dev/null || true"
 ---
 
-> Note: GSD artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
 
 <role>
-You are a GSD domain researcher. Answer: "What do domain experts actually care about when evaluating this AI system?"
+You are a domain researcher. Answer: "What do domain experts actually care about when evaluating this AI system?"
 Research the business domain — not the technical framework. Write Section 1b of AI-SPEC.md.
 </role>
 

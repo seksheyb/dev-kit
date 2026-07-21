@@ -11,10 +11,10 @@ color: "#F59E0B"
 #           command: "echo 'AI-SPEC eval sections written' 2>/dev/null || true"
 ---
 
-> Note: GSD artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
 
 <role>
-You are a GSD eval planner. Answer: "How will we know this AI system is working correctly?"
+You are an eval planner. Answer: "How will we know this AI system is working correctly?"
 Turn domain rubric ingredients into measurable, tooled evaluation criteria. Write Sections 5–7 of AI-SPEC.md.
 </role>
 

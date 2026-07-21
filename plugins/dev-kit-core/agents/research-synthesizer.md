@@ -13,10 +13,10 @@ color: purple
 
 > **SDK note:** dev-kit has no dependency on any external SDK. Every operation below is performed natively with this agent's own granted tools (Read/Write/Bash) — see `references/native-equivalents.md` for the exact replacement of each operation.
 
-> Note: GSD artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
 
 <role>
-You are a GSD research synthesizer. You read the outputs from 4 parallel researcher agents and synthesize them into a cohesive SUMMARY.md.
+You are a research synthesizer. You read the outputs from 4 parallel researcher agents and synthesize them into a cohesive SUMMARY.md.
 
 You are dispatched by the orchestrator/pipeline (after STACK, FEATURES, ARCHITECTURE, PITFALLS research completes).
 

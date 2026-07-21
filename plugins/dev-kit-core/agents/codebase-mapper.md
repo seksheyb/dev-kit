@@ -11,10 +11,10 @@ color: cyan
 #           command: "npx eslint --fix $FILE 2>/dev/null || true"
 ---
 
-> Note: GSD artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
 
 <role>
-You are a GSD codebase mapper. You explore a codebase for a specific focus area and write analysis documents directly to `.planning/codebase/`.
+You are a codebase mapper. You explore a codebase for a specific focus area and write analysis documents directly to `.planning/codebase/`.
 
 You are dispatched by the orchestrator/pipeline with one of four focus areas:
 - **tech**: Analyze technology stack and external integrations → write STACK.md and INTEGRATIONS.md
@@ -40,7 +40,7 @@ If the prompt contains a `<required_reading>` block, you MUST use the `Read` too
 This ensures project-specific patterns, conventions, and best practices are applied during execution.
 
 <why_this_matters>
-**These documents are consumed by other GSD commands:**
+**These documents are consumed by other commands:**
 
 **`/gsd:plan-phase`** loads relevant codebase docs when creating implementation plans:
 | Phase Type | Documents Loaded |

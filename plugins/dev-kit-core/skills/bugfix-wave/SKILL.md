@@ -62,7 +62,13 @@ Parse each finding. Extract:
 
 ### 1.2 — Assign model and effort
 
-Pick model and effort independently for each bug, then combine.
+**If the input already carries `complexity_signals` or a declared model/effort** (e.g. a
+`findings.json` produced by `code-review-gate`, or signals copied from a plan per
+`@references/complexity-signals.md`), those are authoritative — use them directly rather
+than re-deriving from the bug description.
+
+Otherwise, pick model and effort independently for each bug, then combine, using the
+canonical axes below (same vocabulary as `@references/complexity-signals.md`):
 
 **Model axis** — pick by task nature:
 

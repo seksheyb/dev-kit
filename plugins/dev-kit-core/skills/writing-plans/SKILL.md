@@ -86,6 +86,12 @@ include this section.]
 - Modify: `exact/path/to/existing.py:123-145`
 - Test: `tests/exact/path/to/test.py`
 
+**Signals:** (canonical vocabulary: `@references/complexity-signals.md`)
+- `novelty`: none | low | high
+- `logic`: low | medium | high
+- `ambiguity`: low | medium | high
+- `tests`: none | existing | new
+
 **Interfaces:**
 - Consumes: [what this task uses from earlier tasks — exact signatures]
 - Produces: [what later tasks rely on — exact function names, parameter

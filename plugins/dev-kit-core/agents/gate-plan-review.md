@@ -49,13 +49,10 @@ Your job: dispatch an independent review engine (selected per `@references/indep
    back to a manual signal check:
    1. Read the plan's `## Parallel Execution Map` and every track's `complexity:` block yourself.
    2. Sanity-check each track's declared `Model`/`Effort` against its stated signals using the
-      same axes the `bugfix-wave` skill uses for individual fixes — model: `haiku` for pure
-      mechanical work, `sonnet` for standard wiring/implementation, `opus` for multi-file
-      refactors or ambiguous scope; effort: `low` for literal execution, `medium` for standard
-      judgment, `high` for security/data-loss/cross-cutting risk. Flag as implausible anything
-      where the track's task list clearly outgrows its declared tier (e.g. multi-file,
-      cross-cutting work logged as `haiku`/`low`, or a track whose file list omits files its own
-      tasks say it creates).
+      canonical axes in `@references/complexity-signals.md` (the same vocabulary `bugfix-wave`
+      and `planner` use). Flag as implausible anything where the track's task list clearly
+      outgrows its declared tier (e.g. multi-file, cross-cutting work logged as `haiku`/`low`,
+      or a track whose file list omits files its own tasks say it creates).
    3. Record `complexity_ok: false` for any track that fails this manual check, phrased the same
       way as the scripted path: `track <name>: declared <x>/<y> looks too low for <reason>`.
    4. This manual pass is a judgment call, not a deterministic recomputation — say so in

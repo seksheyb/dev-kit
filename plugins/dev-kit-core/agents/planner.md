@@ -471,6 +471,7 @@ Invoke the `sprint-execution` skill to execute this plan (plugins/dev-kit-core/s
   <action>[Specific implementation]</action>
   <verify>[Command or check]</verify>
   <done>[Acceptance criteria]</done>
+  <complexity_signals>files: [complete list, including files this task CREATES]; novelty: none|low|high; logic: low|medium|high; ambiguity: low|medium|high; tests: none|existing|new</complexity_signals>
 </task>
 
 </tasks>
@@ -520,6 +521,12 @@ Create `.planning/phases/XX-name/{padded_phase}-{plan}-SUMMARY.md` when done
 | `must_haves` | Yes | Goal-backward verification criteria |
 
 Wave numbers are pre-computed during planning. Execute-phase reads `wave` directly from frontmatter.
+
+Every task also emits a `<complexity_signals>` block (see the task template above) using
+the canonical vocabulary in `@references/complexity-signals.md` — `files` (complete,
+including files the task CREATES), `novelty`, `logic`, `ambiguity`, `tests`. These signals
+are what `gate-plan-review` and `sprint-execution` use to validate or select model/effort;
+emit them honestly rather than deriving model/effort first and back-filling signals to match.
 
 ## Interface Context for Executors
 

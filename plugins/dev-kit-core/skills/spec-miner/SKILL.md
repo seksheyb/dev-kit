@@ -4,7 +4,6 @@ description: "Reverse-engineering specialist that extracts specifications from e
 license: MIT
 allowed-tools: Read, Grep, Glob, Bash
 metadata:
-  author: https://github.com/Jeffallan
   version: "1.1.0"
   domain: workflow
   triggers: reverse engineer, legacy code, code analysis, undocumented, understand codebase, existing system
@@ -107,4 +106,3 @@ Include:
 6. Uncertainties and questions
 7. Recommendations
 
-[Documentation](https://jeffallan.github.io/claude-skills/skills/workflow/spec-miner/)

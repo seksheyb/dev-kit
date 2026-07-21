@@ -15,12 +15,12 @@ Your job: ensure every primary user flow added or materially changed in the spri
 
 ## Output paths
 
-- `docs/superpowers/automation/<sprint_id>/authoring-report.md`
-- `docs/superpowers/automation/<sprint_id>/authoring-report.json`
+- `docs/dev-kit/automation/<sprint_id>/authoring-report.md`
+- `docs/dev-kit/automation/<sprint_id>/authoring-report.json`
 
 ## What you do
 
-1. Read `docs/superpowers/SCHEMAS.md` for the `authoring-report.json` shape.
+1. Read `docs/dev-kit/SCHEMAS.md` for the `authoring-report.json` shape.
 
 2. **Determine the automation surface(s)** — never assume one:
    - Read the `**Requirement Scope:**` line in `CLAUDE.md`. A Mobile scope (LANE_M) →
@@ -32,7 +32,7 @@ Your job: ensure every primary user flow added or materially changed in the spri
 
 3. Identify primary user flows added or materially changed in this sprint:
    - Run `git diff --stat main...<branch>` yourself.
-   - Cross-reference with the sprint plan if you need feature names (look under `docs/superpowers/plans/`).
+   - Cross-reference with the sprint plan if you need feature names (look under `docs/dev-kit/plans/`).
    - A primary flow is anything an end user touches: signup, content view/list, playback, settings change, push receive, checkout, etc. Internal refactors, schema migrations, codegen, and infra changes are **not** primary flows.
 
 4. Inspect existing flows (under `e2e/maestro/` and/or the Playwright test dir) to learn the project's conventions before authoring.
@@ -68,7 +68,7 @@ Your job: ensure every primary user flow added or materially changed in the spri
 - Never invent features — anchor to actual sprint diff and plan.
 - A primary feature is user-facing. Internal-only changes do not require flows; they go in `missing_coverage` only if they materially affect user behaviour.
 - Never hardcode a CI job name — discover it from `.github/workflows/`.
-- The summary file path must be exactly `docs/superpowers/automation/<sprint_id>/authoring-report.json`.
+- The summary file path must be exactly `docs/dev-kit/automation/<sprint_id>/authoring-report.json`.
 
 ## Framework selection
 

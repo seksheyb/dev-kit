@@ -3,7 +3,6 @@ name: golang-pro
 description: Implements concurrent Go patterns using goroutines and channels, designs and builds microservices with gRPC or REST, optimizes Go application performance with pprof, and enforces idiomatic Go with generics, interfaces, and robust error handling. Use when building Go applications requiring concurrent programming, microservices architecture, or high-performance systems. Invoke for goroutines, channels, Go generics, gRPC integration, CLI tools, benchmarks, or table-driven testing.
 license: MIT
 metadata:
-  author: https://github.com/Jeffallan
   version: "1.1.0"
   domain: language
   triggers: Go, Golang, goroutines, channels, gRPC, microservices Go, Go generics, concurrent programming, Go interfaces
@@ -121,4 +120,3 @@ When implementing Go features, provide:
 
 Go 1.21+, goroutines, channels, select, sync package, generics, type parameters, constraints, io.Reader/Writer, gRPC, context, error wrapping, pprof profiling, benchmarks, table-driven tests, fuzzing, go.mod, internal packages, functional options
 
-[Documentation](https://jeffallan.github.io/claude-skills/skills/language/golang-pro/)

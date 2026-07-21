@@ -3,7 +3,6 @@ name: javascript-pro
 description: Writes, debugs, and refactors JavaScript code using modern ES2023+ features, async/await patterns, ESM module systems, and Node.js APIs. Use when building vanilla JavaScript applications, implementing Promise-based async flows, optimising browser or Node.js performance, working with Web Workers or Fetch API, or reviewing .js/.mjs/.cjs files for correctness and best practices.
 license: MIT
 metadata:
-  author: https://github.com/Jeffallan
   version: "1.1.0"
   domain: language
   triggers: JavaScript, ES2023, async await, Node.js, vanilla JavaScript, Web Workers, Fetch API, browser API, module system
@@ -131,4 +130,3 @@ When implementing JavaScript features, provide:
 3. JSDoc documentation for public APIs
 4. Brief explanation of patterns used
 
-[Documentation](https://jeffallan.github.io/claude-skills/skills/language/javascript-pro/)

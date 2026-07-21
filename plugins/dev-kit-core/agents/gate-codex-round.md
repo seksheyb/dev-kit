@@ -16,14 +16,14 @@ Your job: run a single adversarial review round via Codex, ensure findings are w
 
 ## Output paths (you create the round directory)
 
-- `docs/superpowers/reviews/<sprint_id>/round-<round>/findings.md`
-- `docs/superpowers/reviews/<sprint_id>/round-<round>/findings.json`
+- `docs/dev-kit/reviews/<sprint_id>/round-<round>/findings.md`
+- `docs/dev-kit/reviews/<sprint_id>/round-<round>/findings.json`
 
 ## What you do
 
-1. Read `docs/superpowers/SCHEMAS.md` for the `findings.json` shape and the P0–P4 ladder.
+1. Read `docs/dev-kit/SCHEMAS.md` for the `findings.json` shape and the P0–P4 ladder.
 
-2. Glob `docs/superpowers/reviews/<sprint_id>/round-*/findings.json` for prior rounds. Also glob `docs/superpowers/reviews/<sprint_id>/round-*/fixes.json`. These are inputs Codex needs for `previously_seen_classes` detection.
+2. Glob `docs/dev-kit/reviews/<sprint_id>/round-*/findings.json` for prior rounds. Also glob `docs/dev-kit/reviews/<sprint_id>/round-*/fixes.json`. These are inputs Codex needs for `previously_seen_classes` detection.
 
 3. Create the round directory.
 
@@ -36,9 +36,9 @@ Your job: run a single adversarial review round via Codex, ensure findings are w
    Run `git diff main...<branch>` yourself to see what changed in this sprint.
 
    Read these files:
-   - docs/superpowers/SCHEMAS.md (P0–P4 ladder, findings.json shape)
-   - any docs/superpowers/reviews/<sprint_id>/round-*/findings.json (prior rounds)
-   - any docs/superpowers/reviews/<sprint_id>/round-*/fixes.json (prior fix waves)
+   - docs/dev-kit/SCHEMAS.md (P0–P4 ladder, findings.json shape)
+   - any docs/dev-kit/reviews/<sprint_id>/round-*/findings.json (prior rounds)
+   - any docs/dev-kit/reviews/<sprint_id>/round-*/fixes.json (prior fix waves)
 
    Look for: correctness bugs, security issues (auth, RLS, validation, secrets), data-loss / race conditions, broken contracts, missing tests on critical paths, accessibility blockers on primary screens.
 
@@ -47,8 +47,8 @@ Your job: run a single adversarial review round via Codex, ensure findings are w
    For prior-round classes that re-appear here (per the prior findings.json files): list them in `previously_seen_classes` — this means a structural fix did not generalize.
 
    Output (write both files; do NOT paste their contents into your reply):
-   - docs/superpowers/reviews/<sprint_id>/round-<round>/findings.md  (full prose, file:line refs grouped by class)
-   - docs/superpowers/reviews/<sprint_id>/round-<round>/findings.json  (matches SCHEMAS contract; blockers contains verbatim P0/P1 lines, one entry per class)
+   - docs/dev-kit/reviews/<sprint_id>/round-<round>/findings.md  (full prose, file:line refs grouped by class)
+   - docs/dev-kit/reviews/<sprint_id>/round-<round>/findings.json  (matches SCHEMAS contract; blockers contains verbatim P0/P1 lines, one entry per class)
 
    On every P0/P1 blocker, set "files" to the repo-relative paths of ALL instances of the
    class (the same paths findings.md lists), alongside the required "lead_file". This feeds
@@ -87,4 +87,4 @@ Your job: run a single adversarial review round via Codex, ensure findings are w
 
 - Never inline diff, plan, or spec content into the Codex brief — Codex must run `git diff` itself and read files itself.
 - Never include findings prose in your reply to the orchestrator — only the JSON.
-- The `findings.md` and `findings.json` paths must be exactly under `docs/superpowers/reviews/<sprint_id>/round-<round>/`.
+- The `findings.md` and `findings.json` paths must be exactly under `docs/dev-kit/reviews/<sprint_id>/round-<round>/`.

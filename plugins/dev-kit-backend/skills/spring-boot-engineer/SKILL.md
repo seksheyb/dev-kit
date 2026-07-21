@@ -3,7 +3,6 @@ name: spring-boot-engineer
 description: Generates Spring Boot 3.x configurations, creates REST controllers, implements Spring Security 6 authentication flows, sets up Spring Data JPA repositories, and configures reactive WebFlux endpoints. Use when building Spring Boot 3.x applications, microservices, or reactive Java applications; invoke for Spring Data JPA, Spring Security 6, WebFlux, Spring Cloud integration, Java REST API design, or Microservices Java architecture.
 license: MIT
 metadata:
-  author: https://github.com/Jeffallan
   version: "1.1.0"
   domain: backend
   triggers: Spring Boot, Spring Framework, Spring Cloud, Spring Security, Spring Data JPA, Spring WebFlux, Microservices Java, Java REST API, Reactive Java
@@ -194,4 +193,3 @@ class ProductControllerTest {
 - Hardcode URLs, credentials, or environment-specific values
 - Use deprecated Spring Boot 2.x patterns (e.g., `WebSecurityConfigurerAdapter`)
 
-[Documentation](https://jeffallan.github.io/claude-skills/skills/backend/spring-boot-engineer/)

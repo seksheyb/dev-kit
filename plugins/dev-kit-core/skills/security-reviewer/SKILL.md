@@ -4,14 +4,13 @@ description: Identifies security vulnerabilities, generates structured audit rep
 license: MIT
 allowed-tools: Read, Grep, Glob, Bash
 metadata:
-  author: https://github.com/Jeffallan
   version: "1.1.1"
   domain: security
   triggers: security review, vulnerability scan, SAST, security audit, penetration test, code audit, security analysis, infrastructure security, DevSecOps, cloud security, compliance audit
   role: specialist
   scope: review
   output-format: report
-  related-skills: secure-code-guardian, code-reviewer, devops-engineer, cloud-architect, kubernetes-specialist, api-designer, mcp-developer
+  related-skills: secure-code-guardian, devops-engineer, cloud-architect, kubernetes-specialist, api-designer, mcp-developer
 ---
 
 # Security Reviewer
@@ -102,4 +101,3 @@ References: CWE-89, OWASP A03:2021
 
 OWASP Top 10, CWE, Semgrep, Bandit, ESLint Security, gosec, npm audit, gitleaks, trufflehog, CVSS scoring, nmap, Burp Suite, sqlmap, Trivy, Checkov, HashiCorp Vault, AWS Security Hub, CIS benchmarks, SOC2, ISO27001
 
-[Documentation](https://jeffallan.github.io/claude-skills/skills/security/security-reviewer/)

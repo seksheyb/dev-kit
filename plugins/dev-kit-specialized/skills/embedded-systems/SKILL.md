@@ -3,7 +3,6 @@ name: embedded-systems
 description: Use when developing firmware for microcontrollers, implementing RTOS applications, or optimizing power consumption. Invoke for STM32, ESP32, FreeRTOS, bare-metal, power optimization, real-time systems, configure peripherals, write interrupt handlers, implement DMA transfers, debug timing issues.
 license: MIT
 metadata:
-  author: https://github.com/Jeffallan
   version: "1.1.0"
   domain: specialized
   triggers: embedded systems, firmware, microcontroller, RTOS, FreeRTOS, STM32, ESP32, bare metal, interrupt, DMA, real-time
@@ -166,4 +165,3 @@ When implementing embedded features, provide:
 4. Resource usage summary (flash, RAM, power estimate)
 5. Brief explanation of timing and optimization decisions
 
-[Documentation](https://jeffallan.github.io/claude-skills/skills/specialized/embedded-systems/)

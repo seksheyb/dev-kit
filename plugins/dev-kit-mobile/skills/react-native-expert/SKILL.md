@@ -3,7 +3,6 @@ name: react-native-expert
 description: Builds, optimizes, and debugs cross-platform mobile applications with React Native and Expo. Implements navigation hierarchies (tabs, stacks, drawers), configures native modules, optimizes FlatList rendering with memo and useCallback, and handles platform-specific code for iOS and Android. Use when building a React Native or Expo mobile app, setting up navigation, integrating native modules, improving scroll performance, handling SafeArea or keyboard input, or configuring Expo SDK projects.
 license: MIT
 metadata:
-  author: https://github.com/Jeffallan
   version: "1.1.0"
   domain: frontend
   triggers: React Native, Expo, mobile app, iOS, Android, cross-platform, native module
@@ -184,4 +183,3 @@ When implementing React Native features, deliver:
 
 React Native 0.73+, Expo SDK 50+, Expo Router, React Navigation 7, Reanimated 3, Gesture Handler, AsyncStorage, MMKV, React Query, Zustand
 
-[Documentation](https://jeffallan.github.io/claude-skills/skills/frontend/react-native-expert/)

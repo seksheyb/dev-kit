@@ -3,7 +3,6 @@ name: fine-tuning-expert
 description: "Use when fine-tuning LLMs, training custom models, or adapting foundation models for specific tasks. Invoke for configuring LoRA/QLoRA adapters, preparing JSONL training datasets, setting hyperparameters for fine-tuning runs, adapter training, transfer learning, finetuning with Hugging Face PEFT, OpenAI fine-tuning, instruction tuning, RLHF, DPO, or quantizing and deploying fine-tuned models. Trigger terms include: LoRA, QLoRA, PEFT, finetuning, fine-tuning, adapter tuning, LLM training, model training, custom model."
 license: MIT
 metadata:
-  author: https://github.com/Jeffallan
   version: "1.1.0"
   domain: data-ml
   triggers: fine-tuning, fine tuning, finetuning, LoRA, QLoRA, PEFT, adapter tuning, transfer learning, model training, custom model, LLM training, instruction tuning, RLHF, model optimization, quantization
@@ -161,4 +160,3 @@ When implementing fine-tuning, always provide:
 3. **Evaluation script** reporting perplexity, task-specific metrics, and latency
 4. **Brief design rationale** — why this PEFT method, rank, and learning rate were chosen for this task
 
-[Documentation](https://jeffallan.github.io/claude-skills/skills/data-ml/fine-tuning-expert/)

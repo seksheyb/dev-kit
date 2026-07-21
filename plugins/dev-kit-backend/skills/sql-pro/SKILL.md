@@ -3,7 +3,6 @@ name: sql-pro
 description: Optimizes SQL queries, designs database schemas, and troubleshoots performance issues. Use when a user asks why their query is slow, needs help writing complex joins or aggregations, mentions database performance issues, or wants to design or migrate a schema. Invoke for complex queries, window functions, CTEs, indexing strategies, query plan analysis, covering index creation, recursive queries, EXPLAIN/ANALYZE interpretation, before/after query benchmarking, or migrating queries between database dialects (PostgreSQL, MySQL, SQL Server, Oracle).
 license: MIT
 metadata:
-  author: https://github.com/Jeffallan
   version: "1.1.0"
   domain: language
   triggers: SQL optimization, query performance, database design, PostgreSQL, MySQL, SQL Server, window functions, CTEs, query tuning, EXPLAIN plan, database indexing
@@ -128,4 +127,3 @@ When implementing SQL solutions, provide:
 4. Performance metrics (before/after)
 5. Platform-specific notes if applicable
 
-[Documentation](https://jeffallan.github.io/claude-skills/skills/language/sql-pro/)

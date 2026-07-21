@@ -3,7 +3,6 @@ name: cloud-architect
 description: Designs cloud architectures, creates migration plans, generates cost optimization recommendations, and produces disaster recovery strategies across AWS, Azure, and GCP. Use when designing cloud architectures, planning migrations, or optimizing multi-cloud deployments. Invoke for Well-Architected Framework, cost optimization, disaster recovery, landing zones, security architecture, serverless design.
 license: MIT
 metadata:
-  author: https://github.com/Jeffallan
   version: "1.1.0"
   domain: infrastructure
   triggers: AWS, Azure, GCP, Google Cloud, cloud migration, cloud architecture, multi-cloud, cloud cost, Well-Architected, landing zone, cloud security, disaster recovery, cloud native, serverless architecture
@@ -215,4 +214,3 @@ When designing cloud architecture, provide:
 4. Cost estimation and optimization strategy
 5. Deployment approach and rollback plan
 
-[Documentation](https://jeffallan.github.io/claude-skills/skills/infrastructure/cloud-architect/)

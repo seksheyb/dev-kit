@@ -34,7 +34,7 @@ machine-readable output is required at the end.
 ### Mode 2 — `findings.json` path (structured)
 
 Caller provides a path to a `findings.json` file matching a published schema (e.g.
-`docs/superpowers/SCHEMAS.md` in caller-side projects). Read that file at the start of Phase 1.
+`docs/dev-kit/SCHEMAS.md` in caller-side projects). Read that file at the start of Phase 1.
 
 In this mode:
 - Every entry in `blockers` represents a **defect class** with one or more instances. Treat it
@@ -384,7 +384,7 @@ guard or move the class to `unresolved` with an explicit rationale before writin
 
 The caller specifies the output path (or asks you to derive it from the input findings.json
 path). Write JSON matching the schema referenced by the caller (typically
-`docs/superpowers/SCHEMAS.md` — the `fixes.json` shape).
+`docs/dev-kit/SCHEMAS.md` — the `fixes.json` shape).
 
 ### 4.4 — Compute next_action
 

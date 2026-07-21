@@ -3,7 +3,6 @@ name: kubernetes-specialist
 description: Use when deploying or managing Kubernetes workloads. Invoke to create deployment manifests, configure pod security policies, set up service accounts, define network isolation rules, debug pod crashes, analyze resource limits, inspect container logs, or right-size workloads. Use for Helm charts, RBAC policies, NetworkPolicies, storage configuration, performance optimization, GitOps pipelines, and multi-cluster management.
 license: MIT
 metadata:
-  author: https://github.com/Jeffallan
   version: "1.1.1"
   domain: infrastructure
   triggers: Kubernetes, K8s, kubectl, Helm, container orchestration, pod deployment, RBAC, NetworkPolicy, Ingress, StatefulSet, Operator, CRD, CustomResourceDefinition, ArgoCD, Flux, GitOps, Istio, Linkerd, service mesh, multi-cluster, cost optimization, VPA, spot instances
@@ -240,4 +239,3 @@ When implementing Kubernetes resources, provide:
 3. NetworkPolicy for network isolation
 4. Brief explanation of design decisions and security considerations
 
-[Documentation](https://jeffallan.github.io/claude-skills/skills/infrastructure/kubernetes-specialist/)

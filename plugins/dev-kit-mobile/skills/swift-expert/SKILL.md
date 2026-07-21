@@ -3,7 +3,6 @@ name: swift-expert
 description: Builds iOS/macOS/watchOS/tvOS applications, implements SwiftUI views and state management, designs protocol-oriented architectures, handles async/await concurrency, implements actors for thread safety, and debugs Swift-specific issues. Use when building iOS/macOS applications with Swift 5.9+, SwiftUI, or async/await concurrency. Invoke for protocol-oriented programming, SwiftUI state management, actors, server-side Swift, UIKit integration, Combine, or Vapor.
 license: MIT
 metadata:
-  author: https://github.com/Jeffallan
   version: "1.1.0"
   domain: language
   triggers: Swift, SwiftUI, iOS development, macOS development, async/await Swift, Combine, UIKit, Vapor
@@ -162,4 +161,3 @@ When implementing Swift features, provide:
 4. Tests demonstrating usage
 5. Brief explanation of architectural decisions
 
-[Documentation](https://jeffallan.github.io/claude-skills/skills/language/swift-expert/)

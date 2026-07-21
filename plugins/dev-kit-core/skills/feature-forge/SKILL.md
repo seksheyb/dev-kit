@@ -3,7 +3,6 @@ name: feature-forge
 description: Conducts structured requirements workshops to produce feature specifications, user stories, EARS-format functional requirements, acceptance criteria, and implementation checklists. Use when defining new features, gathering requirements, or writing specifications. Invoke for feature definition, requirements gathering, user stories, EARS format specs, PRDs, acceptance criteria, or requirement matrices.
 license: MIT
 metadata:
-  author: https://github.com/Jeffallan
   version: "1.1.0"
   domain: workflow
   triggers: requirements, specification, feature definition, user stories, EARS, planning
@@ -97,4 +96,3 @@ Then they are redirected to the dashboard within 2 seconds.
 
 Save as: `specs/{feature_name}.spec.md`
 
-[Documentation](https://jeffallan.github.io/claude-skills/skills/workflow/feature-forge/)

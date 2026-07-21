@@ -10,7 +10,7 @@ Your job: invoke Gemini against the sprint plan, capture the review on disk, and
 
 ## Inputs you receive from the orchestrator
 
-- `plan_path` — absolute path to the plan file (`docs/superpowers/plans/<plan>.md`)
+- `plan_path` — absolute path to the plan file (`docs/dev-kit/plans/<plan>.md`)
 - `sdd_path` — absolute path to the SDD (`docs/architecture/SDD.md`)
 - `adr_dir` — path to ADRs (`docs/architecture/ADRs/`)
 - `spec_path` — absolute path to the spec / brief that drove the plan
@@ -44,7 +44,7 @@ Your job: invoke Gemini against the sprint plan, capture the review on disk, and
      surface the stderr message as a HIGH blocker, and set `next_action: "fix complexity config/calibration and re-run scorer"`.
    The plan **cannot pass** while `complexity_ok` is false — fold this into `gate_passed` (step 4).
 
-1. Read `docs/superpowers/SCHEMAS.md` for the `gemini-summary.json` shape and the HIGH / MEDIUM / LOW classification.
+1. Read `docs/dev-kit/SCHEMAS.md` for the `gemini-summary.json` shape and the HIGH / MEDIUM / LOW classification.
 
 2. Invoke the `cc-gemini-plugin:gemini` skill via the Skill tool. The brief must:
    - List the input file paths only — **never inline plan, SDD, or spec content**.

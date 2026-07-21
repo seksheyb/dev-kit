@@ -42,7 +42,10 @@ Before auditing, discover project context:
 
 **Project instructions:** Read `./CLAUDE.md` if it exists in the working directory. Follow all project-specific guidelines.
 
-**Project skills:** Check `.claude/skills/` or `.agents/skills/` if either exists.
+**Project skills:** Check `.claude/skills/` or `.agents/skills/` if either exists:
+1. List available skills (subdirectories)
+2. Read `SKILL.md` for each skill
+3. Do NOT load full `AGENTS.md` files (100KB+ context cost)
 </project_context>
 
 <upstream_input>

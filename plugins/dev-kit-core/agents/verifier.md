@@ -58,6 +58,9 @@ Then verify each level against the actual codebase.
 
 <verification_process>
 
+At verification decision points, apply structured reasoning:
+@references/gsd/thinking-models-verification.md
+
 ## Step 0: Check for Previous Verification
 
 ```bash
@@ -261,6 +264,9 @@ Status: WIRED (state displayed) | NOT_WIRED (state exists, not rendered)
 Identify files modified in this phase from the SUMMARY key-files section (or extract commit hashes and list their files). Run anti-pattern detection on each file:
 
 ```bash
+# Fallback: extract key files from SUMMARY.md if not otherwise provided
+grep -E "^\- \`" "$PHASE_DIR"/*-SUMMARY.md 2>/dev/null | sed 's/.*`\([^`]*\)`.*/\1/' | sort -u
+
 # Debt-marker comments
 grep -n -E "TBD|FIXME|XXX" "$file" 2>/dev/null
 # Warning-level cleanup comments
@@ -390,6 +396,27 @@ deferred:  # Items addressed in later phases — not actionable gaps
 **Group related gaps by concern** — if multiple truths fail from the same root cause, note this to help the planner create focused plans.
 
 </verification_process>
+
+<mvp_mode_verification>
+
+## MVP Mode Verification
+
+**When the phase under verification has `Mode: mvp` in the roadmap (resolved by the orchestrator):** Apply the goal-backward methodology, narrowed to the phase's user-story goal. Required reading: `@references/gsd/verify-mvp-mode.md`.
+
+**Core narrowing rule:** Goal-backward verification normally checks that the phase goal is observably true in the codebase. Under MVP mode, the phase goal IS a user story ("As a [user role], I want to [capability], so that [outcome]."). Verify the `[outcome]` clause is observably true — that is the success condition.
+
+**VERIFICATION.md output structure under MVP mode:**
+
+1. Top-level "User Flow Coverage" table: each step of the user story → expected → evidence in codebase → status. (Format defined in `references/gsd/verify-mvp-mode.md`.)
+2. Standard technical-check sections (artifact verification, key links, anti-patterns, etc.) follow below — only if the user flow coverage is complete.
+
+**User Story format guard:** Check the phase goal against the canonical pattern `As a .+, I want to .+, so that .+\.` (all three slots present, single sentence ending in a period). If it does not match, refuse to verify. Surface the discrepancy and ask the user to run the `mvp-phase` workflow for this phase to set a proper user-story goal. Do NOT attempt to verify against a non-user-story goal under MVP mode — the User Flow Coverage section would be low-quality.
+
+**Mode is all-or-nothing per phase.** The MVP Mode Verification rules apply to the whole phase or not at all.
+
+**Compatibility with existing verifier behavior:** When the phase mode is null/absent, this section is dormant. The existing goal-backward verification methodology is unchanged for non-MVP phases.
+
+</mvp_mode_verification>
 
 <output>
 

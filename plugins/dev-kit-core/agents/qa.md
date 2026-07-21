@@ -101,6 +101,47 @@ Run full mode, then load `baseline.json` from a previous run. Diff: which issues
 ### Phase 1: Initialize
 Verify browser tooling is available, create output directories, start a timer for duration tracking.
 
+### Phase 1b: Bootstrap Test Framework (full mode only)
+
+The fix loop needs a test command to run regression tests against — detect (and if needed, set up) one before QA begins.
+
+1. **Detect runtime and existing test setup:**
+   ```bash
+   [ -f package.json ] && echo RUNTIME:node
+   [ -f Gemfile ] && grep -q rails Gemfile && echo FRAMEWORK:rails
+   { [ -f requirements.txt ] || [ -f pyproject.toml ]; } && echo RUNTIME:python
+   [ -f go.mod ] && echo RUNTIME:go
+   [ -f Cargo.toml ] && echo RUNTIME:rust
+   [ -f composer.json ] && echo RUNTIME:php
+   [ -f mix.exs ] && echo RUNTIME:elixir
+   ls jest.config.* vitest.config.* playwright.config.* .rspec pytest.ini phpunit.xml 2>/dev/null
+   ls -d test/ tests/ spec/ __tests__/ cypress/ e2e/ 2>/dev/null
+   ```
+2. **Framework already present:** read 2-3 existing test files to learn naming/import/assertion conventions for later use in Phase 8e.5, then skip the rest of this phase.
+3. **No runtime detected at all:** note "No test framework detected — could not identify project language" in the report and skip bootstrap; regression tests will be skipped in Phase 8e.5.
+4. **Runtime detected, no test framework:** this agent runs unattended, so don't stop to ask — pick the primary recommendation below, note the choice in the report, and proceed:
+
+   | Runtime | Primary | Alternative (note in report, don't switch to it) |
+   |---|---|---|
+   | Ruby/Rails | minitest + fixtures + capybara | rspec + factory_bot + shoulda-matchers |
+   | Node.js | vitest + @testing-library | jest + @testing-library |
+   | Next.js | vitest + @testing-library/react + playwright | jest + cypress |
+   | Python | pytest + pytest-cov | unittest |
+   | Go | stdlib testing + testify | stdlib only |
+   | Rust | cargo test (built-in) + mockall | — |
+   | PHP | phpunit + mockery | pest |
+   | Elixir | ExUnit (built-in) + ex_machina | — |
+
+   Monorepo with multiple runtimes: bootstrap the one nearest the code under QA; note the others as skipped.
+5. **Install and configure:** install the chosen packages, add a minimal config file and test directory, write one example test against real project code to confirm the setup works. Installation failure → debug once; still failing → `git checkout -- <changed files>` to revert and continue the QA run without a test framework.
+6. **Seed 3-5 real tests:** `git log --since=30.days --name-only --format="" | sort | uniq -c | sort -rn | head -10` to find recently-changed files; prioritize error handlers > business logic with conditionals > API endpoints > pure functions. One meaningful-assertion test per file (never `expect(x).toBeDefined()`). Run each — keep passing tests, fix failing ones once, delete silently if still failing.
+7. **Verify:** run the full suite with the detected test command. Failing → debug once; still failing → revert the bootstrap changes and warn in the report.
+8. **Document:** write or update `TESTING.md` (framework, run command, test layers, conventions) and, if `CLAUDE.md` exists and lacks a `## Testing` section, append one (run command; "write a regression test when fixing a bug"; "test both branches of a conditional"). Never overwrite existing content in either file.
+9. **CI (GitHub only):** if `.github/` exists or no CI config is found anywhere, write `.github/workflows/test.yml` running the verified test command on push/PR. Other CI providers detected → note "CI pipeline generation supports GitHub Actions only — add the test step to your existing pipeline manually" and skip.
+10. **Commit:** if bootstrap produced changes, `git add` only the bootstrap files and `git commit -m "chore: bootstrap test framework ({framework})"`.
+
+Skip this entire phase in `report_only` mode — use the "No test framework detected" report note from Setup instead.
+
 ### Phase 2: Authenticate (if needed)
 - Credentials supplied: navigate to the login page, find the form, fill it (NEVER echo real passwords — write `[REDACTED]` in all output), submit, verify login succeeded.
 - Cookie file supplied: import cookies, then navigate to the target.
@@ -116,7 +157,7 @@ Navigate to the target, take an annotated screenshot, map the navigation structu
 Visit pages systematically. At each page: navigate, annotated screenshot, console check. Then the per-page checklist:
 
 1. **Visual scan** — layout issues in the annotated screenshot
-2. **Interactive elements** — click buttons, links, controls. Do they work?
+2. **Interactive elements** — click buttons, links, controls. Do they work? Check for custom clickable elements (divs/spans with click handlers) that a standard accessibility scan can miss — probe elements that look interactive even if they aren't in the a11y tree.
 3. **Forms** — fill and submit. Test empty, invalid, boundary, and edge-case inputs (equivalence partitioning + boundary values)
 4. **Navigation** — all paths in and out
 5. **States** — empty state, loading, error, overflow
@@ -169,7 +210,7 @@ Compute each category score (0-100), then take the weighted average.
 
 - **Next.js:** hydration errors in console (`Hydration failed`, `Text content did not match`); `_next/data` 404s = broken data fetching; test client-side navigation (click links, don't just goto); check CLS on dynamic content.
 - **Rails:** N+1 query warnings (dev mode); CSRF token presence in forms; Turbo/Stimulus transitions; flash messages appearing and dismissing.
-- **WordPress:** plugin-conflict JS errors; REST API endpoints (`/wp-json/`); mixed-content warnings.
+- **WordPress:** plugin-conflict JS errors; admin bar visibility for logged-in users; REST API endpoints (`/wp-json/`); mixed-content warnings.
 - **General SPA (React/Vue/Angular):** snapshots over link crawling; stale state (navigate away and back — does data refresh?); browser back/forward history handling; console after extended use.
 
 ## Phase 7: Triage (full mode only)

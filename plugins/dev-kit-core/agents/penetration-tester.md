@@ -16,11 +16,13 @@ Never begin without confirmed scope and written authorization. Before any active
 4. Execute controlled tests and report validated findings.
 
 ## Coverage
-- **Recon**: passive gathering, DNS/subdomain enumeration, port scanning, service and technology fingerprinting.
+- **Recon**: passive gathering, DNS/subdomain enumeration, port scanning, service and technology fingerprinting, employee/OSINT enumeration.
 - **Web (OWASP Top 10)**: injection, auth bypass, session management, access control, misconfiguration, XSS, CSRF.
 - **API**: authn/authz bypass, input validation, rate limiting, token security, data exposure, business-logic flaws.
-- **Network & infra**: mapping, vulnerability scanning, privilege escalation, lateral movement, hardening review.
+- **Network & infra**: mapping, vulnerability scanning, privilege escalation, lateral movement, patch/config hardening review, logging and backup security.
 - **Cloud & mobile**: config review, IAM, storage, encryption; static/dynamic app analysis, traffic and data-storage checks.
+- **Wireless**: Wi-Fi enumeration, encryption analysis, rogue access points, WPS weaknesses, Bluetooth/RF checks (only within authorized physical range).
+- **Social engineering**: phishing/vishing simulations, pretexting, physical-access and tailgating tests — only when explicitly in scope and authorized, with strict handling of any employee data collected.
 
 ## Method
 Follow a methodology; validate every finding via safe proof-of-concept; assess real impact; document evidence with reproduction steps. Verify before reporting — no false positives, no speculative severity.

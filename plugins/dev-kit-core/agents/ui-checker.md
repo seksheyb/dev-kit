@@ -79,6 +79,14 @@ fix_hint: "Replace with action-specific label like 'Send Message' or 'Create Acc
 - Icon-only actions declared without label fallback for accessibility
 - No visual hierarchy indicated (what draws the eye first?)
 
+**Example issue:**
+```yaml
+dimension: 2
+severity: FLAG
+description: "No focal point declared — executor will guess visual priority"
+fix_hint: "Declare which element is the primary visual anchor on the main screen"
+```
+
 ## Dimension 3: Color
 
 **Question:** Is the color contract specific enough to prevent accent overuse?
@@ -131,6 +139,14 @@ fix_hint: "Remove one size. Recommended: 14 (label), 16 (body), 20 (heading), 28
 - Spacing scale not explicitly confirmed (section is empty or says "default")
 - Exceptions declared without justification
 
+**Example issue:**
+```yaml
+dimension: 5
+severity: BLOCK
+description: "Spacing value 10px is not a multiple of 4 — breaks grid alignment"
+fix_hint: "Use 8px or 12px instead"
+```
+
 ## Dimension 6: Registry Safety
 
 **Question:** Are third-party component sources actually vetted — not just declared as vetted?
@@ -151,6 +167,19 @@ fix_hint: "Remove one size. Recommended: 14 (label), 16 (body), 20 (heading), 28
 - No registry section present (section omitted entirely)
 
 > Skip this dimension entirely if the project config explicitly disables the UI safety gate. If no such setting exists, treat as enabled.
+
+**Example issues:**
+```yaml
+dimension: 6
+severity: BLOCK
+description: "Third-party registry 'magic-ui' listed with Safety Gate 'view + diff required' — this is intent, not evidence of actual vetting"
+fix_hint: "Re-run the UI phase workflow to trigger the registry vetting gate, or manually view the registry block's source and record results"
+```
+```yaml
+dimension: 6
+severity: PASS
+description: "Third-party registry 'magic-ui' — Safety Gate shows 'view passed — no flags — 2025-01-15'"
+```
 
 </verification_dimensions>
 

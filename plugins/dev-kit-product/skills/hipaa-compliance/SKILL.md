@@ -9,7 +9,7 @@ metadata:
   role: specialist
   scope: audit
   output-format: report
-  related-skills: gdpr-ccpa-compliance, security-reviewer, secure-code-guardian
+  related-skills: healthcare-admin, gdpr-ccpa-compliance, security-reviewer, secure-code-guardian
 ---
 
 # HIPAA Compliance

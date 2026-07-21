@@ -24,7 +24,8 @@ Your job: invoke Gemini against the sprint plan, capture the review on disk, and
 
 ## What you do
 
-0. **Deterministic complexity check (runs first, before Gemini).** Run:
+0. **Deterministic complexity check (runs first, before Gemini).** If the project has adopted a
+   scorer at `.claude/bin/complexity-score.mjs`, run it:
    ```bash
    node .claude/bin/complexity-score.mjs "$plan_path" --gate --json
    ```
@@ -42,6 +43,25 @@ Your job: invoke Gemini against the sprint plan, capture the review on disk, and
      `track <name>: missing complexity signals`.
    - Exit `2` → configuration or calibration file is invalid; record `complexity_ok: false`,
      surface the stderr message as a HIGH blocker, and set `next_action: "fix complexity config/calibration and re-run scorer"`.
+
+   **No scorer installed (common — this is optional project tooling, not a dev-kit dependency):**
+   if `.claude/bin/complexity-score.mjs` does not exist, do not fail the gate on that alone — fall
+   back to a manual signal check:
+   1. Read the plan's `## Parallel Execution Map` and every track's `complexity:` block yourself.
+   2. Sanity-check each track's declared `Model`/`Effort` against its stated signals using the
+      same axes the `bugfix-wave` skill uses for individual fixes — model: `haiku` for pure
+      mechanical work, `sonnet` for standard wiring/implementation, `opus` for multi-file
+      refactors or ambiguous scope; effort: `low` for literal execution, `medium` for standard
+      judgment, `high` for security/data-loss/cross-cutting risk. Flag as implausible anything
+      where the track's task list clearly outgrows its declared tier (e.g. multi-file,
+      cross-cutting work logged as `haiku`/`low`, or a track whose file list omits files its own
+      tasks say it creates).
+   3. Record `complexity_ok: false` for any track that fails this manual check, phrased the same
+      way as the scripted path: `track <name>: declared <x>/<y> looks too low for <reason>`.
+   4. This manual pass is a judgment call, not a deterministic recomputation — say so in
+      `next_action` when it's the reason the gate failed, and suggest the project add
+      `.claude/bin/complexity-score.mjs` for calibration-aware enforcement, but never block the
+      gate on the scorer's absence by itself.
    The plan **cannot pass** while `complexity_ok` is false — fold this into `gate_passed` (step 4).
 
 1. Read `docs/dev-kit/SCHEMAS.md` for the `gemini-summary.json` shape and the HIGH / MEDIUM / LOW classification.
@@ -70,7 +90,10 @@ Your job: invoke Gemini against the sprint plan, capture the review on disk, and
    - `blockers` — up to 5 verbatim HIGH lines (one sentence each), with the plan section each affects. Resolved-by-justification HIGHs do not appear here. **The step-0 complexity blockers are always listed here when `complexity_ok` is false** (they cannot be waived with `won't fix` — they are deterministic and must be corrected).
    - `gate_passed` is `true` iff `complexity_ok` is `true` **and** `severity_counts.HIGH == 0` after subtracting resolved-by-justification HIGHs.
    - `next_action`:
-     - `"fix complexity columns and re-run scorer"` if `complexity_ok` is false
+     - `"fix complexity columns and re-run scorer"` if `complexity_ok` is false and the scripted
+       scorer ran
+     - `"fix complexity columns flagged by manual review (no scorer installed — see step 0)"` if
+       `complexity_ok` is false via the manual fallback
      - `"fix HIGHs in plan and re-review"` if `gate_passed` is false for Gemini reasons
      - `"dispatch Wave 1"` if `gate_passed` is true
 

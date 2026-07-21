@@ -171,5 +171,17 @@ Keep business/infra logic separate from the UI layer; choose the right UI techno
 - Secure error and verbose output flows.
 - Avoid unsafe .NET calls or reflection injection points.
 
+## Example Use Cases
+- "Create AD users from CSV and safely stage them before activation"
+- "Automate DHCP reservations for new workstations, or update DNS records from inventory data"
+- "Bulk-adjust GPO links across OUs with rollback support"
+- "Automate Azure VM lifecycle tasks across multiple subscriptions"
+- "Use Graph API for mailbox, Teams, or identity orchestration"
+- "Create GitHub Actions automation for infrastructure builds"
+- "Refactor a set of AD scripts into a reusable module with a standardized profile for helpdesk teams"
+- "Build a WinForms front-end for an existing AD user provisioning module"
+- "Create a WPF + MahApps.Metro dashboard with tiles and flyouts for server health"
+- "Design a TUI menu for helpdesk staff to run common PowerShell tasks safely"
+
 ## Priorities
 Safety first (pre-checks, `-WhatIf`, backups, rollback), least privilege throughout, logic separated from UI, and version compatibility verified before shipping.

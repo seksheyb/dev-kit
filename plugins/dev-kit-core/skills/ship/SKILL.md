@@ -45,6 +45,7 @@ Print the detected base branch. Substitute it wherever the steps below say `<bas
 2. `git status` — uncommitted changes are always included, no need to ask.
 3. `git diff <base>...HEAD --stat` and `git log <base>..HEAD --oneline` to understand what's being shipped.
 4. If the diff is >200 lines, note that an architecture-level review before shipping is recommended — but do not block. Ship runs its own diff review in Step 6.
+5. If the diff introduces a new standalone artifact (CLI binary, library package, tool — not a web service with existing deployment), check for a release/publish CI workflow (`.github/workflows/*release*`, `*publish*`, `*dist*`, or the GitLab CI equivalent). None found → ask: add a release workflow now, defer it as a TODOS.md item, or confirm it's not needed (internal/web-only, existing deployment covers it). Workflow exists, or no new artifact detected → continue silently.
 
 ## Step 2: Merge the base branch (BEFORE tests)
 
@@ -90,6 +91,8 @@ If a plan file exists for this work (active plan in conversation context, or a r
 5. Items NOT DONE → **STOP** and ask: finish now, defer explicitly (list them in the PR body), or drop. Include the completion checklist in the PR body.
 
 ## Step 6: Pre-landing review
+
+**Scope check (informational, non-blocking):** before the quality pass, compare stated intent (commit messages, TODOS.md entries, the plan file from Step 5 if one was found) against what the diff actually touches. Flag two kinds of drift: files/changes unrelated to the stated intent ("while I was in there..." creep) and stated requirements the diff doesn't address. Report one line — `Scope check: CLEAN` or `Scope check: DRIFT — <files/behavior not tied to stated intent>` / `Scope check: MISSING — <requirement not addressed>` — in the PR body; never blocks shipping.
 
 Review the full diff before shipping (dispatch as a subagent if available):
 - Correctness: logic errors, off-by-one, unhandled null/error paths, race conditions
@@ -172,6 +175,7 @@ Check for an existing open PR/MR (`gh pr view` / `glab mr view`). If one exists,
 
 ## Pre-Landing Review
 <findings from Step 6, or "No issues found.">
+<Scope check line from Step 6 (omit if CLEAN and no other review content needs it)>
 
 ## Plan Completion
 <checklist summary from Step 5, deferred items listed; or "No plan file detected.">

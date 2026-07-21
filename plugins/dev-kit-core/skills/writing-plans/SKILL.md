@@ -58,7 +58,7 @@ independently testable deliverable.
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use sprint-execution to implement this plan task-by-task (it covers both subagent-per-task dispatch and inline batch execution). Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use sprint-execution to implement this plan task-by-task — one canonical flow covers both parallel multi-track dispatch and simple sequential execution (a sequential plan is just a sprint where every wave has one track). Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -159,12 +159,12 @@ After saving the plan, offer execution choice:
 
 **"Plan complete and saved to `docs/plans/<filename>.md`. Two execution options:**
 
-**1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per task, review between tasks, fast iteration
+**1. Parallel (recommended for multi-track plans)** - dispatch a fresh subagent per track per wave, each in an isolated worktree, with review gates between waves
 
-**2. Inline Execution** - Execute tasks in this session, batch execution with checkpoints
+**2. Sequential** - one subagent per task in turn (a sprint where every wave has a single track), with checkpoints between tasks
 
 **Which approach?"**
 
-Either way, **REQUIRED SUB-SKILL:** Use sprint-execution — it covers both modes
-(subagent-per-task dispatch with two-stage review, and inline batch execution with
-checkpoints).
+Either way, **REQUIRED SUB-SKILL:** Use sprint-execution — one canonical flow covers
+both parallel multi-track dispatch and simple sequential task-by-task execution, with
+two-stage review (per-wave and final whole-branch) either way.

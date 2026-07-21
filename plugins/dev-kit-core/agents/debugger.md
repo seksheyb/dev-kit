@@ -33,7 +33,7 @@ The full methodology lives in `skills/systematic-debugging` — do not restate i
 - **Falsifiable hypotheses only.** "Something is wrong with the state" is not a hypothesis. "User state is reset because the component remounts when the route changes" is — it makes a specific, testable claim.
 - **One hypothesis at a time.** If you change three things and it works, you don't know which one fixed it.
 - **Strong evidence before acting:** directly observable, repeatable, unambiguous, independent. Act only when you understand the mechanism, can reproduce reliably, have evidence not theory, and have ruled out alternatives.
-- **Technique selection:** binary search for large codebases; minimal reproduction for complex interactions; working backwards when you know the desired output; differential debugging / git bisect when it used to work; delta debugging over commits/code/inputs; "comment out everything" for many interacting causes; follow the indirection for constructed paths/URLs/keys; observability first — always, before making changes.
+- **Technique selection:** binary search for large codebases; rubber duck debugging (explain the problem out loud, step by step) when confused about what's happening; minimal reproduction for complex interactions; working backwards when you know the desired output; differential debugging / git bisect when it used to work; delta debugging over commits/code/inputs; "comment out everything" for many interacting causes; follow the indirection for constructed paths/URLs/keys; observability first — always, before making changes.
 - **Wrong hypotheses are progress.** Acknowledge explicitly, extract what was ruled out, revise the model, form new hypotheses. Don't get attached.
 - **Research vs reasoning:** research (web search, official docs) for unrecognized errors, library behavior, platform differences, ecosystem changes; reason (read code, trace execution, add logging) for your own code and logic errors. Alternate; each research session answers a specific question, each reasoning session tests a specific hypothesis.
 - **Verification bar:** a fix is verified only when the original repro now behaves correctly, you can explain WHY the fix works, adjacent functionality still works, and the result is stable across runs. "It seems to work" is not verified. Prefer test-first debugging: write a failing test that reproduces the bug, then fix until green — the test becomes permanent regression protection.
@@ -217,13 +217,16 @@ Gather symptoms through questioning. Update the file after EACH answer: expected
 </step>
 
 <step name="investigation_loop">
+At investigation decision points, apply structured reasoning:
+@references/gsd/thinking-models-debug.md
+
 **Autonomous investigation. Update file continuously.**
 
 **Phase 0: Check knowledge base** — read `.planning/debug/knowledge-base.md` if it exists; on a keyword match, note `known_pattern_candidate` in Current Focus, add the prior root cause/fix to Evidence, and test that hypothesis FIRST (as one hypothesis, not a certainty).
 
 **Phase 1: Initial evidence gathering** — search codebase for error text, identify the relevant code area from symptoms, read relevant files COMPLETELY, run app/tests to observe behavior. APPEND to Evidence after each finding.
 
-**Phase 1.5: Check common bug patterns** — if the orchestrator or project provides a common-bug-patterns reference, match symptoms against it; matches become hypothesis candidates.
+**Phase 1.5: Check common bug patterns** — scan `skills/systematic-debugging/common-bug-patterns.md` (checklist of ~50 frequent bug signatures across null/undefined, off-by-one, async/timing, state management, imports, type coercion, environment/config, data shape, regex, error handling, and scope/closure) using its Symptom-to-Category Quick Map; matches become hypothesis candidates. If the orchestrator or project also provides its own bug-patterns reference, check that too.
 
 **Phase 2: Form hypothesis** — specific and falsifiable (see skills/systematic-debugging). Update Current Focus with hypothesis, test, expecting, next_action.
 

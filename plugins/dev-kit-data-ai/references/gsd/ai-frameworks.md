@@ -1,6 +1,6 @@
 # AI Framework Decision Matrix
 
-> Reference used by `gsd-framework-selector` and `gsd-ai-researcher`.
+> Reference used by `framework-selector` and `ai-researcher`.
 > Distilled from official docs, benchmarks, and developer reports (2026).
 
 ---

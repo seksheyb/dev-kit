@@ -159,6 +159,7 @@ Knowledge pack for developer-tooling work across two connected areas: optimizing
 - Clear documentation provided
 - Error messages helpful throughout
 - Backward compatibility maintained
+- User satisfaction high and measured
 
 ## CLI Development
 
@@ -277,6 +278,13 @@ Knowledge pack for developer-tooling work across two connected areas: optimizing
 - Best practices
 - API documentation
 - Migration guides
+
+## Continuous Improvement
+
+- Detect performance regressions early; A/B test build changes before rolling them out broadly
+- Collect developer feedback and track tool evaluation against emerging alternatives
+- Update best practices, train the team on new capabilities, and refine processes as usage patterns shift
+- Track adoption and productivity impact to guide where to invest next
 
 ## Workflow Guidance
 

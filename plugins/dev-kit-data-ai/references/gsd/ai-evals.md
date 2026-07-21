@@ -1,6 +1,6 @@
 # AI Evaluation Reference
 
-> Reference used by `gsd-eval-planner` and `gsd-eval-auditor`.
+> Reference used by `eval-planner` and `eval-auditor`.
 > Based on "AI Evals for Everyone" course (Reganti & Badam) + industry practice.
 
 ---

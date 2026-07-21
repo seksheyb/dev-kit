@@ -313,6 +313,32 @@ If you catch yourself thinking:
 
 **When you see these:** STOP. Return to Phase 1.
 
+## Debugging Mindset
+
+Evergreen disciplines that apply across every bug, every language, every system — not a phase, a stance to hold throughout.
+
+**User = Reporter, Investigator = you.** The user knows what they expected, what actually happened, error messages they saw, and when it started. The user does NOT know what's causing the bug, which file has the problem, or what the fix should be — don't ask them to diagnose. Ask about experience; investigate the cause yourself.
+
+**Meta-debugging your own code is harder.** You made the design decisions, so they feel obviously correct; you remember intent, not what you actually implemented; familiarity breeds blindness to bugs. The discipline: treat your code as foreign (read it as if someone else wrote it), treat your own implementation decisions as hypotheses not facts, and admit your mental model might be wrong — the code's behavior is truth, your model is a guess. If you modified code recently and something broke, that diff is the prime suspect. The hardest admission is "I implemented this wrong," not "requirements were unclear."
+
+**Cognitive biases to actively counter:**
+
+| Bias | Trap | Antidote |
+|------|------|----------|
+| Confirmation | Only looking for evidence supporting your hypothesis | Actively seek disconfirming evidence: "What would prove me wrong?" |
+| Anchoring | First explanation becomes your fixed anchor | Generate 3+ independent hypotheses before investigating any |
+| Availability | Recent bug → assume this one has the same cause | Treat each bug as novel until evidence suggests otherwise |
+| Sunk cost | Spent 2 hours on one path, keep going despite evidence | Every 30 min ask: "If I started fresh, is this still the path I'd take?" |
+
+**When to restart from Phase 1:**
+- 2+ hours with no progress (you're likely tunnel-visioned)
+- 3+ "fixes" that didn't work (your mental model is wrong)
+- You can't explain the current behavior (don't add changes on top of confusion)
+- You're debugging the debugger (something fundamental is wrong)
+- The fix works but you don't know why (that isn't fixed, that's luck)
+
+Restart protocol: close all files/terminals, write down what you know for certain, write down what you've ruled out, list new hypotheses that differ from before, begin again from Phase 1.
+
 ## Common Rationalizations
 
 | Excuse | Reality |

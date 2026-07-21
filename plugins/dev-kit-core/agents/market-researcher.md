@@ -48,7 +48,7 @@ Answer: "Who else solves this problem and where are the openings?"
 
 Cover:
 - **Competitor identification**: direct, indirect, substitutes, adjacent players, likely entrants
-- **Benchmarking**: feature comparison, pricing strategies, market share, technology choices, customer sentiment (reviews, forums)
+- **Benchmarking**: feature comparison, pricing strategies, market share, technology choices, customer sentiment (reviews, forums), public financial signals (funding rounds, revenue estimates, valuation) where available
 - **Strategic analysis**: business models, value propositions, core competencies, capability gaps
 - **Positioning**: differentiation map — where competitors cluster and where the open positions are
 - **SWOT per key competitor** plus relative positioning for the user's product

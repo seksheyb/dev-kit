@@ -11,7 +11,7 @@ Status legend: `[ ]` open · `[x]` resolved · `[-]` declined/no-change.
 
 ## Stage 8 — Execute
 
-### F1. `dispatching-parallel-agents` is claimed as a foundation but nothing builds on it — [ ]
+### F1. `dispatching-parallel-agents` is claimed as a foundation but nothing builds on it — [x]
 
 The pipeline doc says sprint-execution and bugfix-wave "build on" it; grep shows neither
 SKILL.md references it (only the docs do). It is not dead, though — it is the *lightweight
@@ -23,6 +23,15 @@ ceremony) that neither orchestrator covers: `sprint-execution` requires a plan,
 pipeline doc ("the lightweight ad-hoc counterpart", not "the underlying technique they
 build on") and add one-line cross-references in `sprint-execution` and `bugfix-wave`
 pointing at it for the no-ceremony case (and vice versa). Net-zero.
+
+Done. Also surfaced during the "why does this need to be a separate skill" discussion:
+`dispatching-parallel-agents/SKILL.md` is byte-for-byte identical to the `superpowers`
+plugin's skill of the same name — the 9th skill in dev-kit's superpowers fork, missing
+from `ATTRIBUTION.md`'s list of 8. Added it to that line. Also caught and fixed the same
+overstated "Built directly on `dispatching-parallel-agents`" claim in `bugfix-wave`'s
+catalog entry (not just the pipeline doc) — and removed an equally-unverified
+`using-git-worktrees` claim on that same line (`bugfix-wave/SKILL.md` doesn't reference
+it either; that's an F2-shaped gap, left for when F2 is picked up).
 
 ### F2. `sprint-execution` doesn't reference `using-git-worktrees` — [ ]
 

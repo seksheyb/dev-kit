@@ -36,7 +36,7 @@
 - **Why not vanilla Claude Code:** Without this skill's guidance, an agent tends to either investigate everything itself sequentially or dispatch a single vague "fix all the tests" subagent that loses focus — nothing forces the one-agent-per-independent-domain split or the single-message parallel dispatch pattern.
 - **When to use:** "Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies."
 - **Then what:** Multiple subagents' fixes/investigations are reviewed for conflicts, integrated, and the full test suite is re-run to confirm they compose cleanly.
-- **Notes:** `bugfix-wave` is a fully worked-out, higher-ceremony application of this same pattern (with worktrees, waves, and structured commits).
+- **Notes:** The lightweight, no-ceremony counterpart to `sprint-execution` (plan-driven) and `bugfix-wave` (bug-list-driven) — same core pattern, without their worktree/wave/gate machinery. Use this when neither a plan file nor a triaged bug list exists yet; once one does, that skill's ceremony is warranted instead.
 
 #### `using-git-worktrees` (skill)
 
@@ -63,7 +63,7 @@
 - **Why not vanilla Claude Code:** Vanilla Claude Code has no notion of grouping bugs into non-conflicting tracks or waves, no per-fix atomic-commit-with-rollback discipline, and no structural-fix requirement — it would either fix bugs serially or parallelize naively into merge conflicts and unreviewable diffs.
 - **When to use:** Triggered by a pasted bug list with severity tags, or explicit requests like "fix these", "execute these findings", "run the fix wave".
 - **Then what:** Every fixable finding lands as its own atomic, verified commit with a regression guard; unresolved findings are reported with rationale; in structured (`findings.json`) mode, a `fixes.json` summary is emitted for the next pipeline stage.
-- **Notes:** Built directly on `dispatching-parallel-agents` and `using-git-worktrees`; commonly the consumer of `code-review-gate`/`security-auditor` output.
+- **Notes:** The higher-ceremony sibling of `dispatching-parallel-agents` for the bug-list case — same core parallel-dispatch pattern, with worktrees, waves, and structured commits layered on top; commonly the consumer of `code-review-gate`/`security-auditor` output.
 
 #### `test-master` (skill)
 

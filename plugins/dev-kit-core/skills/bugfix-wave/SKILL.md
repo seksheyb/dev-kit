@@ -21,6 +21,10 @@ You are the orchestrator. Your job: take a bug list, classify it, partition it i
 parallel tracks, dispatch subagents in waves, merge their work, and clean up. No plan files. No
 markdown output. Just execute.
 
+**No bug list yet, just a couple of independent tasks?** This skill's classify/track/wave/worktree
+ceremony is overkill for that — use `dispatching-parallel-agents` instead for lightweight,
+no-ceremony parallel dispatch.
+
 ## Input modes
 
 Bugfix-wave accepts input in two modes. Detect which one you've been given before Phase 1.

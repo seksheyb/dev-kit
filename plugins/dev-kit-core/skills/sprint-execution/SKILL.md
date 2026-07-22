@@ -7,6 +7,8 @@ description: Use when executing a written sprint/implementation plan with multip
 
 Execute a written plan by dispatching subagents — one per track — in parallel waves, each in an isolated git worktree, with the orchestrator owning merges, state, and gates. One canonical flow covers both parallel multi-track sprints and simple sequential task lists (a sequential plan is just a sprint where every wave has one track).
 
+**No plan file yet, just a handful of independent tasks?** This skill's worktree/wave/gate ceremony is overkill for that — use `dispatching-parallel-agents` instead for lightweight, no-ceremony parallel dispatch.
+
 ## Conventions (configure per project, defaults shown)
 
 Projects declare these in their plan file or project config (CLAUDE.md). If absent, use the defaults:

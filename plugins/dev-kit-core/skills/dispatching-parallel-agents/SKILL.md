@@ -13,6 +13,12 @@ When you have multiple unrelated failures (different test files, different subsy
 
 **Core principle:** Dispatch one agent per independent problem domain. Let them work concurrently.
 
+**Already have a written plan or a triaged bug list?** This is the no-ceremony, no-worktree variant
+for ad hoc mid-session dispatch. Once ceremony is warranted — a plan file with a parallel execution
+map exists (`sprint-execution`), or you have a prioritized bug list with severity tags
+(`bugfix-wave`) — use that skill's worktree/wave/gate machinery instead; it's the same core pattern
+with isolation, sequencing, and merge protocol layered on top.
+
 ## When to Use
 
 ```dot

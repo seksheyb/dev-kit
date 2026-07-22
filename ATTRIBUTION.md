@@ -7,7 +7,7 @@ skill/agent/command architecture with per-track model routing.
 
 | Source | Author | License | What was derived |
 |---|---|---|---|
-| [superpowers](https://github.com/obra/superpowers) | Jesse Vincent (@obra) | MIT | Process skills: brainstorming, TDD, systematic-debugging, writing-plans, verification, worktrees, code-review protocol, writing-skills |
+| [superpowers](https://github.com/obra/superpowers) | Jesse Vincent (@obra) | MIT | Process skills: brainstorming, TDD, systematic-debugging, writing-plans, verification, worktrees, dispatching parallel agents, code-review protocol, writing-skills |
 | [claude-skills](https://github.com/jeffallan/claude-skills) | @jeffallan | MIT | 64 domain knowledge packs (skills/) |
 | [awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents) | VoltAgent | MIT | Selected agents (accessibility-tester, performance-engineer, dependency-manager, incident-responder, compliance-auditor, penetration-tester, market-researcher lenses) and ~20 net-new domain packs converted to skills |
 | [spec-kit](https://github.com/github/spec-kit) | GitHub | MIT | SDD spine skills: constitution, specify, clarify, analyze, converge |

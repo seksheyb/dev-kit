@@ -368,7 +368,11 @@ the lighter tier, with the full set still available as an explicit escalation.
    a compaction-proof progress ledger. **Orchestrator must not start Wave N+1 until Wave N merges.**
 3. **`test-driven-development`** — RED → GREEN → REFACTOR inside every track (the "no production code without a
    failing test first" iron law).
-4. **`dispatching-parallel-agents`** — the underlying technique `sprint-execution` and `bugfix-wave` build on.
+4. **`dispatching-parallel-agents`** — the lightweight ad-hoc counterpart to `sprint-execution` and
+   `bugfix-wave`: same core pattern (one focused, self-contained subagent per independent problem,
+   dispatched in parallel), with none of their ceremony — no plan file, no worktree isolation, no
+   wave/gate protocol. Reach for it when you have 2+ independent tasks but neither a written plan
+   nor a triaged bug list yet.
 5. Implementation skills, per surface: **`fullstack-guardian`** (frontend+backend+security together),
    **`secure-code-guardian`** (auth/input/crypto), **`refactoring-specialist`** (injected into any track touching
    existing code — behavior-preserving, one move at a time).

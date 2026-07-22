@@ -2,17 +2,17 @@
 name: design-html
 description: >
   Design finalization: turns an approved design (mockup image, DESIGN.md tokens, a plan, or
-  a plain description) into production-quality, self-contained HTML/CSS. Real content, real
+  a plain description) into a production-quality Claude Design deliverable. Real content, real
   responsive behavior, dark mode, accessibility, and an interactive refinement loop. Use
   when asked to "finalize this design", "turn this into HTML", "build me a page",
   "implement this design", "code the mockup", or after a design-consultation session.
 ---
 
-# Design HTML: Production HTML/CSS From a Design
+# Design HTML: Production Design From a Design, Built in Claude Design
 
-You generate production-quality HTML where layout and text behave correctly: text reflows on
-resize, containers size to their content, breakpoints are deliberate. One page per
-invocation. Real content only.
+You generate production-quality screens where layout and text behave correctly: text reflows on
+resize, containers size to their content, breakpoints are deliberate. One page per invocation.
+Real content only. Delivery is always Claude Design — there is no local-file fallback.
 
 ## UX principles (apply before, during, and after every decision)
 
@@ -50,25 +50,41 @@ Prioritize ruthlessly.
 
 ---
 
-## Step 0: Input Detection
+## Step 0: Input Detection + Design System Check
 
 Detect what design context exists, in this order:
 
 1. **Approved mockup** — a design image (PNG/screenshot) the user approved, e.g. from a
-   design-consultation variant-shotgun session. If a prior finalized HTML also exists, ask:
-   evolve it (apply changes on top, preserving custom edits) or start fresh from the mockup?
+   design-consultation variant-shotgun session. Check `.claude/design/screens.json` (a local
+   index this skill maintains — see Step 5 — mapping screen name → Claude Design project id,
+   since the actual deliverable lives entirely in Claude Design, not on disk) for a prior entry
+   matching this screen name. If found, ask: evolve it (apply changes on top, preserving custom
+   edits made live in the Claude Design editor) or start fresh from the mockup?
 2. **Plan-driven** — a product/design plan or spec exists but no mockup. The plan is the
-   source of truth. Ask for a screen name for the output (e.g. "landing-page", "dashboard").
-3. **Freeform** — nothing found. Ask the user to describe what they want, or point them to
-   design-consultation first if they'd rather establish a system before building.
+   source of truth. Ask for a screen name for the output (e.g. "landing-page", "dashboard"), then
+   check `.claude/design/screens.json` the same way.
+3. **Freeform** — nothing found. Ask the user to describe what they want, and for a screen name.
 
-Always also check for `DESIGN.md` in the repo root — its tokens take priority for
-system-level values (fonts, brand colors, spacing scale). If it contains a
-`<!-- claude_design_project_id: ... -->` comment, this project has an existing claude-design
-MCP workspace — reuse it in Step 3.5 rather than only serving a local preview.
+**Require the Claude Design MCP.** This skill only delivers via Claude Design — there is no
+local-file fallback. If `mcp__claude-design__*` tools aren't available, stop here and tell the
+user Claude Design is required before this skill can produce anything.
+
+**Read, don't resolve, the design system binding.** This skill does not decide which design
+system to use — `design-consultation` is the only skill that resolves or binds
+`claude_design_system_id` (see `@references/claude-design-mcp-protocol.md`, "Resolution
+ownership"). Here, just:
+
+1. Check `DESIGN.md` for `claude_design_system_id`. **Missing (no DESIGN.md, or DESIGN.md has no
+   bound system)?** Stop and tell the user to run `design-consultation` first — do not call
+   `list_design_systems` yourself, do not ask which system applies, do not proceed unbound.
+2. Check `DESIGN.md` for `claude_design_project_id` — that's design-consultation's own
+   demo/preview project. Don't build this screen into it; this skill's screens get their own
+   project(s), bound to the same `claude_design_system_id`.
+3. Ask the model-selection question from the protocol once, up front — every subagent dispatch
+   for this invocation (initial build and every refinement round) uses that same chosen model.
 
 Output a context summary: **Mode** (approved-mockup | plan-driven | freeform | evolve),
-**Visual reference**, **Design tokens** (DESIGN.md or none), **Screen name**.
+**Visual reference**, **`claude_design_system_id`**, **Screen name**, **Model**.
 
 ---
 
@@ -90,7 +106,7 @@ Output a context summary: **Mode** (approved-mockup | plan-driven | freeform | e
 
 ## Step 2: Layout Strategy
 
-Classify the design and state the layout approach before writing code:
+Classify the design and state the layout approach before writing anything:
 
 | Design type | Strategy |
 |-------------|----------|
@@ -103,35 +119,44 @@ Classify the design and state the layout approach before writing code:
 If the project has a text-layout or design engine wired in (requires wiring), you may use it
 for computed text layout; the default is standard modern CSS, which handles all tiers above.
 
-### Framework detection
-
-```bash
-[ -f package.json ] && grep -o '"react"\|"svelte"\|"vue"\|"@angular/core"\|"solid-js"\|"preact"' package.json | head -1 || echo "NONE"
-```
-
-If a framework is detected, ask: A) Vanilla HTML — self-contained preview file (recommended
-for first pass), or B) framework-native component (then ask TypeScript or JavaScript). If no
-framework: default to vanilla HTML, no question needed.
+The deliverable itself is always `.dc.html` (Claude Design's Design Components format, built in
+Step 3) regardless of the target codebase's frontend framework — framework-native translation, if
+needed, happens later at Step 5 when the finished design gets copied into the codebase.
 
 ---
 
-## Step 3: Generate the HTML
+## Step 3: Generate
 
-Write a single file (Write tool). Save to a sensible location — e.g.
-`design/<screen-name>/finalized.html` in the repo, or where the user asks. Framework output
-saves as `finalized.[tsx|svelte|vue]` and adds any needed dependency via the project's
-package manager.
+Dispatch via the Agent tool at the model chosen in Step 0 (always dispatch — see
+`@references/claude-design-mcp-protocol.md` Step 2, never run this inline regardless of which
+model the parent session happens to be). Give the subagent, in one self-contained prompt:
 
-**Always include (vanilla HTML):**
-- CSS custom properties for all design tokens (from DESIGN.md / Step 1 extraction)
-- Fonts via `<link>` tags + `document.fonts.ready` gate before any layout measurement
-- Semantic HTML5 (`<header>`, `<nav>`, `<main>`, `<section>`, `<footer>`)
-- Responsive behavior with breakpoint adjustments at 375px, 768px, 1024px, 1440px
-- ARIA attributes, correct heading hierarchy, `:focus-visible` states
-- `prefers-color-scheme` media query for dark mode
-- `prefers-reduced-motion` respected for all animation
+- the Implementation Spec (Step 1) and layout strategy (Step 2)
+- the `claude_design_system_id` from Step 0, and this screen's existing project id from
+  `.claude/design/screens.json` if Step 0 found one — reuse it, or `create_project
+  (design_system_id: <that id>)` otherwise; a screen typically gets its own project, distinct
+  from design-consultation's demo project
+- instruction to follow Claude Design's own workflow end to end (it's loaded automatically via
+  `get_claude_design_prompt`): explore the bound system's templates/resources first
+  (`list_files`/`read_file` on the design-system project, `copy_files(src_project_id: ...)` for
+  anything reused — never hand-recreate what the system already ships), write the deliverable as
+  `.dc.html` (call `create_support_js` first per directory), then run its own verify loop
+  (render → gate → `design-verifier` → act)
+- instruction to offer a live `?embed=1` preview link right after `create_project`/`get_project`
+  (Claude Design's own convention — auto-refreshes on every `write_files`, distinct from the
+  short-lived `serve_url` used only by verification tooling)
+- report back: `project_id`, path(s) written, `open_url` (never `serve_url`), model used
+
+The **AI slop blacklist below still applies** — Claude Design's own system prompt has its own
+overlapping list (aggressive gradients, emoji, overused fonts); treat the two as reinforcing,
+not redundant.
+
+**Content requirements (regardless of what fed the tokens):**
+- Fonts, palette, and spacing from the bound design system — never invented
+- Semantic structure, correct heading hierarchy, `:focus-visible` states, ARIA where needed
+- Responsive behavior deliberate at each breakpoint, not just "stacked on mobile"
+- `prefers-color-scheme` respected for dark mode, `prefers-reduced-motion` for animation
 - Real content extracted from the mockup/plan (never lorem ipsum, never "Your text here")
-- Self-contained: inline CSS/JS, no build step required to open the file
 
 **Never include (AI slop blacklist):**
 - Purple/blue gradients as default
@@ -147,46 +172,26 @@ package manager.
 
 ---
 
-## Step 3.5: Live Preview
-
-Start a simple HTTP server for live preview:
-
-```bash
-cd <output-dir> && python3 -m http.server 0 --bind 127.0.0.1 &
-```
-
-Report the URL (or fall back to `open <path>/finalized.html` if python3 is unavailable).
-Tell the user: "Live preview running — after each edit, refresh the browser to see changes."
-Kill the server when the refinement loop ends.
-
-**If a `claude_design_project_id` was found in Step 0** and `mcp__claude-design__*` tools are
-available: also `write_files` the finalized HTML into that same project (never `create_project`
-here — this skill only ever writes into a project design-consultation already created) and
-`render_preview` for a shareable link, offered alongside the local preview rather than
-replacing it.
-
----
-
 ## Step 4: Verify + Refinement Loop
 
-**Verification:** if browser tooling is available (requires wiring), screenshot the page at
-375px, 768px, and 1440px and inspect for text overflow, layout collapse, and responsive
-breakage; fix before presenting. Otherwise note that automated viewport verification was
-skipped and rely on the user's browser.
-
-**Refinement loop:**
+Verification is Claude Design's own render → gate → `design-verifier` → act loop (already run
+once at the end of Step 3's dispatch) — don't layer a separate dev-kit screenshot-verification
+pass on top. The refinement loop below stays under this skill's control — the user is talking to
+*this* conversation, not inside the dispatched subagent — so each round re-dispatches a fresh
+Agent call at the same chosen model:
 
 ```
 LOOP:
-  1. Point the user at the preview URL/file.
+  1. Share the `open_url` (and the `?embed=1` live-preview link if offered) with the user.
   2. If an approved mockup exists, show it alongside for comparison.
   3. Ask: "What needs to change? Say 'done' when satisfied."
   4. "done" / "ship it" / "looks good" → exit loop, go to Step 5.
-  5. Apply feedback with targeted Edit-tool changes on the HTML file
-     (do NOT regenerate the whole file — surgical edits only; the user may
-     have made manual edits that must be preserved).
-  6. Brief summary of what changed (2-3 lines max).
-  7. Re-verify if screenshots are available. Go to LOOP.
+  5. Dispatch a fresh Agent call (same model as Step 3): apply this feedback via a targeted
+     `write_files` (read current content + etag first, pass `if_match`), then re-run the verify
+     loop (render → gate → design-verifier → act). Never regenerate the whole file from scratch
+     — the user (or a teammate) may be editing the same project live.
+  6. Brief summary of what changed (2-3 lines max), plus the refreshed `open_url`.
+  7. Go to LOOP.
 ```
 
 Maximum 10 iterations; after 10, ask whether to continue or call it done.
@@ -195,16 +200,24 @@ Maximum 10 iterations; after 10, ask whether to continue or call it done.
 
 ## Step 5: Save & Next Steps
 
-**Design token extraction:** if no `DESIGN.md` exists, offer to create one from the generated
-HTML — extract CSS custom properties (colors, spacing, font sizes), font families/weights,
-palette roles, spacing scale, border radii, shadows. If accepted, write `DESIGN.md` to the
-repo root so future design work is style-consistent automatically.
+**Design token extraction:** if no `DESIGN.md` exists — this shouldn't happen given Step 0's
+gate, but if it was bypassed somehow — stop and point back to `design-consultation` rather than
+inventing tokens here.
 
-**Save metadata** (`finalized.json` next to the HTML): source mockup/plan, mode, html file,
-layout strategy, framework, iteration count, date, screen name.
+**Save metadata** (as a project support file, e.g. `finalized.json` written via `write_files`):
+source mockup/plan, mode, screen name, project id, `claude_design_system_id`, path(s) written,
+iteration count, date, model used (Sonnet/Opus/Fable).
 
-**Next steps:** A) Copy the HTML/component into the codebase. B) Iterate more. C) Done —
-use as reference.
+**Update the local screen index** — upsert this screen name → project id into
+`.claude/design/screens.json` (create if missing) so a later invocation for the same screen
+finds it in Step 0 instead of starting fresh unnecessarily.
+
+**Next steps:** A) Copy the design into the codebase — run `design-handoff` first (it has no
+automatic access to Claude Design's context the way this skill does, so it needs the translated
+cheat sheet), then pull the final `.dc.html` content via `read_file` and adapt it to the
+project's actual frontend framework against that cheat sheet; the Claude Design project stays
+the collaborative source of truth, the codebase gets a framework-native translation.
+B) Iterate more. C) Done — the `open_url` stays live and editable in Claude Design either way.
 
 ---
 
@@ -214,10 +227,11 @@ use as reference.
   If that requires `width: 312px` instead of a grid class, that's correct. Cleanup happens
   later during component extraction. In plan-driven/freeform mode, the user's refinement
   feedback is the source of truth.
-- **Surgical edits in the refinement loop.** Edit tool for targeted changes, never a full
-  rewrite that clobbers the user's manual edits.
+- **Surgical edits in the refinement loop.** Targeted `write_files` for changed content only,
+  never a full rewrite that clobbers edits made live in the Claude Design editor.
 - **Real content only.** Extract from the mockup, use plan content, or generate realistic
   domain content. Never placeholders.
 - **One page per invocation.** For multi-page designs, run once per page.
-- **Self-contained output.** The vanilla HTML file must open and look right with zero build
-  steps and zero network dependencies beyond fonts.
+- **Design-system templates take precedence over scaffolding from scratch.** When the bound
+  system ships a template for this kind of content, `copy_files` it in and compose from its
+  parts rather than writing your own from zero.

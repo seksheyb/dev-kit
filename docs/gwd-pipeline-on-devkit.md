@@ -44,11 +44,11 @@ cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it desc
 | **1** | Requirements & product framing | `brainstorming` · `specify` (generate + clarify) · `assumption-mapping` → `backlog-grooming` · `market-researcher` · `spec-review-cpo` | PRD (or `docs/BACKLOG.md` for milestone 2+) → `spec.md` (+ `US-xxx` story bank) + locked Scope Decision Record + updated `docs/BACKLOG.md` |
 | **2** | Architecture & tech stack | `architecture-designer` · `diagram` · `cso` · `plan-review-eng` (lens) | requirements → `SDD.md` + ADRs + threat posture |
 | **3** | Research & roadmap | `project-researcher` ×4 → `research-synthesizer` · `roadmapper` | requirements + research → `ROADMAP.md` (vertical slices) + `STATE.md` |
-| **4** | Design system *(if UI)* | `design-consultation` → `design-html` → `design-handoff` · `plan-review-design` (lens) | product → `DESIGN.md` + build prompts |
+| **4** | Design system *(if UI)* | `design-consultation` → `design-html`[^plan-review-design] | product → `DESIGN.md` |
 | **5** | Phase discovery | `codebase-mapper` ×4 · `pattern-mapper` · `assumptions-analyzer` · `advisor-researcher` · `phase-researcher` · `graphify` (query) | phase → `CONTEXT.md`, `PATTERNS.md`, `RESEARCH.md`, codebase maps |
 | **6** | AI / UI phase specs *(conditional)* | *(AI)* `domain-researcher` → `eval-planner`/`eval-auditor` (data-ai lane) · *(UI)* `ui-researcher` → `ui-checker` | phase → `AI-SPEC.md` / `UI-SPEC.md` |
-| **7** | Plan the phase | `writing-plans` · `planner` · `plan-review` (cmd) → `plan-reviewer` → 4 lenses · `gate-plan-review` · `analyze` | context → `PLAN.md` (waves + tracks), reviewed & complexity-gated |
-| **8** | Execute the phase | `using-git-worktrees` · `sprint-execution` · `test-driven-development` · `dispatching-parallel-agents` · `fullstack-guardian`/`secure-code-guardian` · `refactoring-specialist` · `guard` · `verification-before-completion` · **lane skills** | plan → code + tests, per-track parallel |
+| **7** | Plan the phase | `writing-plans` · `planner` · `plan-review` (cmd) → `plan-reviewer` → 4 lenses (incl. `plan-review-design`) · `gate-plan-review` · `analyze` | context → `PLAN.md` (waves + tracks), reviewed & complexity-gated |
+| **8** | Execute the phase | `using-git-worktrees` · `sprint-execution` · `test-driven-development` · `dispatching-parallel-agents` · `fullstack-guardian`/`secure-code-guardian` · `refactoring-specialist` · `guard` · `design-handoff` (Claude Design → codebase bridge, when UI in scope) · `verification-before-completion` · **lane skills** | plan → code + tests, per-track parallel |
 | **9** | Debug *(as needed)* | `debug` (cmd) → `debugger` ← `systematic-debugging` · `learn` | failure → root-cause fix + regression test |
 | **10** | Adversarial review ↔ fix loop | `review` (cmd) → `code-review-gate` (round) ↔ `bugfix-wave` · `code-review-protocol` · `qa` (cmd/agent) · `design-reviewer` · `ui-auditor` · `accessibility-tester` · `devex-review` | code → fixes (loop ≤6) |
 | **11** | Verify the goal | `verify` (cmd) → `verifier` · `converge` · `integration-checker` · `nyquist-auditor` · `dependency-manager` | code → `VERIFICATION.md`, gaps closed |
@@ -62,6 +62,11 @@ cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it desc
 `learn` (durable knowledge), `guard` (safety), `graphify` (query anytime), `diagram` (any review/design
 step), `writing-skills` (codify a repeated workflow into a new skill). See
 [Cross-cutting assets](#cross-cutting-assets).
+
+[^plan-review-design]: `plan-review-design` is introduced conceptually here, alongside `DESIGN.md`, but
+does not execute in Stage 4 — it has no artifact to review yet. It fires once per phase, in Stage 7, as
+one of four parallel lenses against *that phase's own* `PLAN.md` (a fresh artifact per phase, not a
+project-wide one) — see Stage 7's row above and its own section below.
 
 ---
 
@@ -220,21 +225,42 @@ input is a fresh PRD. **Every milestone after that:** input is `docs/BACKLOG.md`
 
 ### Stage 4 — Design system *(GWD step 6 — once, only if the project has a UI lane and no `DESIGN.md`)*
 
-1. **`design-consultation`** — establish typography/color/layout/spacing/motion as one coherent system
-   (anti-AI-slop discipline), write `DESIGN.md`. Includes "Variant shotgun" mode for competing directions. **When
-   the `claude-design` MCP is available**, the preview/handoff artifact is a claude-design project instead of (or
-   alongside) a local self-contained HTML file — see "Claude Design MCP path" below.
-2. **`design-html`** — turn the approved system into a real, responsive, accessible, self-contained HTML preview;
-   reuses the same claude-design project (never creates a second one) if one exists.
-3. **`design-handoff`** — translate `DESIGN.md` into copy-paste-ready component build prompts for implementing agents.
-4. **`plan-review-design`** *(design lens)* — becomes load-bearing again in Stage 7 for any plan with UI scope.
+1. **`design-consultation`** — establish typography/color/layout/spacing/motion as one coherent system (anti-AI-slop
+   discipline), write `DESIGN.md`. Includes "Variant shotgun" mode for competing directions. Delivery is **always**
+   Claude Design — no local-file fallback. It is also the **only** skill that resolves or binds
+   `claude_design_system_id`; every downstream skill just reads that id from `DESIGN.md` and stops if it's absent.
+2. **`design-html`** — turn the approved system into a real, responsive, accessible screen, built directly as a
+   Claude Design `.dc.html` deliverable (never a plain local HTML file). Reads `claude_design_system_id` from
+   `DESIGN.md` (stops and points back to `design-consultation` if missing) rather than resolving it itself. Also
+   fires standalone in Stage 8 for a single phase's screen, where it creates its own screen-scoped project bound
+   to that same system id (never design-consultation's demo project).
+`design-handoff` and `plan-review-design` are **not** Stage 4 assets despite being about design — see the
+table footnote above for `plan-review-design` (fires in Stage 7), and Stage 8 below for `design-handoff`
+(fires per phase, bridging a finished Claude Design screen into codebase-native code —
+`get_claude_design_prompt` already auto-loads the system's context for anything staying inside Claude
+Design, so design-handoff's translated cheat sheet only earns its keep for the *codebase-side*
+implementer, which doesn't exist until a phase is actually being built).
 
-**Claude Design MCP path:** `design-consultation` checks `DESIGN.md` for a stored
-`<!-- claude_design_project_id: ... -->` comment before ever calling `create_project` — reuse, never duplicate.
-The first run that creates a project persists its ID into `DESIGN.md`'s frontmatter comment and Decisions Log, so
-every later stage that touches the design system (`design-html`, `design-handoff`, and any UI work in Stage 8)
-references the same collaborative workspace instead of drifting into disconnected local files. Falls back to a
-plain local HTML file automatically when the MCP isn't wired in — this path is optional, never required.
+**Design system vs. project — and the one gap MCP can't close:** a Claude Design *design system* (the shared,
+reusable token/asset library — fonts, colors, spacing, component templates) is a different object from a Claude
+Design *project* (one deliverable, e.g. a demo preview or a single screen). Projects *bind* to a system via
+`design_system_id`; no MCP tool creates a design system — that's a Claude Design UI-only action. When
+`design-consultation` runs and no existing system fits, it composes a **paste-ready prompt** from the approved
+design decisions (aesthetic, typography, colors, spacing, motion, seed templates), saves it to
+`.claude/design/claude-design-system-prompt.md`, and has the user paste it into Claude Design directly to create the
+system — then reports the resulting id back to store as `claude_design_system_id`. This run's own delivery still
+proceeds without blocking on that manual step.
+
+**Model selection for Claude Design work:** whenever `design-consultation` or `design-html` is about to make its
+first `mcp__claude-design__*` call, it asks once (per invocation) which model should perform that generation work —
+Sonnet (high thinking, default), Opus, or Fable — then **always** dispatches via the Agent tool's `model` override
+to run it, regardless of which model the current session happens to be (there's no way for a skill's instructions
+to change which model is answering the current turn — dispatch is the only mechanism that actually guarantees the
+choice). See `references/claude-design-mcp-protocol.md` for the shared protocol both skills follow.
+
+**Not part of this path:** Stage 6's `ui-researcher`/`ui-checker` never touch the claude-design MCP — they write
+`UI-SPEC.md`, a per-phase constraints *contract* (hard limits, component vetting), not visuals. The actual
+per-phase screens this contract governs are what Stage 8's `design-html` invocation (above) builds.
 
 ---
 
@@ -307,8 +333,14 @@ the lighter tier, with the full set still available as an explicit escalation.
    **`secure-code-guardian`** (auth/input/crypto), **`refactoring-specialist`** (injected into any track touching
    existing code — behavior-preserving, one move at a time).
 6. **`guard`** — destructive-command warnings + edit-scope freeze when a track touches prod or shared surface.
-7. **`verification-before-completion`** — every "done" claim backed by fresh command output, not confidence.
-8. **Lane skills** — the actual framework work routes here (see [Lane routing](#lane-routing)): e.g. `python-pro` /
+7. **`design-handoff`** *(UI tracks only)* — bridges a `design-html`-built Claude Design screen into this track's
+   actual codebase: translates `DESIGN.md` into a hex/typography quick-reference and copy-paste component prompts
+   for the lane skill below to build against, since a codebase-side implementer has no automatic access to the
+   Claude Design system's context (`get_claude_design_prompt` only auto-loads that for work staying inside Claude
+   Design itself). Runs once its first output is needed, per phase — not eagerly at Stage 4, since at that point
+   there's no codebase yet to bridge into.
+8. **`verification-before-completion`** — every "done" claim backed by fresh command output, not confidence.
+9. **Lane skills** — the actual framework work routes here (see [Lane routing](#lane-routing)): e.g. `python-pro` /
    `fastapi-expert` / `postgres-pro` (backend), `react-expert` / `nextjs-developer` (web), `swift-expert` /
    `flutter-expert` (mobile), `terraform-engineer` / `kubernetes-specialist` (infra), `payment-integration` /
    `fintech-engineer` (specialized).
@@ -478,11 +510,13 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 - **Stage 1:** `brainstorming`, `specify` (generate + clarify in one skill), `assumption-mapping`, `backlog-grooming`, `market-researcher`, `spec-review-cpo` (`the-fool` remains available as an optional extra pressure-test, no longer in the default list; `first-principles-thinking`, `clarify`, and `feature-forge` were folded into `specify`/`spec-review-cpo` — see the note at the top of this document)
 - **Stage 2:** `architecture-designer`, `diagram`, `cso`, `plan-review-eng`
 - **Stage 3:** `project-researcher`, `research-synthesizer`, `roadmapper`
-- **Stage 4:** `design-consultation`, `design-html`, `design-handoff`, `plan-review-design`
+- **Stage 4:** `design-consultation`, `design-html` (`plan-review-design` is introduced here conceptually but
+  only executes — and is counted — under Stage 7; `design-handoff` is counted under Stage 8, where it actually
+  fires — see both stages' notes)
 - **Stage 5:** `codebase-mapper`, `pattern-mapper`, `assumptions-analyzer`, `advisor-researcher`, `phase-researcher`
 - **Stage 6:** `domain-researcher`, `ui-researcher`, `ui-checker`
-- **Stage 7:** `writing-plans`, `planner`, `plan-review` (cmd), `plan-reviewer`, `plan-review-devex`, `plan-review-goal-backward`, `gate-plan-review`, `analyze` (`plan-review-eng`/`plan-review-design` already counted under Stage 2/4; `plan-review-ceo` intentionally excluded from this pipeline — see Stage 7's opening note)
-- **Stage 8:** `using-git-worktrees`, `sprint-execution`, `test-driven-development`, `dispatching-parallel-agents`, `fullstack-guardian`, `secure-code-guardian`, `refactoring-specialist`, `guard`, `verification-before-completion`
+- **Stage 7:** `writing-plans`, `planner`, `plan-review` (cmd), `plan-reviewer`, `plan-review-design`, `plan-review-devex`, `plan-review-goal-backward`, `gate-plan-review`, `analyze` (`plan-review-eng` already counted under Stage 2; `plan-review-ceo` intentionally excluded from this pipeline — see Stage 7's opening note)
+- **Stage 8:** `using-git-worktrees`, `sprint-execution`, `test-driven-development`, `dispatching-parallel-agents`, `fullstack-guardian`, `secure-code-guardian`, `refactoring-specialist`, `guard`, `design-handoff`, `verification-before-completion`
 - **Stage 9:** `debug` (cmd), `debugger`, `systematic-debugging`
 - **Stage 10:** `review` (cmd), `code-review-gate`, `bugfix-wave`, `code-review-protocol`, `qa` (cmd), `qa` (agent), `design-reviewer`, `ui-auditor`, `accessibility-tester`, `devex-review`
 - **Stage 11:** `verify` (cmd), `verifier`, `converge`, `integration-checker`, `nyquist-auditor`, `dependency-manager`

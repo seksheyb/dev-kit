@@ -33,8 +33,36 @@ ls DESIGN.md design-system.md 2>/dev/null || echo "NO_DESIGN_FILE"
 - If a DESIGN.md exists: read it, then ask: "You already have a design system. Want to
   **update** it, **start fresh**, or **cancel**?" Also check for a
   `<!-- claude_design_project_id: ... -->` comment near the top — if present, this project
-  already has a claude-design workspace; reuse it (see Phase 5) rather than creating a new one.
+  already has a claude-design demo/preview project; reuse it (see Phase 5) rather than creating
+  a new one. This is a *different* id from the design-system binding below — don't conflate them.
 - If none: continue.
+
+**Require the Claude Design MCP.** This skill only delivers via Claude Design — there is no
+local-file fallback. If `mcp__claude-design__*` tools aren't available, stop here and tell the
+user Claude Design is required before this skill can produce anything.
+
+**Resolve the Claude Design system binding.** `design-consultation` is the **only** skill that
+does this resolution — every downstream skill (`design-html`, etc.) just reads whatever gets
+decided here from `DESIGN.md` and stops if it's missing, per
+`@references/claude-design-mcp-protocol.md`. Run its Step 0 now, before anything else:
+
+1. Check DESIGN.md for a stored `claude_design_system_id`. If present, skip to the bound-system
+   branch below.
+2. Otherwise call `list_design_systems` and ask the user which one (if any) applies.
+
+**This decides whether Phases 1–3 below run at all:**
+
+- **A design system is bound:** per Claude Design's own workflow, a bound system is the
+  confirmed visual direction — do NOT ask any aesthetic/vibe/color/typography/mood questions and
+  do not re-confirm the direction. Ask only Phase 1's items 1–2 (what the product is, who it's
+  for, project type) since that context shapes content and layout regardless of which system
+  supplies the visual language. Skip Phase 1 item 3 (the research offer — Phase 2 never runs when
+  bound) and the memorable-thing question, skip Phase 2 (research), Phase 3 (proposal), and
+  Phase 4 (drill-downs) entirely, then go straight to Phase 5.
+- **No design system fits, or the user wants fresh direction:** continue to Phase 1 as written;
+  the full proposal flow produces the visual language this skill has always produced. At the end
+  (Phase 6), follow the protocol's "Manual design-system creation" section: generate the
+  paste-ready prompt for the user to hand to Claude Design directly.
 
 **Gather product context from the codebase:**
 
@@ -223,11 +251,33 @@ rest of the system.
 
 ## Phase 5: Design System Preview (default ON)
 
-Generate a polished, **single self-contained HTML preview page** (no framework dependencies)
-and open it in the user's browser (`open <file>` on macOS; otherwise tell them the path).
-This page is the first visual artifact the skill produces — it must be beautiful.
+Generate a polished preview in Claude Design — this is the first visual artifact the skill
+produces, and it must be beautiful. Follow `@references/claude-design-mcp-protocol.md` in full:
+ask the model-selection question, then **always** dispatch the actual generation via the Agent
+tool with the chosen model (`sonnet` / `opus` / `fable`) — never run it inline regardless of
+which model the current session happens to be. Give the dispatched subagent everything it needs
+in one prompt:
 
-Requirements:
+- Reuse the demo/preview project stored in DESIGN.md's `claude_design_project_id` comment if
+  one exists; otherwise `create_project(design_system_id: <the resolved claude_design_system_id,
+  if Phase 0 bound one>)`, capturing the returned project id immediately — it's needed in
+  Phase 6 before anything else touches DESIGN.md.
+- If a design system is bound: `get_claude_design_prompt(design_system_id: ...)` to load its
+  tokens/context, `list_files` on the design-system project for any templates it ships, and
+  `copy_files(src_project_id: <system id>)` in the ones actually needed — build the preview
+  *from* those tokens/templates, don't invent new ones.
+- If no system is bound (the full proposal flow ran): build from the approved proposal's
+  tokens as usual.
+- Write content as `.dc.html` (Design Components format — call `create_support_js` once per
+  directory first; see the protocol doc for the exact shape), then `write_files` and
+  `render_preview`.
+- Run Claude Design's own verify loop (render → gate → `design-verifier` → act) rather than a
+  separate dev-kit screenshot-verification pass.
+- Report back the `open_url` (never `serve_url`).
+
+Every requirement below applies to the preview regardless of what fed its tokens (bound system
+or fresh proposal):
+
 1. **Loads proposed fonts** from Google Fonts (or Bunny Fonts) via `<link>` tags
 2. **Uses the proposed palette throughout** — dogfood the design system
 3. **Shows the product name** (never "Lorem Ipsum") as the hero heading
@@ -253,26 +303,6 @@ body text, generic stock-photo vibe, system-ui font, gradient CTA, bubble-radius
 
 If the user says skip the preview, go directly to Phase 6.
 
-### Claude Design MCP path (optional, if `mcp__claude-design__*` tools are available)
-
-If the claude-design MCP is wired in and the user wants a shareable, collaborative workspace
-instead of (or alongside) a local HTML file:
-
-1. **Reuse, don't duplicate.** Check DESIGN.md for an existing `claude_design_project_id`
-   comment. If present, `get_project` it and confirm it's still valid before writing to it —
-   never call `create_project` when a valid stored ID already exists.
-2. If none exists, `create_project` for this design system and capture the returned project ID
-   immediately — it's needed in Phase 6 before anything else touches DESIGN.md.
-3. `write_files` the preview content (font specimens, palette swatches, mockups — same content
-   as the self-contained HTML page above) into the project.
-4. `render_preview` to generate the live view and report its link to the user in place of (or
-   next to) the local `open <file>` step.
-5. This path replaces the *delivery mechanism* only — every other rule in this phase (self-gate,
-   anti-slop checklist, SAFE/RISK framing) still applies to what gets written.
-
-If the MCP isn't available, or the user prefers a plain local file, fall back to the
-self-contained HTML page above — that path is always the default and needs no tooling.
-
 ---
 
 ## Variant Shotgun mode
@@ -280,6 +310,12 @@ self-contained HTML page above — that path is always the default and needs no 
 Run this mode when the user wants to see **competing full directions side-by-side** ("show me
 options", "explore designs", "I don't like how this looks") instead of a single proposal.
 It can replace Phase 3-5 or run inside Phase 5.
+
+**If a design system is bound (Phase 0):** the normal rule is no aesthetic re-proposal — but the
+user explicitly asking for this mode ("show me options") IS them asking for divergent
+alternatives, which Claude Design's own workflow treats as the one exception to "don't ask about
+visual style." Proceed, and say plainly that these variants explore *beyond* the bound system
+rather than silently ignoring it.
 
 **Context gathering (5 dimensions, two rounds max):**
 1. **Who** — who is the design for? (persona, audience, expertise level)
@@ -311,20 +347,22 @@ three different coffee levels.
 
 **Confirm concepts** with the user before building (adjust / add / drop, max 2 rounds).
 
-**Build the variants:** generate one self-contained HTML mockup per concept (same quality bar
-as the Phase 5 preview; use parallel subagents if available, one per variant). If an
-image-generation design tool is wired in, it may be used instead — that's optional, not
-required. Then build a simple side-by-side **comparison board**: one HTML page embedding all
-variants (iframes or screenshots) with labels, and open it in the browser.
+**Build the variants:** same delivery as Phase 5 (Claude Design MCP, per
+`@references/claude-design-mcp-protocol.md`) — ask the model-selection question once up front,
+then dispatch one parallel subagent per variant at that same chosen model, each writing its
+variant as its own `.dc.html` within the shared project. Same quality bar as the Phase 5 preview.
+If an image-generation design tool is wired in, it may be used instead — that's optional, not
+required. Then build a simple side-by-side **comparison board**: one `.dc.html` embedding all
+variants (iframes or screenshots) with labels, in the same Claude Design project.
 
 **Feedback loop:** ask which variant they prefer and what to change; regenerate or remix
 (e.g. "layout from A, colors from B") until a direction is approved. After feedback, always
 confirm what you understood: preferred variant, notes per variant, overall direction —
 "Is this right?"
 
-**Save the approved choice** (variant file + a short `approved.json` with variant, feedback,
-date, screen name) in a project-appropriate location, and feed the approved direction into
-Phase 6.
+**Save the approved choice** — the winning variant's `.dc.html` plus a short `approved.json`
+(variant, feedback, date, screen name) — as support files in the same Claude Design project, and
+feed the approved direction into Phase 6.
 
 ---
 
@@ -336,7 +374,9 @@ proposal/variant, not just text descriptions):
 ```markdown
 # Design System — [Project Name]
 
-<!-- claude_design_project_id: [proj_xxx, only if the Claude Design MCP path was used] -->
+<!-- claude_design_system_id: [uuid, only if bound to an existing Claude Design design system] -->
+<!-- claude_design_project_id: [proj_xxx, from Phase 5 — omit only if the preview was skipped;
+     this is this project's OWN demo/preview project, a distinct id from the design system above ] -->
 
 ## Product Context
 - **What this is:** [1-2 sentences]
@@ -386,9 +426,25 @@ proposal/variant, not just text descriptions):
 ## Decisions Log
 | Date | Decision | Rationale |
 |------|----------|-----------|
-| [today] | Initial design system created | Created by design-consultation based on [context] |
-| [today] | Claude Design project created: [proj_xxx] | Only if the MCP path was used — omit this row otherwise |
+| [today] | Initial design system created | Created by design-consultation based on [context], OR summarized from bound Claude Design system [name] — state which |
+| [today] | Claude Design design system bound: [name, uuid] | Only if Phase 0 bound an existing system — omit otherwise |
+| [today] | Claude Design system-creation prompt generated | Only if no system was bound — see `.claude/design/claude-design-system-prompt.md`; awaiting user to run it in Claude Design and report back the resulting id |
+| [today] | Claude Design demo project created: [proj_xxx] | — |
+| [today] | Generated by: [Sonnet/Opus/Fable] | Model selected for this session's Claude Design MCP work |
 ```
+
+**When a design system is bound (Phase 0):** every section above (Aesthetic Direction through
+Motion) is filled by *summarizing* that system's actual tokens (read via `get_claude_design_prompt`
+/ `list_files` / `read_file` on the design-system project), not by inventing new values — DESIGN.md
+becomes a local reference copy of the bound system's decisions, not a competing source of truth.
+
+**When no design system was bound (the full proposal flow ran):** before final confirmation,
+follow `@references/claude-design-mcp-protocol.md`'s "Manual design-system creation" section —
+compose the paste-ready prompt from this session's approved decisions (aesthetic, typography,
+colors, spacing, motion, seed component templates), show it in chat, and save it to
+`.claude/design/claude-design-system-prompt.md`. Tell the user: paste this into Claude Design
+(claude.ai/design) to create the system, then send back the resulting id so it can be stored as
+`claude_design_system_id` here on a future run. Don't block this run's delivery on that step.
 
 **Update CLAUDE.md** (create if missing) — append:
 

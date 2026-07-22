@@ -1,30 +1,47 @@
 ---
 name: design-handoff
 description: >
-  Translate a project's DESIGN.md (and UI-SPEC, if present) into precise, actionable build
-  instructions and ready-to-use prompts for a designer/builder agent handoff. Use when a
-  design system exists and someone (or some agent) needs to implement UI that faithfully
-  matches it — "hand off the design", "prep build instructions from DESIGN.md", "write
-  prompts for the UI agent", "replicate this look".
+  Bridge a Claude Design system into codebase-native implementation: translate a project's
+  DESIGN.md (and UI-SPEC, if present) into a compressed hex/typography quick-reference and
+  ready-to-use component prompts for whatever's building the *actual codebase* (a lane skill,
+  a frontend developer agent, a human) — not for anything staying inside Claude Design itself,
+  which already gets the system's context automatically. Use when a design-html screen is about
+  to be copied into the codebase and needs a framework-native translation — "hand off this
+  design to the codebase", "translate DESIGN.md for [React/Vue/...]", "prep build instructions
+  for the frontend implementation", "replicate this look outside Claude Design".
 ---
 
-# Design Handoff: DESIGN.md → Build Instructions
+# Design Handoff: Claude Design's System → Codebase-Native Build Instructions
 
-You are a senior design translator who bridges design-system documents and code. You read a
-DESIGN.md (and UI-SPEC.md if one exists), extract its essential visual language, and convert
-it into clear, actionable instructions for implementation-focused agents or developers. Every
-color, typographic nuance, layout rule, and elevation treatment from the source design must
-survive the handoff intact.
+You are a senior design translator who bridges a Claude Design system and real codebase
+implementation. You read a DESIGN.md (and UI-SPEC.md if one exists), extract its essential
+visual language, and convert it into clear, actionable instructions for whoever is writing the
+*actual codebase* — a lane skill (`react-expert`, `vue-expert`, etc.), a frontend developer
+agent, or a human. Every color, typographic nuance, layout rule, and elevation treatment from
+the source design must survive the handoff intact.
+
+**Why this exists, specifically:** anything that stays inside Claude Design (`design-html`,
+Variant Shotgun) already gets the bound system's tokens/context loaded automatically via
+`get_claude_design_prompt(design_system_id: ...)` — it doesn't need this skill at all. The gap
+this skill closes is the *other* side: once a screen is built in Claude Design and needs to be
+translated into the project's real frontend framework, that implementer has no automatic access
+to the Claude Design system's context. This skill is that bridge — run it when a codebase-side
+translation is actually about to happen (typically Stage 8, per phase, per screen — not eagerly
+at Stage 4 before any code or screens exist).
 
 ## When invoked
 
 1. Locate the source documents: `DESIGN.md` in the repo root (ask if it lives elsewhere),
    plus `UI-SPEC.md` / screen-level specs if present. If no DESIGN.md exists, stop and
    suggest running design-consultation first — do not invent a design system.
-2. Read the documents fully.
-3. Analyze the design across the nine standard sections (below).
-4. Synthesize instructions for the implementing agent/developer.
-5. Save the output and report.
+2. If a specific screen is being translated (the common case — right before copying a
+   `design-html` deliverable into the codebase), also read that screen's finalized `.dc.html`
+   content (via `read_file` on its Claude Design project, per `.claude/design/screens.json`) so
+   the instructions reflect the actual built screen, not just the abstract system.
+3. Read the documents fully.
+4. Analyze the design across the nine standard sections (below).
+5. Synthesize instructions for the codebase-side implementer.
+6. Save the output and report.
 
 ## Extraction checklist (the nine sections)
 
@@ -43,8 +60,8 @@ explicitly — never guess or fill in values:
 
 ## Instruction synthesis
 
-Convert your notes into instructions the implementing agent can follow without reading the
-source documents:
+Convert your notes into instructions the codebase-side implementer can follow without ever
+touching Claude Design or reading DESIGN.md directly:
 
 - Use bullet points and numbered steps — no prose walls
 - Include a **Quick Color Reference** table: `name → hex → role` (plus hover/active variants)
@@ -63,12 +80,23 @@ source documents:
 ## Deliverable
 
 Save the output to `.claude/design/instructions-<name>.md` (or `docs/design-handoff.md` if
-the project doesn't use a `.claude/` directory), where `<name>` is the project or screen
-name. Then notify the user with a one-paragraph summary: how many colors, typography rules,
-component styles, and prompts were extracted, where the file was saved, and any gaps flagged.
+the project doesn't use a `.claude/` directory), where `<name>` is the project or screen name —
+this local file is the primary artifact, since the codebase-side implementer reads it directly
+and has no Claude Design MCP access of its own. If `DESIGN.md` contains a
+`<!-- claude_design_project_id: ... -->` comment and `mcp__claude-design__*` tools are
+available, also `write_files` a copy into that project (as a support file) purely for archival —
+anyone browsing the Claude Design project later sees it alongside the system itself. No
+model-selection question needed here, since this skill only translates existing DESIGN.md
+content rather than generating new design decisions.
 
-Suggest next steps: hand the instructions file to the implementing agent (e.g. design-html
-for a page build, or a frontend developer agent for component work).
+Then notify the user with a one-paragraph summary: how many colors, typography rules,
+component styles, and prompts were extracted, where the local file was saved (plus the Claude
+Design archival copy, if written), and any gaps flagged.
+
+Suggest next steps: hand the instructions file to whatever is building the actual codebase —
+the relevant lane skill (`react-expert`, `vue-expert`, `nextjs-developer`, etc.), a general
+frontend developer agent, or the human doing it by hand. Not `design-html` — it doesn't need
+this, since Claude Design already loads its own system context automatically.
 
 ## Do's and Don'ts
 

@@ -1,11 +1,10 @@
----
-name: first-principles-thinking
-description: "Breaks a problem down to its irreducible truths and rebuilds solutions from the ground up, free of inherited assumptions. Use when the user wants to challenge assumptions, rethink an approach from scratch, or asks 'why do we do it this way'. Triggers: 'first principles', 'challenge assumptions', 'rethink', 'from scratch', 'fundamental truths'."
----
-
 # First-Principles Thinking
 
-Break any problem down to its irreducible truths and rebuild solutions from the ground up — not from analogy, convention, or inherited assumptions.
+Break any problem down to its irreducible truths and rebuild solutions from the ground
+up — not from analogy, convention, or inherited assumptions. Load this when Step 0A's
+premise challenge suggests the framing itself is inherited-by-convention rather than
+reasoned, or when the user explicitly asks to "challenge assumptions", "rethink from
+scratch", or "first principles" a problem.
 
 ## The 5-Step First Principles Method
 
@@ -41,11 +40,15 @@ Starting only from fundamental truths:
 - What becomes possible when assumptions are removed?
 - What would a new entrant with no legacy do?
 
-**Classic example**: Elon Musk on battery costs — instead of accepting "batteries are expensive because they always have been," break the battery into raw materials, price each on commodity markets, and build up from there. The assumption was the cost, not the physics.
+**Classic example**: Elon Musk on battery costs — instead of accepting "batteries are
+expensive because they always have been," break the battery into raw materials, price
+each on commodity markets, and build up from there. The assumption was the cost, not the
+physics.
 
 ## Structured Problem Solving (5D Method)
 
-For specific product, business, or operational problems — use this alongside first principles:
+For specific product, business, or operational problems — use this alongside first
+principles:
 
 ### D1: Define
 - What IS the problem? (facts, data, symptoms)
@@ -91,10 +94,12 @@ Deliver:
 2. List of challenged assumptions with verdict (valid / invalid / partially valid)
 3. Fundamental truths identified
 4. 2-3 rebuilt solution directions with trade-offs
-5. Recommended next step with owner
+5. Recommended next step
 
-## Combining With Other Skills
+## Feeding Back into the Review
 
-- Run BEFORE brainstorming/design work when the framing itself is suspect — first-principles output becomes the premises the design flow starts from
-- Pair with research/web search for evidence when challenging market or technical assumptions
-- Feed rebuilt solution directions into the standard alternatives-and-trade-offs step of the design flow
+- The rebuilt problem statement replaces or amends the premise being reviewed in 0A
+- Each rebuilt solution direction becomes an additional candidate framing in 0C-bis
+- Challenged-assumption verdicts become evidence lines in the Scope Decision Record
+- If invoked pre-spec (via `brainstorming`), the rebuilt directions become the premises
+  the standard design flow starts from

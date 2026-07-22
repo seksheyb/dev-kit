@@ -1,34 +1,32 @@
----
-name: clarify
-description: Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding the answers back into the spec. Use when the user says "clarify the spec", "resolve ambiguities", "interrogate the spec", "de-risk the spec", or after a spec is written but before planning begins.
----
+# Clarification Pass
 
-# Clarify — Ambiguity Interrogation for Feature Specs
+Runs as the final phase after Mode A or Mode B produces a validated spec — or standalone,
+when invoked directly against an already-written spec ("clarify the spec", "resolve
+ambiguities", "de-risk the spec").
 
-Goal: Detect and reduce ambiguity or missing decision points in the active feature
-specification and record the clarifications directly in the spec file.
+Goal: detect and reduce remaining ambiguity or missing decision points, and record the
+clarifications directly in the spec file. This is a *different* pass than the structural
+quality checklist in `SKILL.md` — that checklist catches structural gaps (missing
+sections, leaked implementation details); this pass catches semantic ambiguity a
+structurally-complete spec can still hide (an unhandled edge case, an unresolved data
+model question, a vague non-functional target).
 
-Note: This clarification workflow is expected to run (and be completed) BEFORE planning.
-If the user explicitly states they are skipping clarification (e.g., exploratory spike),
-you may proceed, but must warn that downstream rework risk increases.
+If the user explicitly states they are skipping this pass (e.g., exploratory spike), you
+may proceed, but must warn that downstream rework risk increases.
 
-## File Locations
+## Standalone entry
 
-Feature specs live in the project's docs/requirements directory (configurable; default
-`docs/specs/<NNN-feature-name>/spec.md`). If the project keeps requirements elsewhere,
-follow the existing convention. Identify the active feature directory (`FEATURE_DIR`)
-and its spec file (`FEATURE_SPEC`) — from the user's context, the most recently modified
-feature directory, or by asking. If no spec exists, instruct the user to run the
-`specify` skill first (do not create a new spec here).
+If invoked directly (not as a continuation of Mode A/B): locate `FEATURE_DIR` and
+`FEATURE_SPEC` — from the user's context, the most recently modified feature directory, or
+by asking. If no spec exists, instruct the user to run Mode A/B first (do not create a new
+spec here).
 
 ## Execution Steps
 
-1. Locate `FEATURE_DIR` and `FEATURE_SPEC` as described above.
+1. **IF EXISTS**: Load the project constitution for principles and governance constraints
+   (skip if already loaded earlier in this pass).
 
-2. **IF EXISTS**: Load the project constitution (see the `constitution` skill; default
-   `docs/constitution.md`) for project principles and governance constraints.
-
-3. Load the current spec file. Perform a structured ambiguity & coverage scan using this
+2. Load the current spec file. Perform a structured ambiguity & coverage scan using this
    taxonomy. For each category, mark status: Clear / Partial / Missing. Produce an
    internal coverage map used for prioritization (do not output raw map unless no
    questions will be asked).
@@ -87,7 +85,7 @@ feature directory, or by asking. If no spec exists, instruct the user to run the
    - Clarification would not materially change implementation or validation strategy
    - Information is better deferred to planning phase (note internally)
 
-4. Generate (internally) a prioritized queue of candidate clarification questions
+3. Generate (internally) a prioritized queue of candidate clarification questions
    (maximum 5). Do NOT output them all at once. Apply these constraints:
     - Maximum of 5 total questions across the whole session.
     - Each question must be answerable with EITHER:
@@ -99,7 +97,7 @@ feature directory, or by asking. If no spec exists, instruct the user to run the
     - Favor clarifications that reduce downstream rework risk or prevent misaligned acceptance tests.
     - If more than 5 categories remain unresolved, select the top 5 by (Impact * Uncertainty) heuristic.
 
-5. Sequential questioning loop (interactive):
+4. Sequential questioning loop (interactive):
     - Present EXACTLY ONE question at a time.
     - For multiple‑choice questions:
        - **Analyze all options** and determine the **most suitable option** based on:
@@ -135,9 +133,9 @@ feature directory, or by asking. If no spec exists, instruct the user to run the
     - Never reveal future queued questions in advance.
     - If no valid questions exist at start, immediately report no critical ambiguities.
 
-6. Integration after EACH accepted answer (incremental update approach):
+5. Integration after EACH accepted answer (incremental update approach):
     - Maintain in-memory representation of the spec (loaded once at start) plus the raw file contents.
-    - For the first integrated answer in this session:
+    - For the first integrated answer in this pass:
        - Ensure a `## Clarifications` section exists (create it just after the highest-level contextual/overview section per the spec template if missing).
        - Under it, create (if not present) a `### Session YYYY-MM-DD` subheading for today.
     - Append a bullet line immediately after acceptance: `- Q: <question> → A: <final answer>`.
@@ -145,15 +143,15 @@ feature directory, or by asking. If no spec exists, instruct the user to run the
        - Functional ambiguity → Update or add a bullet in Functional Requirements.
        - User interaction / actor distinction → Update User Stories or Actors subsection (if present) with clarified role, constraint, or scenario.
        - Data shape / entities → Update Data Model (add fields, types, relationships) preserving ordering; note added constraints succinctly.
-       - Non-functional constraint → Add/modify measurable criteria in Success Criteria > Measurable Outcomes (convert vague adjective to metric or explicit target).
-       - Edge case / negative flow → Add a new bullet under Edge Cases / Error Handling (or create such subsection if template provides placeholder for it).
+       - Non-functional constraint → Add/modify a Non-Functional Requirement or the relevant Success Criteria entry (convert vague adjective to metric or explicit target).
+       - Edge case / negative flow → Add a new row to the Error Handling table (or a bullet under Edge Cases if not yet reduced to a scenario/response pair).
        - Terminology conflict → Normalize term across spec; retain original only if necessary by adding `(formerly referred to as "X")` once.
     - If the clarification invalidates an earlier ambiguous statement, replace that statement instead of duplicating; leave no obsolete contradictory text.
     - Save the spec file AFTER each integration to minimize risk of context loss (atomic overwrite).
     - Preserve formatting: do not reorder unrelated sections; keep heading hierarchy intact.
     - Keep each inserted clarification minimal and testable (avoid narrative drift).
 
-7. Validation (performed after EACH write plus final pass):
+6. Validation (performed after EACH write plus final pass):
    - Clarifications session contains exactly one bullet per accepted answer (no duplicates).
    - Total asked (accepted) questions ≤ 5.
    - Updated sections contain no lingering vague placeholders the new answer was meant to resolve.
@@ -161,50 +159,30 @@ feature directory, or by asking. If no spec exists, instruct the user to run the
    - Markdown structure valid; only allowed new headings: `## Clarifications`, `### Session YYYY-MM-DD`.
    - Terminology consistency: same canonical term used across all updated sections.
 
-8. Write the updated spec back to `FEATURE_SPEC`.
+7. Write the updated spec back to `FEATURE_SPEC`.
 
-9. **Re-validate Spec Quality Checklist** (if it exists):
+8. **Re-validate the Spec Quality Checklist** (if it exists):
    - Check if `FEATURE_DIR/checklists/requirements.md` exists.
    - If it does NOT exist, skip this step silently.
    - If it exists:
      1. Read the checklist file.
      2. Identify all task-list checkbox lines — lines matching `- [ ]`, `- [x]`, or `- [X]` (case-insensitive, tolerant of leading whitespace for nested items) outside of code fences. Ignore all other content (headings, notes, non-checkbox bullets, metadata).
      3. For each checkbox line, record its current marker state (checked or unchecked) and item text into a before-snapshot list.
-     4. Re-evaluate each checkbox item against the **updated** spec (the version just saved in step 8).
+     4. Re-evaluate each checkbox item against the **updated** spec (the version just saved in step 7).
      5. For each checkbox item, update only if the checked/unchecked state actually changes:
         - If the item now passes and was unchecked: change `[ ]` to `[x]`.
         - If the item now fails and was checked: change `[x]`/`[X]` to `[ ]`.
         - If the state is unchanged: leave the marker as-is (preserve existing case to avoid cosmetic diffs).
      6. Save the updated checklist file. **Only toggle the `[ ]`/`[x]` marker portion of checkbox lines whose state changed.** All other file content — headings, metadata, notes, line ordering, whitespace — must remain unchanged to avoid noisy diffs.
-     7. Compare the before-snapshot with the current state to compute three lists for the Completion Report:
-        - **Newly passing**: items that changed from unchecked to checked.
-        - **Regressions**: items that changed from checked to unchecked.
-        - **Still unchecked**: items that remain unchecked.
+     7. Compare the before-snapshot with the current state to compute three lists: **Newly passing**, **Regressions**, **Still unchecked**.
      8. Record the before/after pass counts as checked/total checkbox items (e.g., "12/16 → 15/16 items passing").
 
 ## Behavior Rules
 
 - If no meaningful ambiguities found (or all potential questions would be low-impact), respond: "No critical ambiguities detected worth formal clarification." and suggest proceeding.
-- If spec file missing, instruct user to run the `specify` skill first (do not create a new spec here).
+- If spec file missing (standalone entry), instruct user to run Mode A/B first (do not create a new spec here).
 - Never exceed 5 total asked questions (clarification retries for a single question do not count as new questions).
 - Avoid speculative tech stack questions unless the absence blocks functional clarity.
 - Respect user early termination signals ("stop", "done", "proceed").
 - If no questions asked due to full coverage, output a compact coverage summary (all categories Clear) then suggest advancing.
 - If quota reached with unresolved high-impact categories remaining, explicitly flag them under Deferred with rationale.
-
-## Completion Report
-
-Report completion (after questioning loop ends or early termination):
-- Number of questions asked & answered.
-- Path to updated spec.
-- Sections touched (list names).
-- Spec quality checklist status (if `FEATURE_DIR/checklists/requirements.md` was re-validated): show before/after pass counts (e.g., "Spec Quality Checklist: 12/16 → 15/16 items passing") and list any items that changed state — both newly checked (unchecked → checked) and any regressions (checked → unchecked). If any items remain unchecked, list them as areas needing attention.
-- Coverage summary table listing each taxonomy category with Status: Resolved (was Partial/Missing and addressed), Deferred (exceeds question quota or better suited for planning), Clear (already sufficient), Outstanding (still Partial/Missing but low impact).
-- If any Outstanding or Deferred remain, recommend whether to proceed to planning or run `clarify` again later post-plan.
-- Suggested next step.
-
-## Done When
-
-- [ ] Spec ambiguities identified and clarifications integrated into spec file
-- [ ] Spec quality checklist re-validated against updated spec (if `FEATURE_DIR/checklists/requirements.md` exists)
-- [ ] Completion reported to user with questions answered, sections touched, checklist status, and coverage summary

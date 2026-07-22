@@ -1,16 +1,15 @@
 # EARS Syntax
 
-## EARS Format
+Easy Approach to Requirements Syntax for clear, unambiguous functional requirements. Use
+this pattern for every Functional Requirement in the spec.
 
-Easy Approach to Requirements Syntax for clear, unambiguous requirements.
-
-### Basic Pattern
+## Basic Pattern
 
 ```
 While <precondition>, when <trigger>, the system shall <response>.
 ```
 
-### Pattern Types
+## Pattern Types
 
 **Ubiquitous (Always True)**
 ```
@@ -70,10 +69,6 @@ the system shall add the item and update the cart badge count.
 **FR-CART-002**: Apply Coupon
 While the cart contains items, when a valid coupon code is applied,
 the system shall reduce the total by the discount amount.
-
-**FR-ORDER-001**: Checkout
-While payment method is valid, when user confirms order,
-the system shall create order, charge payment, and send confirmation email.
 ```
 
 ### Data Management
@@ -97,3 +92,8 @@ the system shall set deleted_at timestamp instead of removing the record.
 | State | While [X], shall | Continuous state |
 | Conditional | While [X], when [Y], shall | State + trigger |
 | Optional | Where [X], shall | Feature flag |
+
+Simple, non-conditional requirements (data persistence, field constraints) can stay as
+plain `MUST` statements — reserve the full EARS trigger/state syntax for behavior that
+actually branches on a condition. Forcing every requirement into `While/When/shall` when
+there's no real precondition just adds ceremony without adding clarity.

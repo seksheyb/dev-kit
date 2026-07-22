@@ -9,7 +9,7 @@ metadata:
   role: specialist
   scope: implementation
   output-format: code
-  related-skills: devops-engineer, cloud-architect, kubernetes-specialist
+  related-skills: devops-engineer, cloud-architect, kubernetes-specialist, incident-responder, chaos-engineer
 ---
 
 # SRE Engineer
@@ -22,6 +22,13 @@ metadata:
 4. **Implement monitoring** - Build golden signal dashboards and alerting
 5. **Automate toil** - Identify repetitive tasks and build automation
 6. **Test resilience** - Design and execute chaos experiments; verify recovery meets RTO/RPO targets before marking the experiment complete; validate recovery behavior end-to-end
+
+## Hand-off Guidance
+
+This skill covers SRE process design and operational discipline. When your task requires specialized incident response or chaos engineering execution:
+
+- **For active production incidents**, use `incident-responder` — this skill's incident-response practice covers process design (on-call rotations, SLOs, error budgets, blameless postmortems), not live incident triage, containment, evidence-preservation, or escalation.
+- **For chaos-experiment design and execution detail**, use `chaos-engineer` — this skill references chaos engineering as part of holistic SRE practice and reliability testing, not as a replacement for the dedicated chaos methodology and blast-radius controls that agent provides.
 
 ## Reference Guide
 

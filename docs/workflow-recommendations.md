@@ -1,12 +1,21 @@
 # dev-kit Workflow Recommendations
 
-Two things, extracted from the full analysis in `docs/gwd-pipeline-gap-analysis.md` (kept
-as-is for the complete audit trail — it reflects the 193-asset count at the time of that
-analysis; §2 below has been updated to the current 192-asset count after `code-reviewer`
-and `gate-codex-round` merged into `code-review-gate`): the capability-level homing table
-with **Workflow** as an explicit 5th option, and the full asset sweep flagging which
-dev-kit skills/agents/commands should generate/invoke a real Workflow script. Only items
-needing a change are listed in both.
+Two things: the capability-level homing table with **Workflow** as an explicit 5th
+option (§1), and a full asset sweep flagging which dev-kit skills/agents/commands should
+generate or invoke a real Workflow script (§2). Only items needing a change are listed.
+
+> **Provenance & currency (2026-07-22).** §1 originates in the full analysis in
+> `docs/gwd-pipeline-gap-analysis.md` (kept as-is as the audit trail; its own §2-equivalent
+> asset sweep is **superseded** by the sweep below). §2 here is a **fresh, full re-sweep of
+> all 190 current assets** run against their *rewritten* on-disk prose — necessary because
+> the lane plugins (specialized, infra, product) and parts of core/data-ai were natively
+> rewritten after the original analysis, invalidating the old per-asset flags. Counts are
+> now reconciled to the live repo: **190 assets** (141 skills + 41 agents + 8 commands;
+> `dev-kit-core` = 49 skills + 37 agents + 8 commands = 94, lanes = 96). The former
+> `code-reviewer` and `gate-codex-round` agents are merged into `code-review-gate` (its own
+> description states it "supersedes" both); the surviving `skills/code-review-protocol/code-reviewer.md`
+> is a prompt-template reference inside that skill, not the retired agent. `feature-forge`,
+> `first-principles-thinking`, and `clarify` were folded into `specify`/`spec-review-cpo`.
 
 **Homes used below:** **Workflow** (bounded, deterministic, single-invocation multi-agent
 script — `agent()`/`parallel()`/`pipeline()`/`phase()`, worktree isolation, token budgets;
@@ -27,8 +36,8 @@ lifecycle layer dev-kit could add) · **Skip**.
 | 3 | Upstream source/version pinning ledger | **Orchestration** | Tracks the pipeline's own dependency versions; dev-kit's `dependency-manager` agent already covers code deps, not skill-library versions |
 | 4 | Multi-level requirement hierarchy (Theme→Pillar→Story-bank, global US-xxx) | **Agent/Skill** ✅ DONE | `specify` allocates global, never-renumbered `US-xxx` IDs with an optional Pillar field; `roadmapper` parses Theme→Pillar→US-xxx and keys coverage/traceability on it when present |
 | 5 | Vertical-slice enforcement (never horizontal-layer phases) | **Agent/Skill** ✅ DONE | `references/vertical-slice.md` is the canonical definition + acceptance test; `roadmapper.md`'s prose is now a hard gate alongside the coverage gate |
-| 6 | Wave/track parallel dispatch + worktree isolation (GWD step 12) | **Workflow** | `pipeline()`/`parallel()` + `isolation:'worktree'` almost verbatim — `sprint-execution`/`bugfix-wave` already hand-roll this in prose today |
-| 7 | Adversarial review ↔ fix loop, ≤6 iterations (GWD step 13) | **Workflow** | Textbook loop-until-count/dry pattern — a plain `while` calling `agent()`, no external state needed |
+| 6 | Wave/track parallel dispatch + worktree isolation (GWD step 12) | **Workflow** | `pipeline()`/`parallel()` + `isolation:'worktree'` almost verbatim — `sprint-execution`/`bugfix-wave` already hand-roll this in prose today (confirmed still true in §2) |
+| 7 | Adversarial review ↔ fix loop, ≤6 iterations (GWD step 13) | **Workflow** | Textbook loop-until-count/dry pattern — a plain `while` calling `agent()`. The per-round reviewer (`code-review-gate` round mode) is a single-round leaf; the ≤6 loop that dispatches it belongs to this Workflow/orchestrator, not the agent — see §2 note on leaf workers |
 | 8 | Deterministic model/effort scoring — the band/floor math | **Workflow** | Arithmetic on bounded factors — real JS computes it deterministically, no external `.mjs` CLI needed |
 | 9 | Deterministic model/effort scoring — what signals to extract | **Agent/Skill** ✅ DONE | `references/complexity-signals.md` is the canonical vocabulary; `planner` emits per-task `complexity_signals`, `writing-plans` has a mandatory Signals: block — both feed the still-open Workflow half (row 8) |
 | 10 | Telemetry + defect-attribution + calibration-proposal computation | **Workflow** | The matching/attribution logic is plain JS over structured agent outputs — one-shot computation |
@@ -48,106 +57,117 @@ lifecycle layer dev-kit could add) · **Skip**.
 | 24 | New-repo scaffolding (lint/tsconfig templates, bootstrap/adopt/audit scripts, kickoff/adoption guides) | **Agent/Skill/Command** (not Workflow, not built) | Needs live user Q&A (lane selection, clarifying questions) mid-flow — Workflow has no interactive back-and-forth; dev-kit also has no scaffolding surface at all today |
 
 **Tally:** 6 Orchestration-only, 6 Agent/Skill, 5 Workflow, 6 Hooks, 1 Skip (some
-capabilities split across two homes, so this sums to more than 24).
+capabilities split across two homes, so this sums to more than 24). All "✅ DONE" rows
+re-verified 2026-07-22 against the live repo — every cited reference file exists and the
+named assets wire to it.
 
 ### Recommended skill changes this implies (concrete, buildable today)
 
 1. **`sprint-execution` / `bugfix-wave`** — generate/invoke an actual Workflow script
    (`pipeline()`/`parallel()` with `isolation:'worktree'`) for wave/track dispatch instead
-   of prose "make these calls yourself" instructions.
-2. **`code-review-gate`** (round mode; formerly `gate-codex-round`, now merged with
-   `code-reviewer` — see row 23) — express the ≤6-round adversarial loop as a Workflow
-   `while` loop instead of a prose "loop ≤6 times, check majority-refuted" instruction.
+   of prose "make these calls yourself" instructions. **Still the two prime targets** — the
+   §2 re-sweep confirms both remain hand-rolled orchestrator prose today.
+2. **The ≤6-round adversarial loop** (GWD step 13 / row 7) — express the loop as a Workflow
+   `while` calling `code-review-gate` (round mode) once per round and checking `stop_loop`.
+   Note the seam: `code-review-gate` itself is now a correct **single-round leaf** (it
+   reviews one round and emits `next_action`/`stop_loop` JSON); the loop that re-invokes it
+   belongs to the Workflow/orchestrator, **not** to the agent. So the buildable change is a
+   new orchestrating Workflow script, not an edit to `code-review-gate`.
 3. **`planner`** — add a companion pattern: an agent stage extracts complexity signals as
    structured output, a Workflow script's plain JS computes the deterministic model/effort
    bands — closing the gap with `gate-plan-review`/`sprint-execution`, which already know
-   how to *consume* a `complexity-score.mjs`-style signal but have nothing producing one.
+   how to *consume* a complexity-score signal but have nothing producing one.
 4. ✅ **DONE** — **`gate-plan-review`** generalized the hardcoded single-vendor
    independence check to engine selection via `references/independent-review.md` (default
-   Gemini, fallback Codex then Claude), with per-engine binding adapters under
-   `references/review-engines/`. A Workflow `agent()` stage with Bash access remains
-   one valid way to host that dispatch/retry loop, not the only one — still open for a
-   future Workflow-script pass.
+   Gemini, fallback order Gemini → Codex → Claude), with per-engine binding adapters under
+   `references/review-engines/`. A Workflow `agent()` stage with Bash access remains one
+   valid way to host that dispatch/retry loop, not the only one — still open for a future
+   Workflow-script pass.
 
 ---
 
-## 2. Workflow-candidate sweep — all 192 dev-kit assets
+## 2. Workflow-candidate sweep — all 190 dev-kit assets (2026-07-22 re-sweep)
 
-Every `SKILL.md`, agent, and command file across all 8 plugins (51 core skills, 37 core
-agents, 8 core commands, 26 backend, 11 web, 4 mobile, 13+4 data-ai, 14 infra, 19
-specialized, 5 product = 192 files — `code-reviewer` and `gate-codex-round` merged into
-one `code-review-gate` agent since this count was last taken), checked for: parallel
-fan-out over independent items, an iterative loop with a hard exit condition, or a
-multi-stage pipeline where later stages depend on earlier ones completing.
+Every `SKILL.md`, agent, and command across all 8 plugins (49 core skills, 37 core agents,
+8 core commands, 26 backend, 11 web, 4 mobile, 13 data-ai skills + 4 data-ai agents, 14
+infra, 19 specialized, 5 product = **190 files**) was re-read against its **current** prose
+and classified by whether that prose issues, as a first-class operational instruction, one
+of three Workflow shapes:
 
-**29 of 192 flagged.** The other 163 (162 no-change + `specify`'s pre-discovery pattern as
-Agent-only) need no change — single-agent linear methodology with no fan-out/loop/pipeline
-shape. (This baseline predates the Stage 0/1 asset-overlap audit that folded
-`first-principles-thinking`/`clarify`/`feature-forge` into `specify`/`spec-review-cpo`;
-the 192 total hasn't been recomputed against the current 190-asset count.)
+1. **Fan-out** — parallel dispatch of N independent subagents over a data-driven, variable-size list, then aggregate → `parallel()`/`pipeline()`.
+2. **Bounded-loop** — an iterative loop with a hard, deterministic exit condition → a `while` calling `agent()`.
+3. **Dependent-pipeline** — stages where a later stage must not begin until an earlier one completes, for correctness → `phase()`/`pipeline()`.
 
-### dev-kit-core skills (9 of 51)
+**Unit-of-analysis rule (this is what changed most from the prior sweep):** each file is
+judged on **its own text**. An agent that is *dispatched* N-wide by an orchestrator is a
+**leaf worker** — the fan-out/loop lives in the *caller*, not in the agent's file. In
+dev-kit that caller is almost always the not-yet-built pipeline (§1), so leaf agents are
+`no-change` here even though they participate in a Workflow shape upstream.
 
-| Skill | Trigger | Mechanism | Rationale |
-|---|---|---|---|
-| `bugfix-wave` | Classifies bugs into non-conflicting tracks, dependency-ordered waves, parallel subagents per track in worktree isolation | **Workflow** | Textbook `parallel()`+`phase()` — currently hand-rolled in prose |
-| `sprint-execution` | Same wave/track/worktree/merge pattern generalized to arbitrary plans | **Workflow** | Matches `parallel()` + worktree isolation + cached resumability directly |
-| `graphify` | Chunked N-way parallel extraction with a caching layer, multi-stage pipeline | **Workflow** | Fan-out + cached resumability + dependent stages, currently a long bash-heavy prose script |
-| `cso` | Independent verification subagent per candidate finding, gate-scored, aggregated | **Workflow** | Parallel-map-then-reduce over a variable-N finding list |
-| `dispatching-parallel-agents` | Entire skill content is prose teaching manual N-way parallel dispatch | **Workflow** | Could generate a small Workflow script instead of re-teaching the technique every time |
-| `design-consultation` (Shotgun mode) | 3–8 independent variant-mockup subagents, then a merge/comparison board | **Workflow** | Fan-out-then-aggregate, currently hand-orchestrated |
-| `specify` (Mode B pre-discovery) | Multi-domain discovery via Task subagents when a feature spans domains | **Agent** (not full Workflow) | Small/ad-hoc fan-out — needs fresh-context isolation, not worktrees/waves/budget tracking |
-| `ship` | 14 sequential gated steps (merge→test→coverage→plan-audit→review→version→changelog→PR) | **Workflow** | Each stage's output gates the next — currently prose trusting one agent to track 14 steps of gate state |
-| `land-and-deploy` | Multiple poll-with-hard-timeout loops chained with revert-on-failure branches | **Workflow** | Deterministic loop/exit-condition + `phase()` beats manual re-polling and elapsed-time tracking |
+### Result
 
-### dev-kit-core agents + commands (12 of 45)
+**11 of 190 flagged — 5 Workflow, 6 Agent-only. 179 need no change.**
 
-| Name | Type | Trigger | Mechanism | Rationale |
+- **All 11 flagged assets are in `dev-kit-core`.** Every one of the 96 lane assets
+  (backend, web, mobile, data-ai, infra, specialized, product) is now `no-change`: the
+  native rewrites turned them into single-agent linear methodologies with no fan-out/loop/
+  pipeline shape. The lanes are, as a body, not Workflow surface.
+- No **new** Workflow candidates emerged from the rewrites; the only newly-surfaced flag is
+  `design-html` (agent-only). The rewrites only *removed* shapes.
+
+### Flagged **Workflow** (5) — hand-rolled orchestration that a Workflow script should own
+
+| Asset | Kind | Shape | Mechanism | Current-text evidence |
 |---|---|---|---|---|
-| `plan-review` | Command | Dispatch `plan-reviewer` once per lens, in parallel (up to 5) | **Workflow** | Parallel fan-out + consolidation, currently one prose sentence |
-| `plan-reviewer` | Agent | Own description tells its caller to dispatch N in parallel | **Workflow** | That orchestration instruction belongs in a deterministic script, not agent prose |
-| `code-review-gate` (round mode) | Agent | Spawned per round of a max-6-round adversarial loop; emits JSON for an external caller to parse and re-invoke | **Workflow** | Loop-up-to-N-with-hard-exit, removes risk of the caller mis-reading `next_action` |
-| `gate-automation` | Agent | One golden-path + one edge-case flow per primary flow, done serially | **Workflow** | Each flow is independent — embarrassingly parallel across worktrees |
-| `nyquist-auditor` | Agent | Per-gap: generate test, run, debug if failing (max 3), sequentially across all gaps | **Workflow** | Independent items + bounded retry-cap sub-loop |
-| `qa` | Agent | Fix loop: one commit per issue in severity order, risk-gate every 5, hard cap 50 | **Workflow** | Same shape as `bugfix-wave` but currently done alone, serially, in one context |
-| `design-reviewer` | Agent | Identical fix-loop pattern to `qa`, cap 30 | **Workflow** | Same rationale as `qa` |
-| `planner` | Agent | `build_dependency_graph`/`assign_waves` given as literal pseudocode for the LLM to hand-simulate | **Workflow** | Deterministic graph/topo-sort — real JS never mis-orders a large plan set |
-| `codebase-mapper` | Agent | Dispatched with one of four independent focus areas, non-overlapping outputs | **Workflow** | Clean `parallel()` fan-out, currently relies on the caller to invoke it 4 times |
-| `doc-classifier` | Agent | One classifier per input doc, parallel, feeding a downstream synthesis stage | **Workflow** | Classify→synthesize dependency is a `phase()`/`pipeline()` stage-boundary case |
-| `doc-synthesizer` | Agent | Dispatched only after all classifiers complete; cycle detection + conflict resolution | **Workflow** | Correctness depends on a hard stage boundary a `phase()` gate enforces structurally |
-| `research-synthesizer` | Agent | Dispatched after 4 parallel researcher agents complete | **Workflow** | Same fan-out-then-synthesize shape as the doc-ingestion pair |
+| `bugfix-wave` | skill | fan-out + pipeline | `parallel()` per-wave track dispatch w/ `isolation:'worktree'`; `phase()` wave-N-before-N+1 gate | "Group into tracks… Wave 1: tracks with no dependencies… Wave N: tracks depending on Wave N-1", "single message with multiple Agent tool" calls |
+| `sprint-execution` | skill | fan-out + pipeline | `parallel()`/`pipeline()` per-wave fan-out in worktrees; `phase()` wave gate | "Dispatch one subagent per track within a wave, each with worktree isolation" + "must not start Wave N+1 until all Wave N subagents have returned and their worktrees are merged" |
+| `graphify` | skill | fan-out + pipeline | `parallel()` chunked subagent fan-out; `phase()` Detect→Extract→Merge→Cluster | Step 3B: "Call the Agent tool multiple times IN THE SAME RESPONSE — one call per chunk… the only way they run in parallel"; chunk count is data-driven |
+| `ship` | skill | dependent-pipeline + bounded-loop | `phase()`/`pipeline()` for Steps 0–13; a bounded `while` for the coverage-gate + verification-gate retries | Ordered Steps 0–13 that must not begin before the prior completes ("Merge base BEFORE tests", "Run tests on merged code", Step 11 Verification Gate looping failures back) |
+| `plan-review` | command | fan-out | `parallel()` one `plan-reviewer` per lens, then consolidate | "Dispatch `agents/plan-reviewer` once per selected lens, in parallel… consolidated into a single set of findings" (default all 4 lenses) |
 
-*Checked, not flagged:* `code-review-gate` (single mode — one-shot review, no fan-out/loop), `doc-verifier`, `health-reporter`, `incident-responder`, `retro`, `roadmapper`, `phase-researcher`, `market-researcher`, `debugger` (needs live user interaction — unsuited to Workflow by design), `gate-plan-review`, `gate-reverse-engineer`.
+### Flagged **Agent-only** (6) — real fan-out, but small/ad-hoc or human-in-loop; a plain Agent/Task dispatch fits better than a full Workflow
 
-### dev-kit-backend + dev-kit-web (1 of 37)
-
-| Skill | Trigger | Mechanism | Rationale |
+| Asset | Kind | Shape | Why agent-only, not Workflow |
 |---|---|---|---|
-| `legacy-modernizer` | 5-phase gated strangler-fig migration, traffic-increment gates (5%→25%→50%→100%), rollback triggers | **Workflow** | Gated multi-stage pipeline with measurable exit conditions; per-component facades could dispatch via `parallel()` + worktree isolation |
+| `cso` | skill | fan-out | Verification subagent per candidate finding with a confidence-gate discard — genuine data-driven fan-out, but no worktree/wave/budget machinery needed |
+| `design-consultation` | skill | fan-out | Shotgun mode: one subagent per variant (3–8) writing independent files, then a comparison board — small fan-out + simple aggregation |
+| `dispatching-parallel-agents` | skill | fan-out | Explicitly the **no-worktree, no-ceremony** variant for ad-hoc mid-session parallel Task dispatch; self-scopes heavier machinery to other skills |
+| `plan-reviewer` | agent | fan-out | Says "Dispatch N of these in parallel (one per lens)" — but over a fixed 4-lens set; the operational fan-out really belongs to the `plan-review` command (which *is* flagged Workflow). Leaf-ish |
+| `specify` | skill | fan-out | Optional pre-discovery via a couple of parallel Task subagents for multi-domain features — framed as an accelerant, not core methodology |
+| `design-html` | skill | (human-loop) | Single subagent dispatch + a "Maximum 10 iterations" refinement loop whose exit condition is the **user saying "done"** — live mid-run Q&A a Workflow cannot host. Agent-only for the dispatch's context isolation only |
 
-### dev-kit-infra + dev-kit-specialized (7 of 33)
+### What changed vs. the prior sweep (30 flagged → 11) and why
 
-| Skill | Trigger | Mechanism | Rationale |
-|---|---|---|---|
-| `chaos-engineer` | Game days = N independent per-service experiments, steady-state baseline, blast-radius cap, scripted rollback | **Workflow** | `parallel()` over experiments with per-track abort condition |
-| `sre-engineer` | Same SLI/SLO pipeline rolled out per-service across a catalog | **Workflow** | Repeatable per-item pipeline, `phase()`/`parallel()` over a service list |
-| `devops-engineer` | Multi-environment staged pipeline with go/no-go gates and rollback-on-failure | **Workflow** | Textbook staged `pipeline()`-with-gates case |
-| `cloud-architect` | Wave-based migration: each wave moves workloads in parallel, gated by a checkpoint | **Workflow** | `phase()` (waves) + `parallel()` (workloads per wave) |
-| `terraform-engineer` | Explicit re-validate loop with named failure branches | **Workflow** | Iterative loop with hard exit condition ("repeat until clean") |
-| `microsoft-ops` | Bulk AD/M365 changes, each needing enumerate→dry-run→apply→verify→rollback | **Workflow** | Fan-out over objects with per-object safety gates |
-| `license-engineer` | Classifying potentially hundreds of dependencies for license/copyleft risk | **Workflow** | Classify-many-in-parallel-then-synthesize, same shape as `doc-classifier` |
+The original sweep flagged **29 Workflow + 1 Agent-only**. The reduction is real and has
+three distinct, legitimate causes — not a defect in either analysis:
 
-### dev-kit-mobile + dev-kit-product + dev-kit-data-ai (0 of 26)
-
-No changes. Single-pass build/analysis, or the "loop" is already parallel at the compute
-layer inside one script/job (training epochs, embedding batches, Spark partitions) —
-fanning those out to separate Claude subagents would add coordination overhead without
-parallelizing real work.
+- **A. Content rewrites (8 drops).** The lane skills the prior sweep flagged were natively
+  rewritten into single-agent linear methodologies; their old fan-out/gated-pipeline prose
+  is gone. Dropped to `no-change`: `legacy-modernizer`, `chaos-engineer`, `sre-engineer`,
+  `devops-engineer`, `cloud-architect`, `terraform-engineer`, `microsoft-ops`,
+  `license-engineer`.
+- **B. Leaf-worker vs. orchestrator (5 reclassifications).** The prior sweep flagged
+  agent-definition files by their *role* in a fan-out pattern; this sweep judges each file's
+  own text, and these are leaf workers whose fan-out/loop lives in the caller (the future
+  pipeline, i.e. §1): `doc-classifier`, `doc-synthesizer`, `research-synthesizer`,
+  `codebase-mapper` → `no-change`; `code-review-gate` (round mode) → `no-change` (its ≤6
+  loop is §1 row 7); `plan-reviewer` → `agent-only` (its fan-out owner, `plan-review`, is
+  the flagged Workflow).
+- **C. Single-agent bounded loops (4 drops).** These have a genuine hard-capped loop but the
+  **same agent iterates in its own context** rather than dispatching `agent()` per item, so
+  under a strict multi-agent-shape reading they are `no-change`: `qa` (hard cap 50 fixes,
+  self-regulate every 5), `design-reviewer` (cap 30), `nyquist-auditor` (per-gap, max-3
+  debug), `gate-automation` (per-flow authoring). **Future note:** each *could* be
+  restructured into a `bugfix-wave`-style parallel Workflow — that is a design opportunity,
+  not a property of the current text.
 
 ### Tally
 
-- **29 flagged for Workflow**: 9 core skills, 12 core agents/commands, 1 backend/web, 7 infra/specialized.
-- **1 flagged Agent-only** (`specify`'s Mode B pre-discovery pattern, formerly `feature-forge`).
-- **162 need no change.**
-- **0 flagged Hooks/Orchestrator** — those homes apply to the GWD-gap capabilities in
-  section 1, not to any of dev-kit's own existing assets.
+- **11 flagged** — all in `dev-kit-core`. Workflow (5): `bugfix-wave`, `sprint-execution`, `graphify`, `ship` (skills) + `plan-review` (command). Agent-only (6): `cso`, `design-consultation`, `dispatching-parallel-agents`, `design-html`, `specify` (skills) + `plan-reviewer` (agent).
+- **179 need no change** — 83 of 94 core assets + all 96 lane assets.
+- **0 flagged Hooks/Orchestrator** — those homes apply to the GWD-gap capabilities in §1,
+  not to any of dev-kit's own existing assets.
+
+_Sweep method: 21 parallel classifier agents (Sonnet — high effort on core, medium on
+lanes) each read the full current prose of an asset batch and returned a structured verdict
+with cited evidence; 190/190 classified, 0 errors._

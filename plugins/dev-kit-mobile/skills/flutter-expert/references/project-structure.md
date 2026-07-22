@@ -56,11 +56,11 @@ lib/
 dependencies:
   flutter:
     sdk: flutter
-  # State Management
-  flutter_riverpod: ^2.5.0
-  riverpod_annotation: ^2.3.0
+  # State Management (Riverpod 3.x — unified Ref, auto-retry)
+  flutter_riverpod: ^3.0.0
+  riverpod_annotation: ^3.0.0
   # Navigation
-  go_router: ^14.0.0
+  go_router: ^17.0.0
   # Networking
   dio: ^5.4.0
   # Code Generation
@@ -74,10 +74,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^2.4.0
-  riverpod_generator: ^2.4.0
+  riverpod_generator: ^3.0.0
   freezed: ^2.5.0
   json_serializable: ^6.8.0
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
 ```
 
 ## Feature Layer Responsibilities

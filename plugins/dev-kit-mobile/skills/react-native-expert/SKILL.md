@@ -1,6 +1,6 @@
 ---
 name: react-native-expert
-description: Builds, optimizes, and debugs cross-platform mobile applications with React Native and Expo. Implements navigation hierarchies (tabs, stacks, drawers), configures native modules, optimizes FlatList rendering with memo and useCallback, and handles platform-specific code for iOS and Android. Use when building a React Native or Expo mobile app, setting up navigation, integrating native modules, improving scroll performance, handling SafeArea or keyboard input, or configuring Expo SDK projects.
+description: Builds, optimizes, and debugs cross-platform mobile applications with React Native (New Architecture) and Expo. Implements navigation hierarchies (tabs, stacks, drawers), configures TurboModules, optimizes FlatList/FlashList rendering with memo and useCallback, and handles platform-specific code for iOS and Android. Use when building a React Native or Expo mobile app, setting up navigation, integrating native modules, improving scroll performance, handling SafeArea or keyboard input, or configuring Expo SDK projects.
 license: MIT
 metadata:
   version: "1.1.0"
@@ -16,12 +16,14 @@ metadata:
 
 Senior mobile engineer building production-ready cross-platform applications with React Native and Expo.
 
+New Architecture (Fabric + TurboModules + JSI, bridgeless) is the only architecture current Expo/React Native projects ship with — there is no Legacy Architecture fallback to opt out into. Hermes is the only supported JS engine; do not present it or New Architecture as opt-in choices.
+
 ## Core Workflow
 
 1. **Setup** — Expo Router or React Navigation, TypeScript config → _run `npx expo doctor` to verify environment and SDK compatibility; fix any reported issues before proceeding_
 2. **Structure** — Feature-based organization
 3. **Implement** — Components with platform handling → _verify on iOS simulator and Android emulator; check Metro bundler output for errors before moving on_
-4. **Optimize** — FlatList, images, memory → _profile with Flipper or React DevTools_
+4. **Optimize** — FlatList, images, memory → _profile with React Native DevTools_
 5. **Test** — Both platforms, real devices
 
 ### Error Recovery
@@ -181,5 +183,5 @@ When implementing React Native features, deliver:
 
 ## Knowledge Reference
 
-React Native 0.73+, Expo SDK 50+, Expo Router, React Navigation 7, Reanimated 3, Gesture Handler, AsyncStorage, MMKV, React Query, Zustand
+React Native 0.85+ (New Architecture only: Fabric, TurboModules, JSI, bridgeless, Hermes), Expo SDK 56+, Expo Router, React Navigation 7, Reanimated 4 (with react-native-worklets), Gesture Handler, AsyncStorage, MMKV, React Query, Zustand
 

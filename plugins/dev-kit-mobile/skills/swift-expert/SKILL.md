@@ -1,6 +1,6 @@
 ---
 name: swift-expert
-description: Builds iOS/macOS/watchOS/tvOS applications, implements SwiftUI views and state management, designs protocol-oriented architectures, handles async/await concurrency, implements actors for thread safety, and debugs Swift-specific issues. Use when building iOS/macOS applications with Swift 5.9+, SwiftUI, or async/await concurrency. Invoke for protocol-oriented programming, SwiftUI state management, actors, server-side Swift, UIKit integration, Combine, or Vapor.
+description: Builds iOS/macOS/watchOS/tvOS applications, implements SwiftUI views and state management, designs protocol-oriented architectures, handles async/await concurrency, implements actors for thread safety, and debugs Swift-specific issues. Use when building iOS/macOS applications with Swift 6 language mode, SwiftUI, or async/await concurrency. Invoke for protocol-oriented programming, SwiftUI state management, actors, Sendable/data-race safety, Swift Testing, server-side Swift, UIKit integration, Combine, or Vapor.
 license: MIT
 metadata:
   version: "1.1.0"
@@ -20,9 +20,9 @@ metadata:
 2. **Design Protocols** - Create protocol-first APIs with associated types
 3. **Implement** - Write type-safe code with async/await and value semantics
 4. **Optimize** - Profile with Instruments, ensure thread safety
-5. **Test** - Write comprehensive tests with XCTest and async patterns
+5. **Test** - Write comprehensive tests with Swift Testing (unit/logic) and XCTest (UI, performance)
 
-> **Validation checkpoints:** After step 3, run `swift build` to verify compilation. After step 4, run `swift build -warnings-as-errors` to surface actor isolation and Sendable warnings. After step 5, run `swift test` and confirm all async tests pass.
+> **Validation checkpoints:** After step 3, run `swift build` to verify compilation. After step 4, run `swift build -warnings-as-errors` to surface actor isolation and Sendable warnings under Swift 6 strict concurrency. After step 5, run `swift test` and confirm all async tests pass.
 
 ## Reference Guide
 
@@ -34,7 +34,7 @@ Load detailed guidance based on context:
 | Concurrency | `references/async-concurrency.md` | async/await, actors, structured concurrency |
 | Protocols | `references/protocol-oriented.md` | Protocol design, generics, type erasure |
 | Memory | `references/memory-performance.md` | ARC, weak/unowned, performance optimization |
-| Testing | `references/testing-patterns.md` | XCTest, async tests, mocking strategies |
+| Testing | `references/testing-patterns.md` | Swift Testing, XCTest, async tests, mocking strategies |
 
 ## Code Patterns
 
@@ -62,7 +62,10 @@ func fetchUser(id: String) async throws -> User {
 ### SwiftUI State Management
 
 ```swift
-// ✅ DO: use @Observable (Swift 5.9+) for view models
+// ✅ DO: use @Observable as the default for new view models
+// Note: not a drop-in replacement for ObservableObject — a view using
+// @Observable only re-renders when a property it actually reads changes,
+// vs ObservableObject firing on every @Published change.
 @Observable
 final class CounterViewModel {
     var count = 0
@@ -80,9 +83,10 @@ struct CounterView: View {
     }
 }
 
-// ❌ DON'T: reach for ObservableObject/Published when @Observable suffices
+// ❌ DON'T: reach for ObservableObject/@Published for new code —
+// reserve it for back-compat with pre-@Observable targets
 class LegacyViewModel: ObservableObject {
-    @Published var count = 0  // Unnecessary boilerplate in Swift 5.9+
+    @Published var count = 0  // Unnecessary boilerplate when @Observable is available
 }
 ```
 

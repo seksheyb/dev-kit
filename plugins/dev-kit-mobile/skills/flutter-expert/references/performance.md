@@ -9,9 +9,8 @@ flutter run --profile
 # Analyze performance
 flutter analyze
 
-# DevTools
-flutter pub global activate devtools
-flutter pub global run devtools
+# DevTools (bundled with the Flutter SDK — no separate install)
+dart devtools
 ```
 
 ## Common Optimizations

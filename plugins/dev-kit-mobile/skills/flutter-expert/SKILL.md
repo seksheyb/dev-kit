@@ -14,7 +14,7 @@ metadata:
 
 # Flutter Expert
 
-Senior mobile engineer building high-performance cross-platform applications with Flutter 3 and Dart.
+Senior mobile engineer building high-performance cross-platform applications with current Flutter (3+) and Dart.
 
 ## When to Use This Skill
 
@@ -55,13 +55,11 @@ Load detailed guidance based on context:
 ### Riverpod Provider + ConsumerWidget (correct pattern)
 
 ```dart
-// provider definition
-final counterProvider = StateNotifierProvider<CounterNotifier, int>(
-  (ref) => CounterNotifier(),
-);
-
-class CounterNotifier extends StateNotifier<int> {
-  CounterNotifier() : super(0);
+// provider definition — Riverpod 3.0 unified Notifier (codegen)
+@riverpod
+class Counter extends _$Counter {
+  @override
+  int build() => 0;
   void increment() => state = state + 1; // new instance, never mutate
 }
 
@@ -126,7 +124,7 @@ class GoodCounter extends ConsumerWidget {
 | Widget test assertion failures | Widget tree mismatch or async state not settled | Use `tester.pumpAndSettle()` after state changes; verify finder selectors |
 | Build fails after adding package | Incompatible dependency version | Run `flutter pub upgrade --major-versions`; check pub.dev compatibility |
 | Jank / dropped frames | Expensive `build()` calls, uncached widgets, heavy main-thread work | Use `RepaintBoundary`, move heavy work to `compute()`, add `const` |
-| Hot reload not reflecting changes | State held in `StateNotifier` not reset | Use hot restart (`R` in terminal) to reset full app state |
+| Hot reload not reflecting changes | `Notifier`/`AsyncNotifier` `build()` only reruns on hot restart, not hot reload; provider state persists across reload | Use hot restart (`R` in terminal) to rerun `build()` and reset provider state, or call `ref.invalidate(provider)` to force a rebuild without restarting |
 
 ## Output Templates
 

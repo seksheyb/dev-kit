@@ -138,24 +138,27 @@ module.exports = function (api) {
 ```json
 {
   "dependencies": {
-    "expo": "~50.0.0",
-    "expo-router": "~3.4.0",
-    "react-native-safe-area-context": "4.8.2",
-    "react-native-screens": "~3.29.0",
-    "@react-navigation/native": "^6.1.0",
-    "react-native-reanimated": "~3.6.0",
-    "react-native-gesture-handler": "~2.14.0",
+    "expo": "~56.0.0",
+    "expo-router": "~6.0.0",
+    "react-native-safe-area-context": "~5.0.0",
+    "react-native-screens": "~4.25.0",
+    "@react-navigation/native": "^7.0.0",
+    "react-native-reanimated": "~4.3.0",
+    "react-native-worklets": "~0.8.0",
+    "react-native-gesture-handler": "~2.31.0",
     "zustand": "^4.5.0",
     "@tanstack/react-query": "^5.0.0",
-    "expo-image": "~1.10.0",
-    "react-native-mmkv": "^2.11.0"
+    "expo-image": "~2.0.0",
+    "react-native-mmkv": "^3.0.0"
   },
   "devDependencies": {
-    "@types/react": "~18.2.0",
+    "@types/react": "~19.2.0",
     "typescript": "^5.3.0"
   }
 }
 ```
+
+New Architecture is mandatory as of current Expo/React Native releases — no `newArchEnabled` flag or Legacy Architecture opt-out exists. `react-native-worklets` is a required peer dependency of Reanimated 4+ (the worklets runtime was split out of `react-native-reanimated`).
 
 ## Quick Reference
 

@@ -20,7 +20,9 @@ final messagesProvider = StreamProvider<List<Message>>((ref) {
 });
 ```
 
-## Notifier Pattern (Riverpod 2.0)
+## Notifier Pattern (Riverpod 3.0)
+
+Riverpod 3.0 unified `Family`/`AutoDispose` variants into a single `Ref` type, added automatic retry on provider computation failure, and `ref.mounted` for post-await safety checks. Use the plain `@riverpod` codegen annotation below for new code — it targets the unified API by default. If a project is still pinned to `riverpod ^2.x`, the same notifier shape works, but drop the retry/`ref.mounted` guidance until the upgrade lands.
 
 ```dart
 @riverpod
@@ -54,10 +56,11 @@ class UserProfile extends _$UserProfile {
 
   Future<void> updateName(String name) async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final updated = await ref.read(apiProvider).updateUser(name: name);
-      return updated;
-    });
+    final result = await AsyncValue.guard(
+      () => ref.read(apiProvider).updateUser(name: name),
+    );
+    if (!ref.mounted) return; // guard against disposal mid-await (3.0)
+    state = result;
   }
 }
 ```

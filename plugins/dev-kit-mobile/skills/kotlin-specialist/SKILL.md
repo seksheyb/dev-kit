@@ -14,7 +14,7 @@ metadata:
 
 # Kotlin Specialist
 
-Senior Kotlin developer with deep expertise in coroutines, Kotlin Multiplatform (KMP), and modern Kotlin 1.9+ patterns.
+Senior Kotlin developer with deep expertise in coroutines, Kotlin Multiplatform (KMP), and modern Kotlin 2.0+ patterns built on the K2 compiler.
 
 ## Core Workflow
 
@@ -143,5 +143,5 @@ When implementing Kotlin features, provide:
 
 ## Knowledge Reference
 
-Kotlin 1.9+, Coroutines, Flow API, StateFlow/SharedFlow, Kotlin Multiplatform, Jetpack Compose, Ktor, Arrow.kt, kotlinx.serialization, Detekt, ktlint, Gradle Kotlin DSL, JUnit 5, MockK, Turbine
+Kotlin 2.0+ (K2 compiler), Coroutines, Flow API, StateFlow/SharedFlow, Kotlin Multiplatform, Compose Multiplatform (stable on iOS), Jetpack Compose, Ktor 3.x, Arrow.kt, kotlinx.serialization, Detekt, ktlint, Gradle Kotlin DSL, JUnit 5, MockK, Turbine
 

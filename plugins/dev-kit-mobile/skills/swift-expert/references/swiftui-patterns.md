@@ -26,14 +26,17 @@ struct ToggleView: View {
     }
 }
 
-// @StateObject for observable objects (view owns it)
-class ViewModel: ObservableObject {
-    @Published var items: [String] = []
-    @Published var isLoading = false
+// @Observable + @State: default pattern for new view models (view owns it).
+// A view only re-renders when a property it reads actually changes —
+// finer-grained than ObservableObject's "any @Published change" firing.
+@Observable
+final class ViewModel {
+    var items: [String] = []
+    var isLoading = false
 }
 
 struct ContentView: View {
-    @StateObject private var viewModel = ViewModel()
+    @State private var viewModel = ViewModel()
 
     var body: some View {
         List(viewModel.items, id: \.self) { item in
@@ -42,15 +45,18 @@ struct ContentView: View {
     }
 }
 
-// @ObservedObject for passed-in observable objects
+// @Observable + plain property: passed-in observable reference
 struct DetailView: View {
-    @ObservedObject var viewModel: ViewModel
+    var viewModel: ViewModel
 }
 
-// @EnvironmentObject for dependency injection
+// @Environment for dependency injection of an @Observable type
 struct AppView: View {
-    @EnvironmentObject var appState: AppState
+    @Environment(AppState.self) var appState
 }
+
+// ObservableObject/@Published/@StateObject/@ObservedObject/@EnvironmentObject
+// remain correct only for back-compat with pre-@Observable deployment targets.
 ```
 
 ## Modern View Composition
@@ -281,9 +287,9 @@ struct WaterfallLayout: Layout {
 
 ## Performance Tips
 
-- Use `@State` for simple value types
-- Use `@StateObject` for reference types you create
-- Use `@ObservedObject` for reference types passed in
+- Use `@State` for simple value types and for `@Observable` models a view owns
+- Pass `@Observable` models to child views as plain properties (no property wrapper needed)
+- Reserve `@StateObject`/`@ObservedObject` for legacy `ObservableObject` types
 - Prefer `@Environment` over prop drilling
 - Use `equatable()` modifier for expensive views
 - Leverage `id()` modifier to control view identity

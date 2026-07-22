@@ -1,42 +1,33 @@
 # Testing Patterns
 
-## XCTest Basics
+## Swift Testing Basics (default for new unit/logic tests)
+
+Swift Testing runs tests in parallel by default and uses macro-based assertions
+(`@Test`, `#expect`, `#require`). Prefer it over XCTest for new unit and logic
+tests; keep XCTest only for UI tests (`XCUIApplication`) and performance tests
+(`measure {}`), which Swift Testing has no equivalent for.
 
 ```swift
-import XCTest
+import Testing
 @testable import MyApp
 
-final class UserTests: XCTestCase {
-    var sut: UserManager!
+struct UserTests {
+    let sut = UserManager()
 
-    override func setUp() {
-        super.setUp()
-        sut = UserManager()
-    }
-
-    override func tearDown() {
-        sut = nil
-        super.tearDown()
-    }
-
-    func testUserCreation() {
-        // Given
+    @Test func userCreation() {
         let name = "John Doe"
         let email = "john@example.com"
 
-        // When
         let user = sut.createUser(name: name, email: email)
 
-        // Then
-        XCTAssertEqual(user.name, name)
-        XCTAssertEqual(user.email, email)
-        XCTAssertNotNil(user.id)
+        #expect(user.name == name)
+        #expect(user.email == email)
+        #expect(user.id != nil)
     }
 
-    func testValidation() throws {
-        // Unwrapping optionals in tests
-        let user = try XCTUnwrap(sut.findUser(id: 123))
-        XCTAssertEqual(user.name, "Test User")
+    @Test func validation() throws {
+        let user = try #require(sut.findUser(id: 123))
+        #expect(user.name == "Test User")
     }
 }
 ```
@@ -44,14 +35,14 @@ final class UserTests: XCTestCase {
 ## Async Testing
 
 ```swift
-final class AsyncTests: XCTestCase {
-    func testAsyncFunction() async throws {
+struct AsyncTests {
+    @Test func asyncFunction() async throws {
         // Test async/await code directly
         let result = try await fetchData()
-        XCTAssertEqual(result.count, 10)
+        #expect(result.count == 10)
     }
 
-    func testAsyncSequence() async throws {
+    @Test func asyncSequence() async throws {
         var results: [Int] = []
 
         for try await value in numberStream() {
@@ -61,45 +52,21 @@ final class AsyncTests: XCTestCase {
             }
         }
 
-        XCTAssertEqual(results.count, 5)
+        #expect(results.count == 5)
     }
 
-    func testWithTimeout() async throws {
-        // Test with timeout
-        try await withTimeout(seconds: 5) {
-            try await longRunningOperation()
-        }
+    @Test(.timeLimit(.minutes(1))) func withTimeout() async throws {
+        try await longRunningOperation()
     }
 
-    func testConcurrentOperations() async throws {
+    @Test func concurrentOperations() async throws {
         async let result1 = fetchData(id: 1)
         async let result2 = fetchData(id: 2)
 
         let (data1, data2) = try await (result1, result2)
 
-        XCTAssertNotNil(data1)
-        XCTAssertNotNil(data2)
-    }
-}
-
-// Helper for timeout
-func withTimeout<T>(
-    seconds: TimeInterval,
-    operation: @escaping () async throws -> T
-) async throws -> T {
-    try await withThrowingTaskGroup(of: T.self) { group in
-        group.addTask {
-            try await operation()
-        }
-
-        group.addTask {
-            try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
-            throw TimeoutError()
-        }
-
-        let result = try await group.next()!
-        group.cancelAll()
-        return result
+        #expect(data1 != nil)
+        #expect(data2 != nil)
     }
 }
 ```
@@ -157,20 +124,17 @@ class MockDataService: DataService {
 }
 
 // Using mock in tests
-final class DataManagerTests: XCTestCase {
-    func testDataFetch() async throws {
-        // Given
+struct DataManagerTests {
+    @Test func dataFetch() async throws {
         let mockService = MockDataService()
         mockService.fetchResult = "test data".data(using: .utf8)
         let manager = DataManager(service: mockService)
 
-        // When
         let result = try await manager.loadData(id: 123)
 
-        // Then
-        XCTAssertTrue(mockService.fetchCalled)
-        XCTAssertEqual(mockService.fetchID, 123)
-        XCTAssertNotNil(result)
+        #expect(mockService.fetchCalled)
+        #expect(mockService.fetchID == 123)
+        #expect(result != nil)
     }
 }
 ```
@@ -218,7 +182,7 @@ class FakeDatabase: Database {
 }
 ```
 
-## Performance Testing
+## Performance Testing (XCTest — no Swift Testing equivalent)
 
 ```swift
 final class PerformanceTests: XCTestCase {
@@ -248,7 +212,7 @@ final class PerformanceTests: XCTestCase {
 }
 ```
 
-## UI Testing
+## UI Testing (XCTest — no Swift Testing equivalent)
 
 ```swift
 final class AppUITests: XCTestCase {
@@ -292,8 +256,8 @@ final class AppUITests: XCTestCase {
 ## Testing Actors
 
 ```swift
-final class ActorTests: XCTestCase {
-    func testActorIsolation() async throws {
+struct ActorTests {
+    @Test func actorIsolation() async throws {
         actor Counter {
             private var value = 0
 
@@ -319,7 +283,7 @@ final class ActorTests: XCTestCase {
         }
 
         let finalValue = await counter.increment()
-        XCTAssertEqual(finalValue, 101)
+        #expect(finalValue == 101)
     }
 }
 ```
@@ -354,40 +318,40 @@ final class ViewSnapshotTests: XCTestCase {
 ## Test Organization
 
 ```swift
-// MARK: - Test Cases
-extension UserManagerTests {
-    // MARK: Creation Tests
-    func testUserCreation() { }
-    func testUserCreationWithInvalidData() { }
+@Suite("User Manager")
+struct UserManagerTests {
+    @Suite("Creation")
+    struct CreationTests {
+        @Test func userCreation() { }
+        @Test func userCreationWithInvalidData() { }
+    }
 
-    // MARK: Validation Tests
-    func testEmailValidation() { }
-    func testPasswordValidation() { }
+    @Suite("Validation")
+    struct ValidationTests {
+        @Test func emailValidation() { }
+        @Test func passwordValidation() { }
+    }
 
-    // MARK: Persistence Tests
-    func testUserSave() { }
-    func testUserLoad() { }
+    @Suite("Persistence")
+    struct PersistenceTests {
+        @Test func userSave() { }
+        @Test func userLoad() { }
+    }
 }
 
-// MARK: - Test Helpers
-extension UserManagerTests {
-    func makeTestUser() -> User {
-        User(name: "Test", email: "test@example.com")
-    }
-
-    func setupMockData() {
-        // Common test setup
-    }
+func makeTestUser() -> User {
+    User(name: "Test", email: "test@example.com")
 }
 ```
 
 ## Best Practices
 
 - Use `@testable import` to test internal types
-- One assertion concept per test (can have multiple XCTAssert calls)
+- Prefer Swift Testing (`@Test`, `#expect`, `#require`) for new unit/logic tests; reserve XCTest for UI tests and performance tests
+- One assertion concept per test (can have multiple `#expect`/`XCTAssert` calls)
 - Use Given-When-Then pattern for clarity
-- Name tests descriptively: `test_methodName_condition_expectedResult`
-- Use setUp/tearDown for common test setup
+- Name test functions descriptively by behavior (`emailValidation`, `userCreationWithInvalidData`)
+- Group related tests with `@Suite`; use `init`/`deinit` for setup/teardown in Swift Testing
 - Prefer dependency injection for testability
 - Use protocols to enable mocking
 - Test edge cases and error conditions

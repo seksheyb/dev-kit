@@ -88,6 +88,9 @@ let user = try await cache.user(id: 123)
 
 ```swift
 // UI updates must happen on main thread
+// Note: ObservableObject/@Published shown here for illustration; for new
+// code prefer @Observable (see swiftui-patterns.md) — reserve this pattern
+// for back-compat with pre-@Observable targets.
 @MainActor
 class ViewModel: ObservableObject {
     @Published var users: [User] = []

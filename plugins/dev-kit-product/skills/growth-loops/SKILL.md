@@ -40,6 +40,7 @@ K > 1 = exponential growth. K < 1 = linear with decay.
 Users generate content that ranks in search and attracts new users.
 - User creates profile/listing/content -> SEO traffic -> New users -> More content
 - Examples: Yelp, Glassdoor, GitHub, Stack Overflow
+- Design for zero-click risk: AI-summarized search (Google AI Overviews, ChatGPT search) can rank your content while suppressing the click-through that used to drive the loop — weight the traffic-conversion step accordingly when modeling this loop in 2026
 
 ### 3. Paid Acquisition Loops
 Revenue funds more paid acquisition.

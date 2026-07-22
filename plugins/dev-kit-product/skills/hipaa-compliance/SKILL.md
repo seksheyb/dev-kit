@@ -67,6 +67,16 @@ Names, geographic data, dates (except year), phone numbers, fax numbers, email a
 - [ ] Audit controls (logging access to ePHI)
 - [ ] Integrity controls (verify ePHI hasn't been altered improperly)
 - [ ] Transmission security (encryption in transit)
+- [ ] Multi-factor authentication for access to ePHI
+- [ ] Network segmentation isolating systems that store or process ePHI
+- [ ] Annual penetration testing and vulnerability scanning
+
+**Pending rule change:** HHS OCR's January 2025 proposal to update the Security Rule (first
+major rewrite since 2013, targeted for finalization in 2026) would eliminate the "addressable vs.
+required" distinction — nearly every safeguard above would become mandatory rather than optional
+— and explicitly require MFA, encryption, network segmentation, and annual penetration testing.
+The rule isn't final; treat these as best practice today so the product isn't caught flat-footed
+if/when it is.
 
 ## HIPAA Breach Notification Rule
 
@@ -92,7 +102,11 @@ HITECH (2009) strengthened HIPAA:
 | Tier 2 | Reasonable cause | $1,000-$50,000 |
 | Tier 3 | Willful neglect, corrected | $10,000-$50,000 |
 | Tier 4 | Willful neglect, uncorrected | $50,000 |
-| Annual cap | Per violation category | $1.9M |
+| Annual cap | Per violation category | ~$2.1M-$2.3M |
+
+These per-violation and annual-cap figures are inflation-adjusted by HHS/DOJ most years (published
+in the Federal Register) — verify the current OCR penalty table rather than treating any number
+here as fixed.
 
 ## HIPAA Compliance Roadmap for SaaS Vendors
 

@@ -54,6 +54,11 @@ Privacy compliance methodology covering GDPR (EU) and CCPA/CPRA (California). Un
 - [ ] Data Protection Officer (DPO) appointed if required
 - [ ] Privacy by Design built into new features
 
+**Watch item:** the EU's proposed "Digital Omnibus" package (Nov 2025) would narrow Art. 13-15
+transparency/access obligations and merge breach reporting with NIS2. Not yet law (adoption
+expected late 2026, effect ~2027-2028) — don't treat current text as final, but don't rewrite
+requirements against a proposal either.
+
 ---
 
 ## CCPA (California Consumer Privacy Act) / CPRA
@@ -80,6 +85,22 @@ Businesses that meet ANY ONE of:
 - [ ] Data inventory completed: what data, where, for what purpose
 - [ ] Vendor contracts updated with CCPA service provider language
 
+### CPRA 2026 Regulations Checklist (effective Jan 1, 2026)
+- [ ] Risk assessments completed before high-risk processing (selling/sharing PI, sensitive PI,
+      ADMT for significant decisions) — required starting Jan 1, 2026
+- [ ] Automated Decision-Making Technology (ADMT) notice + opt-out/appeal rights implemented for
+      consumers subject to significant decisions (employment, lending, healthcare, etc.) —
+      ADMT-specific compliance deadline Jan 1, 2027
+- [ ] Cybersecurity audits scheduled if processing personal information at scale
+
+### Beyond California
+CCPA/CPRA is not the only US law in scope. By 2026, roughly 20 states have comprehensive
+consumer privacy laws in effect, including Virginia, Colorado, Texas, Connecticut, Oregon, and
+2026 additions like Indiana, Kentucky, and Rhode Island. Most follow a Virginia/Colorado opt-out
+model with their own automated-decision and profiling opt-out provisions (Colorado and Texas
+notably). Confirm which state laws apply to the target user base — don't assess against CCPA
+alone.
+
 ---
 
 ## GDPR vs. CCPA Quick Comparison
@@ -89,7 +110,8 @@ Businesses that meet ANY ONE of:
 | Scope | EU residents | California residents |
 | Consent model | Opt-in required (for most processing) | Opt-out model (except minors) |
 | Data sales | N/A as a category | Specific opt-out right |
-| Penalties | Up to 4% of global annual revenue | $100-$7,500 per violation |
+| Penalties (regulatory) | Up to 4% of global annual revenue | Administrative fines via CPPA/AG action: up to $2,663 per violation (unintentional) / $7,988 per violation (intentional or involving a minor's data); CPI-adjusted every odd year, next in Jan 2027 |
+| Penalties (private right of action) | N/A — GDPR has no private right of action | Statutory damages for qualifying data breaches only: $107-$799 per consumer per incident (or actual damages if greater), separate from and not capped by the regulatory fine track |
 | Breach notification | 72 hours to supervisory authority | ASAP; state law separate |
 
 ## Output Format

@@ -89,11 +89,17 @@ Only report segments that were pre-planned — post-hoc segmentation is p-hackin
 | Simpson's Paradox | Aggregated result reverses in segments | Always segment analysis |
 | Survivorship bias | Analyzing only users who completed the flow | Analyze from assignment, not completion |
 
-## Bayesian vs. Frequentist
+## Bayesian vs. Frequentist vs. Sequential
 
 - **Frequentist** (traditional): p-value, significance threshold — binary decision
-- **Bayesian** (modern): "Probability that variant is better" — more intuitive
-- Tools: VWO, Optimizely often use Bayesian; custom setups typically use Frequentist
+- **Bayesian**: "Probability that variant is better" — more intuitive; VWO and Optimizely-style
+  platforms lean this way
+- **Sequential / always-valid testing** (modern middle path): platforms like Statsig, Eppo, and
+  GrowthBook compute always-valid p-values plus variance reduction (CUPED), letting you check
+  results anytime without inflating false-positive rate — this directly addresses the peeking
+  problem below rather than just prohibiting it
+- Custom in-house setups typically implement plain Frequentist unless they've adopted a
+  sequential-testing library
 
 ## Output Format
 

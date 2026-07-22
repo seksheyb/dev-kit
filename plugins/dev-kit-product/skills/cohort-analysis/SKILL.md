@@ -69,7 +69,7 @@ Find behaviors that correlate with long-term retention:
 2. What did they do in their first 7 days that low-retaining users did NOT do?
 3. That behavior = your activation metric candidate
 
-Classic examples:
+Commonly cited examples (illustrative, not verified case studies):
 - Facebook: Add 7 friends in 10 days
 - Slack: Send 2,000 messages as a team
 - Twitter: Follow 30 users

@@ -79,7 +79,7 @@ layering (breadth vs depth). **No change.**
 The debugger explicitly declares systematic-debugging its "methodology home" and doesn't
 restate it. This is the pattern Stage 13 should copy (see F15). **No change.**
 
-### F6. Two parallel knowledge stores with no bridge — [ ]
+### F6. Two parallel knowledge stores with no bridge — [x]
 
 `debugger` archives to its own `.planning/debug/knowledge-base.md` (keyword-matched by
 future debug sessions); `learn` keeps `.claude/learnings.jsonl` (general insights, which
@@ -90,6 +90,21 @@ the debug KB, invisible to every non-debug session.
 **Proposal:** one line in debugger's `archive_session`: when the root cause reveals a
 durable convention/pitfall (not a one-off bug), also append a `pitfall` entry to the
 learn ledger.
+
+Done as a bridge, not a merge — full unification was seriously considered (fewer stores,
+free confidence-decay/pruning for debug knowledge) and rejected on inspection: the two
+hold genuinely different *types* of knowledge, not just different formats. `learn`'s 6
+types (pattern/pitfall/preference/architecture/tool/operational) are all generalized,
+selectively-written, cross-session rules. The debug KB is an exhaustive, non-curated
+case log — an entry for every resolved bug, matched by symptom-keyword overlap, useful
+mainly for "has this exact shape recurred?" — most entries don't generalize at all.
+Merging would also have broken commit semantics (debug KB is always committed;
+`learnings.jsonl` is explicitly allowed to be a gitignored personal ledger per-project)
+and required rewriting Phase 0's dedicated-field matcher into free-text search. Landed on:
+`archive_session` now runs a durable-pattern check after every resolved session and
+cross-posts a `type: pitfall` entry (source: `observed`, confidence 8) to
+`learnings.jsonl` only when the root cause generalizes beyond the one incident — the
+narrow slice where the two knowledge types actually coincide.
 
 ### F7. Stage 9 stays a standalone stage — [-]
 

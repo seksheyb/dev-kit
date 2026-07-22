@@ -393,7 +393,13 @@ the lighter tier, with the full set still available as an explicit escalation.
 
 - **`debug`** *(command)* → **`debugger`** *(agent)* ← **`systematic-debugging`** *(skill)* — root-cause-first,
   one falsifiable hypothesis at a time, 3-strike rule, persistent debug file that survives context resets, minimal
-  fix + failing-then-passing regression test.
+  fix + failing-then-passing regression test. Archives every resolved session to its own exhaustive,
+  symptom-matched case log (`.planning/debug/knowledge-base.md`) — read at the start of every future investigation
+  loop — and, only when the root cause generalizes beyond the one incident, also cross-posts a `pitfall` entry to
+  `learn`'s ledger. A Stage 8–13 audit found these two stores had no bridge (durable findings were invisible
+  outside debug sessions) and, after weighing a full merge, kept them separate: one is a case log matched by
+  symptom keywords and written for every bug, the other a curated, cross-session insight store — different types
+  of knowledge, not just different file formats.
 - **`learn`** — record the gotcha/convention/pitfall to `.claude/learnings.jsonl` so the next session doesn't
   rediscover it.
 

@@ -93,6 +93,8 @@ Persistent, append-only record of resolved debug sessions at `.planning/debug/kn
 
 **When to read:** at the start of the investigation loop, before any file reading or hypothesis formation.
 
+**Not the same store as the `learn` ledger (`.claude/learnings.jsonl`), and not merged into it.** This KB is an exhaustive diagnostic case log — every resolved session gets an entry, matched by symptom-keyword overlap, useful mainly when the *same* bug shape recurs. `learn`'s ledger is a curated, cross-session insight store — written selectively, for knowledge that generalizes beyond this one incident. Most bugs here don't generalize; see the cross-post rule in `archive_session` for the minority that do.
+
 **Matching:** keyword overlap, not semantic similarity. Extract nouns and error substrings from `Symptoms.errors` and `Symptoms.actual`; 2+ word overlap (case-insensitive) with an entry's `Error patterns` = candidate match. A match is a **hypothesis candidate**, not a confirmed diagnosis — test it first, but do not skip other hypotheses.
 
 </knowledge_base_protocol>
@@ -271,7 +273,12 @@ Only after checkpoint response confirms the fix works end-to-end.
 1. Update status to "resolved"; `mkdir -p .planning/debug/resolved && mv .planning/debug/{slug}.md .planning/debug/resolved/`
 2. Stage and commit code changes with specific file paths (NEVER `git add -A` or `git add .`): `fix: {brief description}` with `Root cause: {root_cause}` in the body. Commit planning docs per project configuration.
 3. Append the entry to `.planning/debug/knowledge-base.md` (create with a header if missing) and commit it alongside the resolved session.
-4. Report completion and offer next steps.
+4. **Durable-pattern check:** would this root cause apply in a *different* file or context, not just recur in this exact spot (a project-wide habit, a systemic misuse of a library, a missing convention)? If yes, also append a `pitfall` entry to `.claude/learnings.jsonl` (create if missing) — this is the one case where debug knowledge outlives the debug KB's own audience:
+   ```bash
+   printf '%s\n' '{"ts":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'","skill":"debugger","type":"pitfall","key":"{slug}","insight":"{generalized statement of the pitfall — what to watch for, not just what happened here}","confidence":8,"source":"observed","files":{Resolution.files_changed as a JSON array}}' >> .claude/learnings.jsonl
+   ```
+   Most resolved bugs are ordinary and don't qualify — skip this step for them. Confidence 8 (verified, observed, end-to-end confirmed by the user in `request_human_verification`).
+5. Report completion and offer next steps.
 </step>
 
 </execution_flow>
@@ -411,4 +418,5 @@ If the test cannot be made to fail initially: either the test doesn't reproduce 
 - [ ] Root cause confirmed with evidence before fixing
 - [ ] Fix verified against original symptoms
 - [ ] Appropriate return format based on mode
+- [ ] Durable-pattern check run before archiving; `learnings.jsonl` pitfall appended if the root cause generalizes beyond this session
 </success_criteria>

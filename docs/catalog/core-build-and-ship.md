@@ -90,7 +90,7 @@
 - **Why not vanilla Claude Code:** Vanilla Claude Code has no persistent, structured memory across sessions — anything learned mid-conversation is lost unless the user manually writes it down somewhere, and there's no confidence-decay or contradiction-detection mechanism for that memory.
 - **When to use:** "Use when asked 'what have you learned', '/learn', 'search learnings', 'prune learnings', or to record an insight for future sessions."
 - **Then what:** The ledger gains or updates an entry (or the user gets a filtered/exported view of existing entries); no code is ever touched.
-- **Notes:** Read-only with respect to code — pairs naturally with `context-save`/`context-restore` for session continuity but tracks durable knowledge rather than in-flight state.
+- **Notes:** Read-only with respect to code — pairs naturally with `context-save`/`context-restore` for session continuity but tracks durable knowledge rather than in-flight state. `debugger` cross-posts here (as `type: pitfall`) only when a debug session's root cause generalizes beyond the one incident — its own exhaustive, symptom-matched case log stays in `.planning/debug/knowledge-base.md`; that's a diagnostic cache, not curated insight, so it isn't merged into this ledger.
 
 #### `context-save` (skill)
 
@@ -135,7 +135,7 @@
 - **Why not vanilla Claude Code:** A vanilla Claude Code session investigating a bug has no on-disk debug-file protocol — if the context resets or a checkpoint is needed, the entire evidence trail (what was tried, what was ruled out) is gone, and there's no mandatory reasoning-checkpoint gate forcing a filled-in hypothesis/evidence/falsification-test before any fix is attempted.
 - **When to use:** Dispatched by the orchestrator/pipeline for interactive debugging or parallel UAT diagnosis; also backs the `/debug` command.
 - **Then what:** A resolved (or explicitly inconclusive/checkpointed) debug session file moved to `.planning/debug/resolved/`, a knowledge-base entry appended for future pattern matching, and a commit with the fix and root cause in the message.
-- **Notes:** Requires explicit human confirmation ("confirmed fixed") before archiving — it will not self-certify a fix as done.
+- **Notes:** Requires explicit human confirmation ("confirmed fixed") before archiving — it will not self-certify a fix as done. Its knowledge-base entry (every resolved session, symptom-keyword-matched) and `learn`'s ledger (curated, cross-session insight) are deliberately separate stores — different types of knowledge, not just different formats. `archive_session` cross-posts a `pitfall` entry to `learn` only when the root cause generalizes beyond this one incident.
 
 #### `code-review-gate` (agent)
 

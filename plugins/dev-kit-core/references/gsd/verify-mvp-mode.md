@@ -65,7 +65,7 @@ Coverage is a goal-backward check: "did this phase deliver what its user story p
 
 The "show expected, ask if reality matches" model is preserved. The user still types `yes` / `next` / empty to advance. The human-verification format is unchanged. Only the WHAT changes — under MVP mode, the "expected" is a user-visible outcome rather than a technical assertion.
 
-## Output: VERIFICATION.md changes under MVP mode
+## Output: PHASE/VERIFICATION.md changes under MVP mode
 
 Under MVP mode, the report adds a top-level "User Flow Coverage" section that maps each step of the user story to evidence in the codebase:
 

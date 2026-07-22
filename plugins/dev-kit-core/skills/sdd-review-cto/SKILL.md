@@ -1,7 +1,8 @@
 ---
 name: sdd-review-cto
 description: >
-  CTO/founder-lens architecture review. Pressure-tests the system design (SDD.md + ADRs) at
+  CTO/founder-lens architecture review. Pressure-tests the system design
+  (docs/global/architecture/SDD.md + the ADR bank under docs/global/architecture/adr/) at
   design time — before roadmapping and planning — for technical soundness, ADR quality,
   technology-selection wisdom, scalability posture, technical-debt trajectory, and evolution
   path. Commits to a technical posture and locks an Architecture Decision Record onto the SDD.
@@ -15,8 +16,8 @@ description: >
 You are the CTO reviewing the system design **before** it hardens into a roadmap and phase
 plans. Your job is to catch the wrong architecture, the unjustified technology bet, or the
 debt trap while it's still a one-paragraph edit to an ADR — not after three phases have built
-on it. Do NOT make code changes. Do NOT write a plan. Review only, against `SDD.md` and its
-ADRs.
+on it. Do NOT make code changes. Do NOT write a plan. Review only, against
+`docs/global/architecture/SDD.md` and its ADRs under `docs/global/architecture/adr/`.
 
 **Non-interactive execution:** When run by an agent (no user available), do not pause for
 approval. Pick the posture from the context-dependent defaults below, state it in the report,
@@ -37,11 +38,11 @@ Boundaries, so this lens does not duplicate its neighbors:
   runs a full 15-phase audit at Stage 0 when the repo already has code (legacy or
   continuing-milestone entry) and incrementally per phase at Stage 12 once this milestone's own
   code exists; a first-milestone greenfield project has no `cso` pass to weigh here either, since
-  there's no code yet for either lens to examine. Check `.security-reports/` for the latest
-  report if one exists, note security *architecture* concerns as findings, and defer the depth
+  there's no code yet for either lens to examine. Check `docs/milestones/<M>/reports/security/`
+  for the latest report if one exists, note security *architecture* concerns as findings, and defer the depth
   to `cso`'s next scheduled run — do not re-run a threat model here.
 - **Per-phase plan quality is `plan-review-eng`'s job (Stage 7), not this lens's.** That lens
-  reviews each phase's `PLAN.md` — task decomposition, test coverage, the plan-delta's code
+  reviews each phase's `<NN>-<MM>-PLAN.md` — task decomposition, test coverage, the plan-delta's code
   quality. This lens reviews the *system design the plans will build against*. Assess the
   architecture, not any one plan's tasks (no plan exists yet).
 
@@ -122,7 +123,8 @@ pattern / branch-by-abstraction / parallel run.
 
 ## ADR Quality Review
 
-The ADRs are where the design's reasoning lives. For **each** ADR, verify:
+The ADRs (the bank under `docs/global/architecture/adr/`) are where the design's reasoning
+lives. For **each** ADR, verify:
 
 - **Context** — the forces are stated (requirements, constraints, non-functionals), not just
   the decision.
@@ -157,8 +159,9 @@ passes.
 
 ## Required Outputs — the Architecture Decision Record
 
-Write this as an `## CTO Review` section appended to `SDD.md` (append-in-place, never overwrite
-existing SDD content — same pattern `spec-review-cpo` uses on the spec):
+Write this as an `## CTO Review` section appended to `docs/global/architecture/SDD.md`
+(append-in-place, never overwrite existing SDD content — same pattern `spec-review-cpo` uses on
+the spec):
 
 ```markdown
 ## CTO Review

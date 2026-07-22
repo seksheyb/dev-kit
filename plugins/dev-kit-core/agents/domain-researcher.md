@@ -11,7 +11,7 @@ color: "#A78BFA"
 #           command: "echo 'AI-SPEC domain section written' 2>/dev/null || true"
 ---
 
-> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: artifact paths (AI-SPEC.md, CONTEXT.md, REQUIREMENTS.md, RESEARCH.md, ROADMAP.md) are supplied by the orchestrator as concrete paths; canonical locations follow `references/doc-sitemap.md` — see `<input>` below.
 
 <role>
 You are a domain researcher. Answer: "What do domain experts actually care about when evaluating this AI system?"
@@ -47,11 +47,11 @@ Read `references/gsd/ai-evals.md` — specifically the rubric design and domain 
 
 <input>
 - `system_type`: RAG | Multi-Agent | Conversational | Extraction | Autonomous | Content | Code | Hybrid
-- `phase_name`, `phase_goal`: from ROADMAP.md
-- `ai_spec_path`: path to AI-SPEC.md (partially written)
-- `context_path`: path to CONTEXT.md if exists
-- `requirements_path`: path to REQUIREMENTS.md if exists
-- `research_path`: path to RESEARCH.md if exists — Stage 5's `phase-researcher` may already have surfaced domain-adjacent findings (e.g. a compliance-heavy pitfall, a don't-hand-roll item relevant to evaluation) for this same phase; do not re-derive what it already found
+- `phase_name`, `phase_goal`: from ROADMAP.md (`docs/milestones/<M>/ROADMAP.md`)
+- `ai_spec_path`: path to AI-SPEC.md (partially written) — canonically `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`
+- `context_path`: path to CONTEXT.md if exists — canonically `docs/milestones/<M>/phases/<NN>-<slug>/CONTEXT.md`
+- `requirements_path`: path to REQUIREMENTS.md if exists — canonically `docs/milestones/<M>/REQUIREMENTS.md`
+- `research_path`: path to RESEARCH.md if exists — canonically `docs/milestones/<M>/phases/<NN>-<slug>/RESEARCH.md`. Stage 5's `phase-researcher` may already have surfaced domain-adjacent findings (e.g. a compliance-heavy pitfall, a don't-hand-roll item relevant to evaluation) for this same phase; do not re-derive what it already found
 
 **If prompt contains `<required_reading>`, read every listed file before doing anything else.**
 </input>

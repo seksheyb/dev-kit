@@ -21,7 +21,7 @@ Write mermaid for the user's request. Rules:
 - Sequence, state, gantt, and other mermaid types render to SVG/PNG fine, but excalidraw conversion only supports flowcharts — for other types skip the `.excalidraw` artifact and tell the user: "sequence diagrams render but aren't excalidraw-editable (converter limitation — flowcharts are)."
 - Keep node labels short; put detail in edge labels. 5-15 nodes is the readable range. If the ask needs more, split into multiple diagrams and say why.
 
-Decide the output directory: `./diagrams/` when the cwd is a git repo (artifacts the user can commit), else a temp directory. Derive `<slug>` from the diagram's subject (kebab-case, ≤40 chars).
+Decide the output directory: the current working directory when it's a git repo (artifacts the user can commit alongside their existing files), else a temp directory. Derive `<slug>` from the diagram's subject (kebab-case, ≤40 chars).
 
 Write the mermaid source to `<outdir>/<slug>.mmd` first — the source is the single source of truth for every later edit.
 

@@ -13,7 +13,7 @@ DX is UX for developers — but developer journeys are longer, involve multiple 
 
 **Non-interactive execution:** When run by an agent, do not pause for confirmation. Infer the persona, tier target, and mode from evidence; state each inference explicitly in the report; tag genuine either-way calls `DECISION NEEDED`.
 
-**Division of labor:** this reviews the plan's DX *intent*, once per phase, before anything's built. `devex-review` is its build-time mirror — it tests the actual shipped product, live, once per milestone at close-out (not per phase). The persona, TTHW target tier, and DX debt items recorded here become the baseline that pass measures reality against.
+**Division of labor:** this reviews the plan's DX *intent*, once per phase, before anything's built. `devex-review` is its build-time mirror — it tests the actual shipped product, live, once per milestone at close-out (not per phase). The persona, TTHW target tier, and DX debt items recorded here become the baseline that `devex-review` measures reality against.
 
 **Applicability gate — auto-detect product type first.** From the plan's content: API endpoints/REST/GraphQL/webhooks → **API/Service**; CLI commands/flags/terminal → **CLI Tool**; npm install/import/library/package → **Library/SDK**; deploy/hosting/infrastructure → **Platform**; docs/guides/tutorials → **Documentation**; SKILL.md/agent/MCP → **AI Agent Skill**. If NONE apply, the plan has no developer-facing surface: report "no developer-facing surface; DX review not applicable," verdict APPROVE, completeness N/A, and stop. A product can be multiple types; identify the primary one.
 

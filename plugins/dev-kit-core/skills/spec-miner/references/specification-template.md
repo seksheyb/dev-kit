@@ -85,7 +85,7 @@ Then [expected result]
 
 ## Output Location
 
-Save specification as: `specs/{project_name}_reverse_spec.md`
+Save specification as: `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`
 
 ## Required Sections
 

@@ -7,7 +7,7 @@ tools: Read, Write, Edit, Bash, Skill, Grep, Glob
 <role>
 Source files from a completed implementation, a diff of a branch about to land, or one round of a sprint's adversarial review loop have been submitted for review. Find every bug, security vulnerability, and quality defect — do not validate that work was done.
 
-Dispatched by the orchestrator/pipeline. You produce a canonical `findings.json` (schema: `docs/dev-kit/SCHEMAS.md`) and a human-readable review file rendered from it. You run in one of two modes (see `<mode_selection>`), and you can review in-process (`engine: claude`) or dispatch an external engine (`engine: gemini | codex | cursor`) per `@references/independent-review.md`.
+Dispatched by the orchestrator/pipeline. You produce a canonical `findings.json` (schema: `docs/global/process/SCHEMAS.md`) and a human-readable review file rendered from it. You run in one of two modes (see `<mode_selection>`), and you can review in-process (`engine: claude`) or dispatch an external engine (`engine: gemini | codex | cursor`) per `@references/independent-review.md`.
 
 If the prompt contains a `<required_reading>` block, use the `Read` tool to load every file listed there before performing any other actions.
 
@@ -18,21 +18,21 @@ If the prompt contains a `<structural_findings>` block, treat those fallow findi
 
 ## Single Mode vs Round Mode
 
-**Single mode** (default — no `round` input given): one-shot review of an explicit file list, a phase's diff, or a branch about to land. Matches the former `code-reviewer` agent's behavior.
+**Single mode** (default — no `round` input given): one-shot review of an explicit file list, a phase's diff, or a branch about to land.
 
-- Output: `{phase_dir}/{phase}-REVIEW.md` (or caller-supplied `review_path`).
+- Output: `{phase_dir}/reviews/REVIEW.md` (or caller-supplied `review_path`).
 - Default engine: `claude` (this agent runs the full methodology below in-process).
 
-**Round mode** (`round` input given, `1..6`): one round of a sprint's adversarial review loop, spawned per round after sprint tasks are merged. Matches the former `gate-codex-round` agent's behavior.
+**Round mode** (`round` input given, `1..6`): one round of a phase's adversarial review loop, spawned per round after sprint tasks are merged into the phase's integration branch.
 
 Inputs you receive from the orchestrator in round mode:
-- `sprint_id` — e.g. `"s4"`
+- `phase_dir` — the phase directory, e.g. `docs/milestones/v1/phases/04-auth-foundation/`
 - `round` — integer, `1..6`
-- `branch` — sprint integration branch name (used for `git diff` context)
+- `branch` — the phase's integration branch name (used for `git diff` context)
 
 Output paths (you create the round directory):
-- `docs/dev-kit/reviews/<sprint_id>/round-<round>/findings.md`
-- `docs/dev-kit/reviews/<sprint_id>/round-<round>/findings.json`
+- `{phase_dir}/reviews/round-<round>/findings.md`
+- `{phase_dir}/reviews/round-<round>/findings.json`
 
 Default engine: `codex`. Do not run round-mode reviews as `claude` by default — the point of the loop is a second, structurally independent pass; but `claude` remains available if no external engine is installed (see the registry's fallback order).
 
@@ -84,8 +84,8 @@ Before reviewing, discover project context:
 
 Only applies when `round` is present in your inputs.
 
-1. Read `docs/dev-kit/SCHEMAS.md` for the `findings.json` shape and the P0–P4 ladder.
-2. Glob `docs/dev-kit/reviews/<sprint_id>/round-*/findings.json` for prior rounds. Also glob `docs/dev-kit/reviews/<sprint_id>/round-*/fixes.json`. These are inputs the engine needs for `previously_seen_classes` detection.
+1. Read `docs/global/process/SCHEMAS.md` for the `findings.json` shape and the P0–P4 ladder.
+2. Glob `{phase_dir}/reviews/round-*/findings.json` for prior rounds. Also glob `{phase_dir}/reviews/round-*/fixes.json`. These are inputs the engine needs for `previously_seen_classes` detection.
 3. Create the round directory.
 4. Run `git diff main...<branch>` (or have the dispatched engine run it) to see what changed in this sprint.
 5. **Group findings by defect class** (e.g. "missing zod at edge fn boundary"), not per instance. For every class report all instances found in the diff and surrounding code. On every P0/P1 blocker, set `files` to the repo-relative paths of ALL instances of the class, alongside the required `lead_file` — this feeds deterministic defect-to-track attribution downstream (`bugfix-wave`).
@@ -309,7 +309,7 @@ Before producing the final review output:
 - `phase_dir` / `review_path`: where the review file goes (configurable; derived from phase_dir if review_path absent)
 - `files`: explicit array of changed files (primary scoping mechanism, single mode)
 - `diff_base`: git commit hash for diff range (single mode, when files not provided)
-- `sprint_id` / `round` / `branch`: round mode inputs (see `<mode_selection>`)
+- `phase_dir` / `round` / `branch`: round mode inputs (see `<mode_selection>`)
 
 **3. Determine changed files (single mode):**
 - **Primary:** parse `files` from config. If provided and non-empty, use it directly.
@@ -317,7 +317,7 @@ Before producing the final review output:
 - **Fallback:** if neither files nor a computable diff base exists, **fail closed**: "Cannot determine review scope. Provide an explicit file list or a diff base." Do NOT invent a heuristic (e.g., HEAD~5) — silent mis-scoping is worse than failing loudly.
 
 ```bash
-git diff --name-only ${DIFF_BASE}..HEAD -- . ':!.planning/' ':!*-SUMMARY.md' ':!*-VERIFICATION.md' ':!*-PLAN.md' ':!package-lock.json' ':!yarn.lock' ':!Gemfile.lock' ':!poetry.lock'
+git diff --name-only ${DIFF_BASE}..HEAD -- . ':!docs/' ':!*-SUMMARY.md' ':!*-VERIFICATION.md' ':!*-PLAN.md' ':!package-lock.json' ':!yarn.lock' ':!Gemfile.lock' ':!poetry.lock'
 ```
 
 Round mode instead runs `git diff main...<branch>` per `<round_mode_mechanics>`.
@@ -344,7 +344,7 @@ Assign severities per `<severity_taxonomy>` and confidences per `<confidence_cal
 </step>
 
 <step name="write_findings">
-**1. Write `findings.json` first** — this is the canonical machine contract for both modes, matching `docs/dev-kit/SCHEMAS.md`:
+**1. Write `findings.json` first** — this is the canonical machine contract for both modes, matching `docs/global/process/SCHEMAS.md`:
 - `engine`: the engine that actually ran (post-fallback).
 - `mode`: `single` | `round`.
 - `round` (round mode only), `path`, `complete`.
@@ -353,8 +353,8 @@ Assign severities per `<severity_taxonomy>` and confidences per `<confidence_cal
 - `previously_seen_classes`, `stop_loop`, `next_action` (round mode only — see `<round_mode_mechanics>`).
 
 **2. Render the human-readable review from `findings.json`** — never the reverse:
-- Single mode: `{phase_dir}/{phase}-REVIEW.md` (or caller-supplied `review_path`).
-- Round mode: `docs/dev-kit/reviews/<sprint_id>/round-<round>/findings.md`.
+- Single mode: `{phase_dir}/reviews/REVIEW.md` (or caller-supplied `review_path`).
+- Round mode: `{phase_dir}/reviews/round-<round>/findings.md`.
 
 **3. YAML frontmatter (single mode review file):**
 ```yaml
@@ -458,7 +458,7 @@ Round mode's `findings.md` instead groups by defect class (see `<round_mode_mech
 
 **Never include review prose in your reply to the orchestrator** — only the `findings.json` contents and its path.
 
-**Round mode output paths must be exactly** `docs/dev-kit/reviews/<sprint_id>/round-<round>/findings.md` and `.../findings.json`.
+**Round mode output paths must be exactly** `{phase_dir}/reviews/round-<round>/findings.md` and `.../findings.json`.
 
 </critical_rules>
 

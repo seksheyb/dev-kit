@@ -71,11 +71,11 @@ If context or time runs short, review in this order and never skip the front of 
 
 ## Step 0: Design Scope Assessment
 
-Before the passes, gather context: read the plan, CLAUDE.md, DESIGN.md (if it exists, ALL design decisions calibrate against it), TODOS.md for design-related items, and check git history for prior design review cycles (previously flagged areas get MORE aggressive review).
+Before the passes, gather context: read the plan, CLAUDE.md, `docs/global/design/DESIGN.md` (if it exists, ALL design decisions calibrate against it), `docs/global/requirements/TODOS.md` for design-related items, and check git history for prior design review cycles (previously flagged areas get MORE aggressive review).
 
 **0A. Initial design rating.** Rate the plan's overall design completeness 0-10 with a reason ("3/10 — describes what the backend does but never specifies what the user sees"). Explain what a 10 looks like for THIS plan.
 
-**0B. Design system status.** DESIGN.md exists → calibrate every decision against it. No DESIGN.md → flag as a gap; proceed with universal design principles and recommend creating one.
+**0B. Design system status.** `docs/global/design/DESIGN.md` exists → calibrate every decision against it. No `docs/global/design/DESIGN.md` → flag as a gap; proceed with universal design principles and recommend creating one.
 
 **0C. Existing design leverage.** What existing UI patterns, components, and design decisions in the codebase should this plan reuse? Don't reinvent what already works.
 
@@ -158,7 +158,7 @@ Rate 0-10: Does the plan describe specific, intentional UI — or generic patter
 FIX TO 10: Rewrite vague UI descriptions with specific alternatives. "Cards with icons" → what differentiates these from every SaaS template? "Hero section" → what makes this hero feel like THIS product? "Clean, modern UI" → meaningless; replace with actual design decisions. "Dashboard with widgets" → what makes this NOT every other dashboard?
 
 ### Pass 5: Design System Alignment
-Rate 0-10: Does the plan align with the project's design system (DESIGN.md or equivalent)?
+Rate 0-10: Does the plan align with the project's design system (`docs/global/design/DESIGN.md` or equivalent)?
 FIX TO 10: If a design system exists, annotate the plan with specific tokens/components. If none, flag the gap and recommend establishing one. Flag any new component — does it fit the existing vocabulary?
 
 ### Pass 6: Responsive & Accessibility

@@ -7,7 +7,7 @@ Triggered when orchestrator provides `<revision_context>` with checker issues. N
 ### Step 1: Load Existing Plans
 
 ```bash
-cat .planning/phases/$PHASE-*/$PHASE-*-PLAN.md
+cat docs/milestones/<M>/phases/$PHASE-*/$PHASE-*-PLAN.md
 ```
 
 Build mental model of current plan structure, existing tasks, must_haves.
@@ -55,7 +55,7 @@ Group by plan, dimension, severity.
 ### Step 6: Commit
 
 ```bash
-git add .planning/phases/$PHASE-*/$PHASE-*-PLAN.md && git commit -m "fix($PHASE): revise plans based on checker feedback"
+git add docs/milestones/<M>/phases/$PHASE-*/$PHASE-*-PLAN.md && git commit -m "fix($PHASE): revise plans based on checker feedback"
 ```
 
 ### Step 7: Return Revision Summary
@@ -74,8 +74,8 @@ git add .planning/phases/$PHASE-*/$PHASE-*-PLAN.md && git commit -m "fix($PHASE)
 
 ### Files Updated
 
-- .planning/phases/16-xxx/16-01-PLAN.md
-- .planning/phases/16-xxx/16-02-PLAN.md
+- docs/milestones/<M>/phases/16-xxx/16-01-PLAN.md
+- docs/milestones/<M>/phases/16-xxx/16-02-PLAN.md
 
 {If any issues NOT addressed:}
 

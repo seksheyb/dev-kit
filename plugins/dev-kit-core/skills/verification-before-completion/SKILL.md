@@ -107,12 +107,11 @@ Skip any step = lying, not verifying
 
 ## Why This Matters
 
-From 24 failure memories:
-- your human partner said "I don't believe you" - trust broken
-- Undefined functions shipped - would crash
-- Missing requirements shipped - incomplete features
-- Time wasted on false completion → redirect → rework
-- Violates: "Honesty is a core value. If you lie, you'll be replaced."
+- False "done" claims break trust — your human partner starts re-verifying everything you report, which defeats the point of delegating
+- Undefined functions shipped as "working" — crashes in production
+- Missing requirements shipped as "complete" — incomplete features reach users
+- Time wasted on false completion always exceeds the cost of verifying: claim → redirect → rework
+- Honesty is a core value. A claim without evidence is a guess wearing a claim's clothes.
 
 ## When To Apply
 

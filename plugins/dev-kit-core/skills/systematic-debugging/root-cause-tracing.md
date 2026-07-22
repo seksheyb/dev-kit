@@ -44,10 +44,10 @@ await execFileAsync('git', ['init'], { cwd: projectDir });
 
 ### 3. Ask: What Called This?
 ```typescript
-WorktreeManager.createSessionWorktree(projectDir, sessionId)
-  → called by Session.initializeWorkspace()
-  → called by Session.create()
-  → called by test at Project.create()
+DirectoryManager.createWorkingDirectory(projectDir, taskId)
+  → called by Task.initializeWorkspace()
+  → called by Task.create()
+  → called by test at Workspace.create()
 ```
 
 ### 4. Keep Tracing Up
@@ -59,8 +59,8 @@ WorktreeManager.createSessionWorktree(projectDir, sessionId)
 ### 5. Find Original Trigger
 **Where did empty string come from?**
 ```typescript
-const context = setupCoreTest(); // Returns { tempDir: '' }
-Project.create('name', context.tempDir); // Accessed before beforeEach!
+const context = setupTestContext(); // Returns { tempDir: '' }
+Workspace.create('name', context.tempDir); // Accessed before beforeEach!
 ```
 
 ## Adding Stack Traces
@@ -112,17 +112,17 @@ Runs tests one-by-one, stops at first polluter. See script for usage.
 
 **Trace chain:**
 1. `git init` runs in `process.cwd()` ← empty cwd parameter
-2. WorktreeManager called with empty projectDir
-3. Session.create() passed empty string
+2. DirectoryManager called with empty projectDir
+3. Task.create() passed empty string
 4. Test accessed `context.tempDir` before beforeEach
-5. setupCoreTest() returns `{ tempDir: '' }` initially
+5. setupTestContext() returns `{ tempDir: '' }` initially
 
 **Root cause:** Top-level variable initialization accessing empty value
 
 **Fix:** Made tempDir a getter that throws if accessed before beforeEach
 
 **Also added defense-in-depth:**
-- Layer 1: Project.create() validates directory
+- Layer 1: Workspace.create() validates directory
 - Layer 2: WorkspaceManager validates not empty
 - Layer 3: NODE_ENV guard refuses git init outside tmpdir
 - Layer 4: Stack trace logging before git init
@@ -162,8 +162,8 @@ digraph principle {
 
 ## Real-World Impact
 
-From debugging session (2025-10-03):
+From a real trace-to-source fix:
 - Found root cause through 5-level trace
 - Fixed at source (getter validation)
 - Added 4 layers of defense
-- 1847 tests passed, zero pollution
+- Full suite passed, zero pollution

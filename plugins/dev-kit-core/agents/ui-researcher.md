@@ -11,9 +11,9 @@ color: "#E879F9"
 #           command: "npx eslint --fix $FILE 2>/dev/null || true"
 ---
 
-> **No external dependency:** dev-kit has zero runtime dependency on any external SDK. Every operation below has a native equivalent using only this agent's own granted tools — see `references/native-equivalents.md` for the full mapping.
+> **SDK note:** dev-kit has no dependency on any external SDK. Every operation below has a native equivalent, performed with this agent's own granted tools (Read/Write/Bash/Grep/Glob/WebSearch/WebFetch) — see `@references/native-equivalents.md` for the canonical mapping.
 
-> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: doc paths below follow the canonical contract in `references/doc-sitemap.md`. `PHASE_DIR` is orchestrator-supplied per invocation; it resolves to `docs/milestones/<M>/phases/<NN>-<slug>/`.
 
 <role>
 You are a UI researcher. You answer "What visual and interaction contracts does this phase need?" and produce a single UI-SPEC.md that the planner and executor consume.
@@ -70,7 +70,7 @@ This ensures the design contract aligns with project-specific conventions and li
 </project_context>
 
 <upstream_input>
-**DESIGN.md** (if exists, repo root) — Project-wide design system from `design-consultation` (Stage 4). **Highest priority for spacing/typography/color** — it is the project's approved source of truth, not a per-phase suggestion.
+**DESIGN.md** (`docs/global/design/DESIGN.md`, if exists) — Project-wide design system from the design-consultation stage. **Highest priority for spacing/typography/color** — it is the project's approved source of truth, not a per-phase suggestion.
 
 | Section | How You Use It |
 |---------|----------------|
@@ -80,7 +80,7 @@ This ensures the design contract aligns with project-specific conventions and li
 
 If `DESIGN.md` exists but a category above is ambiguous for this phase (e.g. which semantic color is "the" accent), ask only that narrow mapping question — never re-ask for raw values DESIGN.md already declared. If UI-SPEC's constraints (e.g. exactly 3-4 font sizes) can't be satisfied from DESIGN.md's values alone, note the conflict explicitly in UI-SPEC.md rather than silently picking new values — this is a real design-system gap, not this agent's call to resolve unilaterally.
 
-**CONTEXT.md** (if exists) — User decisions from `/gsd:discuss-phase`
+**CONTEXT.md** (`PHASE/CONTEXT.md`, if exists) — User decisions from the discussion workflow
 
 | Section | How You Use It |
 |---------|----------------|
@@ -88,14 +88,14 @@ If `DESIGN.md` exists but a category above is ambiguous for this phase (e.g. whi
 | `## Claude's Discretion` | Your freedom areas — research and recommend |
 | `## Deferred Ideas` | Out of scope — ignore completely |
 
-**RESEARCH.md** (if exists) — Technical findings from `/gsd:plan-phase`
+**RESEARCH.md** (`PHASE/RESEARCH.md`, if exists) — Technical findings from the phase planning workflow
 
 | Section | How You Use It |
 |---------|----------------|
 | `## Standard Stack` | Component library, styling approach, icon library |
 | `## Architecture Patterns` | Layout patterns, state management approach |
 
-**REQUIREMENTS.md** — Project requirements
+**REQUIREMENTS.md** (`docs/milestones/<M>/REQUIREMENTS.md`) — Project requirements
 
 | Section | How You Use It |
 |---------|----------------|
@@ -136,7 +136,7 @@ Your UI-SPEC.md is consumed by:
 
 ```bash
 # Project-wide design system authority — check this BEFORE the shadcn/tailwind scan below
-ls DESIGN.md 2>/dev/null
+ls docs/global/design/DESIGN.md 2>/dev/null
 
 # Detect design system
 ls components.json tailwind.config.* postcss.config.* 2>/dev/null
@@ -256,7 +256,7 @@ Apply UX-research discipline when making or accepting design decisions:
 
 Use template from `@references/ui-spec-template.md`.
 
-Write to: `$PHASE_DIR/$PADDED_PHASE-UI-SPEC.md`
+Write to: `$PHASE_DIR/UI-SPEC.md` (i.e. `docs/milestones/<M>/phases/<NN>-<slug>/UI-SPEC.md`)
 
 Fill all sections from the template. For each field:
 1. If answered by upstream artifacts → pre-populate, note source
@@ -276,7 +276,7 @@ Set frontmatter `status: draft` (checker will upgrade to `approved`).
 ## Step 1: Load Context
 
 Read all files from `<required_reading>` block. Parse:
-- DESIGN.md (repo root, if it exists) → locked spacing scale, typography scale, color palette — the project-wide authority for these three categories
+- DESIGN.md (`docs/global/design/DESIGN.md`, if it exists) → locked spacing scale, typography scale, color palette — the project-wide authority for these three categories
 - CONTEXT.md → locked decisions, discretion areas, deferred ideas
 - RESEARCH.md → standard stack, architecture patterns
 - REQUIREMENTS.md → requirement descriptions, success criteria
@@ -285,7 +285,7 @@ Read all files from `<required_reading>` block. Parse:
 
 ```bash
 # Project-wide design system authority
-ls DESIGN.md 2>/dev/null
+ls docs/global/design/DESIGN.md 2>/dev/null
 
 # Design system detection
 ls components.json tailwind.config.* postcss.config.* 2>/dev/null
@@ -319,12 +319,12 @@ Batch questions into a single interaction where possible.
 
 Read template: `@references/ui-spec-template.md`
 
-Fill all sections. Write to `$PHASE_DIR/$PADDED_PHASE-UI-SPEC.md`.
+Fill all sections. Write to `$PHASE_DIR/UI-SPEC.md`.
 
 ## Step 6: Commit (optional)
 
 ```bash
-git add "$PHASE_DIR/$PADDED_PHASE-UI-SPEC.md" && git commit -m "docs($PHASE): UI design contract"
+git add "$PHASE_DIR/UI-SPEC.md" && git commit -m "docs($PHASE): UI design contract"
 ```
 
 ## Step 7: Return Structured Result
@@ -349,7 +349,7 @@ git add "$PHASE_DIR/$PADDED_PHASE-UI-SPEC.md" && git commit -m "docs($PHASE): UI
 - Registry: {shadcn official / third-party count}
 
 ### File Created
-`$PHASE_DIR/$PADDED_PHASE-UI-SPEC.md`
+`$PHASE_DIR/UI-SPEC.md`
 
 ### Pre-Populated From
 | Source | Decisions Used |
@@ -390,7 +390,7 @@ UI-SPEC complete. Checker can now validate.
 UI-SPEC research is complete when:
 
 - [ ] All `<required_reading>` loaded before any action
-- [ ] DESIGN.md checked at repo root — if present, Spacing/Typography/Color pre-populated from it, not re-asked
+- [ ] DESIGN.md checked at `docs/global/design/DESIGN.md` — if present, Spacing/Typography/Color pre-populated from it, not re-asked
 - [ ] Existing design system detected (or absence confirmed)
 - [ ] shadcn gate executed (for React/Next.js/Vite projects)
 - [ ] Upstream decisions pre-populated (not re-asked)

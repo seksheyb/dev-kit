@@ -13,10 +13,8 @@ constitution-violation remediation tasks first. Precision here pays off everywhe
 
 ## File Location
 
-The constitution lives in the project's docs/requirements directory (configurable). By
-default use `docs/constitution.md`; if the project already keeps requirements elsewhere
-(e.g. `requirements/`, `product/`, a `memory/` folder), follow the existing convention or
-ask the user once and stick to it.
+The constitution lives at `docs/global/project/constitution.md` — the single canonical
+path every downstream skill reads from. Don't invent a variant location.
 
 If no constitution file exists yet, initialize it from `constitution-template.md` in this
 skill's directory, then fill it in.
@@ -57,7 +55,7 @@ Follow this execution flow:
    - If the project keeps a spec template, check scope/requirements alignment—update if constitution adds/removes mandatory sections or constraints.
    - If the project keeps a tasks template, ensure task categorization reflects new or removed principle-driven task types (e.g., observability, versioning, testing discipline).
    - Read the sibling SDD skills in this kit (`specify` — which includes the clarification pass — `analyze`, `converge`) or any equivalent workflow docs installed in the project to verify no outdated references remain when generic guidance is required.
-   - Read any runtime guidance docs (e.g., `README.md`, `docs/quickstart.md`, or agent-specific guidance files if present). Update references to principles changed.
+   - Read any runtime guidance docs (e.g., `README.md`, `docs/global/project/quickstart.md`, or agent-specific guidance files if present). Update references to principles changed.
 
 5. Produce a Sync Impact Report (prepend as an HTML comment at top of the constitution file after update):
    - Version change: old → new

@@ -20,7 +20,7 @@ metadata:
 2. **Design** — Plan security controls
 3. **Implement** — Write secure code with defense in depth; see code examples below
 4. **Validate** — Test security controls with explicit checkpoints (see below)
-5. **Document** — Record security decisions
+5. **Document** — Record significant security decisions as ADRs (`docs/global/architecture/adr/NNNN-<slug>.md`; see `architecture-designer`)
 
 ### Validation Checkpoints
 

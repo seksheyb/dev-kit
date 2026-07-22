@@ -214,7 +214,7 @@ BEFORE creating mock responses:
   Check: "What fields does the real API response contain?"
 
   Actions:
-    1. Examine actual API response from docs/examples
+    1. Examine actual API response from docs/global/codebase/STACK.md
     2. Include ALL fields system might consume downstream
     3. Verify mock matches real response schema completely
 

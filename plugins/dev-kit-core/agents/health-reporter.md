@@ -38,7 +38,7 @@ Parse counts from tool output (`error TS` lines for tsc; error/warning summary f
 A table with Category · Tool · Score · Status · Duration · Details, then the composite. Status labels: 10 `CLEAN`, 7-9 `WARNING`, 4-6 `NEEDS WORK`, 0-3 `CRITICAL`. For any category below 7, show the top issues (tail of the tool output) so the user can act without re-running.
 
 ## Step 5 — Persist history
-Append one JSONL line to `.context/health-history.jsonl` (create the dir): `{"ts":"<ISO8601>","branch":"<branch>","score":<composite>,"typecheck":N,"lint":N,"test":N,"deadcode":N,"shell":N,"duration_s":N}`. Skipped categories are `null`.
+Append one JSONL line to `docs/state/baselines/health-history.jsonl` (create the dir): `{"ts":"<ISO8601>","branch":"<branch>","score":<composite>,"typecheck":N,"lint":N,"test":N,"deadcode":N,"shell":N,"duration_s":N}`. Skipped categories are `null`.
 
 ## Step 6 — Trend + recommendations
 Read the last ~10 entries. If prior runs exist, show a trend table and the direction (improving/slipping) with the delta since last run; if the score dropped, name which categories declined, the per-category delta, and the specific errors that appeared. Always list recommendations ranked by impact = `weight × (10 − score)`, only for categories below 10, each with the command to run. First run: "First health check — no trend data yet."

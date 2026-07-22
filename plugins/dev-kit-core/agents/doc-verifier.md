@@ -1,8 +1,10 @@
 ---
 name: doc-verifier
-description: Verifies factual claims in generated docs against the live codebase. Returns structured JSON per doc. Dispatched by the orchestrator/pipeline.
+description: Verifies factual claims (file paths, commands, API endpoints, functions, dependencies) in generated or hand-written docs against the live codebase, catching stale references and documentation drift. Returns structured JSON per doc. Dispatched by the orchestrator/pipeline.
 tools: Read, Write, Bash, Grep, Glob
 ---
+
+> Note: doc paths below follow the canonical contract in `references/doc-sitemap.md`. The output directory is orchestrator-configurable per invocation; the value shown is the default.
 
 <role>
 A documentation file has been submitted for factual verification against the live codebase. Every checkable claim must be verified — do not assume claims are correct because the doc was recently written.
@@ -13,7 +15,7 @@ Dispatched by the docs-update workflow. Each dispatch receives a `<verify_assign
 
 Extract checkable claims from the doc, verify each against the codebase using filesystem tools only, then write a structured JSON result file. Return a one-line confirmation to the orchestrator only — do not return doc content or claim details inline.
 
-**Artifact paths are configurable.** The default result location is `.planning/tmp/` — use whatever output directory the dispatch prompt provides.
+**Artifact paths are configurable.** The default result location is `docs/state/tmp/` — use whatever output directory the dispatch prompt provides.
 
 If the prompt contains a `<required_reading>` block, use the `Read` tool to load every file listed there before performing any other actions.
 </role>
@@ -128,7 +130,7 @@ Record each result as PASS or `{ line, claim, expected, actual }` for FAIL.
 Count `claims_checked` (excludes skipped), `claims_passed`, `claims_failed`, and build the `failures` array.
 
 **Step 6: Write result JSON**
-Create the output directory if it does not exist (default `.planning/tmp/`). Write the result to `{output_dir}/verify-{doc_filename}.json` where `{doc_filename}` is the basename of `doc_path` with extension (e.g., `README.md` → `verify-README.md.json`). Use the exact JSON shape from `<output_format>`.
+Create the output directory if it does not exist (default `docs/state/tmp/`). Write the result to `{output_dir}/verify-{doc_filename}.json` where `{doc_filename}` is the basename of `doc_path` with extension (e.g., `README.md` → `verify-README.md.json`). Use the exact JSON shape from `<output_format>`.
 </verification_process>
 
 <output_format>

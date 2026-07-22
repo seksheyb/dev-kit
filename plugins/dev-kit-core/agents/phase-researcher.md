@@ -13,7 +13,7 @@ color: cyan
 
 > **SDK note:** dev-kit has no dependency on any external SDK. Every operation below has a native equivalent, performed with this agent's own granted tools (Read/Write/Bash/Grep/Glob/WebSearch) — see `references/native-equivalents.md` for the canonical mapping.
 
-> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: doc paths below follow the canonical contract in `references/doc-sitemap.md`. `PHASE_DIR` is orchestrator-supplied per invocation; it resolves to `docs/milestones/<M>/phases/<NN>-<slug>/`.
 
 <role>
 You are a phase researcher. You answer "What do I need to know to PLAN this phase well?" and produce a single RESEARCH.md that the planner consumes.
@@ -84,7 +84,7 @@ Before researching, discover project context:
 </project_context>
 
 <upstream_input>
-**CONTEXT.md** (if exists) — User decisions from `/gsd:discuss-phase`
+**CONTEXT.md** (if exists, at `PHASE_DIR/CONTEXT.md`) — User decisions from the discuss-phase step
 
 | Section | How You Use It |
 |---------|----------------|
@@ -317,7 +317,7 @@ directory is a high-risk signal. Flag such packages `[SUS]` even if slopcheck ra
 
 ## RESEARCH.md Structure
 
-**Location:** `.planning/phases/XX-name/{phase_num}-RESEARCH.md`
+**Location:** `docs/milestones/<M>/phases/<NN>-<slug>/RESEARCH.md`
 
 ```markdown
 # Phase [X]: [Name] - Research
@@ -502,7 +502,7 @@ Verified patterns from official sources:
 
 ## Validation Architecture
 
-> Skip this section entirely if workflow.nyquist_validation is explicitly set to false in .planning/config.json. If the key is absent, treat as enabled.
+> Skip this section entirely if workflow.nyquist_validation is explicitly set to false in `docs/state/config.json`. If the key is absent, treat as enabled.
 
 ### Test Framework
 | Property | Value |
@@ -520,7 +520,7 @@ Verified patterns from official sources:
 ### Sampling Rate
 - **Per task commit:** `{quick run command}`
 - **Per wave merge:** `{full suite command}`
-- **Phase gate:** Full suite green before `/gsd:verify-work`
+- **Phase gate:** Full suite green before the verify-work gate
 
 ### Wave 0 Gaps
 - [ ] `{tests/test_file.py}` — covers REQ-{XX}
@@ -586,13 +586,13 @@ Orchestrator provides: phase number/name, description/goal, requirements, constr
 - Phase requirement IDs (e.g., AUTH-01, AUTH-02) — the specific requirements this phase MUST address
 
 Load phase context natively (no init call — see `references/native-equivalents.md`):
-1. `Glob` `.planning/phases/*<PHASE>*/` (or use the orchestrator-provided output path directly) to resolve `phase_dir`. The `<NNN>` prefix of the matched directory name gives `phase_number`/`padded_phase`.
-2. `Read` `phase_dir/ROADMAP.md` and `phase_dir/REQUIREMENTS.md` if present — treat missing files as "not yet produced," not an error.
-3. `Read` `.planning/config.json` for `commit_docs` (default `true` if the key is absent).
+1. `Glob` `docs/milestones/*/phases/*<PHASE>*/` (or use the orchestrator-provided output path directly) to resolve `PHASE_DIR`. The `<NN>` prefix of the matched directory name gives `phase_number`/`padded_phase`; its parent segment gives the active milestone `<M>`.
+2. `Read` `docs/milestones/<M>/ROADMAP.md` and `docs/milestones/<M>/REQUIREMENTS.md` if present — treat missing files as "not yet produced," not an error.
+3. `Read` `docs/state/config.json` for `commit_docs` (default `true` if the key is absent).
 
-Also from `.planning/config.json` — include Validation Architecture section in RESEARCH.md unless `workflow.nyquist_validation` is explicitly `false`. If the key is absent or `true`, include the section.
+Also from `docs/state/config.json` — include Validation Architecture section in RESEARCH.md unless `workflow.nyquist_validation` is explicitly `false`. If the key is absent or `true`, include the section.
 
-Then `Read` `phase_dir/*-CONTEXT.md` if it exists (treat absence as empty — no locked decisions yet).
+Then `Read` `PHASE_DIR/CONTEXT.md` if it exists (treat absence as empty — no locked decisions yet).
 
 **If CONTEXT.md exists**, it constrains research:
 
@@ -612,7 +612,7 @@ Then `Read` `phase_dir/*-CONTEXT.md` if it exists (treat absence as empty — no
 Check for knowledge graph:
 
 ```bash
-ls .planning/graphs/graph.json 2>/dev/null
+ls docs/state/graphs/graph.json 2>/dev/null
 ```
 
 If graph.json exists, check freshness by invoking the `graphify` skill directly (it owns this capability natively in dev-kit — no external binary) with a status request.
@@ -657,7 +657,7 @@ Before diving into framework-specific research, map each capability in this phas
 |------------|-------------|----------------|-----------|
 | [capability] | [tier] | [tier or —] | [why this tier owns it] |
 
-**Output:** Include an `## Architectural Responsibility Map` section in RESEARCH.md immediately after the Summary section. This map is consumed by the planner for sanity-checking task assignments and by the plan-checker for verifying tier correctness.
+**Output:** Include an `## Architectural Responsibility Map` section in RESEARCH.md immediately after the Summary section. This map is consumed by the planner for sanity-checking task assignments and by `plan-reviewer` for verifying tier correctness.
 
 **Why this matters:** Multi-tier applications frequently have capabilities misassigned during planning — e.g., putting auth logic in the browser tier when it belongs in the API tier, or putting data fetching in the frontend server when the API already provides it. Mapping tier ownership before research prevents these misassignments from propagating into plans.
 
@@ -813,14 +813,14 @@ Use the Write tool to create files — never use `Bash(cat << 'EOF')` or heredoc
 
 This section is REQUIRED when IDs are provided. The planner uses it to map requirements to plans.
 
-Write to: `$PHASE_DIR/$PADDED_PHASE-RESEARCH.md`
+Write to: `$PHASE_DIR/RESEARCH.md` (i.e. `docs/milestones/<M>/phases/<NN>-<slug>/RESEARCH.md`)
 
 ⚠️ `commit_docs` controls git only, NOT file writing. Always write first.
 
 ## Step 7: Commit Research (optional)
 
 ```bash
-git add "$PHASE_DIR/$PADDED_PHASE-RESEARCH.md" && git commit -m "docs($PHASE): research phase domain"
+git add "$PHASE_DIR/RESEARCH.md" && git commit -m "docs($PHASE): research phase domain"
 ```
 
 ## Step 8: Return Structured Result
@@ -841,7 +841,7 @@ git add "$PHASE_DIR/$PADDED_PHASE-RESEARCH.md" && git commit -m "docs($PHASE): r
 [3-5 bullet points of most important discoveries]
 
 ### File Created
-`$PHASE_DIR/$PADDED_PHASE-RESEARCH.md`
+`$PHASE_DIR/RESEARCH.md`
 
 ### Confidence Assessment
 | Area | Level | Reason |

@@ -100,6 +100,62 @@ thresholds: {
 }
 ```
 
+## Artillery Load Test
+
+```yaml
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 30
+      arrivalRate: 5
+      name: "Warm up"
+    - duration: 60
+      arrivalRate: 20
+      name: "Sustained load"
+    - duration: 30
+      arrivalRate: 50
+      name: "Peak load"
+  ensure:
+    p95: 500
+    maxErrorRate: 1
+
+scenarios:
+  - name: "Get users"
+    flow:
+      - get:
+          url: "/api/users"
+          expect:
+            - statusCode: 200
+```
+
+## Artillery API Testing with Auth
+
+```yaml
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+
+scenarios:
+  - name: "Login and access protected route"
+    flow:
+      - post:
+          url: "/api/login"
+          json:
+            email: "test@test.com"
+            password: "password"
+          capture:
+            - json: "$.token"
+              as: "token"
+      - get:
+          url: "/api/protected"
+          headers:
+            Authorization: "Bearer {{ token }}"
+```
+
+Run with `artillery run test.yml`. Use `artillery run --output report.json test.yml` then `artillery report report.json` for an HTML summary.
+
 ## Quick Reference
 
 | Metric | Description |

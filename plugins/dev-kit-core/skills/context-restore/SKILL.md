@@ -1,6 +1,6 @@
 ---
 name: context-restore
-description: Restore working context saved earlier by /context-save. Loads the most recent saved state (across all branches by default) so you can pick up where you left off — even across worktree or workspace handoffs. Use when asked to "resume", "restore context", "where was I", or "pick up where I left off".
+description: Use when asked to resume, restore context, pick up where you left off, or figure out where you were — restores the working context saved earlier by context-save, defaulting to the most recent state across all branches so a session can resume even after a worktree or workspace handoff.
 ---
 
 # /context-restore — Restore Saved Working Context

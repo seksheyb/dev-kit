@@ -95,7 +95,10 @@ Load detailed guidance based on context:
 
 ## Output Templates
 
-Save specification as: `specs/{project_name}_reverse_spec.md`
+Save the mined specification to `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md` — pick the
+next available `<NNN>` and a `<slug>` naming the system or feature under analysis. This is
+the same canonical spec path the `specify` skill writes, so downstream planning skills read
+either origin identically.
 
 Include:
 1. Technology stack and architecture

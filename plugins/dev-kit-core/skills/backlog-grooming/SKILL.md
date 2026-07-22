@@ -74,15 +74,21 @@ A story is sprint-ready when:
 - [ ] Fits within one sprint
 - [ ] Test scenarios drafted
 - [ ] If the project uses the Theme→Pillar→US-xxx hierarchy, the story carries its
-      global US-xxx ID and Pillar (see `skills/specify/SKILL.md`)
+      global US-xxx ID and Pillar (see the specify skill)
 
 ## Backlog Categories
+
+The durable record is `docs/global/requirements/BACKLOG.md` — one file, one taxonomy, shared
+with any other skill that appends candidate or descoped items to it:
 
 - **Now** — sprint-ready, estimated, detailed
 - **Next** — roughly defined, next 2-3 sprints
 - **Later** — directional intent, not detailed
 - **Icebox** — parked, revisit quarterly
 - **Won't Do** — explicitly rejected, with reason noted
+
+This skill owns the file: apply Backlog Hygiene directly against it, append new entries under
+the right category, and archive or delete zombie entries per the 90-day rule.
 
 ## Ceremonies
 
@@ -117,7 +123,7 @@ Essentials for running the agile ceremonies that surround refinement:
 ## Output Format
 
 Deliver:
-- Groomed backlog assessment
+- Updated `docs/global/requirements/BACKLOG.md` (Now/Next/Later/Icebox/Won't Do re-sorted)
 - Stories ready for sprint vs. needs more work
-- Items recommended for archival
+- Items archived or deleted, with reason
 - Refinement agenda for next session

@@ -187,7 +187,7 @@ Verification: <HEALTHY / DEGRADED / SKIPPED / REVERTED>  (scope, console, load t
 VERDICT: <DEPLOYED AND VERIFIED / DEPLOYED (UNVERIFIED) / STAGING VERIFIED / REVERTED>
 ```
 
-Save a copy under `.deploy-reports/{date}-pr{number}-deploy.md` (gitignore the directory).
+Save a copy under `PHASE/reports/deploy/<date>-pr<number>.md` — the canonical path from `references/doc-sitemap.md`, where `PHASE/` = `docs/milestones/<M>/phases/<NN>-<slug>/` for the phase this branch's work belongs to (read the current position from `docs/state/STATE.md`; fall back to the branch name or PR body if it's stale or absent). This is a tracked project doc, not scratch output — commit it with the rest of the phase's artifacts.
 
 **Follow-ups:** verified → "Your changes are live. Nice ship." Unverified → "Merged and deploying — check the site manually when you can." Reverted → "Changes are off {base}; the branch is still there to fix and re-ship." If new features shipped without a CHANGELOG/VERSION update, suggest `/document-release` to sync docs with what just went out.
 

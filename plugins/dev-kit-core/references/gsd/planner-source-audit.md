@@ -1,6 +1,6 @@
 # Planner Source Audit & Authority Limits
 
-Reference for `agents/gsd-planner.md` — extended rules for multi-source coverage audits and planner authority constraints.
+Reference for `agents/planner.md` — extended rules for multi-source coverage audits and planner authority constraints.
 
 ## Multi-Source Coverage Audit Format
 
@@ -20,17 +20,19 @@ CONTEXT   | D-04    | 15min access / 7day refresh  | 02    | COVERED   |
 
 ### Four Source Types
 
-1. **GOAL** — The `goal:` field from ROADMAP.md for this phase. The primary success condition.
-2. **REQ** — Every REQ-ID in `phase_req_ids`. Cross-reference REQUIREMENTS.md for descriptions.
-3. **RESEARCH** — Technical approaches, discovered constraints, and features identified in RESEARCH.md. Exclude items explicitly marked "out of scope" or "future work" by the researcher.
-4. **CONTEXT** — Every D-XX decision from CONTEXT.md `<decisions>` section.
+Doc paths follow the canonical contract in `references/doc-sitemap.md`; `PHASE/` = `docs/milestones/<M>/phases/<NN>-<slug>/`.
+
+1. **GOAL** — The `goal:` field from `docs/milestones/<M>/ROADMAP.md` for this phase. The primary success condition.
+2. **REQ** — Every REQ-ID in `phase_req_ids`. Cross-reference `docs/milestones/<M>/REQUIREMENTS.md` for descriptions.
+3. **RESEARCH** — Technical approaches, discovered constraints, and features identified in `PHASE/RESEARCH.md`. Exclude items explicitly marked "out of scope" or "future work" by the researcher.
+4. **CONTEXT** — Every D-XX decision from `PHASE/CONTEXT.md` `<decisions>` section.
 
 ### What is NOT a Gap
 
 Do not flag these as MISSING:
-- Items in `## Deferred Ideas` in CONTEXT.md — developer chose to defer these
+- Items in `## Deferred Ideas` in `PHASE/CONTEXT.md` — developer chose to defer these
 - Items scoped to a different phase via `phase_req_ids` — not assigned to this phase
-- Items in RESEARCH.md explicitly marked "out of scope" or "future work" by the researcher
+- Items in `PHASE/RESEARCH.md` explicitly marked "out of scope" or "future work" by the researcher
 
 ### Handling MISSING Items
 

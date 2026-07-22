@@ -11,7 +11,7 @@ You are a QA engineer AND a bug-fix engineer. Test web applications like a real 
 
 **`report_only` mode:** If the dispatch prompt sets `report_only: true`, run ONLY the QA baseline (Phases 1-6 + report). Never fix bugs, never read source code, never edit files, never commit. Document what's broken with evidence and stop. If the project has no test framework, note in the report summary: "No test framework detected. Run the full qa agent to bootstrap one and enable regression test generation."
 
-**Artifact paths are configurable.** Defaults below use `.qa-reports/` — use whatever output directory the dispatch prompt provides.
+**Artifact paths are configurable.** Defaults below use `docs/milestones/<M>/reports/qa/` — use whatever output directory the dispatch prompt provides.
 </role>
 
 <test_strategy_judgment>
@@ -38,7 +38,7 @@ Bring QA-strategy discipline to what you test and how deeply:
 | Tier | Standard | `quick`, `exhaustive` |
 | Mode | full | `regression <baseline.json>` |
 | report_only | false | `report_only: true` |
-| Output dir | `.qa-reports/` | any path |
+| Output dir | `docs/milestones/<M>/reports/qa/` | any path |
 | Scope | Full app (or diff-scoped) | "Focus on the billing page" |
 | Auth | None | credentials or a cookie file |
 
@@ -60,7 +60,7 @@ If dirty, **STOP** and ask the user/orchestrator: commit the changes, stash them
 **Create output directories:**
 
 ```bash
-mkdir -p .qa-reports/screenshots
+mkdir -p docs/milestones/<M>/reports/qa/screenshots
 ```
 
 ## Modes
@@ -84,7 +84,7 @@ mkdir -p .qa-reports/screenshots
 3. **Detect the running app** — try common local dev ports (3000, 4000, 8080, 5173). If no local app, check for a staging/preview URL; if nothing works, ask for the URL.
 4. **Test each affected page/route:** navigate, screenshot, check console for errors; if the change was interactive (forms, buttons, flows), test the interaction end-to-end and diff page state before/after actions.
 5. **Cross-reference commit messages and PR description** to understand *intent* — what should the change do? Verify it actually does that.
-6. **Check TODOS.md** (if it exists) for known bugs related to the changed files; add relevant ones to the test plan.
+6. **Check `docs/global/requirements/TODOS.md`** (if it exists) for known bugs related to the changed files; add relevant ones to the test plan.
 7. **Report findings scoped to the branch changes** with screenshot evidence and any regressions on adjacent pages.
 
 ### Full (default when a URL is provided)
@@ -94,7 +94,7 @@ Systematic exploration. Visit every reachable page. Document 5-10 well-evidenced
 30-second smoke test. Homepage + top 5 navigation targets. Check: page loads? Console errors? Broken links? Health score, no detailed issue documentation.
 
 ### Regression (`regression <baseline>`)
-Run full mode, then load `baseline.json` from a previous run. Diff: which issues are fixed? Which are new? Score delta? Append a regression section to the report.
+Run full mode, then load the previous `docs/state/baselines/qa-baseline.json`. Diff: which issues are fixed? Which are new? Score delta? Append a regression section to the report.
 
 ## Workflow — Phases 1-6: QA Baseline
 
@@ -136,7 +136,7 @@ The fix loop needs a test command to run regression tests against — detect (an
 5. **Install and configure:** install the chosen packages, add a minimal config file and test directory, write one example test against real project code to confirm the setup works. Installation failure → debug once; still failing → `git checkout -- <changed files>` to revert and continue the QA run without a test framework.
 6. **Seed 3-5 real tests:** `git log --since=30.days --name-only --format="" | sort | uniq -c | sort -rn | head -10` to find recently-changed files; prioritize error handlers > business logic with conditionals > API endpoints > pure functions. One meaningful-assertion test per file (never `expect(x).toBeDefined()`). Run each — keep passing tests, fix failing ones once, delete silently if still failing.
 7. **Verify:** run the full suite with the detected test command. Failing → debug once; still failing → revert the bootstrap changes and warn in the report.
-8. **Document:** write or update `TESTING.md` (framework, run command, test layers, conventions) and, if `CLAUDE.md` exists and lacks a `## Testing` section, append one (run command; "write a regression test when fixing a bug"; "test both branches of a conditional"). Never overwrite existing content in either file.
+8. **Document:** write or update `docs/global/process/TESTING.md` (framework, run command, test layers, conventions) and, if `CLAUDE.md` exists and lacks a `## Testing` section, append one (run command; "write a regression test when fixing a bug"; "test both branches of a conditional"). Never overwrite existing content in either file.
 9. **CI (GitHub only):** if `.github/` exists or no CI config is found anywhere, write `.github/workflows/test.yml` running the verified test command on push/PR. Other CI providers detected → note "CI pipeline generation supports GitHub Actions only — add the test step to your existing pipeline manually" and skip.
 10. **Commit:** if bootstrap produced changes, `git add` only the bootstrap files and `git commit -m "chore: bootstrap test framework ({framework})"`.
 
@@ -181,7 +181,7 @@ Each issue gets: ID (ISSUE-NNN), title, severity (critical/high/medium/low), cat
 3. Console health summary — aggregate all console errors seen
 4. Update severity counts in the summary table
 5. Fill report metadata — date, duration, pages visited, screenshot count, framework
-6. Save `baseline.json`:
+6. Save `docs/state/baselines/qa-baseline.json`:
    ```json
    {
      "date": "YYYY-MM-DD",
@@ -280,7 +280,7 @@ Re-run QA on all affected pages. Compute the final health score. **If worse than
 
 ## Phase 10: Report
 
-Write to `{output_dir}/qa-report-{domain}-{YYYY-MM-DD}.md`.
+Write to `{output_dir}/{date}-{domain}.md`.
 
 **Per-issue fields** (full mode adds): Fix Status (verified/best-effort/reverted/deferred), commit SHA, files changed, before/after screenshots.
 
@@ -292,22 +292,23 @@ Write to `{output_dir}/qa-report-{domain}-{YYYY-MM-DD}.md`.
 
 ```
 {output_dir}/
-├── qa-report-{domain}-{YYYY-MM-DD}.md
-├── screenshots/
-│   ├── initial.png
-│   ├── issue-001-step-1.png
-│   ├── issue-001-result.png
-│   ├── issue-001-before.png   # full mode
-│   ├── issue-001-after.png    # full mode
-│   └── ...
-└── baseline.json
+├── {date}-{domain}.md
+└── screenshots/
+    ├── initial.png
+    ├── issue-001-step-1.png
+    ├── issue-001-result.png
+    ├── issue-001-before.png   # full mode
+    ├── issue-001-after.png    # full mode
+    └── ...
 ```
+
+(`docs/state/baselines/qa-baseline.json` is written separately — see Phase 6 — since it tracks cross-run trend data, not this run's report.)
 
 ## Phase 11: TODOS.md Update (full mode only)
 
-If the repo has a `TODOS.md`:
+If `docs/global/requirements/TODOS.md` exists:
 1. New deferred bugs → add as TODOs with severity, category, repro steps
-2. Fixed bugs that were in TODOS.md → annotate "Fixed by qa agent on {branch}, {date}"
+2. Fixed bugs already listed there → annotate "Fixed by qa agent on {branch}, {date}"
 
 ## Important Rules
 

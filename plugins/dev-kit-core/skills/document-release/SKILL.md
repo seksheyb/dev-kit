@@ -4,8 +4,8 @@ description: >
   Post-ship documentation sync. Runs after code is committed (PR exists or about to exist)
   but before it merges. Reads every project doc, cross-references the branch diff, builds a
   Diataxis coverage map (reference/how-to/tutorial/explanation), updates
-  README/ARCHITECTURE/CONTRIBUTING/CLAUDE.md to match what shipped, detects architecture
-  diagram drift, polishes CHANGELOG voice with a sell-test rubric, cleans up TODOS, and
+  README/ARCHITECTURE.md/CONTRIBUTING/CLAUDE.md to match what shipped, detects architecture
+  diagram drift, polishes CHANGELOG voice via an editorial pass, cleans up TODOS.md, and
   optionally bumps VERSION. Use when asked to "update the docs", "sync documentation", or
   "post-ship docs". Proactively suggest after a PR is merged or code is shipped.
 ---
@@ -84,7 +84,13 @@ git diff <base>...HEAD --name-only
 
 ```bash
 find . -maxdepth 2 -name "*.md" -not -path "./.git/*" -not -path "./node_modules/*" | sort
+find docs/global -name "*.md" 2>/dev/null | sort
 ```
+
+The first command catches root-level ecosystem docs (README, CONTRIBUTING, CLAUDE.md,
+CHANGELOG); the second catches the durable project docs this workflow maintains
+(`docs/global/architecture/ARCHITECTURE.md`, `docs/global/requirements/TODOS.md`, and
+anything else under `docs/global/` this branch's diff touches).
 
 4. Classify changes into documentation-relevant categories:
    - **New features** — new files, commands, skills, capabilities
@@ -128,17 +134,18 @@ Definitions:
 3. **Output the coverage map.** Items with zero coverage are **critical gaps** — flag them for
    Step 3. Items with reference-only coverage are **common gaps** — note them for the PR body.
 
-4. **Architecture diagram drift detection.** If ARCHITECTURE.md (or any doc) contains ASCII
-   diagrams or Mermaid blocks, extract entity names (modules, services, data flows) from the
-   diagrams and cross-reference against the diff. Flag any diagram entities that were renamed,
-   split, removed, or moved in the code.
+4. **Architecture diagram drift detection.** If `docs/global/architecture/ARCHITECTURE.md`
+   (or any doc) contains ASCII diagrams or Mermaid blocks, extract entity names (modules,
+   services, data flows) from the diagrams and cross-reference against the diff. Flag any
+   diagram entities that were renamed, split, removed, or moved in the code.
 
 5. **Cross-reference the phase's spec requirement bank, if one exists.** The coverage map
    above only answers "did we document what changed in this diff" — it can't tell you whether
    the diff covers what was actually promised. Look for the relevant spec at
-   `docs/specs/<NNN-feature-name>/spec.md` (the `specify` skill's convention; adapt if this
-   project keeps requirements elsewhere). If found, read its `US-xxx` user stories and check
-   each one against both the diff and the coverage map:
+   `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md` (the `specify` skill's canonical output
+   path; glob `docs/milestones/*/specs/*/spec.md` and match by feature slug or branch name if
+   more than one candidate exists). If found, read its `US-xxx` user stories and check each one
+   against both the diff and the coverage map:
    - **Changed but undocumented** — the existing category from steps 1-3: shipped in the
      diff, not yet covered by any doc.
    - **Promised but never touched** — a distinct, new category: a `US-xxx` story that appears
@@ -167,7 +174,7 @@ Read each documentation file and cross-reference it against the diff. Generic he
 - Are examples, demos, and usage descriptions still valid?
 - Are troubleshooting steps still accurate?
 
-**ARCHITECTURE.md:**
+**ARCHITECTURE.md** (`docs/global/architecture/ARCHITECTURE.md`):
 - Do diagrams and component descriptions match the current code?
 - Are design decisions and "why" explanations still accurate?
 - Be conservative — only update things clearly contradicted by the diff.
@@ -267,7 +274,7 @@ If it was, review the entry for voice:
 
 ## Step 7: TODOS Cleanup
 
-If TODOS.md (or equivalent) does not exist, skip.
+If `docs/global/requirements/TODOS.md` (or equivalent) does not exist, skip.
 
 1. **Completed items not yet marked:** cross-reference the diff against open TODO items. If a
    TODO is clearly completed by this branch, move it to the Completed section with the version
@@ -341,12 +348,12 @@ edit fails, warn and continue — do not block on title sync failure.
 
 ```
 Documentation health:
-  README.md       [status] ([details])
-  ARCHITECTURE.md [status] ([details])
-  CONTRIBUTING.md [status] ([details])
-  CHANGELOG.md    [status] ([details])
-  TODOS.md        [status] ([details])
-  VERSION         [status] ([details])
+  README.md                                [status] ([details])
+  docs/global/architecture/ARCHITECTURE.md [status] ([details])
+  CONTRIBUTING.md                          [status] ([details])
+  CHANGELOG.md                             [status] ([details])
+  docs/global/requirements/TODOS.md        [status] ([details])
+  VERSION                                  [status] ([details])
 ```
 
 Status is one of: Updated / Current / Voice polished / Not bumped / Already bumped / Skipped.

@@ -14,19 +14,20 @@ a static, read-only audit; run it once the phase's `PLAN.md` exists (after `plan
 `writing-plans` has produced it) and before execution begins.
 
 > **Artifact convention.** This pipeline produces a single `PLAN.md` per plan with its tasks
-> embedded (`<task>…</task>`), not the Spec-Kit `plan.md` + separate `tasks.md` split. `analyze`
-> reads the plan and its tasks from that one file. (The Spec-Kit `spec.md`/`plan.md`/`tasks.md`
-> triad is what `converge` operates on — a different lineage; do not conflate the two.)
+> embedded (`<task>…</task>`), not a separate `plan.md` + `tasks.md` split. `analyze` reads
+> the plan and its tasks from that one file — the same convention `converge` and
+> `writing-plans`/`planner` already use.
 
 ## File Locations
 
-- **SPEC** — the governing spec: `docs/specs/<NNN-feature-name>/spec.md` (configurable; if the
-  project keeps requirements in `ROADMAP.md`/`REQUIREMENTS.md` instead, use whichever the plan's
-  `requirements` frontmatter references).
-- **PLAN** — the phase plan file(s): by default `.planning/phases/<phase>/*-PLAN.md`. A phase may
-  have several plans across waves; load **all** of them and treat their `<task>` blocks as the
-  combined task set. If the user points at one plan file directly, analyze that file.
-- **CONSTITUTION** — `docs/constitution.md` by default (see the `constitution` skill).
+- **SPEC** — the governing spec: `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md` (configurable;
+  if the project keeps requirements in `docs/milestones/<M>/ROADMAP.md`/
+  `docs/milestones/<M>/REQUIREMENTS.md` instead, use whichever the plan's `requirements`
+  frontmatter references).
+- **PLAN** — the phase plan file(s): `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`.
+  A phase may have several plans across waves; load **all** of them and treat their `<task>`
+  blocks as the combined task set. If the user points at one plan file directly, analyze that file.
+- **CONSTITUTION** — `docs/global/project/constitution.md` by default (see the `constitution` skill).
 
 Follow any project-specific path convention (CLAUDE.md) over these defaults.
 
@@ -49,11 +50,11 @@ constitution update via the `constitution` skill, not here.
 Identify the phase under review — from the user's context, the most recently modified phase
 directory, or by asking. Resolve:
 
-- SPEC = the governing spec (`docs/specs/<NNN-feature-name>/spec.md`, or the requirements doc
-  the plan's `requirements` frontmatter points at)
-- PLAN = the phase's `PLAN.md` file(s) (`.planning/phases/<phase>/*-PLAN.md`) — tasks live
-  inline as `<task>` blocks
-- CONSTITUTION = `docs/constitution.md`
+- SPEC = the governing spec (`docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`, or the
+  requirements doc the plan's `requirements` frontmatter points at)
+- PLAN = the phase's `PLAN.md` file(s) (`docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`)
+  — tasks live inline as `<task>` blocks
+- CONSTITUTION = `docs/global/project/constitution.md`
 
 Abort with an actionable message if a required input is missing (instruct the user to run the
 missing prerequisite: `specify` for a missing spec, `planner`/`writing-plans` for a missing

@@ -10,17 +10,17 @@ Use init context (from load_project_state) which provides `phase_dir`:
 
 ```bash
 # Check for VERIFICATION.md (code verification gaps)
-ls "$phase_dir"/*-VERIFICATION.md 2>/dev/null
+ls "$phase_dir"/VERIFICATION.md 2>/dev/null
 
 # Check for UAT.md with diagnosed status (user testing gaps)
-grep -l "status: diagnosed" "$phase_dir"/*-UAT.md 2>/dev/null
+grep -l "status: diagnosed" "$phase_dir"/UAT.md 2>/dev/null
 ```
 
 **2. Parse gaps:** Each gap has: truth (failed behavior), reason, artifacts (files with issues), missing (things to add/fix).
 
-**3. Load existing SUMMARYs** to understand what's already built.
+**3. Load existing `<NN>-<MM>-SUMMARY.md` files** to understand what's already built.
 
-**4. Find next plan number:** If plans 01-03 exist, next is 04.
+**4. Find next plan number:** Plans are named `<NN>-<MM>-PLAN.md`. If `<MM>` 01-03 exist, the next is 04.
 
 **5. Group gaps into plans** by: same artifact, same concern, dependency order (can't wire if artifact is stub → fix stub first).
 
@@ -46,7 +46,7 @@ grep -l "status: diagnosed" "$phase_dir"/*-UAT.md 2>/dev/null
 - Plans that depend on other gap closure plans → max(dependency waves) + 1
 - Also consider dependencies on existing (non-gap) plans in the phase
 
-**8. Write PLAN.md files:**
+**8. Write `<NN>-<MM>-PLAN.md` files** (the only valid plan path — never `PLAN-MM.md` or other variants):
 
 ```yaml
 ---

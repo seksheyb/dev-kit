@@ -29,23 +29,22 @@ You follow the **Diataxis framework** — four quadrants, each serving a differe
 **This is the most important step.** Do not skip or rush it. Documentation quality is directly proportional to how well you understand the code.
 
 1. **Map the project structure** (find, excluding `.git`, `node_modules`, `dist`, `build`, `.next`).
-2. **Read the upstream planning artifacts first — canonical sources, not a fallback.** If this
-   project uses the GSD/spec-kit planning convention, read whichever of these exist for the
-   target before anything else:
-   - The relevant `spec.md` (`docs/specs/<NNN-feature-name>/spec.md`, or wherever this
-     project's spec lives if the convention differs) — the "why" and the user-facing
-     requirements (`US-xxx` stories) the target was built to satisfy.
-   - `docs/architecture/SDD.md` and its ADRs (`docs/architecture/ADRs/`) — the system design
-     and the trade-off analysis already written up for each significant decision.
-   - The relevant `PLAN.md` (`.planning/phases/<phase>/*-PLAN.md`) — what was actually scoped
-     and built, and why it was scoped that way.
+2. **Read the project's planning artifacts first — canonical sources, not a fallback.** If
+   this project has a `docs/milestones/` tree, read whichever of these exist for the target
+   before anything else:
+   - The relevant `spec.md` (`docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`) — the "why"
+     and the user-facing requirements (`US-xxx` stories) the target was built to satisfy.
+   - `docs/global/architecture/SDD.md` and its ADRs (`docs/global/architecture/adr/`) — the
+     system design and the trade-off analysis already written up for each significant decision.
+   - The relevant plan (`docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`) — what was
+     actually scoped and built, and why it was scoped that way.
 
    These are frequently more reliable than re-deriving intent from code: a spec's `US-xxx`
    states the requirement directly, and an ADR's "Alternatives Considered" is exactly the
    trade-off analysis reference-grade docs need — reading it beats reconstructing it from
-   comments or git archaeology. If none of these exist (pre-dates the convention, or the
-   project plans elsewhere), skip silently and continue with the reads below.
-3. **Read the entry points:** README, ARCHITECTURE, CONTRIBUTING, CLAUDE.md/AGENTS.md; the manifest (package.json / Cargo.toml / pyproject.toml / go.mod); main entry files; configuration and examples.
+   comments or git archaeology. If none of these exist, skip silently and continue with the
+   reads below.
+3. **Read the entry points:** README, CONTRIBUTING, CLAUDE.md, `docs/global/architecture/ARCHITECTURE.md`; the manifest (package.json / Cargo.toml / pyproject.toml / go.mod); main entry files; configuration and examples.
 4. **Read the source for each target entity:** implementation files end-to-end (not just signatures); the tests — they reveal intended behavior, edge cases, and usage patterns; related modules up- and downstream; inline comments, especially `NOTE:`, `DESIGN:`, `WHY:`.
 5. **Build a concept map** before writing:
 
@@ -91,8 +90,8 @@ Explanation docs answer "why does this work this way?" — the design rationale.
 
 Template: opening paragraph (the problem, stated for a smart reader who hasn't seen the code); **The problem** (concrete failure modes without this design, not abstract risks); **The approach** (how the design solves it — include ASCII or Mermaid diagrams for architecture); **Trade-offs** (what was given up — every design trades something; name it); **Alternatives considered** (what else was on the table and why it lost).
 
-Sourcing Trade-offs and Alternatives considered: if `docs/architecture/SDD.md` and its ADRs
-cover the decision in question, pull both sections directly from there first — an ADR's
+Sourcing Trade-offs and Alternatives considered: if `docs/global/architecture/SDD.md` and its
+ADRs cover the decision in question, pull both sections directly from there first — an ADR's
 "Consequences"/trade-offs and "Alternatives Considered" fields are already written in exactly
 the shape this quadrant wants; quote or closely paraphrase rather than re-deriving from
 scratch. Only fall back to grepping comments (`NOTE:`, `DESIGN:`, `WHY:`) or git history when
@@ -124,7 +123,7 @@ Rules:
 ## Step 7: Cross-Document Linking & Discoverability
 
 1. **Cross-link between quadrants:** every reference links to its how-to and vice versa; tutorials link to both.
-2. **Update entry points:** README's documentation section/ToC; CLAUDE.md/AGENTS.md project structure if relevant; any docs index or sidebar config.
+2. **Update entry points:** README's documentation section/ToC; CLAUDE.md project structure if relevant; any docs index or sidebar config.
 3. **Verify discoverability:** every new document reachable within 2 clicks from README. Add to the framework's sidebar/nav config if one exists.
 4. **Check for broken links:** grep `](` references for targets that don't exist.
 

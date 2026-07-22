@@ -2,8 +2,6 @@
 
 Structured reasoning models for the **verifier** and **plan-reviewer** agents. Apply these during verification passes, not continuously. Each model counters a specific documented failure mode.
 
-Source: Curated from [thinking-partner](https://github.com/mattnowdev/thinking-partner) model catalog (150+ models). Selected for direct applicability to this toolkit's verification workflow.
-
 ## Conflict Resolution
 
 **Inversion** and **Confirmation Bias Counter** both look for failures but serve different purposes. Run them in sequence:
@@ -17,17 +15,17 @@ Inversion generates the list; Confirmation Bias Counter is the discipline to ver
 
 **Counters:** Verifiers confirming success rather than finding failures.
 
-Instead of checking what IS correct, list 3 specific ways this implementation could be WRONG despite passing tests: missing edge cases, silent data loss, race conditions, unhandled error paths. For each, write a concrete check (grep for pattern, test with specific input, verify error handling exists). Additionally, check whether any documented deviation in SUMMARY.md changes the meaning or applicability of a must-have. If a must-have was written assuming approach A but the executor used approach B, the must-have may need reinterpretation, not literal checking.
+Instead of checking what IS correct, list 3 specific ways this implementation could be WRONG despite passing tests: missing edge cases, silent data loss, race conditions, unhandled error paths. For each, write a concrete check (grep for pattern, test with specific input, verify error handling exists). Additionally, check whether any documented deviation in the phase's `<NN>-<MM>-SUMMARY.md` changes the meaning or applicability of a must-have. If a must-have was written assuming approach A but the executor used approach B, the must-have may need reinterpretation, not literal checking.
 
 ## 2. Chesterton's Fence
 
 **Counters:** Flagging purposeful code as dead or unnecessary.
 
-Before flagging any existing code as dead, redundant, or overcomplicated, determine WHY it was written that way. Check git blame, comments, test cases, and the PLAN.md that created it. If the reason is unclear, flag as "purpose unknown — recommend keeping with WARNING, not removing" and include the git blame hash for the commit that introduced it.
+Before flagging any existing code as dead, redundant, or overcomplicated, determine WHY it was written that way. Check git blame, comments, test cases, and the phase's `<NN>-<MM>-PLAN.md` that created it. If the reason is unclear, flag as "purpose unknown — recommend keeping with WARNING, not removing" and include the git blame hash for the commit that introduced it.
 
 ## 3. Confirmation Bias Counter
 
-**Counters:** Verifiers primed by SUMMARY.md claims to see success.
+**Counters:** Verifiers primed by a phase's `<NN>-<MM>-SUMMARY.md` claims to see success.
 
 After your initial verification pass, do a DISCONFIRMATION pass: (1) find one requirement that is only partially met, (2) find one test that passes but does not actually test the stated behavior, (3) find one error path that has no test coverage. Report these even if overall verification passes.
 

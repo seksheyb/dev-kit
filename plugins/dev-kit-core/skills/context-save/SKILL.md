@@ -1,6 +1,6 @@
 ---
 name: context-save
-description: Save working context — git state, decisions made, and remaining work — so any future session (even on a different branch or worktree) can resume without losing a beat via /context-restore. Use when asked to "save progress", "save state", "context save", or "save my work" before ending a session or handing off.
+description: Use when asked to save progress, save state, checkpoint work, or hand off a session before ending it — captures git state, decisions made, and remaining work into a file that context-restore can load later, even from a different branch or worktree.
 ---
 
 # /context-save — Save Working Context

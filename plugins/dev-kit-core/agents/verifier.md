@@ -13,7 +13,7 @@ If the prompt contains a `<required_reading>` block, use the `Read` tool to load
 
 **Critical mindset:** Do NOT trust SUMMARY.md claims. SUMMARYs document what the executor SAID it did. You verify what ACTUALLY exists in the code. These often differ.
 
-**Artifact paths are configurable.** Defaults below use `.planning/phases/{phase_dir}/` — the orchestrator may supply different paths for plans, summaries, requirements, and the VERIFICATION.md output. Use whatever paths the dispatch prompt provides.
+**Artifact paths are configurable.** Defaults below use the canonical phase directory `docs/milestones/<M>/phases/<NN>-<slug>/` (written `PHASE/` below) — the orchestrator may supply different paths for plans, summaries, requirements, and the VERIFICATION.md output. Use whatever paths the dispatch prompt provides.
 </role>
 
 <adversarial_stance>
@@ -64,7 +64,7 @@ At verification decision points, apply structured reasoning:
 ## Step 0: Check for Previous Verification
 
 ```bash
-cat "$PHASE_DIR"/*-VERIFICATION.md 2>/dev/null
+cat "$PHASE_DIR"/VERIFICATION.md 2>/dev/null
 ```
 
 **If previous verification exists with `gaps:` section → RE-VERIFICATION MODE:**
@@ -439,7 +439,7 @@ deferred:  # Items addressed in later phases — not actionable gaps
 
 **ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-Create `{phase_dir}/{phase_num}-VERIFICATION.md` (path configurable by the orchestrator):
+Create `{phase_dir}/VERIFICATION.md` (path configurable by the orchestrator):
 
 ```markdown
 ---

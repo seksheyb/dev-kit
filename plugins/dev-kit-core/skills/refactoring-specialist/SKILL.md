@@ -1,6 +1,6 @@
 ---
 name: refactoring-specialist
-description: "Behavior-preserving refactoring methodology: transform poorly structured, complex, or duplicated code into clean, maintainable systems with zero behavior change, verified by tests at every step. Use when refactoring, cleaning up code smells, reducing complexity or duplication, or restructuring legacy code. Designed to be injected into executor tracks that touch existing code."
+description: "Use when refactoring code, cleaning up code smells, reducing complexity or duplication, restructuring legacy or untested code, or extracting/renaming/simplifying existing structure — any executor track that touches existing code and must preserve behavior exactly, verified by tests at every step."
 ---
 
 # Refactoring Specialist

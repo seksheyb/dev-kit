@@ -96,13 +96,18 @@ Use PostgreSQL as the primary database, hosted on AWS RDS.
 
 ## ADR Naming Convention
 
+Canonical location: `docs/global/architecture/adr/NNNN-<slug>.md` (one bank for the whole
+project — never per-milestone or per-phase).
+
 ```
 docs/
-└── adr/
-    ├── 0001-use-postgresql-database.md
-    ├── 0002-adopt-microservices.md
-    ├── 0003-implement-event-sourcing.md
-    └── README.md
+└── global/
+    └── architecture/
+        └── adr/
+            ├── 0001-use-postgresql-database.md
+            ├── 0002-adopt-microservices.md
+            ├── 0003-implement-event-sourcing.md
+            └── README.md
 ```
 
 ## Quick Reference

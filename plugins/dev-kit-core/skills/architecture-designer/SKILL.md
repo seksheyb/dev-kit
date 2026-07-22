@@ -75,6 +75,10 @@ When designing architecture, provide:
 4. Technology recommendations with rationale
 5. Risks and mitigation strategies
 
+Canonical save locations: the system design doc is `docs/global/architecture/SDD.md`; the
+public-facing overview is `docs/global/architecture/ARCHITECTURE.md`; each ADR is
+`docs/global/architecture/adr/NNNN-<slug>.md` (see `references/adr-template.md`).
+
 ### Architecture Diagram (Mermaid)
 
 ```mermaid

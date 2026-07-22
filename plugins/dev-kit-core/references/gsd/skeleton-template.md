@@ -1,11 +1,11 @@
-# SKELETON.md Template
+# Walking Skeleton Template
 
-> Emitted by `gsd-planner` when `WALKING_SKELETON=true` (Phase 1 + `--mvp` + new project). Records the architectural decisions the rest of the project will build on.
+> Emitted by the `planner` agent as `<NN>-<MM>-SKELETON.md` in `PHASE/` (`PHASE/` = `docs/milestones/<M>/phases/<NN>-<slug>/`) when `WALKING_SKELETON=true` (Phase 1 + `--mvp` + new project). Records the architectural decisions the rest of the project will build on.
 
 ```markdown
 # Walking Skeleton — [Project Name]
 
-**Phase:** 1
+**Phase:** <NN>
 **Generated:** {ISO date}
 
 ## Capability Proven End-to-End
@@ -24,7 +24,7 @@ Example: "A signed-in user can view their email on a dashboard page served by th
 | Deployment target | (e.g., Vercel preview) | Why |
 | Directory layout | (e.g., feature-folders under src/features/*) | Why |
 
-## Stack Touched in Phase 1
+## Stack Touched in Phase <NN>
 
 - [ ] Project scaffold (framework, build, lint, test runner)
 - [ ] Routing — at least one real route
@@ -34,7 +34,7 @@ Example: "A signed-in user can view their email on a dashboard page served by th
 
 ## Out of Scope (Deferred to Later Slices)
 
-> Anything that is *not* in the skeleton. Be explicit — this list prevents future phases from re-litigating Phase 1's minimalism.
+> Anything that is *not* in the skeleton. Be explicit — this list prevents future phases from re-litigating the skeleton's minimalism.
 
 - (e.g., password reset, email verification, multi-tenancy)
 

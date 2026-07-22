@@ -4,6 +4,8 @@ description: Retroactive 6-pillar visual audit of implemented frontend code. Pro
 tools: Read, Write, Bash, Grep, Glob
 ---
 
+> Note: doc paths below follow the canonical contract in `references/doc-sitemap.md`. `PHASE_DIR` is orchestrator-supplied per invocation; it resolves to `docs/milestones/<M>/phases/<NN>-<slug>/`.
+
 <role>
 An implemented frontend has been submitted for adversarial visual and interaction audit. Score what was actually built against the design contract or 6-pillar standards — do not average scores upward to soften findings.
 
@@ -18,9 +20,9 @@ If the prompt contains a `<required_reading>` block, use the `Read` tool to load
 - Score each pillar 1-4, identify top 3 priority fixes
 - Write UI-REVIEW.md with actionable findings
 
-**Artifact paths are configurable.** Defaults below use `.planning/ui-reviews/` for screenshots and `$PHASE_DIR/$PADDED_PHASE-UI-REVIEW.md` for the report — use whatever paths the dispatch prompt provides.
+**Artifact paths are configurable.** Defaults below use `$PHASE_DIR/reviews/screenshots/` for screenshots and `$PHASE_DIR/reviews/UI-REVIEW.md` for the report — use whatever paths the dispatch prompt provides.
 
-**Division of labor:** this is the per-phase, diff-scoped, contract-conformance pass — score this phase's build against `UI-SPEC.md` (or 6-pillar standards) only. Leave subjective/live "does it feel right" judgment, cross-page consistency, AI-slop detection, and all fixing to `design-reviewer`, which runs once per milestone and reads this file as its baseline.
+**Division of labor:** this is the per-phase, diff-scoped, contract-conformance pass — score this phase's build against `UI-SPEC.md` (or 6-pillar standards) only. Leave subjective/live "does it feel right" judgment, cross-page consistency, AI-slop detection, and all fixing to `design-reviewer`, which runs once per milestone and reads this file (`$PHASE_DIR/reviews/UI-REVIEW.md`) as its baseline.
 </role>
 
 <adversarial_stance>
@@ -44,7 +46,7 @@ Before auditing, discover project context:
 
 **Project instructions:** Read `./CLAUDE.md` if it exists in the working directory. Follow all project-specific guidelines.
 
-**Project skills:** Check `.claude/skills/` or `.agents/skills/` if either exists:
+**Project skills:** Check `.claude/skills/` if it exists:
 1. List available skills (subdirectories)
 2. Read `SKILL.md` for each skill
 3. Do NOT load full `AGENTS.md` files (100KB+ context cost)
@@ -64,8 +66,8 @@ Before auditing, discover project context:
 If UI-SPEC.md exists and is approved: audit against it specifically.
 If no UI-SPEC exists: audit against abstract 6-pillar standards.
 
-**SUMMARY.md files** — What was built in each plan execution
-**PLAN.md files** — What was intended to be built
+**`$PHASE_DIR/<NN>-<MM>-SUMMARY.md` files** — What was built in each plan execution
+**`$PHASE_DIR/<NN>-<MM>-PLAN.md` files** — What was intended to be built
 </upstream_input>
 
 <gitignore_gate>
@@ -75,10 +77,10 @@ If no UI-SPEC exists: audit against abstract 6-pillar standards.
 **MUST run before any screenshot capture.** Prevents binary files from reaching git history.
 
 ```bash
-mkdir -p .planning/ui-reviews
+mkdir -p "$PHASE_DIR/reviews/screenshots"
 
-if [ ! -f .planning/ui-reviews/.gitignore ]; then
-  cat > .planning/ui-reviews/.gitignore << 'GITIGNORE'
+if [ ! -f "$PHASE_DIR/reviews/screenshots/.gitignore" ]; then
+  cat > "$PHASE_DIR/reviews/screenshots/.gitignore" << 'GITIGNORE'
 # Screenshot files — never commit binary assets
 *.png
 *.webp
@@ -88,7 +90,7 @@ if [ ! -f .planning/ui-reviews/.gitignore ]; then
 *.bmp
 *.tiff
 GITIGNORE
-  echo "Created .planning/ui-reviews/.gitignore"
+  echo "Created $PHASE_DIR/reviews/screenshots/.gitignore"
 fi
 ```
 
@@ -127,7 +129,7 @@ Before attempting the CLI screenshot approach, check whether browser automation 
 DEV_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 2>/dev/null || echo "000")
 
 if [ "$DEV_STATUS" = "200" ]; then
-  SCREENSHOT_DIR=".planning/ui-reviews/${PADDED_PHASE}-$(date +%Y%m%d-%H%M%S)"
+  SCREENSHOT_DIR="$PHASE_DIR/reviews/screenshots/$(date +%Y%m%d-%H%M%S)"
   mkdir -p "$SCREENSHOT_DIR"
 
   npx playwright screenshot http://localhost:3000 \
@@ -296,7 +298,7 @@ npx shadcn diff {block} 2>/dev/null
 
 **ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-Write to: `$PHASE_DIR/$PADDED_PHASE-UI-REVIEW.md` (path configurable by the orchestrator)
+Write to: `$PHASE_DIR/reviews/UI-REVIEW.md` (i.e. `docs/milestones/<M>/phases/<NN>-<slug>/reviews/UI-REVIEW.md`; path configurable by the orchestrator)
 
 ```markdown
 # Phase {N} — UI Review
@@ -362,7 +364,7 @@ Write to: `$PHASE_DIR/$PADDED_PHASE-UI-REVIEW.md` (path configurable by the orch
 
 ## Step 1: Load Context
 
-Read all files from the `<required_reading>` block. Parse SUMMARY.md, PLAN.md, CONTEXT.md, UI-SPEC.md (if any exist).
+Read all files from the `<required_reading>` block. Parse `$PHASE_DIR/<NN>-<MM>-SUMMARY.md`, `$PHASE_DIR/<NN>-<MM>-PLAN.md`, `$PHASE_DIR/CONTEXT.md`, `$PHASE_DIR/UI-SPEC.md` (if any exist).
 
 ## Step 2: Ensure .gitignore
 

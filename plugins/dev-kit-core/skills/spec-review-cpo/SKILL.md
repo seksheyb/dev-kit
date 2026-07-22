@@ -16,8 +16,8 @@ description: >
 You are not here to rubber-stamp this spec. You are here to make the scope call before
 anyone spends engineering hours on it — catch the wrong problem, the wrong ambition level, or
 the missing prioritization evidence while it's still a one-line edit instead of a rewrite. Do
-NOT make any code changes. Do NOT write or edit a plan. Review only, against `spec.md`
-(WHAT/WHY), never HOW.
+NOT make any code changes. Do NOT write or edit a plan. Review only, against
+`docs/milestones/<M>/specs/<NNN>-<slug>/spec.md` (WHAT/WHY), never HOW.
 
 **Non-interactive execution:** When run by an agent (no user available), do not pause for
 approval. Pick the posture from the context-dependent defaults below, state it in the report,
@@ -109,8 +109,9 @@ at the end of milestone 1? If the answer is "nothing yet," the split is wrong.
 
 **This is not just a recommendation — descoped items get written to the backlog, not just
 mentioned in prose.** Whatever this milestone doesn't ship gets removed from `spec.md`'s
-active scope and appended to `docs/BACKLOG.md` (create if it doesn't exist yet) as real,
-findable entries for whichever future milestone picks them up — see "Backlog Handoff" below.
+active scope and appended to `docs/global/requirements/BACKLOG.md` (create if it doesn't
+exist yet) as real, findable entries for whichever future milestone picks them up — see
+"Backlog Handoff" below.
 
 **Risk and timing:** Is now the right time (market timing, dependency maturity, team
 capacity)? What is the cost of delay vs the cost of premature shipping?
@@ -119,12 +120,12 @@ capacity)? What is the cost of delay vs the cost of premature shipping?
 
 ```bash
 git log --oneline -30
-ls docs/specs/ 2>/dev/null
+ls docs/milestones/*/specs/ 2>/dev/null
 grep -rn "TODO\|FIXME" docs/ 2>/dev/null | head -10
 ```
 
 Read the spec itself, the constitution (if one exists — any conflict with a MUST principle is
-an automatic BLOCKER, same as `analyze`'s rule), and `.planning/research/MARKET.md` if
+an automatic BLOCKER, same as `analyze`'s rule), and `docs/milestones/<M>/research/MARKET.md` if
 `market-researcher` has already run (don't re-derive sourced market data it already gathered —
 consume it). If `assumption-mapping` has already produced a VUBF-scored assumption table for
 this idea, treat it as input evidence for the premise challenge below rather than re-deriving
@@ -209,9 +210,9 @@ architecture exists.*
 
 If the posture and prioritization work above identifies anything this milestone should NOT
 ship (a SCOPE REDUCTION cut, a SELECTIVE EXPANSION proposal not taken, or a proposed later
-milestone from the split above), write it to `docs/BACKLOG.md` — create the file if it doesn't
-exist, using `backlog-grooming`'s existing category taxonomy so the two skills share one
-convention:
+milestone from the split above), write it to `docs/global/requirements/BACKLOG.md` — create
+the file if it doesn't exist, using `backlog-grooming`'s existing category taxonomy so the two
+skills share one convention:
 
 ```markdown
 ## Now / Next / Later / Icebox / Won't Do
@@ -229,9 +230,9 @@ convention:
 `BL-<NNN>` is a flat, global, never-reused counter — same discipline as `US-xxx` in `specify`.
 Append only; never delete or renumber existing entries (`backlog-grooming` owns archival of
 stale ones, per its own 90-day rule). This file is the seed for the **next** milestone's Stage
-1 — when a new milestone starts, `specify` reads `docs/BACKLOG.md`'s Now/Next items as its
-primary input instead of (or alongside) a fresh PRD, and this skill runs again against
-whatever didn't fit into `spec.md` this time.
+1 — when a new milestone starts, `specify` reads `docs/global/requirements/BACKLOG.md`'s
+Now/Next items as its primary input instead of (or alongside) a fresh PRD, and this skill runs
+again against whatever didn't fit into `spec.md` this time.
 
 ## Required Outputs — the Scope Decision Record
 
@@ -248,10 +249,11 @@ overwrite existing spec content):
 **Alternatives considered:** [Framing A/B/C summary + recommendation]
 **Prioritization:** RICE/Kano/JTBD scores, North Star metric named
 **Milestone split:** [THIS milestone's scope in one line], remainder deferred to
-  `docs/BACKLOG.md` — [BL-xxx, BL-xxx, ...], or "N/A — ships as one release"
+  `docs/global/requirements/BACKLOG.md` — [BL-xxx, BL-xxx, ...], or "N/A — ships as one release"
 **NOT in scope:** [work considered and explicitly deferred, one-line rationale each — anything
-  deferred to a future milestone must also appear in `docs/BACKLOG.md` with the same ID; this
-  list is the spec-local pointer, `docs/BACKLOG.md` is the durable record]
+  deferred to a future milestone must also appear in `docs/global/requirements/BACKLOG.md` with
+  the same ID; this list is the spec-local pointer, `docs/global/requirements/BACKLOG.md` is the
+  durable record]
 
 **LOCK:** This Scope Decision Record is binding — this spec's scope does not get re-litigated
 downstream (no plan-stage review re-opens posture or premise) unless the user explicitly

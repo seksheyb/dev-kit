@@ -12,7 +12,8 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
-      - uses: returntocorp/semgrep-action@v1
+      # returntocorp/semgrep-action is deprecated; run the CLI directly instead of a wrapper action (check current docs for the maintained setup)
+      - run: semgrep ci --config=p/security-audit
       - uses: gitleaks/gitleaks-action@v2
       - uses: aquasecurity/trivy-action@master
         with:

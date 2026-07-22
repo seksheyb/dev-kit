@@ -1,6 +1,6 @@
 ---
 name: the-fool
-description: Use when challenging ideas, plans, decisions, or proposals using structured critical reasoning. Invoke to play devil's advocate, run a pre-mortem, red team, or audit evidence and assumptions.
+description: Use when challenging ideas, plans, decisions, or proposals before committing to them. Invoke to play devil's advocate, run a pre-mortem, red team a design, audit evidence and assumptions, or find blind spots and unstated assumptions in a strategy, architecture, or business case.
 license: MIT
 metadata:
   version: "1.0.0"

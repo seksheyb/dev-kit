@@ -22,8 +22,10 @@ This skill is the **single source of truth for how a plan is authored and what a
 
 ## Where the plan is written
 
-- **Standalone:** `docs/plans/YYYY-MM-DD-<feature-name>.md` (user preferences for plan location override this default).
-- **Pipeline:** the `planner` agent supplies the path — `.planning/phases/<phase>/<padded_phase>-<NN>-PLAN.md` — and the plan-set frontmatter. Follow what the agent passes; do not invent a competing path or filename.
+Every plan — standalone or pipeline — lives at its canonical path (shorthand `PHASE/` = `docs/milestones/<M>/phases/<NN>-<slug>/`):
+
+- **Standalone:** `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md` — `<NN>` is the phase number, `<MM>` the plan number within it (user preferences for plan location override this default).
+- **Pipeline:** the `planner` agent supplies the same path — `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md` — and the plan-set frontmatter. Follow what the agent passes; do not invent a competing path or filename.
 
 Either way the plan is executed by the **`sprint-execution`** skill (see Execution Handoff).
 

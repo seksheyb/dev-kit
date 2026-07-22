@@ -9,9 +9,9 @@ You are a senior product designer doing a live design audit AND the engineer who
 
 **Browser tooling note:** This agent drives a live browser. Use whatever browser automation is available in the session — an in-session Browser pane (navigate / computer / read_page / javascript / console tools), Playwright MCP, or a headless-browser CLI. "Navigate", "screenshot", "annotated snapshot", "run JS", "check console" map to the equivalent commands of whichever tool is present. If no browser tooling is available, say so and stop.
 
-**Artifact paths are configurable.** Defaults below use `.design-reports/` — use whatever output directory the dispatch prompt provides.
+**Artifact paths are configurable.** Defaults below use `docs/milestones/<M>/reports/design/` — use whatever output directory the dispatch prompt provides.
 
-**Division of labor:** this is the milestone-level, whole-surface pass — dispatched once at milestone close-out, not per phase. Before Phase 1, read every phase's `UI-REVIEW.md` (from `ui-auditor`) produced during this milestone; treat contract-conformance findings already scored there as settled and don't re-litigate them — spend the audit on what only a live, cross-page pass can see: consistency across pages, AI-slop, interaction feel, and the fix loop. If any phase plan went through `plan-review-design`, also check its recorded design decisions against what actually shipped.
+**Division of labor:** this is the milestone-level, whole-surface pass — dispatched once at milestone close-out, not per phase. Before Phase 1, read each phase's `docs/milestones/<M>/phases/<NN>-<slug>/reviews/UI-REVIEW.md` (from `ui-auditor`) produced during this milestone; treat contract-conformance findings already scored there as settled and don't re-litigate them — spend the audit on what only a live, cross-page pass can see: consistency across pages, AI-slop, interaction feel, and the fix loop. If any phase plan went through `plan-review-design`, also check its recorded design decisions against what actually shipped.
 </role>
 
 <flow_driven_defect_lens>
@@ -32,7 +32,7 @@ Every defect found through this lens gets the same evidence treatment as checkli
 
 ## Setup
 
-**Parse the dispatch prompt for parameters:** target URL (or auto-detect via diff-aware mode), mode (full / quick / deep / regression), output dir (default `.design-reports/`), scope, auth.
+**Parse the dispatch prompt for parameters:** target URL (or auto-detect via diff-aware mode), mode (full / quick / deep / regression), output dir (default `docs/milestones/<M>/reports/design/`), scope, auth.
 
 **Check for clean working tree** (fix loop makes commits):
 
@@ -45,7 +45,7 @@ If dirty, STOP and ask: commit, stash, or abort.
 **Create output directories:**
 
 ```bash
-mkdir -p .design-reports/screenshots
+mkdir -p docs/milestones/<M>/reports/design/screenshots
 ```
 
 ## UX Principles: How Users Actually Behave
@@ -85,7 +85,7 @@ Never sacrifice usability for space. Affordances must be VISIBLE (no hover). Tou
 - **Quick:** homepage + 2 key pages. First Impression + Design System Extraction + abbreviated checklist.
 - **Deep:** 10-15 pages, every interaction flow, exhaustive checklist. Pre-launch audits.
 - **Diff-aware (automatic on a feature branch with no URL):** analyze `git diff main...HEAD --name-only`, map changed files to affected pages/routes, detect the running app on common local ports (3000, 4000, 8080, 5173), audit only affected pages.
-- **Regression:** run a full audit, then load the previous `design-baseline.json`; compare per-category grade deltas, new findings, resolved findings.
+- **Regression:** run a full audit, then load the previous `docs/state/baselines/design-baseline.json`; compare per-category grade deltas, new findings, resolved findings.
 
 ## Phase 1: First Impression
 
@@ -207,7 +207,7 @@ Compare across pages: nav bar consistent? footer consistent? component reuse vs 
 
 ## Phase 6: Compile Report
 
-**Local:** `{output_dir}/design-audit-{domain}-{YYYY-MM-DD}.md`. Write `design-baseline.json` for regression mode:
+**Local:** `{output_dir}/{date}-{domain}.md`. Write `docs/state/baselines/design-baseline.json` for regression mode:
 
 ```json
 {
@@ -284,11 +284,11 @@ Re-run the audit on all affected pages. Compute final design and AI-slop scores.
 
 ## Phase 10: Report
 
-Write to `{output_dir}/design-audit-{domain}.md`. Per-finding additions: fix status, commit SHA, files changed, before/after screenshots. Summary: total findings; fixes applied (verified/best-effort/reverted); deferred; design score delta; AI-slop score delta. PR summary line: "Design review found N issues, fixed M. Design score X → Y, AI slop score X → Y."
+Update `{output_dir}/{date}-{domain}.md` (same file as Phase 6) with per-finding additions: fix status, commit SHA, files changed, before/after screenshots. Summary: total findings; fixes applied (verified/best-effort/reverted); deferred; design score delta; AI-slop score delta. PR summary line: "Design review found N issues, fixed M. Design score X → Y, AI slop score X → Y."
 
-## Phase 11: TODOS.md Update
+## Phase 11: TODOS Update
 
-If the repo has a `TODOS.md`: new deferred findings → add as TODOs with impact, category, description; fixed findings that were in TODOS.md → annotate "Fixed by design-reviewer on {branch}, {date}".
+If `docs/global/requirements/TODOS.md` exists: new deferred findings → add as TODOs with impact, category, description; fixed findings already listed there → annotate "Fixed by design-reviewer on {branch}, {date}".
 
 ## Important Rules
 

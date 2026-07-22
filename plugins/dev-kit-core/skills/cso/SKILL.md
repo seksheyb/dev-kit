@@ -43,15 +43,15 @@ both gated on real code already being present:
 
 - **Stage 0, no flags (full audit)** — on an entry path where the repo already has code: the Legacy/inherited
   path, or a Continuing-milestone entry (milestone 2+, where prior milestones already shipped). Skipped on a
-  first-milestone Greenfield entry. Establishes the baseline `.security-reports/` entry.
+  first-milestone Greenfield entry. Establishes the baseline `docs/milestones/<M>/reports/security/` entry.
 - **Stage 12, `--diff` (per phase)** — after that phase's own Stage 8 (Execute) has run, so code always exists by
   construction even in a Greenfield milestone's first phase. Scans just this phase's branch changes and
-  trend-tracks against the prior `.security-reports/` entry by fingerprint.
+  trend-tracks against the prior `docs/milestones/<M>/reports/security/` entry by fingerprint.
 
-Both invocations write the same `.security-reports/{date}-{HHMMSS}.json` format (Phase 14) — `planner`'s Stage 7
-threat-modeling step and `sdd-review-cto`'s Stage 2 review both consult the latest entry when one exists. `cso`
-can also be run standalone/ad hoc at any time outside these two scheduled points — nothing below changes based on
-who invoked it.
+Both invocations write the same `docs/milestones/<M>/reports/security/<date>-<HHMMSS>.json` format (Phase 14) —
+`planner`'s Stage 7 threat-modeling step and `sdd-review-cto`'s Stage 2 review both consult the latest entry when
+one exists. `cso` can also be run standalone/ad hoc at any time outside these two scheduled points — nothing below
+changes based on who invoked it.
 
 ## Phase 0: Architecture Mental Model + Stack Detection
 
@@ -165,7 +165,7 @@ Search for:
 
 ## Phase 8: Skill / Agent-Config Supply Chain
 
-Scan repo-local AI agent skills, hooks, and instruction files (`.claude/skills/`, `.claude/settings*.json`, `CLAUDE.md`, `AGENTS.md`) for suspicious patterns. This is a real attack class: independent research (Snyk's ToxicSkills study) found 36% of published skills have security flaws and 13.4% are outright malicious.
+Scan repo-local AI agent skills, hooks, and instruction files (`.claude/skills/`, `.claude/settings*.json`, `CLAUDE.md`) for suspicious patterns. This is a real attack class: independent research (Snyk's ToxicSkills study) found 36% of published skills have security flaws and 13.4% are outright malicious.
 
 - `curl`, `wget`, `fetch`, exfiltration endpoints (network exfiltration)
 - `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `process.env` (credential access)
@@ -283,15 +283,15 @@ Mark each finding `VERIFIED` (confirmed via code tracing), `UNVERIFIED` (pattern
 
 **Leaked-secret playbook** (include with any leaked-secret finding): 1) Revoke immediately, 2) Rotate, 3) Scrub history (`git filter-repo` or BFG), 4) Force-push cleaned history, 5) Audit the exposure window, 6) Check provider audit logs for abuse.
 
-**Trend tracking:** if prior reports exist in `.security-reports/`, compare by fingerprint (sha256 of category + file + normalized title) and report Resolved / Persistent / New counts and direction.
+**Trend tracking:** if prior reports exist in `docs/milestones/<M>/reports/security/`, compare by fingerprint (sha256 of category + file + normalized title) and report Resolved / Persistent / New counts and direction.
 
 **Protection file check:** recommend a `.gitleaks.toml` or `.secretlintrc` if none exists.
 
-**Remediation roadmap:** for the top 5 findings, present the options: A) Fix now (specific change + effort), B) Mitigate (risk-reducing workaround), C) Accept risk (document why, set review date), D) Defer to the project TODO list with a security label.
+**Remediation roadmap:** for the top 5 findings, present the options: A) Fix now (specific change + effort), B) Mitigate (risk-reducing workaround), C) Accept risk (document why, set review date), D) Defer to `docs/global/requirements/TODOS.md` with a security label.
 
 ## Phase 14: Save Report
 
-Write findings to `.security-reports/{date}-{HHMMSS}.json` with: version, date, mode, scope, phases_run, attack_surface counts, findings array (id, severity, confidence, status, phase, category, fingerprint, title, file, line, description, exploit_scenario, impact, recommendation), filter_stats (candidates → filtered → reported), totals, and trend vs the prior report. If `.security-reports/` is not gitignored, note it — security reports should stay local.
+Write findings to `docs/milestones/<M>/reports/security/<date>-<HHMMSS>.json` with: version, date, mode, scope, phases_run, attack_surface counts, findings array (id, severity, confidence, status, phase, category, fingerprint, title, file, line, description, exploit_scenario, impact, recommendation), filter_stats (candidates → filtered → reported), totals, and trend vs the prior report.
 
 ## Important Rules
 

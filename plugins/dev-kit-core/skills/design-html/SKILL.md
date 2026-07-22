@@ -74,9 +74,10 @@ system to use — `design-consultation` is the only skill that resolves or binds
 `claude_design_system_id` (see `@references/claude-design-mcp-protocol.md`, "Resolution
 ownership"). Here, just:
 
-1. Check `DESIGN.md` for `claude_design_system_id`. **Missing (no DESIGN.md, or DESIGN.md has no
-   bound system)?** Stop and tell the user to run `design-consultation` first — do not call
-   `list_design_systems` yourself, do not ask which system applies, do not proceed unbound.
+1. Check `DESIGN.md` (`docs/global/design/DESIGN.md`) for `claude_design_system_id`. **Missing
+   (no DESIGN.md, or DESIGN.md has no bound system)?** Stop and tell the user to run
+   `design-consultation` first — do not call `list_design_systems` yourself, do not ask which
+   system applies, do not proceed unbound.
 2. Check `DESIGN.md` for `claude_design_project_id` — that's design-consultation's own
    demo/preview project. Don't build this screen into it; this skill's screens get their own
    project(s), bound to the same `claude_design_system_id`.

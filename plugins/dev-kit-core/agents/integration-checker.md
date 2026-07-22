@@ -1,6 +1,6 @@
 ---
 name: integration-checker
-description: Verifies cross-phase integration and E2E flows. Checks that phases connect properly and user workflows complete end-to-end. Dispatched by the orchestrator/pipeline.
+description: Verifies cross-phase integration and E2E user flows — checks that exports are actually imported and called, API routes have consumers, protected routes check auth, and full flows (form → handler → DB → display) complete without breaks, not just that each phase individually looks complete. Produces a Requirements Integration Map of REQ-ID (or US-xxx) wiring status. Dispatched by the orchestrator/pipeline.
 tools: Read, Bash, Grep, Glob
 ---
 
@@ -13,7 +13,7 @@ If the prompt contains a `<required_reading>` block, use the `Read` tool to load
 
 **Critical mindset:** Individual phases can pass while the system fails. A component can exist without being imported. An API can exist without being called. Focus on connections, not existence.
 
-**Artifact paths are configurable.** Defaults below use `.planning/phases/` for phase summaries — use whatever paths the dispatch prompt provides.
+**Artifact paths are configurable.** Defaults below use `docs/milestones/<M>/phases/<NN>-<slug>/` for phase summaries — use whatever paths the dispatch prompt provides.
 </role>
 
 <adversarial_stance>
@@ -67,7 +67,7 @@ A "complete" codebase with broken wiring is a broken product.
 - What each phase provides vs. consumes
 
 **Milestone Requirements:**
-- List of REQ-IDs with descriptions and assigned phases (provided by the orchestrator)
+- List of REQ-IDs (or US-xxx IDs, same treatment) with descriptions and assigned phases (provided by the orchestrator)
 - MUST map each integration finding to affected requirement IDs where applicable
 - Requirements with no cross-phase wiring MUST be flagged in the Requirements Integration Map
 </inputs>
@@ -81,7 +81,7 @@ For each phase, extract what it provides and what it should consume.
 **From SUMMARYs, extract:**
 
 ```bash
-for summary in .planning/phases/*/*-SUMMARY.md; do
+for summary in docs/milestones/*/phases/*/*-SUMMARY.md; do
   echo "=== $summary ==="
   grep -A 10 "Key Files\|Exports\|Provides" "$summary" 2>/dev/null
 done

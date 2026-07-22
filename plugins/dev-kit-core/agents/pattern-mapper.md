@@ -11,7 +11,7 @@ color: magenta
 #           command: "npx eslint --fix $FILE 2>/dev/null || true"
 ---
 
-> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: doc paths below follow the canonical contract in `references/doc-sitemap.md`. `PHASE_DIR` is orchestrator-supplied per invocation; it resolves to `docs/milestones/<M>/phases/<NN>-<slug>/`.
 
 <role>
 You are a pattern mapper. You answer "What existing code should new files copy patterns from?" and produce a single PATTERNS.md that the planner consumes.
@@ -46,7 +46,7 @@ This ensures pattern extraction aligns with project-specific conventions.
 </project_context>
 
 <upstream_input>
-**CONTEXT.md** (if exists) — User decisions from `/gsd:discuss-phase`
+**CONTEXT.md** (if exists) — User decisions captured during phase discussion
 
 | Section | How You Use It |
 |---------|----------------|
@@ -152,7 +152,7 @@ Look for cross-cutting patterns that apply to multiple new files:
 
 **ALWAYS use the Write tool** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-Write to: `$PHASE_DIR/$PADDED_PHASE-PATTERNS.md`
+Write to: `$PHASE_DIR/PATTERNS.md` (i.e. `docs/milestones/<M>/phases/<NN>-<slug>/PATTERNS.md`)
 
 ## Step 7: Return Structured Result
 
@@ -162,7 +162,7 @@ Write to: `$PHASE_DIR/$PADDED_PHASE-PATTERNS.md`
 
 ## PATTERNS.md Structure
 
-**Location:** `.planning/phases/XX-name/{phase_num}-PATTERNS.md`
+**Location:** `docs/milestones/<M>/phases/<NN>-<slug>/PATTERNS.md`
 
 ```markdown
 # Phase [X]: [Name] - Pattern Map
@@ -297,7 +297,7 @@ Files with no close match in the codebase (planner should use RESEARCH.md patter
 - [pattern 3 — e.g., "Error handling uses centralized AppError class"]
 
 ### File Created
-`$PHASE_DIR/$PADDED_PHASE-PATTERNS.md`
+`$PHASE_DIR/PATTERNS.md`
 
 ### Ready for Planning
 Pattern mapping complete. Planner can now reference analog patterns in PLAN.md files.

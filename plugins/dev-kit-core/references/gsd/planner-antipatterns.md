@@ -1,6 +1,6 @@
 # Planner Anti-Patterns and Specificity Examples
 
-> Reference file for gsd-planner agent. Loaded on-demand via `@` reference.
+> Reference file for the planner agent. Loaded on-demand via `@` reference.
 > For sub-200K context windows, this content is stripped from the agent prompt and available here for on-demand loading.
 
 ## Checkpoint Anti-Patterns
@@ -61,9 +61,9 @@ A plan should not interleave multiple checkpoint types with implementation tasks
 
 ```markdown
 <context>
-@.planning/phases/01-foundation/01-01-SUMMARY.md
-@.planning/phases/01-foundation/01-02-SUMMARY.md  <!-- Does Plan 02 actually need Plan 01's output? -->
-@.planning/phases/01-foundation/01-03-SUMMARY.md  <!-- Chain grows, context bloats -->
+@docs/milestones/<M>/phases/01-foundation/01-01-SUMMARY.md
+@docs/milestones/<M>/phases/01-foundation/01-02-SUMMARY.md  <!-- Does Plan 02 actually need Plan 01's output? -->
+@docs/milestones/<M>/phases/01-foundation/01-03-SUMMARY.md  <!-- Chain grows, context bloats -->
 </context>
 ```
 
@@ -73,9 +73,9 @@ A plan should not interleave multiple checkpoint types with implementation tasks
 
 ```markdown
 <context>
-@.planning/PROJECT.md
-@.planning/STATE.md
-@.planning/phases/01-foundation/01-01-SUMMARY.md  <!-- Uses User type defined in Plan 01 -->
+@docs/global/project/PROJECT.md
+@docs/state/STATE.md
+@docs/milestones/<M>/phases/01-foundation/01-01-SUMMARY.md  <!-- Uses User type defined in Plan 01 -->
 </context>
 ```
 
@@ -86,4 +86,4 @@ A plan should not interleave multiple checkpoint types with implementation tasks
 - "future enhancement", "placeholder", "basic version", "minimal implementation"
 - "will be wired later", "dynamic in future phase", "skip for now"
 
-If a decision from CONTEXT.md says "display cost calculated from billing table in impulses", the plan must deliver exactly that. Not "static label /min" as a "v1". If the phase is too complex, recommend a phase split instead of silently reducing scope.
+If a decision from `docs/milestones/<M>/phases/<NN>-<slug>/CONTEXT.md` says "display cost calculated from billing table in impulses", the plan must deliver exactly that. Not "static label /min" as a "v1". If the phase is too complex, recommend a phase split instead of silently reducing scope.

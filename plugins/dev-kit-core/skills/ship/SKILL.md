@@ -45,7 +45,7 @@ Print the detected base branch. Substitute it wherever the steps below say `<bas
 2. `git status` — uncommitted changes are always included, no need to ask.
 3. `git diff <base>...HEAD --stat` and `git log <base>..HEAD --oneline` to understand what's being shipped.
 4. If the diff is >200 lines, note that an architecture-level review before shipping is recommended — but do not block. Ship runs its own diff review in Step 6.
-5. If the diff introduces a new standalone artifact (CLI binary, library package, tool — not a web service with existing deployment), check for a release/publish CI workflow (`.github/workflows/*release*`, `*publish*`, `*dist*`, or the GitLab CI equivalent). None found → ask: add a release workflow now, defer it as a TODOS.md item, or confirm it's not needed (internal/web-only, existing deployment covers it). Workflow exists, or no new artifact detected → continue silently.
+5. If the diff introduces a new standalone artifact (CLI binary, library package, tool — not a web service with existing deployment), check for a release/publish CI workflow (`.github/workflows/*release*`, `*publish*`, `*dist*`, or the GitLab CI equivalent). None found → ask: add a release workflow now, defer it as a `docs/global/requirements/TODOS.md` item, or confirm it's not needed (internal/web-only, existing deployment covers it). Workflow exists, or no new artifact detected → continue silently.
 
 ## Step 2: Merge the base branch (BEFORE tests)
 
@@ -63,7 +63,7 @@ Run the full suite. **If any test fails, do NOT immediately stop — triage owne
 
 1. **Classify each failure:** get the branch's changed files (`git diff <base>...HEAD --name-only`). A failure is **in-branch** if the failing test file or the code it tests was modified on this branch, or the failure traces to a branch change. Otherwise it's **likely pre-existing**. When ambiguous, default to in-branch — it's safer to stop the developer than to ship a broken test.
 2. **In-branch failures: STOP.** These are your failures. Fix before shipping.
-3. **Pre-existing failures:** ask the user — A) investigate and fix now (commit the fix separately: `fix: pre-existing test failure in <file>`), B) add as a P0 item to TODOS.md and continue, C) create an issue assigned to whoever last touched the production code under test (`git log --format="%an" -1 -- <source-file>`), or D) skip and note it in the output.
+3. **Pre-existing failures:** ask the user — A) investigate and fix now (commit the fix separately: `fix: pre-existing test failure in <file>`), B) add as a P0 item to `docs/global/requirements/TODOS.md` and continue, C) create an issue assigned to whoever last touched the production code under test (`git log --format="%an" -1 -- <source-file>`), or D) skip and note it in the output.
 4. After triage: any unfixed in-branch failure → **STOP**. All pre-existing failures handled → continue.
 
 If the diff touches prompt/LLM files and the project has an eval suite, run the affected evals too — a failing eval blocks the same way a failing test does.
@@ -72,7 +72,7 @@ If the diff touches prompt/LLM files and the project has an eval suite, run the 
 
 Dispatch as a subagent if available (fresh context; the parent only needs the conclusion). This is a **final whole-branch safety net, not a first-pass audit** — on the common path, `nyquist-auditor` already did this exact job per-phase at Stage 11 (one real behavioral test per gap in `verifier`'s `validation_gaps` list). Don't silently re-do that work.
 
-0. **Reuse Stage 11 output first.** For each phase this branch covers, check for a `VERIFICATION.md` with a `validation_gaps` list. For every gap already resolved there — `nyquist-auditor` reported it FILLED (a passing test exists for it now) or explicitly justified as SKIP — trust that result; do not re-derive it. Narrow everything below to only:
+0. **Reuse Stage 11 output first.** For each phase this branch covers, check for a `VERIFICATION.md` (`docs/milestones/<M>/phases/<NN>-<slug>/VERIFICATION.md`) with a `validation_gaps` list. For every gap already resolved there — `nyquist-auditor` reported it FILLED (a passing test exists for it now) or explicitly justified as SKIP — trust that result; do not re-derive it. Narrow everything below to only:
    - gaps that were ESCALATED and never subsequently resolved, and
    - code changed since the last `VERIFICATION.md`/`nyquist-auditor` pass — hotfixes made directly during Stage 13, or phases/workflows with no `VERIFICATION.md` at all (ad-hoc work, manual branches, or projects that skip the full per-phase loop).
 
@@ -90,7 +90,7 @@ Dispatch as a subagent if available (fresh context; the parent only needs the co
 
 ## Step 5: Plan Completion Audit
 
-If a plan file exists for this work (active plan in conversation context, or a recent plan file mentioning this branch/repo), audit it. No plan file → skip with "No plan file detected."
+If a plan file exists for this work — the phase's `<NN>-<MM>-PLAN.md` (`docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`), active plan in conversation context, or a recent plan file mentioning this branch/repo — audit it. No plan file → skip with "No plan file detected."
 
 0. **Reuse Stage 11 output first.** If a `VERIFICATION.md` exists for the relevant phase(s), read its pass/fail verdicts (`gaps:` list, `status`, per-truth evidence) and scan the plan file for any `## Phase N: Convergence` task blocks `converge` appended — use both as **pre-confirmed evidence** for the plan items they cover, the same way `converge` itself treats `VERIFICATION.md` as pre-confirmed evidence rather than re-deriving it from scratch. A truth `verifier` marked passed with no later gap reopening it → DONE. A gap `verifier` flagged with no Convergence task closing it (or an unclosed one) → NOT DONE/PARTIAL, per the gap's `reason`. A plan item covered by an appended Convergence task → its status follows whether that task is now done in the diff. Only fall back to Steps 1-4 below — deriving status from the plan file blind — for phases with no `VERIFICATION.md` (manual/ad-hoc workflows that skipped Stage 11).
 
@@ -102,7 +102,7 @@ If a plan file exists for this work (active plan in conversation context, or a r
 
 ## Step 6: Pre-landing review
 
-**Scope check (informational, non-blocking):** before the quality pass, compare stated intent (commit messages, TODOS.md entries, the plan file from Step 5 if one was found) against what the diff actually touches. Flag two kinds of drift: files/changes unrelated to the stated intent ("while I was in there..." creep) and stated requirements the diff doesn't address. Report one line — `Scope check: CLEAN` or `Scope check: DRIFT — <files/behavior not tied to stated intent>` / `Scope check: MISSING — <requirement not addressed>` — in the PR body; never blocks shipping.
+**Scope check (informational, non-blocking):** before the quality pass, compare stated intent (commit messages, `docs/global/requirements/TODOS.md` entries, the plan file from Step 5 if one was found) against what the diff actually touches. Flag two kinds of drift: files/changes unrelated to the stated intent ("while I was in there..." creep) and stated requirements the diff doesn't address. Report one line — `Scope check: CLEAN` or `Scope check: DRIFT — <files/behavior not tied to stated intent>` / `Scope check: MISSING — <requirement not addressed>` — in the PR body; never blocks shipping.
 
 **Scope the review — don't re-review what already went through Stage 10/12.** On the common path, `code-review-gate` (Stage 10) and `security-auditor`/`cso` (Stage 12) already adversarially reviewed the pre-existing diff. Split the diff before reviewing:
 
@@ -139,14 +139,14 @@ Projects with no version tracking: skip this step silently.
 
 ## Step 9: TODOS.md (auto-update)
 
-If the repo keeps a TODOS.md, cross-reference it against the diff and commit messages. Mark items complete only with clear evidence in the diff (be conservative), move them to a `## Completed` section with the version and date, and summarize (`N items marked complete, M remaining`). Missing or disorganized file → offer once to create/reorganize, otherwise skip. Never fail the ship over a TODOS write error.
+If the repo keeps a `docs/global/requirements/TODOS.md`, cross-reference it against the diff and commit messages. Mark items complete only with clear evidence in the diff (be conservative), move them to a `## Completed` section with the version and date, and summarize (`N items marked complete, M remaining`). Missing or disorganized file → offer once to create/reorganize, otherwise skip. Never fail the ship over a TODOS write error.
 
 ## Step 10: Commit (bisectable chunks)
 
 **Goal:** small, logical commits that work with `git bisect` and make the history readable.
 
 1. Group changes into logical commits — one coherent change each, not one file each.
-2. **Ordering:** infrastructure (migrations, config, routes) → models/services (+ their tests) → controllers/views/components (+ their tests) → VERSION + CHANGELOG + TODOS.md always in the final commit.
+2. **Ordering:** infrastructure (migrations, config, routes) → models/services (+ their tests) → controllers/views/components (+ their tests) → VERSION + CHANGELOG + `docs/global/requirements/TODOS.md` always in the final commit.
 3. A unit and its test file go in the same commit. Migrations get their own commit or ride with the model they support. Diffs under ~50 lines across <4 files can be a single commit.
 4. **Each commit must be independently valid** — no broken imports, no references to code that doesn't exist yet.
 5. Messages: `<type>: <summary>` (feat/fix/chore/refactor/docs/test) plus a brief body. The final version-bump commit carries the version tag.

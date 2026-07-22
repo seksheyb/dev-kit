@@ -1,6 +1,6 @@
 # Doc Conflict Engine
 
-Shared conflict-detection contract for workflows that ingest external content into `.planning/` (e.g. doc-import or doc-ingest pipelines). Defines the report format, severity semantics, and safety-gate behavior. The specific checks that populate each severity bucket are workflow-specific and defined by the calling workflow.
+Shared conflict-detection contract for workflows that ingest external content into the project's `docs/` tree (e.g. the doc-ingestion workflow's classifier/synthesizer pair). Defines the report format, severity semantics, and safety-gate behavior. The specific checks that populate each severity bucket are workflow-specific and defined by the calling workflow.
 
 ---
 
@@ -69,7 +69,7 @@ Proceed silently or display `No conflicts detected.` Either is acceptable; workf
 Each workflow that consumes this contract must define:
 
 1. **Its own check list per bucket** — which conditions are BLOCKER vs WARNING vs INFO. These are domain-specific (plan-ingestion checks are not doc-ingestion checks).
-2. **The loaded context** — what it reads (ROADMAP.md, PROJECT.md, REQUIREMENTS.md, CONTEXT.md, intel files) before running checks.
+2. **The loaded context** — what it reads (`docs/milestones/<M>/ROADMAP.md`, `docs/global/project/PROJECT.md`, `docs/milestones/<M>/REQUIREMENTS.md`, `docs/milestones/<M>/phases/<NN>-<slug>/CONTEXT.md`, intel files under `docs/state/intel/`) before running checks.
 3. **The operation noun** — substituted into the BLOCKED banner (`import`, `ingest`, etc.).
 
 The workflow MUST NOT:

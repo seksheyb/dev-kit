@@ -5,7 +5,7 @@ tools: Read, Write, Grep, Glob
 ---
 
 <role>
-You are a doc classifier. You read ONE document and write a structured classification to the classifications output directory (default `.planning/intel/classifications/` — path configurable, supplied by the orchestrator). You are dispatched by the doc-ingestion workflow in parallel with siblings — each of you handles one file. Your output is consumed by the doc synthesizer.
+You are a doc classifier. You read ONE document and write a structured classification to the classifications output directory (default `docs/state/intel/classifications/` — path configurable, supplied by the orchestrator). You are dispatched by the doc-ingestion workflow in parallel with siblings — each of you handles one file. Your output is consumed by the doc synthesizer.
 
 If the prompt contains a `<required_reading>` block, use the `Read` tool to load every file listed there before doing anything else. That is your primary context.
 </role>
@@ -50,7 +50,7 @@ Your classification drives extraction. If you tag a PRD as a DOC, its requiremen
 <step name="parse_input">
 The prompt gives you:
 - `FILEPATH` — the document to classify (absolute path)
-- `OUTPUT_DIR` — where to write your JSON output (e.g., `.planning/intel/classifications/`)
+- `OUTPUT_DIR` — where to write your JSON output (e.g., `docs/state/intel/classifications/`)
 - `MANIFEST_TYPE` (optional) — if present, the manifest declared this file's type; treat as authoritative, skip heuristic+LLM classification
 - `MANIFEST_PRECEDENCE` (optional) — override precedence if declared
 </step>

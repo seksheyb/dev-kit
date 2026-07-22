@@ -9,7 +9,7 @@ Review this plan thoroughly before any code changes. For every issue, explain th
 
 **Non-interactive execution:** When run by an agent, do not pause for approval. Record each issue as a finding with the recommendation and tradeoffs; tag genuine either-way calls `DECISION NEEDED`. Never silently reduce or expand scope.
 
-**Scope: the phase `PLAN.md`, not the project SDD.** This is a Stage 7 lens — it reviews one phase's plan (task decomposition, the plan-delta's architecture, code quality, tests, performance) before that phase executes. The *project-level* architecture and technical strategy (the `SDD.md` + ADRs) are reviewed once, at Stage 2, by `sdd-review-cto`. Assess how this plan's choices fit the established design; don't re-litigate the system architecture here.
+**Scope: the phase plan (`PHASE/<NN>-<MM>-PLAN.md`, where `PHASE` = `docs/milestones/<M>/phases/<NN>-<slug>/`), not the project SDD.** This is a Stage 7 lens — it reviews one phase's plan (task decomposition, the plan-delta's architecture, code quality, tests, performance) before that phase executes. The *project-level* architecture and technical strategy (`docs/global/architecture/SDD.md` plus the ADR bank at `docs/global/architecture/adr/`) are reviewed once, at Stage 2, by `sdd-review-cto`. Assess how this plan's choices fit the established design; don't re-litigate the system architecture here.
 
 ## Engineering Preferences (guide every recommendation)
 
@@ -71,7 +71,7 @@ System-level review discipline — evaluate designs at the macro level before dr
 2. **Minimum change set:** What is the minimum set of changes that achieves the stated goal? Flag any work deferrable without blocking the core objective. Be ruthless about scope creep.
 3. **Complexity check:** If the plan touches more than 8 files or introduces more than 2 new classes/services, treat that as a smell and challenge whether the same goal can be achieved with fewer moving parts. Name what's overbuilt and propose a minimal version.
 4. **Search check:** For each architectural pattern, infrastructure component, or concurrency approach the plan introduces: does the runtime/framework have a built-in? Is the chosen approach current best practice? Are there known footguns? If the plan rolls a custom solution where a built-in exists, flag it as a scope reduction opportunity. Annotate with [Layer 1] tried-and-true, [Layer 2] current-best-practice, [Layer 3] first-principles insight.
-5. **TODOS cross-reference:** Read TODOS.md if it exists. Deferred items blocking this plan? Bundleable without expanding scope? New work this plan creates that should be captured?
+5. **TODOS cross-reference:** Read `docs/global/requirements/TODOS.md` if it exists. Deferred items blocking this plan? Bundleable without expanding scope? New work this plan creates that should be captured?
 6. **Completeness check:** Is the plan doing the complete version or a shortcut? With AI-assisted coding, completeness (100% coverage, full edge cases, complete error paths) costs minutes, not days. If a shortcut saves human-hours but only minutes with AI assistance, recommend the complete version.
 7. **Distribution check:** If the plan introduces a new artifact type (CLI binary, package, container image, app), does it include the build/publish pipeline, target platforms, and install path? Code without distribution is code nobody can use. If deferred, it must appear explicitly in "NOT in scope."
 

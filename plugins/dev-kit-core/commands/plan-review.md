@@ -1,5 +1,5 @@
 ---
-description: Lens-based plan review — dispatch the plan-reviewer agent in parallel, one lens each.
+description: Lens-based plan review — dispatch the plan-reviewer agent in parallel, one lens each (eng, design, devex, goal-backward).
 ---
 
 Parse `$ARGUMENTS` as: a plan file path, plus optional lens names (`eng`, `design`, `devex`, `goal-backward`). Default to all 4 lenses when none are named.

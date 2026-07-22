@@ -10,17 +10,19 @@ Your job: dispatch an independent review engine (selected per `@references/indep
 
 ## Inputs you receive from the orchestrator
 
-- `plan_path` — absolute path to the plan file (`docs/dev-kit/plans/<plan>.md`)
-- `sdd_path` — absolute path to the SDD (`docs/architecture/SDD.md`)
-- `adr_dir` — path to ADRs (`docs/architecture/ADRs/`)
-- `spec_path` — absolute path to the spec / brief that drove the plan
-- `graphify_path` — absolute path to the graphify report or wiki index used (or `"none"`)
+- `plan_path` — absolute path to the plan file (the only canonical plan path: `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`)
+- `sdd_path` — absolute path to the SDD (`docs/global/architecture/SDD.md`)
+- `adr_dir` — path to the ADR bank (`docs/global/architecture/adr/`)
+- `spec_path` — absolute path to the spec / brief that drove the plan (typically `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`)
+- `graphify_path` — absolute path to the graphify report or wiki index used (or `"none"`; typically `docs/state/graphs/GRAPH_REPORT.md`)
 - (optional) `obsidian_path` — absolute path to any Obsidian context the planner used
 
 ## Output paths (you create them)
 
-- `<plan_path>.review.md` — full prose review (the selected engine writes this)
-- `<plan_path>.review-summary.json` — schema-compliant summary (you write this)
+Let `PHASE` be the plan's own directory and `<plan-basename>` be the plan file's name (e.g. `<NN>-<MM>-PLAN.md`):
+
+- `review_path` = `PHASE/reviews/<plan-basename>.review.md` — full prose review (the selected engine writes this)
+- `summary_path` = `PHASE/reviews/<plan-basename>.review-summary.json` — schema-compliant summary (you write this)
 
 ## What you do
 
@@ -61,12 +63,12 @@ Your job: dispatch an independent review engine (selected per `@references/indep
       gate on the scorer's absence by itself.
    The plan **cannot pass** while `complexity_ok` is false — fold this into `gate_passed` (step 4).
 
-1. Read `docs/dev-kit/SCHEMAS.md` for the `review-summary.json` shape and the HIGH / MEDIUM / LOW classification.
+1. Read `docs/global/process/SCHEMAS.md` for the `review-summary.json` shape and the HIGH / MEDIUM / LOW classification.
 
 2. Select a review engine per `@references/independent-review.md` (role: Plan-gate review — default `gemini`, fallback order `gemini` → `codex` → `claude`). Run the chosen engine's availability check and invoke it per its adapter in `references/review-engines/`; fall back per the registry order if unavailable. Give the selected engine a brief that must:
    - List the input file paths only — **never inline plan, SDD, or spec content**.
    - Tell the engine to read each path and review for:
-     - **ADD Alignment**: Does the plan implement decisions documented in the SDD and ADRs?
+     - **SDD Alignment**: Does the plan implement decisions documented in the SDD and ADRs?
      - **ADR Gaps**: Are there new architectural decisions in the plan that LACK a corresponding ADR?
      - **Scope Coverage**: Does the plan address the requirement scopes (Lanes) defined in CLAUDE.md? Requirements expressed as US-xxx IDs (Theme→Pillar→US-xxx hierarchy) are checked the same way as REQ-IDs.
      - **Structural Soundness**: Dependency-graph errors, wave-decomposition mistakes, and hidden coupling.
@@ -78,12 +80,12 @@ Your job: dispatch an independent review engine (selected per `@references/indep
        Under-declared signals (fewer files than the tasks imply, `novelty: none` on
        greenfield work) are HIGH — they game the deterministic scorer.
    - Tell the engine to classify findings as HIGH / MEDIUM / LOW.
-   - Tell the engine to write the full review to `<plan_path>.review.md`.
+   - Tell the engine to write the full review to `review_path`.
    - Tell the engine to reply with only that path. No prose.
 
-3. Read the resulting `<plan_path>.review.md`. Also re-read the plan file to detect any inline `won't fix — <reason>` justifications attached to HIGH findings — those count as resolved.
+3. Read the resulting `review_path`. Also re-read the plan file to detect any inline `won't fix — <reason>` justifications attached to HIGH findings — those count as resolved.
 
-4. Produce `<plan_path>.review-summary.json` matching the SCHEMAS contract:
+4. Produce `summary_path` matching the SCHEMAS contract:
    - `engine` — which engine was actually used (after any fallback per the registry).
    - `complexity_ok` (boolean) from step 0.
    - `severity_counts` aggregated from the review; **add the step-0 complexity blockers to the HIGH count**.
@@ -108,4 +110,4 @@ Your job: dispatch an independent review engine (selected per `@references/indep
 
 - Never paste plan, spec, or graphify content into the engine call — pass paths only.
 - Never include review prose in your reply to the orchestrator — only the JSON.
-- The summary file path must be exactly `<plan_path>.review-summary.json`.
+- The summary file path must be exactly `summary_path` (`PHASE/reviews/<plan-basename>.review-summary.json`).

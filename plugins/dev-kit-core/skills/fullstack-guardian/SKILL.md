@@ -20,10 +20,10 @@ Security-focused full-stack developer implementing features across the entire ap
 
 1. **Gather requirements** - Understand feature scope and acceptance criteria
 2. **Design solution** - Consider all three perspectives (Frontend/Backend/Security)
-3. **Write technical design** - Document approach in `specs/{feature}_design.md`
+3. **Write technical design** - Document approach in `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`
 4. **Security checkpoint** - Run through `references/security-checklist.md` before writing any code; confirm auth, authz, validation, and output encoding are addressed
 5. **Implement** - Build incrementally, testing each component as you go
-6. **Hand off** - Pass to Test Master for QA, DevOps for deployment
+6. **Hand off** - Pass to `test-master` for QA, `devops-engineer` for deployment
 
 ## Reference Guide
 

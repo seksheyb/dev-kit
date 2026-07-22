@@ -17,14 +17,15 @@ spec" on an already-written spec re-enters at the Clarification Pass directly.
 
 ## File Locations
 
-Specs live in the project's docs/requirements directory (configurable). By default use
-`docs/specs/`; if the project already keeps requirements elsewhere, follow the existing
-convention or ask the user once and stick to it. Each feature gets its own subdirectory
-(see step 2 below). The output template is `spec-template.md` in this skill's directory.
+Specs live under the active milestone at `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`,
+where `<M>` is the current milestone version, `<NNN>` a zero-padded feature number, and
+`<slug>` the feature's short name. Each feature gets its own `<NNN>-<slug>/` subdirectory
+under `docs/milestones/<M>/specs/` (see step 2 below). The output template is
+`spec-template.md` in this skill's directory.
 
-If the project has a constitution (see the `constitution` skill; default
-`docs/constitution.md`), load it for project principles and governance constraints —
-the spec must not conflict with it.
+If the project has a constitution (see the `constitution` skill;
+`docs/global/project/constitution.md`), load it for project principles and governance
+constraints — the spec must not conflict with it.
 
 ## Two Lenses
 
@@ -87,16 +88,16 @@ Given the feature description, do this:
      - "Fix payment processing timeout bug" → "fix-payment-timeout"
 
 2. **Create the spec feature directory**:
-   - Scan existing directories in the specs directory and pick the next available 3-digit
-     number `NNN` (or use a `YYYYMMDD-HHMMSS` timestamp prefix if the project prefers it)
-   - Construct the directory name: `<prefix>-<short-name>` (e.g., `003-user-auth`)
-   - Create the directory and copy `spec-template.md` (from this skill's directory) into it
-     as `spec.md` — this is `SPEC_FILE`
+   - Under `docs/milestones/<M>/specs/`, scan the existing `<NNN>-<slug>/` directories and
+     pick the next available zero-padded 3-digit number `<NNN>`
+   - Construct the directory name `<NNN>-<slug>` (e.g., `003-user-auth`)
+   - Create `docs/milestones/<M>/specs/<NNN>-<slug>/` and copy `spec-template.md` (from this
+     skill's directory) into it as `spec.md` — this is `SPEC_FILE`
    - Only create one feature per invocation
 
 3. **Assigning US-xxx IDs (global allocation)**:
-   - Glob every `spec.md` under the specs directory (all feature subdirectories, not just
-     this one) and extract every `US-\d+` heading found.
+   - Glob every `spec.md` across all milestones (`docs/milestones/*/specs/*/spec.md`), not
+     just this feature, and extract every `US-\d+` heading found.
    - Take the highest number found across ALL specs, and allocate the next sequential
      numbers to this feature's stories (e.g. if the highest existing is `US-014`, this
      feature's stories start at `US-015`).
@@ -155,7 +156,8 @@ Given the feature description, do this:
 After writing the initial spec, validate it against quality criteria:
 
 a. **Create Spec Quality Checklist**: Generate a checklist file at
-   `<feature-directory>/checklists/requirements.md` with these validation items:
+   `docs/milestones/<M>/specs/<NNN>-<slug>/checklists/requirements.md` with these
+   validation items:
 
    ```markdown
    # Specification Quality Checklist: [FEATURE NAME]

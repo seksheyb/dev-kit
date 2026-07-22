@@ -22,9 +22,9 @@ This is **not** a diff tool and does **not** track changes. It assesses the pres
 of the code relative to the feature's artifacts — no git, no branch comparison, no history.
 
 > **Artifact convention.** This pipeline produces a single `PLAN.md` per plan/track with its
-> tasks embedded (`<task>…</task>`), not the Spec-Kit `spec.md`/`plan.md`/`tasks.md` triad.
-> `converge` reads `spec.md` and the phase's `PLAN.md`(s) and appends new `<task>` blocks to
-> a plan file — the same convention `analyze` and `writing-plans`/`planner` already use.
+> tasks embedded (`<task>…</task>`), not a separate `plan.md` + `tasks.md` split. `converge`
+> reads `spec.md` and the phase's `PLAN.md`(s) and appends new `<task>` blocks to a plan
+> file — the same convention `analyze` and `writing-plans`/`planner` already use.
 
 ## Relationship to Other Verify-Stage Assets
 
@@ -45,15 +45,18 @@ alongside three other verify-stage assets that answer different questions:
 
 ## File Locations
 
-- **SPEC** — the governing spec: `docs/specs/<NNN-feature-name>/spec.md` (configurable; if
-  the project keeps requirements elsewhere, use whichever the plan's `requirements`
-  frontmatter references).
-- **PLAN** — the phase's `PLAN.md` file(s): by default `.planning/phases/<phase>/*-PLAN.md`.
-  A phase may have several plans across waves/tracks; load **all** of them to build the
-  intent inventory. If the user points at one plan file directly, converge against that file.
-- **VERIFICATION** — the phase's `VERIFICATION.md` (`.planning/phases/<phase>/*-VERIFICATION.md`),
-  if one exists. Optional input evidence, not a prerequisite.
-- **CONSTITUTION** — `docs/constitution.md` by default (see the `constitution` skill).
+- **SPEC** — the governing spec: `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`
+  (configurable; if the project keeps requirements elsewhere, use whichever the plan's
+  `requirements` frontmatter references).
+- **PLAN** — the phase's `PLAN.md` file(s): by default
+  `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`. A phase may have several plans
+  across waves/tracks; load **all** of them to build the intent inventory. If the user points
+  at one plan file directly, converge against that file.
+- **VERIFICATION** — the phase's `VERIFICATION.md`
+  (`docs/milestones/<M>/phases/<NN>-<slug>/VERIFICATION.md`), if one exists. Optional input
+  evidence, not a prerequisite.
+- **CONSTITUTION** — `docs/global/project/constitution.md` by default (see the `constitution`
+  skill).
 
 Follow any project-specific path convention (CLAUDE.md) over these defaults.
 
@@ -84,10 +87,11 @@ gracefully rather than failing.
 Identify the active feature/phase — from the user's context, the most recently modified
 phase directory, or by asking. Derive paths:
 
-- SPEC = the governing spec (`docs/specs/<NNN-feature-name>/spec.md`, or the requirements doc
-  the plan's `requirements` frontmatter points at)
-- PLAN = the phase's `PLAN.md` file(s) (`.planning/phases/<phase>/*-PLAN.md`) — tasks live
-  inline as `<task>` blocks
+- SPEC = the governing spec (`docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`, or the
+  requirements doc the plan's `requirements` frontmatter points at)
+- PLAN = the phase's `PLAN.md` file(s)
+  (`docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`) — tasks live inline as
+  `<task>` blocks
 - VERIFICATION = the phase's `VERIFICATION.md`, if present
 - CONSTITUTION = the project's constitution file, if present
 

@@ -25,7 +25,7 @@ Learnings live in an append-only JSONL file at `.claude/learnings.jsonl` in the 
 
 Any workflow (review, ship, debugging) may append to this ledger when it discovers something non-obvious. **Only log genuine discoveries** — the test is "would this insight save time in a future session?"
 
-`debugger` is a concrete example: it keeps its own exhaustive, symptom-matched case log at `.planning/debug/knowledge-base.md` for every resolved session — a different kind of store (diagnostic cache, not curated insight) — and only cross-posts here as `type: pitfall` when a root cause generalizes beyond the one incident. Most resolved bugs don't; this ledger isn't a bug tracker.
+`debugger` is a concrete example: it keeps its own exhaustive, symptom-matched case log at `docs/state/debug/knowledge-base.md` for every resolved session — a different kind of store (diagnostic cache, not curated insight) — and only cross-posts here as `type: pitfall` when a root cause generalizes beyond the one incident. Most resolved bugs don't; this ledger isn't a bug tracker.
 
 ## Detect command
 

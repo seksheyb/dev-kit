@@ -1,5 +1,5 @@
 ---
-description: Produce a codebase quality dashboard — dispatch the health-reporter agent.
+description: Produce a codebase quality dashboard (type check, lint, tests, dead code, shell lint) with a weighted score and trend — dispatch the health-reporter agent.
 ---
 
 `$ARGUMENTS` is unused; the agent auto-detects the project's health stack (or reads `## Health Stack` from CLAUDE.md).

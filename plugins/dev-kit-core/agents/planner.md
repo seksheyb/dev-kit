@@ -13,7 +13,7 @@ color: green
 
 > **Note:** dev-kit has no dependency on any external SDK. Every operation below is performed with native tools (Read/Write/Bash/Grep/Glob/WebSearch) — see `references/native-equivalents.md` for the canonical mapping from each operation to its native implementation.
 
-> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: every end-user project document path below follows the canonical doc-path contract in `references/doc-sitemap.md`. Shorthand `PHASE/` = `docs/milestones/<M>/phases/<NN>-<slug>/`. Project-lifetime docs live under `docs/global/`, milestone-lifetime docs under `docs/milestones/<M>/`, and pipeline state under `docs/state/`. The milestone `<M>`, phase number `<NN>`, and `<slug>` come from the orchestrator's dispatch prompt.
 
 <role>
 You are a planner. You create executable phase plans with task breakdown, dependency analysis, and goal-backward verification.
@@ -67,7 +67,7 @@ Before planning, discover project context:
 <context_fidelity>
 ## CRITICAL: User Decision Fidelity
 
-The orchestrator provides user decisions in `<user_decisions>` tags from `/gsd:discuss-phase`.
+The orchestrator provides user decisions in `<user_decisions>` tags from the phase-discovery stage.
 
 **Before creating ANY task, verify:**
 
@@ -199,7 +199,7 @@ Discovery is MANDATORY unless you can prove current context exists.
 - Level 2+: New library not in package.json, external API, "choose/select/evaluate" in description
 - Level 3: "architecture/design/system", multiple external services, data modeling, auth design
 
-For niche domains (3D/games/audio/shaders/ML), suggest `/gsd:plan-phase --research-phase <N>` first.
+For niche domains (3D/games/audio/shaders/ML), suggest `/plan-phase --research-phase <N>` first.
 
 </discovery_levels>
 
@@ -315,7 +315,7 @@ Exceptions where `tdd="true"` is not needed: `type="checkpoint:*"` tasks, config
    ```
 
    Format rules from `@references/gsd/user-story-template.md`:
-   - All three slots required. If the ROADMAP `**Goal:**` line is not in user-story format, surface the discrepancy and ask the user to run `/gsd mvp-phase ${PHASE}` first — do not invent a story.
+   - All three slots required. If the ROADMAP `**Goal:**` line is not in user-story format, surface the discrepancy and ask the user to run `/mvp-phase ${PHASE}` first — do not invent a story.
    - Bold the three keywords (`**As a**`, `**I want to**`, `**so that**`) when emitting to PLAN.md. The ROADMAP form does not use bolded keywords; the PLAN form does.
 2. First task: failing end-to-end test for the happy path.
 3. Second task: thinnest UI → API → DB slice that makes the test pass (stubs allowed for non-critical branches).
@@ -443,9 +443,9 @@ Invoke the `sprint-execution` skill to execute this plan (plugins/dev-kit-core/s
 </execution_context>
 
 <context>
-@.planning/PROJECT.md
-@.planning/ROADMAP.md
-@.planning/STATE.md
+@docs/global/project/PROJECT.md
+@docs/milestones/<M>/ROADMAP.md
+@docs/state/STATE.md
 
 # Only reference prior plan SUMMARYs if genuinely needed
 @path/to/relevant/source.ts
@@ -489,7 +489,7 @@ Invoke the `sprint-execution` skill to execute this plan (plugins/dev-kit-core/s
 </success_criteria>
 
 <output>
-Create `.planning/phases/XX-name/{padded_phase}-{plan}-SUMMARY.md` when done
+Create `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-SUMMARY.md` when done
 </output>
 ```
 
@@ -617,7 +617,7 @@ Only include what Claude literally cannot do.
 **Step 0: Extract Requirement IDs**
 Read ROADMAP.md `**Requirements:**` line for this phase. Strip brackets if present (e.g., `[AUTH-01, AUTH-02]` → `AUTH-01, AUTH-02`). IDs may be REQ-form or `US-xxx` (Theme→Pillar→US-xxx hierarchy) — treat either as a valid requirement ID. Distribute requirement IDs across plans — each plan's `requirements` frontmatter field MUST list the IDs its tasks address. **CRITICAL:** Every requirement ID MUST appear in at least one plan. Plans with an empty `requirements` field are invalid.
 
-**Security (when `security_enforcement` enabled — absent = enabled):** Identify trust boundaries in this phase's scope. Map STRIDE categories to applicable tech stack from RESEARCH.md security domain. Check for the latest `cso` posture report under `.security-reports/*.json`, if present (from Stage 0's onboarding audit, or a prior phase's Stage 12 `--diff` run) — start dispositions from findings it already surfaced for this scope rather than re-deriving from zero. For each threat: assign disposition (mitigate if ASVS L1 requires it, accept if low risk, transfer if third-party). Every plan MUST include `<threat_model>` when security_enforcement is enabled.
+**Security (when `security_enforcement` enabled — absent = enabled):** Identify trust boundaries in this phase's scope. Map STRIDE categories to applicable tech stack from RESEARCH.md security domain. Check for the latest `cso` posture report under `docs/milestones/<M>/reports/security/*.json`, if present (from Stage 0's onboarding audit, or a prior phase's Stage 12 `--diff` run) — start dispositions from findings it already surfaced for this scope rather than re-deriving from zero. For each threat: assign disposition (mitigate if ASVS L1 requires it, accept if low risk, transfer if third-party). Every plan MUST include `<threat_model>` when security_enforcement is enabled.
 
 **Package legitimacy gate (npm/pip/cargo only):**
 - Require RESEARCH.md `## Package Legitimacy Audit` before package-manager install tasks.
@@ -829,16 +829,16 @@ Load planning context natively (see `references/native-equivalents.md`):
 
 **Phase bootstrap (native equivalent of `init.plan-phase`):**
 ```bash
-ls .planning/phases/  2>/dev/null
+ls docs/milestones/<M>/phases/  2>/dev/null
 ```
-`Glob`/`ls` the phase directory (default `.planning/phases/<NNN>-<slug>/`), then `Read` `.planning/ROADMAP.md`, `.planning/REQUIREMENTS.md`, and any existing `CONTEXT.md`/`RESEARCH.md`/`PLAN.md` already inside that phase directory. Treat missing files as "not yet produced," not an error.
+`Glob`/`ls` the phase directory (`PHASE/` = `docs/milestones/<M>/phases/<NN>-<slug>/`), then `Read` `docs/milestones/<M>/ROADMAP.md`, `docs/milestones/<M>/REQUIREMENTS.md`, and any existing `CONTEXT.md`/`RESEARCH.md`/`PLAN.md` already inside that phase directory. Treat missing files as "not yet produced," not an error.
 
 Derive from what you read: `phase_dir` (the directory path), `phase_number` (from the directory name), `has_research` (RESEARCH.md present), `has_context` (CONTEXT.md present). Config-style values (`planner_model`, `researcher_model`, `checker_model`, `commit_docs`, `research_enabled`) come directly from the orchestrator's dispatch prompt — there is no separate query for them; if the dispatch prompt is silent on one, use the project default.
 
 **Planning state (native equivalent of `state.load`):**
-`Read` `.planning/STATE.md` directly. If absent, state is empty — proceed with what the dispatch prompt provided.
+`Read` `docs/state/STATE.md` directly. If absent, state is empty — proceed with what the dispatch prompt provided.
 
-If STATE.md missing but .planning/ exists, offer to reconstruct or continue without.
+If STATE.md missing but `docs/state/` exists, offer to reconstruct or continue without.
 </step>
 
 <step name="load_mode_context">
@@ -857,7 +857,7 @@ instructions for operating in that mode.
 Check for codebase map:
 
 ```bash
-ls .planning/codebase/*.md 2>/dev/null
+ls docs/global/codebase/*.md 2>/dev/null
 ```
 
 If exists, load relevant documents by phase type:
@@ -878,7 +878,7 @@ If exists, load relevant documents by phase type:
 Check for knowledge graph:
 
 ```bash
-ls .planning/graphs/graph.json 2>/dev/null
+ls docs/state/graphs/graph.json 2>/dev/null
 ```
 
 If graph.json exists, invoke the `graphify` skill directly (native equivalent of `graphify status` / `graphify query` — it owns this capability natively in dev-kit, no external binary) to check freshness and query phase-relevant dependency context.
@@ -900,8 +900,8 @@ If no results or graph.json absent, continue without graph context.
 
 <step name="identify_phase">
 ```bash
-cat .planning/ROADMAP.md
-ls .planning/phases/
+cat docs/milestones/<M>/ROADMAP.md
+ls docs/milestones/<M>/phases/
 ```
 
 If multiple phases available, ask which to plan. If obvious (first incomplete), proceed.
@@ -921,7 +921,7 @@ Apply discovery level protocol (see discovery_levels section).
 **Step 1 — Generate digest index (native equivalent of `history-digest`):**
 ```bash
 git log --oneline -20
-ls .planning/phases/*/*-SUMMARY.md 2>/dev/null
+ls docs/milestones/<M>/phases/*/*-SUMMARY.md 2>/dev/null
 ```
 `Read` the frontmatter (first ~25 lines) of each SUMMARY.md found — `affects`, `provides`, `tech-stack`, `patterns-established`, and `key-decisions` fields give a cheap digest without reading full bodies. Synthesize the digest yourself from these frontmatter blocks plus the commit log.
 
@@ -937,7 +937,7 @@ Select top 2-4 phases. Skip phases with no relevance signal.
 
 **Step 3 — Read full SUMMARYs for selected phases:**
 ```bash
-cat .planning/phases/{selected-phase}/*-SUMMARY.md
+cat docs/milestones/<M>/phases/{selected-phase}/*-SUMMARY.md
 ```
 
 From full SUMMARYs extract:
@@ -957,7 +957,7 @@ For phases not selected, retain from digest:
 
 **From RETROSPECTIVE.md (if exists):**
 ```bash
-cat .planning/RETROSPECTIVE.md 2>/dev/null | tail -100
+cat docs/milestones/<M>/RETROSPECTIVE.md 2>/dev/null | tail -100
 ```
 
 Read the most recent milestone retrospective and cross-milestone trends. Extract:
@@ -974,9 +974,9 @@ If `features.global_learnings` is `true`: for each tag from PLAN.md frontmatter 
 Use `phase_dir` from init context (already loaded in load_project_state).
 
 ```bash
-cat "$phase_dir"/*-CONTEXT.md 2>/dev/null   # From /gsd:discuss-phase
-cat "$phase_dir"/*-RESEARCH.md 2>/dev/null   # Research output
-cat "$phase_dir"/*-DISCOVERY.md 2>/dev/null  # From mandatory discovery
+cat "$phase_dir"/CONTEXT.md 2>/dev/null   # From phase discovery
+cat "$phase_dir"/RESEARCH.md 2>/dev/null   # Research output
+cat "$phase_dir"/DISCOVERY.md 2>/dev/null  # From mandatory discovery
 ```
 
 **If CONTEXT.md exists (has_context=true from init):** Honor user's vision, prioritize essential features, respect boundaries. Locked decisions — do not revisit.
@@ -1070,11 +1070,11 @@ Use template structure for each PLAN.md.
 
 **CRITICAL — File naming convention (enforced):**
 
-The filename MUST follow the exact pattern: `{padded_phase}-{NN}-PLAN.md`
+The filename MUST follow the exact pattern: `<NN>-<MM>-PLAN.md`
 
-- `{padded_phase}` = zero-padded phase number received from the orchestrator (e.g. `01`, `02`, `03`, `02.1`)
-- `{NN}` = zero-padded sequential plan number within the phase (e.g. `01`, `02`, `03`)
-- The suffix is always `-PLAN.md` — NEVER `PLAN-NN.md`, `NN-PLAN.md`, or any other variation
+- `<NN>` = zero-padded phase number received from the orchestrator (e.g. `01`, `02`, `03`, `02.1`)
+- `<MM>` = zero-padded sequential plan number within the phase (e.g. `01`, `02`, `03`)
+- The suffix is always `-PLAN.md` — NEVER `PLAN-MM.md`, `MM-PLAN.md`, or any other variation
 
 **Correct examples:**
 - Phase 1, Plan 1 → `01-01-PLAN.md`
@@ -1087,7 +1087,7 @@ The filename MUST follow the exact pattern: `{padded_phase}-{NN}-PLAN.md`
 - ❌ `plan-01.md`
 - ❌ `01-01-plan.md` (lowercase)
 
-Full write path: `.planning/phases/{padded_phase}-{slug}/{padded_phase}-{NN}-PLAN.md`
+Full write path: `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`
 
 Include all frontmatter fields.
 </step>
@@ -1112,7 +1112,7 @@ Validate each created PLAN.md natively (see `references/native-equivalents.md`):
 <step name="update_roadmap">
 Update ROADMAP.md to finalize phase placeholders:
 
-1. Read `.planning/ROADMAP.md`
+1. Read `docs/milestones/<M>/ROADMAP.md`
 2. Find phase entry (`### Phase {N}:`)
 3. Update placeholders:
 
@@ -1126,8 +1126,8 @@ Update ROADMAP.md to finalize phase placeholders:
 **Plan list** (always update):
 ```
 Plans:
-- [ ] {phase}-01-PLAN.md — {brief objective}
-- [ ] {phase}-02-PLAN.md — {brief objective}
+- [ ] <NN>-01-PLAN.md — {brief objective}
+- [ ] <NN>-02-PLAN.md — {brief objective}
 ```
 
 4. Write updated ROADMAP.md
@@ -1137,7 +1137,7 @@ Plans:
 Native equivalent of `commit`: stage the explicit paths this operation names — never `git add -A` — then commit.
 
 ```bash
-git add .planning/phases/$PHASE-*/$PHASE-*-PLAN.md .planning/ROADMAP.md
+git add docs/milestones/<M>/phases/$PHASE-*/$PHASE-*-PLAN.md docs/milestones/<M>/ROADMAP.md
 git commit -m "docs($PHASE): create phase plan"
 ```
 </step>
@@ -1174,7 +1174,7 @@ Return structured planning outcome to orchestrator.
 
 ### Next Steps
 
-Execute: `/gsd:execute-phase {phase}`
+Execute: `/execute-phase {phase}`
 
 <sub>`/clear` first - fresh context window</sub>
 ```
@@ -1195,7 +1195,7 @@ Execute: `/gsd:execute-phase {phase}`
 
 ### Next Steps
 
-Execute: `/gsd:execute-phase {phase} --gaps-only`
+Execute: `/execute-phase {phase} --gaps-only`
 ```
 
 ## Checkpoint Reached / Revision Complete
@@ -1251,6 +1251,6 @@ Planning complete when:
 - [ ] PLAN file(s) exist with gap_closure: true
 - [ ] Each plan: tasks derived from gap.missing items
 - [ ] PLAN file(s) committed to git
-- [ ] User knows to run `/gsd:execute-phase {X}` next
+- [ ] User knows to run `/execute-phase {X}` next
 
 </success_criteria>

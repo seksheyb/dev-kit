@@ -21,7 +21,7 @@ the user the Claude Design MCP is required (don't silently degrade to writing lo
   explicit `copy_files(src_project_id: <system's project id>)` into the consumer — binding does
   not copy files across projects by itself.
 
-`DESIGN.md` tracks two separate ids:
+**DESIGN.md** (`docs/global/design/DESIGN.md`) tracks two separate ids:
 - `claude_design_system_id` — the shared design system. Resolved **exactly once, by
   design-consultation** (see "Resolution ownership" below). Reused by every downstream skill.
 - `claude_design_project_id` — design-consultation's own demo/preview project. One consumer of
@@ -67,7 +67,7 @@ system for them, rather than a vague "go promote this somewhere":
   design system named '[Project] Design System'. Aesthetic: [direction]. Typography: [fonts +
   roles]. Colors: [hex + roles]. Spacing: [base unit + scale]. Motion: [approach]. Seed it with
   templates for [component list]."*
-- Show this prompt in chat and save it (e.g. `.claude/design/claude-design-system-prompt.md`) so
+- Show this prompt in chat and save it to `docs/state/tmp/claude-design-system-prompt.md` so
   it isn't lost between sessions.
 - Tell the user: paste this into Claude Design (claude.ai/design) to create the system, then
   send back the resulting id (or its `list_design_systems` name) so it can be stored as

@@ -1,6 +1,6 @@
 ---
 name: guard
-description: Safety guardrails for risky sessions. Warns before destructive commands (rm -rf, DROP TABLE, force-push, git reset --hard, kubectl delete) and can freeze edits to a chosen directory, with unfreeze to lift the boundary. Use when touching prod, debugging live systems, working in shared environments, or when asked to "be careful", "safety mode", "guard mode", "freeze edits", or "unfreeze".
+description: Use when touching prod, debugging live systems, working in shared environments, or asked to "be careful", "prod mode", "safety mode", "guard mode", "freeze edits", "lock scope to a directory", or "unfreeze". Covers destructive-command warnings (rm -rf, DROP TABLE, force-push, git reset --hard, kubectl delete, docker prune) and an edit-scope freeze/unfreeze boundary.
 ---
 
 # Guard — Session Safety Mode

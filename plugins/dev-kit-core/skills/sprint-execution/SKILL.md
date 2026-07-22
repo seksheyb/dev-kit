@@ -9,21 +9,21 @@ Execute a written plan by dispatching subagents — one per track — in paralle
 
 **No plan file yet, just a handful of independent tasks?** This skill's worktree/wave/gate ceremony is overkill for that — use `dispatching-parallel-agents` instead for lightweight, no-ceremony parallel dispatch.
 
-## Conventions (configure per project, defaults shown)
+## Conventions (canonical paths from `references/doc-sitemap.md`)
 
-Projects declare these in their plan file or project config (CLAUDE.md). If absent, use the defaults:
+These are the canonical doc paths every dev-kit asset shares. A project may override them in its plan header or config (CLAUDE.md); absent an override, use these. Throughout, `PHASE/` = `docs/milestones/<M>/phases/<NN>-<slug>/`.
 
-| Convention | Default | Purpose |
+| Convention | Canonical path | Purpose |
 |---|---|---|
-| Plan file | `docs/plans/<sprint-id>-plan.md` | Tasks, tracks, waves, Parallel Execution Map |
-| State file | `.planning/STATE.md` (or project equivalent) | Which tasks/waves are executed — orchestrator-owned |
-| Roadmap file | `ROADMAP.md` (if the project keeps one) | Milestone-level progress — orchestrator-owned |
-| Progress ledger | `.sprint/progress.md` (git-ignored scratch) | Compaction-proof recovery map |
-| Track summary | `SUMMARY.md` committed inside each track's worktree | Subagent handover record |
+| Plan file | `PHASE/<NN>-<MM>-PLAN.md` | Tasks, tracks, waves, Parallel Execution Map |
+| State file | `docs/state/STATE.md` | Which tasks/waves are executed — orchestrator-owned |
+| Roadmap file | `docs/milestones/<M>/ROADMAP.md` | Milestone-level progress — orchestrator-owned |
+| Progress ledger | `docs/state/sprint/progress.md` | Compaction-proof recovery map (pipeline-internal scratch) |
+| Track summary | `PHASE/<NN>-<MM>-SUMMARY.md`, committed inside each track's worktree | Subagent handover record |
 | Metrics/telemetry command | none (optional) | Post-wave recording, if the project has one |
 | Integration branch | `main` (or the sprint's working branch) | Where track worktrees merge |
 
-Never hardcode another project's paths. Read the plan header first; it wins.
+Never hardcode a different project's paths. Read the plan header first; it wins.
 
 ## 1 — Load and Review the Plan (before any dispatch)
 
@@ -64,8 +64,8 @@ Never hardcode another project's paths. Read the plan header first; it wins.
 
 Everything pasted into a dispatch prompt — and everything a subagent prints back — stays resident in orchestrator context forever. Hand artifacts over as files:
 
-- **Task brief:** extract the track's full task text from the plan into a uniquely named brief file (`.sprint/task-N-brief.md` or equivalent) and pass the path. The dispatch prompt contains only: (1) one line on where this track fits the project; (2) the brief path, introduced as "read this first — it is your requirements, with the exact values to use verbatim"; (3) interfaces and decisions from earlier waves the brief cannot know; (4) your resolution of any ambiguity you noticed; (5) the report-file path and report contract. Exact values (numbers, magic strings, signatures, test cases) live only in the brief.
-- **Report file:** name it after the brief (`task-N-brief.md` → `task-N-report.md`). The subagent writes the full report there and returns only status, commits, a one-line test summary, and concerns.
+- **Task brief:** extract the track's full task text from the plan into a uniquely named brief file (`docs/state/sprint/task-N-brief.md`) and pass the path. The dispatch prompt contains only: (1) one line on where this track fits the project; (2) the brief path, introduced as "read this first — it is your requirements, with the exact values to use verbatim"; (3) interfaces and decisions from earlier waves the brief cannot know; (4) your resolution of any ambiguity you noticed; (5) the report-file path and report contract. Exact values (numbers, magic strings, signatures, test cases) live only in the brief.
+- **Report file:** name it after the brief (`docs/state/sprint/task-N-brief.md` → `docs/state/sprint/task-N-report.md`). The subagent writes the full report there and returns only status, commits, a one-line test summary, and concerns.
 - **Never make a subagent read the whole plan file** when a brief will do, and never paste accumulated prior-wave history into later dispatches — a fresh subagent needs its task, the interfaces it touches, and the global constraints. Nothing else.
 - **Do not pre-judge findings for reviewers.** Never instruct a reviewer to ignore an issue or cap a severity. Copy binding requirements verbatim from the plan's global constraints as the reviewer's attention lens.
 

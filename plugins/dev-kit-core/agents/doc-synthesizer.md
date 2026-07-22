@@ -1,6 +1,6 @@
 ---
 name: doc-synthesizer
-description: Synthesizes classified planning docs into a single consolidated context. Applies precedence rules, detects cross-ref cycles, enforces LOCKED-vs-LOCKED hard-blocks, and writes INGEST-CONFLICTS.md with three buckets (auto-resolved, competing-variants, unresolved-blockers). Dispatched by the orchestrator/pipeline.
+description: Synthesizes classified ADR/PRD/SPEC/DOC files into a single consolidated intel set during doc ingestion. Applies precedence rules, detects cross-ref cycles, enforces LOCKED-vs-LOCKED hard-blocks, and writes INGEST-CONFLICTS.md with three buckets (auto-resolved, competing-variants, unresolved-blockers). Dispatched by the orchestrator/pipeline after doc-classifier.
 tools: Read, Write, Grep, Glob, Bash
 color: orange
 # hooks:
@@ -11,7 +11,7 @@ color: orange
 #           command: "true"
 ---
 
-> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: doc paths below follow the canonical contract in `references/doc-sitemap.md`. `INTEL_DIR` and `CONFLICTS_PATH` are orchestrator-configurable per invocation; the values shown are the defaults.
 
 <role>
 You are a doc synthesizer. You consume per-doc classification JSON files and the source documents themselves, merge their content into structured intel, and produce a conflicts report. You are dispatched by the orchestrator/pipeline after all classifiers have completed.
@@ -28,11 +28,11 @@ You are the precedence-enforcing layer. Silent merges, lost locked decisions, or
 
 <inputs>
 The prompt provides:
-- `CLASSIFICATIONS_DIR` — directory containing per-doc `*.json` files produced by `doc-classifier`
-- `INTEL_DIR` — where to write synthesized intel (typically `.planning/intel/`)
-- `CONFLICTS_PATH` — where to write `INGEST-CONFLICTS.md` (typically `.planning/INGEST-CONFLICTS.md`)
+- `CLASSIFICATIONS_DIR` — directory containing per-doc `*.json` files produced by `doc-classifier` (typically `docs/state/intel/classifications/`)
+- `INTEL_DIR` — where to write synthesized intel (typically `docs/state/intel/`)
+- `CONFLICTS_PATH` — where to write `INGEST-CONFLICTS.md` (typically `docs/state/tmp/INGEST-CONFLICTS.md`)
 - `MODE` — `new` or `merge`
-- `EXISTING_CONTEXT` (merge mode only) — list of paths to existing `.planning/` files to check against (ROADMAP.md, PROJECT.md, REQUIREMENTS.md, CONTEXT.md files)
+- `EXISTING_CONTEXT` (merge mode only) — list of paths to existing project docs to check against: `docs/milestones/<M>/ROADMAP.md`, `docs/global/project/PROJECT.md`, `docs/milestones/<M>/REQUIREMENTS.md`, and any `docs/milestones/<M>/phases/<NN>-<slug>/CONTEXT.md` files
 - `PRECEDENCE` — ordered list, default `["ADR", "SPEC", "PRD", "DOC"]`; may be overridden per-doc via the classification's `precedence` field
 </inputs>
 
@@ -122,21 +122,21 @@ Structure:
 ### BLOCKERS ({N})
 
 [BLOCKER] LOCKED ADR contradiction
-  Found: docs/adr/0004-db.md declares "Postgres" (Accepted)
-  Expected: docs/adr/0011-db.md declares "DynamoDB" (Accepted) — same scope "primary datastore"
+  Found: docs/global/architecture/adr/0004-db.md declares "Postgres" (Accepted)
+  Expected: docs/global/architecture/adr/0011-db.md declares "DynamoDB" (Accepted) — same scope "primary datastore"
   → Resolve by marking one ADR Superseded, or set precedence in --manifest
 
 ### WARNINGS ({N})
 
 [WARNING] Competing acceptance variants for REQ-user-auth
-  Found: docs/prd/auth-v1.md requires "email+password", docs/prd/auth-v2.md requires "SSO only"
+  Found: docs/global/requirements/PRD.md § REQ-user-auth (v1) requires "email+password", docs/global/requirements/PRD.md § REQ-user-auth (v2) requires "SSO only"
   Impact: Synthesis cannot pick without losing intent
   → Choose one variant or split into two requirements before routing
 
 ### INFO ({N})
 
 [INFO] Auto-resolved: ADR > SPEC on cache layer
-  Note: docs/adr/0007-cache.md (Accepted) chose Redis; docs/specs/cache-api.md assumed Memcached — ADR wins, SPEC updated to Redis in synthesized intel
+  Note: docs/global/architecture/adr/0007-cache.md (Accepted) chose Redis; docs/milestones/v1/specs/003-cache-api/spec.md assumed Memcached — ADR wins, SPEC updated to Redis in synthesized intel
 ```
 
 Every entry requires `source:` references for every claim.

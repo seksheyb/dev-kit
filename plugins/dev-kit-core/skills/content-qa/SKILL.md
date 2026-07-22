@@ -35,58 +35,13 @@ source of truth.
 
 ## Pass 1: AI-Pattern Detection
 
-### Formatting patterns
-- **Em dashes:** replace with commas, periods, or sentence breaks. Target: zero. Hard max:
-  one per 1,000 words.
-- **Bold overuse:** strip bold from most phrases. One bolded phrase per major section at most.
-- **Emoji in headers:** remove entirely. Social posts may use one or two sparingly at line ends.
-- **Excessive bullet lists:** convert to prose paragraphs. Bullets only for genuinely
-  list-like content (5+ item lists that read as prose should become prose).
-
-### Sentence structure patterns
-- **"It's not X, it's Y" constructions:** rewrite as direct positive statements.
-- **Hollow intensifiers:** cut "genuine," "truly," "quite frankly," "let's be clear,"
-  "it's worth noting that."
-- **Hedging stacks:** cut "perhaps," "could potentially," "it's important to note that,"
-  "it's important to consider."
-- **Sycophantic/stock openers:** cut "Great question!", "Certainly!", "Absolutely!"
-- **Filler transitions:** cut "Furthermore," "Moreover," "In conclusion," — replace with
-  real bridge sentences; each paragraph should connect to the last.
-- **Compulsive rule of three:** vary groupings; max one triad pattern per piece.
-- **Formulaic openings and generic conclusions.**
-
-### Vocabulary (tiered system)
-
-**Tier 1 (always replace on sight)** — words 5-20x more common in AI text than human text:
-delve, landscape (metaphor), tapestry, realm, paradigm, embark, beacon, testament to, robust,
-comprehensive, cutting-edge, leverage, pivotal, seamless, game-changer, utilize, nestled,
-showcasing, deep dive, holistic, actionable, synergy, streamline.
-
-**Tier 2 (flag in clusters)** — individually fine, but two or more in one paragraph signals
-AI origin: harness, navigate, foster, elevate, unleash, empower, bolster, spearhead,
-resonate, revolutionize, facilitate, nuanced, crucial, multifaceted, ecosystem (metaphor),
-myriad, cornerstone, paramount, transformative.
-
-**Tier 3 (flag by density)** — common words AI overuses; flag when they exceed roughly 3% of
-total word count: significant, innovative, effective, dynamic, scalable, compelling,
-unprecedented, exceptional, remarkable, sophisticated, instrumental, world-class.
-
-### Severity levels
-- **P0 (credibility killers):** knowledge-cutoff disclaimers, chatbot artifacts ("As an AI…"),
-  vague attributions ("experts say"), significance inflation.
-- **P1 (obvious AI smell):** Tier 1 vocabulary, template phrases, "let's" openers, synonym
-  cycling, formulaic openings, bold overuse, em-dash frequency.
-- **P2 (stylistic polish):** generic conclusions, rule of three, uniform paragraph length,
-  copula avoidance, filler transitions.
-
-### Content-type profiles (strictness by format)
-- **LinkedIn/social posts:** relaxed on formatting and structure, strict on vocabulary.
-- **Blog/newsletter:** all rules at full strength (default).
-- **Technical blog:** relaxed on hedging and Tier 2 words with legitimate technical meaning
-  ("navigate a filesystem", "robust to failure" in an engineering sense).
-- **Investor/exec emails:** extra strict on promotional language and significance inflation.
-- **Documentation:** relaxed overall — clarity over voice; keep bullets where they aid scanning.
-- **Casual:** only flag P0 credibility killers.
+Scan across formatting patterns (em dashes, bold overuse, emoji headers, excessive bullets),
+sentence structure patterns ("it's not X, it's Y", hollow intensifiers, hedging stacks,
+sycophantic openers, filler transitions, compulsive rule of three), and the tiered vocabulary
+list (Tier 1 always-replace, Tier 2 flag-in-clusters, Tier 3 flag-by-density). Strictness
+varies by content-type profile (social post, blog, technical blog, investor email,
+documentation, casual). Full detection framework and word lists: see
+[voice-frameworks.md](references/voice-frameworks.md).
 
 **Always preserve:** code blocks, URLs, technical terms, quoted material, and the author's
 intended meaning.
@@ -104,26 +59,5 @@ intended meaning.
 - Every claim either concrete (numbers, names, examples) or cut.
 - Light edits only — preserve the author's voice; you are an editor, not a ghostwriter.
 
-## Quality gates before marking done
-
-- [ ] No P0 findings remain
-- [ ] No banned openers or Tier 1 vocabulary remain
-- [ ] Em dashes at or below the hard max for the profile
-- [ ] Tier 2 clusters and Tier 3 density resolved
-- [ ] No passive-voice stacks, "There is/are" openers, or restating headers
-- [ ] Reading level fits the audience; first sentence hooks without clickbait
-- [ ] Meaning, code blocks, URLs, and technical terms unchanged
-
-## Output format
-
-1. **Findings table:** each issue found — severity (P0/P1/P2), category, the exact text, and
-   the suggested fix.
-2. **Rewritten version:** the full content with all issues fixed.
-3. **Change summary:** what changed and why, grouped by category (brief — a few lines).
-
----
-
-*Detection categories and tiered vocabulary adapted from the open-source
-[conorbronsdon/avoid-ai-writing](https://github.com/conorbronsdon/avoid-ai-writing) skill (MIT
-License), with vocabulary research from brandonwise/humanizer, via the ai-writing-auditor and
-content-quality-editor agent patterns.*
+Severity levels (P0/P1/P2), the quality-gate checklist, and the exact output format
+are in [scoring-rubric.md](references/scoring-rubric.md) — apply them before returning results.

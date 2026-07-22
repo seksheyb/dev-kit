@@ -50,8 +50,8 @@ Output: [Working, tested feature]
 </objective>
 
 <context>
-@.planning/PROJECT.md
-@.planning/ROADMAP.md
+@docs/global/project/PROJECT.md
+@docs/milestones/<M>/ROADMAP.md
 @relevant/source/files.ts
 </context>
 
@@ -77,7 +77,7 @@ Output: [Working, tested feature]
 </success_criteria>
 
 <output>
-After completion, create SUMMARY.md with:
+After completion, create `<NN>-<MM>-SUMMARY.md` with:
 - RED: What test was written, why it failed
 - GREEN: What implementation made it pass
 - REFACTOR: What cleanup was done (if any)
@@ -263,7 +263,7 @@ When `workflow.tdd_mode` is enabled in config, the RED/GREEN/REFACTOR gate seque
 ### Fail-Fast Rules
 
 1. **Unexpected GREEN in RED phase:** If the test passes before any implementation code is written, STOP. The feature may already exist or the test is wrong. Investigate before proceeding.
-2. **Missing RED commit:** If no `test(...)` commit precedes the `feat(...)` commit, the TDD discipline was violated. Flag in SUMMARY.md.
+2. **Missing RED commit:** If no `test(...)` commit precedes the `feat(...)` commit, the TDD discipline was violated. Flag in `<NN>-<MM>-SUMMARY.md`.
 3. **REFACTOR breaks tests:** Undo the refactor immediately. Commit was premature — refactor in smaller steps.
 
 ### Executor Gate Validation
@@ -278,7 +278,7 @@ git log --oneline --grep="^feat(${PHASE}-${PLAN})" | head -1
 git log --oneline --grep="^refactor(${PHASE}-${PLAN})" | head -1
 ```
 
-If RED or GREEN gate commits are missing, add a `## TDD Gate Compliance` section to SUMMARY.md with the violation details.
+If RED or GREEN gate commits are missing, add a `## TDD Gate Compliance` section to `<NN>-<MM>-SUMMARY.md` with the violation details.
 </gate_enforcement>
 
 <end_of_phase_review>

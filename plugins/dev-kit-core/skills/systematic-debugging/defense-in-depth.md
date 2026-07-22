@@ -41,7 +41,7 @@ function createProject(name: string, workingDirectory: string) {
 **Purpose:** Ensure data makes sense for this operation
 
 ```typescript
-function initializeWorkspace(projectDir: string, sessionId: string) {
+function initializeWorkspace(projectDir: string, taskId: string) {
   if (!projectDir) {
     throw new Error('projectDir required for workspace initialization');
   }
@@ -93,23 +93,23 @@ When you find a bug:
 3. **Add validation at each layer** - Entry, business, environment, debug
 4. **Test each layer** - Try to bypass layer 1, verify layer 2 catches it
 
-## Example from Session
+## Example: Empty Project Directory
 
 Bug: Empty `projectDir` caused `git init` in source code
 
 **Data flow:**
 1. Test setup → empty string
-2. `Project.create(name, '')`
+2. `Workspace.create(name, '')`
 3. `WorkspaceManager.createWorkspace('')`
 4. `git init` runs in `process.cwd()`
 
 **Four layers added:**
-- Layer 1: `Project.create()` validates not empty/exists/writable
+- Layer 1: `Workspace.create()` validates not empty/exists/writable
 - Layer 2: `WorkspaceManager` validates projectDir not empty
-- Layer 3: `WorktreeManager` refuses git init outside tmpdir in tests
+- Layer 3: `DirectoryManager` refuses git init outside tmpdir in tests
 - Layer 4: Stack trace logging before git init
 
-**Result:** All 1847 tests passed, bug impossible to reproduce
+**Result:** Full test suite passed, bug impossible to reproduce
 
 ## Key Insight
 

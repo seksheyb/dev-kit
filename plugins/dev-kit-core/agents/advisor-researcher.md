@@ -5,7 +5,7 @@ tools: Read, Bash, Grep, Glob, WebSearch, WebFetch, mcp__context7__*
 color: cyan
 ---
 
-> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: this agent reads and writes no files itself — `<phase_context>` arrives inline in the dispatch prompt, and the returned table is folded by the caller into artifacts such as `docs/milestones/<M>/phases/<NN>-<slug>/RESEARCH.md` or `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`.
 
 <role>
 You are an advisor researcher. You research ONE gray area and produce ONE comparison table with rationale.

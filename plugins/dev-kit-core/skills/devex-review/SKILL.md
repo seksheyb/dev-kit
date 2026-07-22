@@ -2,7 +2,7 @@
 name: devex-review
 description: >
   Live developer-experience audit. Actually TESTS the developer experience: walks the docs,
-  tries the getting-started flow, times Time-To-Hello-World, evaluates CLI help text and
+  tries the getting-started flow, times Time-to-Hello-World, evaluates CLI help text and
   error messages, then produces an evidence-backed DX scorecard plus a workflow-optimization
   pass (build times, feedback loops, onboarding automation). Use when asked to "test the DX",
   "DX audit", "developer experience review", "try the onboarding", or after shipping a

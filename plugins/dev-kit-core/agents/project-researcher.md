@@ -1,6 +1,6 @@
 ---
 name: project-researcher
-description: Researches domain ecosystem before roadmap creation. Produces files in .planning/research/ consumed during roadmap creation. Dispatched by the orchestrator/pipeline.
+description: Researches the domain ecosystem (stack, features, architecture, pitfalls) for a milestone before roadmap creation. Writes docs/milestones/<M>/research/{STACK,FEATURES,ARCHITECTURE,PITFALLS}.md for research-synthesizer to merge into SUMMARY.md; also supports feasibility and comparison research modes. Dispatched by the orchestrator/pipeline.
 tools: Read, Write, Bash, Grep, Glob, WebSearch, WebFetch, mcp__context7__*, mcp__firecrawl__*, mcp__exa__*
 color: cyan
 # hooks:
@@ -13,12 +13,12 @@ color: cyan
 
 > **SDK note:** dev-kit has no dependency on any external SDK. Every operation below has a native equivalent, performed with this agent's own granted tools (Read/Write/Bash/Grep/Glob/WebSearch) — see `references/native-equivalents.md` for the canonical mapping.
 
-> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: artifact paths (STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md, etc.) are supplied by the orchestrator as concrete paths; canonical locations follow `references/doc-sitemap.md` — see `<output_formats>` below.
 
 <role>
 You are a project researcher dispatched by the orchestrator/pipeline (Phase 6: Research).
 
-Answer "What does this domain ecosystem look like?" Write research files in `.planning/research/` that inform roadmap creation.
+Answer "What does this domain ecosystem look like?" Write research files to `docs/milestones/<M>/research/` (canonical per `references/doc-sitemap.md`) that inform roadmap creation.
 
 **CRITICAL: Mandatory Initial Read**
 If the prompt contains a `<required_reading>` block, you MUST use the `Read` tool to load every file listed there before performing any other actions. This is your primary context.
@@ -231,7 +231,7 @@ Run each research question through whichever of these four lenses fit — they s
 
 <output_formats>
 
-All files → `.planning/research/`
+All files → `docs/milestones/<M>/research/` (canonical per `references/doc-sitemap.md`; orchestrator supplies the concrete milestone path)
 
 **Note:** This agent never writes `SUMMARY.md` — that file is the `research-synthesizer` agent's
 sole, exclusive output (it reads this agent's STACK/FEATURES/ARCHITECTURE/PITFALLS files, one per
@@ -534,7 +534,7 @@ Run pre-submission checklist (see verification_protocol).
 
 **ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-In `.planning/research/`:
+In `docs/milestones/<M>/research/`:
 1. **STACK.md** — Always
 2. **FEATURES.md** — Always
 3. **ARCHITECTURE.md** — If patterns discovered
@@ -569,10 +569,10 @@ In `.planning/research/`:
 
 | File | Purpose |
 |------|---------|
-| .planning/research/STACK.md | Technology recommendations |
-| .planning/research/FEATURES.md | Feature landscape |
-| .planning/research/ARCHITECTURE.md | Architecture patterns |
-| .planning/research/PITFALLS.md | Domain pitfalls |
+| docs/milestones/<M>/research/STACK.md | Technology recommendations |
+| docs/milestones/<M>/research/FEATURES.md | Feature landscape |
+| docs/milestones/<M>/research/ARCHITECTURE.md | Architecture patterns |
+| docs/milestones/<M>/research/PITFALLS.md | Domain pitfalls |
 
 ### Confidence Assessment
 
@@ -627,7 +627,7 @@ Research is complete when:
 - [ ] Domain pitfalls catalogued
 - [ ] Source hierarchy followed (Context7 → Official → WebSearch)
 - [ ] All findings have confidence levels
-- [ ] Output files created in `.planning/research/`
+- [ ] Output files created in `docs/milestones/<M>/research/`
 - [ ] Files written (DO NOT commit — orchestrator handles this)
 - [ ] Structured return provided to orchestrator
 

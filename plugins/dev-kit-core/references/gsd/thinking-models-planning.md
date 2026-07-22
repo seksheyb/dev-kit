@@ -1,8 +1,10 @@
 # Thinking Models: Planning Cluster
 
-Structured reasoning models for the **planner** and **roadmapper** agents. Apply these at decision points during plan creation, not continuously. Each model counters a specific documented failure mode.
+Structured reasoning models for the **planner** agent. Apply these at decision points during plan creation, not continuously. Each model counters a specific documented failure mode.
 
-Source: Curated from [thinking-partner](https://github.com/mattnowdev/thinking-partner) model catalog (150+ models). Selected for direct applicability to the planning workflow in this toolkit.
+Selected for direct applicability to the planning workflow in this pipeline.
+
+Doc paths follow the canonical contract in `references/doc-sitemap.md`; `PHASE/` = `docs/milestones/<M>/phases/<NN>-<slug>/`.
 
 ## Conflict Resolution
 
@@ -42,11 +44,11 @@ For each `<action>` step, re-read it as if you have NEVER seen this codebase. Is
 
 **Counters:** Planners ignoring low-confidence research caveats.
 
-Before finalizing the plan, read ALL `[NEEDS DECISION]` items and LOW-confidence recommendations from SUMMARY.md. For each: either (a) create a `checkpoint:decision` task to resolve it, or (b) document why the risk is acceptable in the plan's deviation notes. LOW-confidence items that are silently accepted become undocumented technical debt.
+Before finalizing the plan, read ALL `[NEEDS DECISION]` items and LOW-confidence recommendations from `PHASE/RESEARCH.md`. For each: either (a) create a `checkpoint:decision` task to resolve it, or (b) document why the risk is acceptable in the plan's deviation notes. LOW-confidence items that are silently accepted become undocumented technical debt.
 
 ## Gap Closure Mode: Root-Cause Check
 
-**Applies only when:** Planner enters gap closure mode (triggered by `gaps_found` in VERIFICATION.md).
+**Applies only when:** Planner enters gap closure mode (triggered by `gaps_found` in `PHASE/VERIFICATION.md`).
 
 Before writing the fix plan, apply a single "why" round: Why did this gap occur? Was it a plan deficiency (wrong task), an execution miss (correct task, wrong implementation), or a changed assumption (environment/dependency shift)? The fix plan must target the root cause category, not just the symptom.
 
@@ -57,6 +59,6 @@ Before writing the fix plan, apply a single "why" round: Why did this gap occur?
 Skip structured reasoning models when the situation does not benefit from them:
 
 - **Single-task plans** -- If the phase has one clear requirement and one obvious task, do not run Pre-Mortem or MECE analysis. Write the task directly.
-- **Well-researched phases** -- If RESEARCH.md has HIGH-confidence recommendations for every decision and no `[NEEDS DECISION]` items, skip Base Rate Neglect Counter. The research already resolved uncertainty.
+- **Well-researched phases** -- If `PHASE/RESEARCH.md` has HIGH-confidence recommendations for every decision and no `[NEEDS DECISION]` items, skip Base Rate Neglect Counter. The research already resolved uncertainty.
 - **Revision iterations** -- When revising a plan based on checker feedback, focus on fixing the flagged issues. Do not re-run the full model suite on every revision pass -- apply only the model relevant to the specific issue (e.g., MECE if the checker found a coverage gap).
 - **Boilerplate plans** -- Configuration changes, version bumps, documentation updates. These do not have failure modes worth pre-mortem analysis.

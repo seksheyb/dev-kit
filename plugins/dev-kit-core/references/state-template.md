@@ -1,6 +1,9 @@
 # State Template
 
-Template for `.planning/STATE.md` — the project's living memory.
+Template for `docs/state/STATE.md` — the project's living memory.
+
+> Doc paths follow the canonical contract in `references/doc-sitemap.md`; `PHASE/` =
+> `docs/milestones/<M>/phases/<NN>-<slug>/`.
 
 ---
 
@@ -11,7 +14,7 @@ Template for `.planning/STATE.md` — the project's living memory.
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated [date])
+See: docs/global/project/PROJECT.md (updated [date])
 
 **Core value:** [One-liner from PROJECT.md Core Value section]
 **Current focus:** [Current phase name]
@@ -56,7 +59,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-[From .planning/todos/pending/ — ideas captured during sessions]
+[From docs/global/requirements/TODOS.md — ideas and deferred work captured during sessions]
 
 None yet.
 
@@ -78,7 +81,7 @@ Items acknowledged and carried forward from previous milestone close:
 
 Last session: [YYYY-MM-DD HH:MM]
 Stopped at: [Description of last completed action]
-Resume file: [Path to .continue-here*.md if exists, otherwise "None"]
+Resume file: [Path to the latest saved context under ~/.claude/context/<project-slug>/ if one exists, otherwise "None"]
 ```
 
 <purpose>
@@ -97,8 +100,8 @@ STATE.md is the project's short-term memory spanning all phases and sessions.
 
 <lifecycle>
 
-**Creation:** After ROADMAP.md is created (during init)
-- Reference PROJECT.md (read it for current context)
+**Creation:** After docs/milestones/<M>/ROADMAP.md is created (during init)
+- Reference docs/global/project/PROJECT.md (read it for current context)
 - Initialize empty accumulated context sections
 - Set position to "Phase 1 ready to plan"
 
@@ -109,9 +112,9 @@ STATE.md is the project's short-term memory spanning all phases and sessions.
 - transition: Know what's complete
 
 **Writing:** After every significant action
-- execute: After SUMMARY.md created
+- execute: After PHASE/<NN>-<MM>-SUMMARY.md created
   - Update position (phase, plan, status)
-  - Note new decisions (detail in PROJECT.md)
+  - Note new decisions (detail in docs/global/project/PROJECT.md)
   - Add blockers/concerns
 - transition: After phase marked complete
   - Update progress bar
@@ -123,7 +126,7 @@ STATE.md is the project's short-term memory spanning all phases and sessions.
 <sections>
 
 ### Project Reference
-Points to PROJECT.md for full context. Includes:
+Points to docs/global/project/PROJECT.md for full context. Includes:
 - Core value (the ONE thing that matters)
 - Current focus (which phase)
 - Last update date (triggers re-read if stale)
@@ -151,12 +154,12 @@ Updated after each plan completion.
 
 ### Accumulated Context
 
-**Decisions:** Reference to PROJECT.md Key Decisions table, plus recent decisions summary for quick access. Full decision log lives in PROJECT.md.
+**Decisions:** Reference to docs/global/project/PROJECT.md's Key Decisions table, plus recent decisions summary for quick access. Full decision log lives in PROJECT.md.
 
-**Pending Todos:** Ideas captured via the `capture` workflow
+**Pending Todos:** Ideas and deferred work captured during sessions
 - Count of pending todos
-- Reference to .planning/todos/pending/
-- Brief list if few, count if many (e.g., "5 pending todos — see pending todos list")
+- Reference to docs/global/requirements/TODOS.md
+- Brief list if few, count if many (e.g., "5 pending todos — see TODOS.md")
 
 **Blockers/Concerns:** From "Next Phase Readiness" sections
 - Issues that affect future work
@@ -167,7 +170,7 @@ Updated after each plan completion.
 Enables instant resumption:
 - When was last session
 - What was last completed
-- Is there a .continue-here file to resume from
+- Is there a saved context to resume from (see the context-save/context-restore skills)
 
 </sections>
 

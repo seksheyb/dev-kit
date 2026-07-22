@@ -9,7 +9,7 @@ description: Use when creating new skills, editing existing skills, verifying sk
 
 **Writing skills IS Test-Driven Development applied to process documentation.**
 
-**Personal skills live in your runtime's skills directory** 
+**Skills live one-per-folder under a plugin's `skills/` directory**, each with its own `SKILL.md`.
 
 You write test cases (pressure scenarios with subagents), watch them fail (baseline behavior), write the skill (documentation), watch tests pass (agents comply), and refactor (close loopholes).
 
@@ -291,12 +291,12 @@ Always use subagents (50-100x context savings). REQUIRED: Use [other-skill-name]
 **Compress examples:**
 ```markdown
 # ❌ BAD: Verbose example (42 words)
-your human partner: "How did we handle authentication errors in React Router before?"
+User: "How did we handle authentication errors in React Router before?"
 You: I'll search past conversations for React Router authentication patterns.
 [Dispatch subagent with search query: "React Router authentication error handling 401"]
 
 # ✅ GOOD: Minimal example (20 words)
-Partner: "How did we handle auth errors in React Router?"
+User: "How did we handle auth errors in React Router?"
 You: Searching...
 [Dispatch subagent → synthesis]
 ```
@@ -363,7 +363,7 @@ digraph when_flowchart {
 
 See `graphviz-conventions.dot` in this directory for graphviz style rules.
 
-**Visualizing for your human partner:** Use `render-graphs.js` in this directory to render a skill's flowcharts to SVG:
+**Visualizing for review:** Use `render-graphs.js` in this directory to render a skill's flowcharts to SVG:
 ```bash
 ./render-graphs.js ../some-skill           # Each diagram separately
 ./render-graphs.js ../some-skill --combine # All diagrams in one SVG
@@ -710,8 +710,8 @@ Deploying untested skills = deploying untested code. It's a violation of quality
 - [ ] Supporting files only for tools or heavy reference
 
 **Deployment:**
-- [ ] Commit skill to git and push to your fork (if configured)
-- [ ] Consider contributing back via PR (if broadly useful)
+- [ ] Commit the skill into its plugin's `skills/` directory
+- [ ] Place broadly-useful skills in `dev-kit-core`; keep lane-specific ones in their lane plugin (one canonical home per capability)
 
 ## Discovery Workflow
 

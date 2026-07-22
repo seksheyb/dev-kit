@@ -39,7 +39,9 @@ Then verify each level against the actual plan text.
 
 ## Inputs to Locate Before Verifying
 
-Read whatever exists of: the plan file(s); the goal statement (phase goal, roadmap entry, issue description, or the plan's own objective section); any decisions/context document recording user decisions (locked decisions, discretion areas, deferred ideas); project CLAUDE.md; requirements docs (PROJECT.md, ROADMAP.md, spec, or PRD); research/patterns docs if present. Follow project conventions found in CLAUDE.md throughout.
+Throughout, `PHASE` = `docs/milestones/<M>/phases/<NN>-<slug>/`.
+
+Read whatever exists of: the plan file(s) (`PHASE/<NN>-<MM>-PLAN.md`); the goal statement (the phase goal in `PHASE/CONTEXT.md`, the roadmap entry in `docs/milestones/<M>/ROADMAP.md`, an issue description, or the plan's own objective section); any decisions/context document recording user decisions — `PHASE/CONTEXT.md`, `PHASE/DISCOVERY.md`, or `docs/global/project/PROJECT.md` (locked decisions, discretion areas, deferred ideas); project CLAUDE.md; requirements docs (`docs/global/project/PROJECT.md`, `docs/milestones/<M>/ROADMAP.md`, the feature spec at `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`, or `docs/global/requirements/PRD.md`); research/patterns docs if present (`PHASE/RESEARCH.md`, `PHASE/PATTERNS.md`). Follow project conventions found in CLAUDE.md throughout.
 
 ## Verification Dimensions
 
@@ -97,11 +99,11 @@ Identify data entities appearing in multiple units. Red flags: one unit strips/s
 **Question:** Does the plan respect project conventions, constraints, and requirements from CLAUDE.md?
 Extract actionable directives (conventions, forbidden patterns, required tools, security requirements, testing rules, architectural constraints). Red flags: plan uses a library/pattern CLAUDE.md forbids (BLOCKER — e.g., Jest when CLAUDE.md mandates Vitest); plan skips a required step ("always run X before Y") (WARNING or BLOCKER by impact); files created in locations violating architectural constraints; documented security requirements ignored. Skip with a note if no CLAUDE.md exists.
 
-### Dimension 11: Research Resolution (if a research doc exists)
+### Dimension 11: Research Resolution (if `PHASE/RESEARCH.md` exists)
 **Question:** Are all open research questions resolved before execution?
 Find any "Open Questions" section. Each question needs an explicit resolution (inline RESOLVED marker or a resolved section). Unresolved open questions feeding the plan → BLOCKER.
 
-### Dimension 12: Pattern Compliance (if a patterns/analog doc exists)
+### Dimension 12: Pattern Compliance (if `PHASE/PATTERNS.md` exists)
 **Question:** Does each new/modified file reference the correct analog pattern?
 For each mapped file: does the plan's action reference the analog, and does the approach align with the extracted pattern (imports, auth, error handling)? Red flags (WARNINGS): analog not referenced; different pattern used without justification; shared cross-cutting pattern (auth middleware, error handling) missing from an applicable unit; referenced analog doesn't exist in the codebase.
 

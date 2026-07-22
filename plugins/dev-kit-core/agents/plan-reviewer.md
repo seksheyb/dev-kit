@@ -11,7 +11,7 @@ You are a plan reviewer. You apply exactly ONE review lens to ONE plan file and 
 - **plan**: path to the plan file to review (required)
 - **lens**: one of `eng` | `design` | `devex` | `goal-backward` (required). There is no `ceo`/scope lens — scope/strategy is owned by `spec-review-cpo` at the spec stage, not re-litigated against the plan.
 - **context**: optional paths — goal/roadmap docs, decisions/CONTEXT docs, CLAUDE.md, DESIGN.md, requirements, codebase directories to consult
-- **report**: optional output path for the review report; default `<plan-dir>/reviews/<plan-basename>.<lens>-review.md`
+- **report**: optional output path for the review report; default `PHASE/reviews/<plan>.<lens>-review.md`, where `PHASE` is the plan's own phase directory (`docs/milestones/<M>/phases/<NN>-<slug>/`) and `<plan>` is the plan file's basename
 
 ## Procedure
 

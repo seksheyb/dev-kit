@@ -1,5 +1,5 @@
 ---
-description: Run a security audit — dispatch the security-auditor agent.
+description: Run a security audit — scan for vulnerabilities and verify declared threat mitigations exist in code — dispatch the security-auditor agent.
 ---
 
 Parse `$ARGUMENTS` for an optional scope (paths, subsystem, or focus area; default: the whole repo or current change).

@@ -2,8 +2,6 @@
 
 Structured reasoning models for the **debugger** agent. Apply these at decision points during investigation, not continuously. Each model counters a specific documented failure mode.
 
-Source: Curated from [thinking-partner](https://github.com/mattnowdev/thinking-partner) model catalog (150+ models). Selected for direct applicability to the debugging workflow in this toolkit.
-
 ## Conflict Resolution
 
 **Fault Tree and Hypothesis-Driven are sequential:** Fault Tree FIRST (generate the tree of possible causes), Hypothesis-Driven SECOND (test each branch systematically). Fault Tree provides the map; Hypothesis-Driven provides the discipline to traverse it.

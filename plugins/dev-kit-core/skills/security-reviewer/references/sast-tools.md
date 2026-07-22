@@ -71,9 +71,9 @@ sonar-scanner -Dsonar.projectKey=myproject
 
 ```yaml
 - name: Run Semgrep
-  uses: returntocorp/semgrep-action@v1
-  with:
-    config: p/security-audit
+  # returntocorp/semgrep-action is deprecated; run the CLI directly instead of a wrapper action (check current docs for the maintained setup)
+  container: semgrep/semgrep
+  run: semgrep ci --config=p/security-audit
 
 - name: Run npm audit
   run: npm audit --audit-level=high

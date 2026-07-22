@@ -12,7 +12,7 @@ available**, so it terminates every fallback chain.
 
 **Availability check:** Always available. No external dependency — it runs in-process.
 
-**Invocation:** Dispatch an internal subagent via the Task/Agent tool (a `general-purpose`
+**Invocation:** Dispatch an internal subagent via the Agent tool (a `general-purpose`
 agent, or a purpose-built review agent). The subagent runs the full review methodology
 in-process; no shell-out, no plugin.
 

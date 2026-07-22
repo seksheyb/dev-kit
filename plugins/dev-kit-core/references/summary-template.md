@@ -1,6 +1,6 @@
 # Summary Template
 
-Template for `.planning/phases/XX-name/{phase}-{plan}-SUMMARY.md` - phase completion documentation.
+Template for `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-SUMMARY.md` - phase completion documentation.
 
 ---
 
@@ -8,8 +8,8 @@ Template for `.planning/phases/XX-name/{phase}-{plan}-SUMMARY.md` - phase comple
 
 ```markdown
 ---
-phase: XX-name
-plan: YY
+phase: <NN>-<slug>
+plan: <MM>
 subsystem: [primary category: auth, payments, ui, api, database, infra, testing, etc.]
 tags: [searchable tech: jwt, stripe, react, postgres, prisma]
 
@@ -112,7 +112,7 @@ _Note: TDD tasks may have multiple commits (test → feat → refactor)_
 ## User Setup Required
 
 [If USER-SETUP.md was generated:]
-**External services require manual configuration.** See [{phase}-USER-SETUP.md](./{phase}-USER-SETUP.md) for:
+**External services require manual configuration.** See [USER-SETUP.md](./USER-SETUP.md) for:
 - Environment variables to add
 - Dashboard configuration steps
 - Verification commands
@@ -125,7 +125,7 @@ None - no external service configuration required.
 [Any blockers or concerns]
 
 ---
-*Phase: XX-name*
+*Phase: <NN>-<slug>*
 *Completed: [date]*
 ```
 
@@ -241,8 +241,8 @@ The one-liner should tell someone what actually shipped.
 
 **Decisions section:**
 - Key decisions made during execution with rationale
-- Extracted to STATE.md accumulated context
+- Extracted to `docs/state/STATE.md` accumulated context
 - Use "None - followed plan as specified" if no deviations
 
-**After creation:** STATE.md updated with position, decisions, issues.
+**After creation:** `docs/state/STATE.md` updated with position, decisions, issues.
 </guidelines>

@@ -31,9 +31,10 @@ at Stage 4 before any code or screens exist).
 
 ## When invoked
 
-1. Locate the source documents: `DESIGN.md` in the repo root (ask if it lives elsewhere),
-   plus `UI-SPEC.md` / screen-level specs if present. If no DESIGN.md exists, stop and
-   suggest running design-consultation first — do not invent a design system.
+1. Locate the source documents: **DESIGN.md** (`docs/global/design/DESIGN.md`), plus this
+   phase's **UI-SPEC.md** (`docs/milestones/<M>/phases/<NN>-<slug>/UI-SPEC.md`) if present.
+   If no DESIGN.md exists, stop and suggest running design-consultation first — do not
+   invent a design system.
 2. If a specific screen is being translated (the common case — right before copying a
    `design-html` deliverable into the codebase), also read that screen's finalized `.dc.html`
    content (via `read_file` on its Claude Design project, per `.claude/design/screens.json`) so
@@ -79,10 +80,9 @@ touching Claude Design or reading DESIGN.md directly:
 
 ## Deliverable
 
-Save the output to `.claude/design/instructions-<name>.md` (or `docs/design-handoff.md` if
-the project doesn't use a `.claude/` directory), where `<name>` is the project or screen name —
-this local file is the primary artifact, since the codebase-side implementer reads it directly
-and has no Claude Design MCP access of its own. If `DESIGN.md` contains a
+Save the output to `docs/global/design/handoffs/<name>.md`, where `<name>` is the project or
+screen name — this local file is the primary artifact, since the codebase-side implementer
+reads it directly and has no Claude Design MCP access of its own. If `DESIGN.md` contains a
 `<!-- claude_design_project_id: ... -->` comment and `mcp__claude-design__*` tools are
 available, also `write_files` a copy into that project (as a support file) purely for archival —
 anyone browsing the Claude Design project later sees it alongside the system itself. No

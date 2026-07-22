@@ -1,6 +1,6 @@
 # User Story Template (MVP Mode)
 
-> Used by `mvp-phase` workflow and `gsd-planner` agent when `MVP_MODE=true`. Defines the canonical "As a / I want to / So that" format and the rules for converting it into the `**Goal:**` line in ROADMAP.md.
+> Used by the `mvp-phase` workflow and the `planner` agent when `MVP_MODE=true`. Defines the canonical "As a / I want to / So that" format and the rules for converting it into the `**Goal:**` line in `docs/milestones/<M>/ROADMAP.md`.
 
 ## Canonical format
 
@@ -36,12 +36,12 @@ The full user story replaces the existing `**Goal:**` line in the phase section:
 ```
 
 Two structural rules:
-1. The `**Goal:**` line stays on a single line (no line breaks inside the story). If the story is longer than ~120 chars, it should be split into multiple phases via SPIDR (see `spidr-splitting.md`).
+1. The `**Goal:**` line stays on a single line (no line breaks inside the story). If the story is longer than ~120 chars, it should be split into multiple phases via SPIDR — that split is the `mvp-phase` workflow's job, not this template's.
 2. The `**Mode:** mvp` line is added immediately below `**Goal:**`. If `**Mode:**` already exists, it is replaced (not duplicated).
 
 ## How it lands in PLAN.md
 
-The `gsd-planner` agent (with MVP_MODE=true) emits the user story as the first content under the phase header in `PLAN.md`:
+The `planner` agent (with MVP_MODE=true) emits the user story as the first content under the phase header in the phase's `<NN>-<MM>-PLAN.md`:
 
 ```markdown
 ## Phase Goal
@@ -55,4 +55,4 @@ The `gsd-planner` agent (with MVP_MODE=true) emits the user story as the first c
 ...
 ```
 
-Note the bold-keyword formatting (`**As a**`, `**I want to**`, `**so that**`) is for the PLAN.md emit only. The ROADMAP.md `**Goal:**` line uses prose form (the keywords are not bolded inside the goal line, since the goal is itself a single bolded label).
+Note the bold-keyword formatting (`**As a**`, `**I want to**`, `**so that**`) is for the `<NN>-<MM>-PLAN.md` emit only. The ROADMAP.md `**Goal:**` line uses prose form (the keywords are not bolded inside the goal line, since the goal is itself a single bolded label).

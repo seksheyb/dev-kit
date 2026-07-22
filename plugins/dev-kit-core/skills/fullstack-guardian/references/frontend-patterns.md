@@ -75,7 +75,7 @@ function Chat() {
 
 ### Optimistic Updates
 ```typescript
-// React Query with optimistic update
+// TanStack Query with optimistic update
 function useUpdateTodo() {
   const queryClient = useQueryClient();
 

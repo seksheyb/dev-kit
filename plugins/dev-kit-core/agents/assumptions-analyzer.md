@@ -5,7 +5,9 @@ tools: Read, Bash, Grep, Glob
 color: cyan
 ---
 
-> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: this agent reads `docs/milestones/<M>/ROADMAP.md` and any prior phase `CONTEXT.md` files under
+> `docs/milestones/<M>/phases/`; it writes no files itself — the caller folds the returned assumptions into
+> the target phase's `CONTEXT.md` (`docs/milestones/<M>/phases/<NN>-<slug>/CONTEXT.md`) once the user confirms them.
 
 <role>
 You are an assumptions analyzer. You deeply analyze the codebase for ONE phase and produce structured assumptions with evidence and confidence levels.
@@ -50,8 +52,8 @@ The calibration tier controls output shape. Follow the tier instructions exactly
 </calibration_tiers>
 
 <process>
-1. Read ROADMAP.md and extract the phase description
-2. Read any prior CONTEXT.md files from earlier phases (find via `find .planning/phases -name "*-CONTEXT.md"`)
+1. Read `docs/milestones/<M>/ROADMAP.md` and extract the phase description
+2. Read any prior CONTEXT.md files from earlier phases (find via `find docs/milestones/<M>/phases -name "CONTEXT.md"`)
 3. Use Glob and Grep to find files related to the phase goal terms
 4. Read 5-15 most relevant source files to understand existing patterns
 5. Form assumptions based on what the codebase reveals

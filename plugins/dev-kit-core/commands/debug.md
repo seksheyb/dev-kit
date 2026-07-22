@@ -1,5 +1,5 @@
 ---
-description: Systematically debug a bug or failure — dispatch the debugger agent.
+description: Systematically debug a bug, crash, or test failure — dispatch the debugger agent.
 ---
 
 Parse `$ARGUMENTS` as the bug description, failing test, or error output to investigate.

@@ -270,7 +270,12 @@ per-phase screens this contract governs are what Stage 8's `design-html` invocat
 
 Build the context a planner needs, cheaply, before writing tasks.
 
-- **`codebase-mapper`** ×4 *(agents — tech / arch / quality / concerns)* — write `.planning/codebase/*.md` maps.
+- **`codebase-mapper`** ×4 *(agents — tech / arch / quality / concerns)* — write `.planning/codebase/*.md` maps. For
+  the `arch`/`concerns` focuses specifically, checks for an existing `graphify` graph first and queries it before
+  fresh exploration — its community detection and hotspot analysis (`god_nodes`/`surprising_connections`) map
+  directly onto ARCHITECTURE.md's Layers/Key Abstractions and CONCERNS.md's Fragile Areas, so a pre-built graph is
+  a starting point, not something to silently re-derive from scratch. The `tech`/`quality` focuses have no graphify
+  equivalent (package manifests, lint config) and always explore fresh.
 - **`pattern-mapper`** — map each new/changed file to its closest existing analog with line-numbered excerpts → `PATTERNS.md`.
 - **`assumptions-analyzer`** — deep-read 5–15 source files, return evidence-cited, confidence-labeled assumptions.
 - **`advisor-researcher`** *(per gray-area decision)* — one 5-column options comparison table per open question.
@@ -282,10 +287,17 @@ Build the context a planner needs, cheaply, before writing tasks.
 - **AI work (GWD step 9):** **`domain-researcher`** *(agent)* researches practitioner evaluation criteria and
   failure modes into `AI-SPEC.md §1b`; the **data-ai lane** then owns the eval contract — **`eval-planner`** designs
   the strategy/rubrics, **`eval-auditor`** later audits coverage; **`framework-selector`** / **`ai-researcher`** /
-  **`rag-architect`** / **`prompt-engineer`** / **`ml-pipeline`** etc. supply the build methodology.
+  **`rag-architect`** / **`prompt-engineer`** / **`ml-pipeline`** etc. supply the build methodology. All four of
+  `framework-selector`/`ai-researcher`/`domain-researcher`/`eval-planner` now check for Stage 5's `RESEARCH.md` (if
+  it exists) before researching — a Stage 5/6 audit found this AI lane was the only part of Stage 6 that never
+  consumed Stage 5 output (the UI lane below already did), risking duplicated research and un-reconciled stack picks
+  for the same phase.
 - **UI work (GWD step 10):** **`ui-researcher`** *(agent)* produces the `UI-SPEC.md` design contract (hard
   constraints: ≤4 font sizes, spacing multiples of 4, registry-safety vetting); **`ui-checker`** *(agent)* validates
-  it BLOCK/FLAG/PASS before planning may proceed.
+  it BLOCK/FLAG/PASS before planning may proceed. Both now read Stage 4's `DESIGN.md` (repo root) when it exists —
+  it's the project-wide authority for spacing/typography/color, and the same audit found neither agent actually
+  read it despite the catalog already claiming they did; `ui-researcher` now maps DESIGN.md's declared tokens onto
+  the phase-level contract instead of re-asking, and `ui-checker` BLOCKs on undeclared drift from it.
 
 ### Stage 7 — Plan the phase *(GWD step 11)*
 

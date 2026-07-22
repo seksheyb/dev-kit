@@ -27,11 +27,15 @@ Before verifying, discover project context:
 
 **Project instructions:** Read `./CLAUDE.md` if it exists in the working directory. Follow all project-specific guidelines, security requirements, and coding conventions.
 
+**Design system:** Read `DESIGN.md` at the repo root if it exists — its Spacing/Typography/Color sections are the project-wide authority Dimensions 3-5 check UI-SPEC.md against.
+
 **Project skills:** Check `.claude/skills/` or `.agents/skills/` if either exists. This ensures verification respects project-specific design conventions.
 </project_context>
 
 <upstream_input>
 **UI-SPEC.md** — Design contract from the UI researcher (primary input)
+
+**DESIGN.md** (if exists, repo root) — Project-wide design system from `design-consultation` (Stage 4). If present, it is the authority for Spacing/Typography/Color — check UI-SPEC.md's values against it as part of Dimensions 3-5 below.
 
 **CONTEXT.md** (if exists) — User decisions from the discussion workflow
 
@@ -94,6 +98,7 @@ fix_hint: "Declare which element is the primary visual anchor on the main screen
 **BLOCK if:**
 - Accent reserved-for list is empty or says "all interactive elements"
 - More than one accent color declared without semantic justification (decorative vs. semantic)
+- `DESIGN.md` exists and declares a Color section, but UI-SPEC.md's hex values contradict it with no rationale recorded (e.g. a different Primary/Accent hex than DESIGN.md's Primary/Secondary) — this is drift from the project's approved system, not this phase's decision to make
 
 **FLAG if:**
 - 60/30/10 split not explicitly declared
@@ -114,6 +119,7 @@ fix_hint: "List specific elements: primary CTA, active nav item, focus ring"
 **BLOCK if:**
 - More than 4 font sizes declared
 - More than 2 font weights declared
+- `DESIGN.md` exists and declares a Typography scale/font family, but UI-SPEC.md declares a different font or sizes outside that scale with no noted conflict
 
 **FLAG if:**
 - No line height declared for body text
@@ -134,6 +140,7 @@ fix_hint: "Remove one size. Recommended: 14 (label), 16 (body), 20 (heading), 28
 **BLOCK if:**
 - Any spacing value declared that is not a multiple of 4
 - Spacing scale contains values not in the standard set (4, 8, 16, 24, 32, 48, 64)
+- `DESIGN.md` exists and declares a Spacing base unit/scale, but UI-SPEC.md's scale differs with no exception noted
 
 **FLAG if:**
 - Spacing scale not explicitly confirmed (section is empty or says "default")
@@ -283,6 +290,7 @@ Fix blocking issues in UI-SPEC.md and re-run the UI phase workflow.
 Verification is complete when:
 
 - [ ] All `<required_reading>` loaded before any action
+- [ ] `DESIGN.md` checked at repo root (or absence confirmed) before scoring Dimensions 3-5
 - [ ] All 6 dimensions evaluated (none skipped unless config disables)
 - [ ] Each dimension has PASS, FLAG, or BLOCK verdict
 - [ ] BLOCK verdicts have exact fix descriptions

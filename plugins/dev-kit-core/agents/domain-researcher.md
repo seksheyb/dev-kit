@@ -51,6 +51,7 @@ Read `references/gsd/ai-evals.md` — specifically the rubric design and domain 
 - `ai_spec_path`: path to AI-SPEC.md (partially written)
 - `context_path`: path to CONTEXT.md if exists
 - `requirements_path`: path to REQUIREMENTS.md if exists
+- `research_path`: path to RESEARCH.md if exists — Stage 5's `phase-researcher` may already have surfaced domain-adjacent findings (e.g. a compliance-heavy pitfall, a don't-hand-roll item relevant to evaluation) for this same phase; do not re-derive what it already found
 
 **If prompt contains `<required_reading>`, read every listed file before doing anything else.**
 </input>
@@ -58,7 +59,7 @@ Read `references/gsd/ai-evals.md` — specifically the rubric design and domain 
 <execution_flow>
 
 <step name="extract_domain_signal">
-Read AI-SPEC.md, CONTEXT.md, REQUIREMENTS.md. Extract: industry vertical, user population, stakes level, output type.
+Read AI-SPEC.md, CONTEXT.md, REQUIREMENTS.md, and RESEARCH.md (if `research_path` was provided). Extract: industry vertical, user population, stakes level, output type. Note any pitfalls or compliance-relevant findings RESEARCH.md already surfaced — treat them as a starting point, not something to re-research from zero.
 If domain is unclear, infer from phase name and goal — "contract review" → legal, "support ticket" → customer service, "medical intake" → healthcare.
 </step>
 

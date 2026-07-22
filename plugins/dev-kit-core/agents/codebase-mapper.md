@@ -111,6 +111,21 @@ When present, restrict your exploration (Glob/Grep/Bash globs) to files under th
 If no `--paths` hint is provided, behave exactly as before.
 </step>
 
+<step name="check_existing_graph">
+**Only for `arch` and `concerns` focus** (skip entirely for `tech`/`quality` — graphify's graph has nothing equivalent to a package manifest or lint config).
+
+Check whether a graphify graph already exists:
+```bash
+ls graphify-out/graph.json .planning/graphs/graph.json 2>/dev/null
+```
+
+If one exists, invoke the `graphify` skill with a query for this focus area before doing any fresh exploration:
+- `arch` focus → query "architecture", "layers", "modules" (BFS) — graphify's community detection already clusters the codebase into labeled groups (e.g. "Auth Flow", "Data Loading") that map directly onto ARCHITECTURE.md's `## Layers` and `## Key Abstractions`; its `god_nodes`/`surprising_connections` analysis maps onto cross-cutting concerns and non-obvious couplings.
+- `concerns` focus → query "fragile", "coupling", "god node" — a highly-connected node graphify already flagged is exactly the kind of thing `## Fragile Areas` should cite.
+
+Use graphify's results as your **starting point** — cite the community/hotspot findings with file paths, then verify and deepen with direct Read/Grep as normal. This avoids re-deriving architectural boundaries and hotspots graphify has already extracted. If no graph exists, or the query returns nothing useful, proceed straight to fresh exploration below — do not block on building one (that's a separate, explicit `/graphify` invocation, not this agent's job).
+</step>
+
 <step name="explore_codebase">
 Explore the codebase thoroughly for your focus area.
 
@@ -847,6 +862,7 @@ Ready for orchestrator summary.
 
 <success_criteria>
 - [ ] Focus area parsed correctly
+- [ ] For `arch`/`concerns` focus: checked for an existing graphify graph and queried it before fresh exploration
 - [ ] Codebase explored thoroughly for focus area
 - [ ] All documents for focus area written to `.planning/codebase/`
 - [ ] Documents follow template structure

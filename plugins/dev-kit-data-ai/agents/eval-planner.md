@@ -30,6 +30,7 @@ Read `references/gsd/ai-evals.md` before planning. This is your evaluation frame
 - `ai_spec_path`: path to AI-SPEC.md
 - `context_path`: path to CONTEXT.md if exists
 - `requirements_path`: path to REQUIREMENTS.md if exists
+- `research_path`: path to RESEARCH.md if exists — Stage 5's `phase-researcher` may already have identified pitfalls, package legitimacy concerns, or don't-hand-roll findings relevant to eval tooling/dataset choices; check before re-deriving
 
 **If prompt contains `<required_reading>`, read every listed file before doing anything else.**
 </input>
@@ -38,7 +39,7 @@ Read `references/gsd/ai-evals.md` before planning. This is your evaluation frame
 
 <step name="read_phase_context">
 Read AI-SPEC.md in full — Section 1 (failure modes), Section 1b (domain rubric ingredients from domain-researcher), Sections 3-4 (Pydantic patterns to inform testable criteria), Section 2 (framework for tooling defaults).
-Also read CONTEXT.md and REQUIREMENTS.md.
+Also read CONTEXT.md, REQUIREMENTS.md, and RESEARCH.md (if `research_path` was provided) — RESEARCH.md's `## Common Pitfalls` and `## Package Legitimacy Audit` may bear directly on which guardrails and tooling choices are safe to recommend.
 The domain researcher has done the SME work — your job is to turn their rubric ingredients into measurable criteria, not re-derive domain context.
 </step>
 

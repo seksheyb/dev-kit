@@ -70,6 +70,16 @@ This ensures the design contract aligns with project-specific conventions and li
 </project_context>
 
 <upstream_input>
+**DESIGN.md** (if exists, repo root) — Project-wide design system from `design-consultation` (Stage 4). **Highest priority for spacing/typography/color** — it is the project's approved source of truth, not a per-phase suggestion.
+
+| Section | How You Use It |
+|---------|----------------|
+| `## Spacing` | Base unit + scale — copy verbatim into UI-SPEC's Spacing Scale. Do NOT re-ask or re-derive a different scale. |
+| `## Typography` | Declared fonts + modular scale — this phase only assigns which role (Body/Label/Heading/Display) maps to which declared size; it does not invent new font choices. |
+| `## Color` | Primary/Secondary/Neutrals/Semantic hex values — map these onto UI-SPEC's Dominant(60%)/Secondary(30%)/Accent(10%)/Destructive roles rather than asking for new hex values. |
+
+If `DESIGN.md` exists but a category above is ambiguous for this phase (e.g. which semantic color is "the" accent), ask only that narrow mapping question — never re-ask for raw values DESIGN.md already declared. If UI-SPEC's constraints (e.g. exactly 3-4 font sizes) can't be satisfied from DESIGN.md's values alone, note the conflict explicitly in UI-SPEC.md rather than silently picking new values — this is a real design-system gap, not this agent's call to resolve unilaterally.
+
 **CONTEXT.md** (if exists) — User decisions from `/gsd:discuss-phase`
 
 | Section | How You Use It |
@@ -125,6 +135,9 @@ Your UI-SPEC.md is consumed by:
 **Codebase first:** Always scan the project for existing design decisions before asking.
 
 ```bash
+# Project-wide design system authority — check this BEFORE the shadcn/tailwind scan below
+ls DESIGN.md 2>/dev/null
+
 # Detect design system
 ls components.json tailwind.config.* postcss.config.* 2>/dev/null
 
@@ -167,23 +180,19 @@ Read preset from `npx shadcn info` output. Pre-populate design contract with det
 
 ## What to Ask
 
-Ask ONLY what REQUIREMENTS.md, CONTEXT.md, and RESEARCH.md did not already answer.
+Ask ONLY what DESIGN.md, REQUIREMENTS.md, CONTEXT.md, and RESEARCH.md did not already answer. **DESIGN.md outranks the defaults below for Spacing/Typography/Color** — if it exists, these three categories become a mapping exercise (which declared value applies to which UI-SPEC role), not a fresh decision.
 
 ### Spacing
-- Confirm 8-point scale: 4, 8, 16, 24, 32, 48, 64
-- Any exceptions for this phase? (e.g. icon-only touch targets at 44px)
+- If `DESIGN.md` exists: copy its `## Spacing` base unit and scale verbatim. Only ask about phase-specific exceptions (e.g. icon-only touch targets at 44px).
+- If no `DESIGN.md`: confirm 8-point scale: 4, 8, 16, 24, 32, 48, 64
 
 ### Typography
-- Font sizes (must declare exactly 3-4): e.g. 14, 16, 20, 28
-- Font weights (must declare exactly 2): e.g. regular (400) + semibold (600)
-- Body line height: recommend 1.5
-- Heading line height: recommend 1.2
+- If `DESIGN.md` exists: its declared fonts and modular scale are locked — ask only which of its sizes maps to this phase's Body/Label/Heading/Display roles. Do not solicit new font sizes/weights that contradict its scale.
+- If no `DESIGN.md`: Font sizes (must declare exactly 3-4): e.g. 14, 16, 20, 28; font weights (must declare exactly 2): e.g. regular (400) + semibold (600); body line height: recommend 1.5; heading line height: recommend 1.2
 
 ### Color
-- Confirm 60% dominant surface color
-- Confirm 30% secondary (cards, sidebar, nav)
-- Confirm 10% accent — list the SPECIFIC elements accent is reserved for
-- Second semantic color if needed (destructive actions only)
+- If `DESIGN.md` exists: map its Primary/Secondary/Neutrals/Semantic hex values onto Dominant(60%)/Secondary(30%)/Accent(10%)/Destructive. Ask only which specific elements this phase reserves the accent for — never re-derive new hex values.
+- If no `DESIGN.md`: confirm 60% dominant surface color; confirm 30% secondary (cards, sidebar, nav); confirm 10% accent — list the SPECIFIC elements accent is reserved for; second semantic color if needed (destructive actions only)
 
 ### Copywriting
 - Primary CTA label for this phase: [specific verb + noun]
@@ -267,6 +276,7 @@ Set frontmatter `status: draft` (checker will upgrade to `approved`).
 ## Step 1: Load Context
 
 Read all files from `<required_reading>` block. Parse:
+- DESIGN.md (repo root, if it exists) → locked spacing scale, typography scale, color palette — the project-wide authority for these three categories
 - CONTEXT.md → locked decisions, discretion areas, deferred ideas
 - RESEARCH.md → standard stack, architecture patterns
 - REQUIREMENTS.md → requirement descriptions, success criteria
@@ -274,6 +284,9 @@ Read all files from `<required_reading>` block. Parse:
 ## Step 2: Scout Existing UI
 
 ```bash
+# Project-wide design system authority
+ls DESIGN.md 2>/dev/null
+
 # Design system detection
 ls components.json tailwind.config.* postcss.config.* 2>/dev/null
 
@@ -341,6 +354,7 @@ git add "$PHASE_DIR/$PADDED_PHASE-UI-SPEC.md" && git commit -m "docs($PHASE): UI
 ### Pre-Populated From
 | Source | Decisions Used |
 |--------|---------------|
+| DESIGN.md | {count, or "not present"} |
 | CONTEXT.md | {count} |
 | RESEARCH.md | {count} |
 | components.json | {yes/no} |
@@ -376,6 +390,7 @@ UI-SPEC complete. Checker can now validate.
 UI-SPEC research is complete when:
 
 - [ ] All `<required_reading>` loaded before any action
+- [ ] DESIGN.md checked at repo root — if present, Spacing/Typography/Color pre-populated from it, not re-asked
 - [ ] Existing design system detected (or absence confirmed)
 - [ ] shadcn gate executed (for React/Next.js/Vite projects)
 - [ ] Upstream decisions pre-populated (not re-asked)

@@ -52,6 +52,7 @@ Read `references/gsd/ai-frameworks.md` for framework profiles and known pitfalls
 - `ai_spec_path`: path to AI-SPEC.md
 - `phase_context`: phase name and goal
 - `context_path`: path to CONTEXT.md if it exists
+- `research_path`: path to RESEARCH.md if it exists — Stage 5's `phase-researcher` may have already verified a package version, flagged a supply-chain concern via its Package Legitimacy Audit, or found a pitfall relevant to this same framework; check before re-fetching what's already there
 
 **If prompt contains `<required_reading>`, read every listed file before doing anything else.**
 </input>
@@ -75,6 +76,8 @@ Use context7 MCP first (fastest). Fall back to WebFetch.
 <execution_flow>
 
 <step name="fetch_docs">
+If `research_path` was provided, read RESEARCH.md's `## Standard Stack`, `## Package Legitimacy Audit`, and `## Common Pitfalls` first — reuse any already-verified version/pitfall for this framework instead of re-fetching it.
+
 Fetch 2-4 pages maximum — prioritize depth over breadth: quickstart, the `system_type`-specific pattern page, best practices/pitfalls.
 Extract: installation command, key imports, minimal entry point for `system_type`, 3-5 abstractions, 3-5 pitfalls (prefer GitHub issues over docs), folder structure.
 </step>

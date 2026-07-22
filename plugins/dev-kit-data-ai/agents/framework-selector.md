@@ -22,6 +22,8 @@ Scan for existing technology signals before the interview:
 find . -maxdepth 2 \( -name "package.json" -o -name "pyproject.toml" -o -name "requirements*.txt" \) -not -path "*/node_modules/*" 2>/dev/null | head -5
 ```
 Read found files to extract: existing AI libraries, model providers, language, team size signals. This prevents recommending a framework the team has already rejected.
+
+**Check for RESEARCH.md first:** if the phase directory already has a `RESEARCH.md` (written by Stage 5's `phase-researcher`), read its `## Standard Stack` and `## Don't Hand-Roll` sections before running the interview — it may have already identified a relevant library or a "don't hand-roll this" recommendation for this same phase. Skip any interview question it already answers, and don't recommend a framework its Package Legitimacy Audit flagged `[SLOP]`.
 </project_context>
 
 <interview>

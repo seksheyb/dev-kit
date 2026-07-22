@@ -617,7 +617,7 @@ Only include what Claude literally cannot do.
 **Step 0: Extract Requirement IDs**
 Read ROADMAP.md `**Requirements:**` line for this phase. Strip brackets if present (e.g., `[AUTH-01, AUTH-02]` → `AUTH-01, AUTH-02`). IDs may be REQ-form or `US-xxx` (Theme→Pillar→US-xxx hierarchy) — treat either as a valid requirement ID. Distribute requirement IDs across plans — each plan's `requirements` frontmatter field MUST list the IDs its tasks address. **CRITICAL:** Every requirement ID MUST appear in at least one plan. Plans with an empty `requirements` field are invalid.
 
-**Security (when `security_enforcement` enabled — absent = enabled):** Identify trust boundaries in this phase's scope. Map STRIDE categories to applicable tech stack from RESEARCH.md security domain. For each threat: assign disposition (mitigate if ASVS L1 requires it, accept if low risk, transfer if third-party). Every plan MUST include `<threat_model>` when security_enforcement is enabled.
+**Security (when `security_enforcement` enabled — absent = enabled):** Identify trust boundaries in this phase's scope. Map STRIDE categories to applicable tech stack from RESEARCH.md security domain. Check for the latest `cso` posture report under `.security-reports/*.json`, if present (from Stage 0's onboarding audit, or a prior phase's Stage 13 `--diff` run) — start dispositions from findings it already surfaced for this scope rather than re-deriving from zero. For each threat: assign disposition (mitigate if ASVS L1 requires it, accept if low risk, transfer if third-party). Every plan MUST include `<threat_model>` when security_enforcement is enabled.
 
 **Package legitimacy gate (npm/pip/cargo only):**
 - Require RESEARCH.md `## Package Legitimacy Audit` before package-manager install tasks.

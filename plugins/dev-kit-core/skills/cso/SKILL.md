@@ -34,6 +34,25 @@ You do NOT make code changes. You produce a **Security Posture Report** with con
 
 **Use the Grep tool for all code searches.** The bash blocks below show WHAT patterns to search for, not HOW to run them — they are illustrative. Do not truncate results with `| head`.
 
+## Pipeline Invocation
+
+Every phase in this skill (stack detection, attack-surface census, git-history secrets scan, dependency
+manifests, CI/CD configs, infra files, STRIDE against Phase 0's detected components) reads an existing checkout —
+there is nothing here for a project with no code yet. The orchestrator/pipeline calls this skill at two points,
+both gated on real code already being present:
+
+- **Stage 0, no flags (full audit)** — on an entry path where the repo already has code: the Legacy/inherited
+  path, or a Continuing-milestone entry (milestone 2+, where prior milestones already shipped). Skipped on a
+  first-milestone Greenfield entry. Establishes the baseline `.security-reports/` entry.
+- **Stage 13, `--diff` (per phase)** — after that phase's own Stage 8 (Execute) has run, so code always exists by
+  construction even in a Greenfield milestone's first phase. Scans just this phase's branch changes and
+  trend-tracks against the prior `.security-reports/` entry by fingerprint.
+
+Both invocations write the same `.security-reports/{date}-{HHMMSS}.json` format (Phase 14) — `planner`'s Stage 7
+threat-modeling step and `sdd-review-cto`'s Stage 2 review both consult the latest entry when one exists. `cso`
+can also be run standalone/ad hoc at any time outside these two scheduled points — nothing below changes based on
+who invoked it.
+
 ## Phase 0: Architecture Mental Model + Stack Detection
 
 Before hunting for bugs, detect the tech stack and build an explicit mental model of the codebase.

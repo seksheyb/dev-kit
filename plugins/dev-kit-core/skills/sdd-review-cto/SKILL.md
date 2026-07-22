@@ -33,10 +33,13 @@ inherited downstream.
 
 Boundaries, so this lens does not duplicate its neighbors:
 
-- **Security is `cso`'s job, not this lens's.** `cso` runs its 15-phase design-time audit
-  (attack surface, secrets, supply chain, STRIDE) at Stage 2 alongside this review. Note
-  security *architecture* concerns as findings and defer the depth to `cso` — do not re-run a
-  threat model here.
+- **Security is `cso`'s job, not this lens's.** `cso` is not concurrent with this review — it
+  runs a full 15-phase audit at Stage 0 when the repo already has code (legacy or
+  continuing-milestone entry) and incrementally per phase at Stage 13 once this milestone's own
+  code exists; a first-milestone greenfield project has no `cso` pass to weigh here either, since
+  there's no code yet for either lens to examine. Check `.security-reports/` for the latest
+  report if one exists, note security *architecture* concerns as findings, and defer the depth
+  to `cso`'s next scheduled run — do not re-run a threat model here.
 - **Per-phase plan quality is `plan-review-eng`'s job (Stage 7), not this lens's.** That lens
   reviews each phase's `PLAN.md` — task decomposition, test coverage, the plan-delta's code
   quality. This lens reviews the *system design the plans will build against*. Assess the

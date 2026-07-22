@@ -42,9 +42,9 @@ cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it desc
 
 | # | Stage | Primary dev-kit assets | In → Out |
 |---|-------|------------------------|----------|
-| **0** | Bootstrap & governance | `constitution` · *(legacy)* `spec-miner` → `gate-reverse-engineer` · *(existing docs)* `doc-classifier` → `doc-synthesizer` · `graphify` | repo/PRD → `constitution.md`, recovered SDD/PRD/ADRs, `graph.json` |
+| **0** | Bootstrap & governance | `constitution` · *(legacy)* `spec-miner` → `gate-reverse-engineer` · *(existing docs)* `doc-classifier` → `doc-synthesizer` · *(existing code)* `cso` · `graphify` | repo/PRD → `constitution.md`, recovered SDD/PRD/ADRs, `.security-reports/*.json`, `graph.json` |
 | **1** | Requirements & product framing | `brainstorming` · `specify` (generate + clarify) · `assumption-mapping` → `backlog-grooming` · `market-researcher` · `spec-review-cpo` | PRD (or `docs/BACKLOG.md` for milestone 2+) → `spec.md` (+ `US-xxx` story bank) + locked Scope Decision Record + updated `docs/BACKLOG.md` |
-| **2** | Architecture & tech stack | `architecture-designer` · `diagram` · `cso` · `sdd-review-cto` | requirements → `SDD.md` + ADRs + threat posture |
+| **2** | Architecture & tech stack | `architecture-designer` · `diagram` · `sdd-review-cto` | requirements → `SDD.md` + ADRs |
 | **3** | Research & roadmap | `project-researcher` ×4 → `research-synthesizer` · `roadmapper` | requirements + research → `ROADMAP.md` (vertical slices) + `STATE.md` |
 | **4** | Design system *(if UI)* | `design-consultation` → `design-html`[^plan-review-design] | product → `DESIGN.md` |
 | **5** | Phase discovery | `codebase-mapper` ×4 · `pattern-mapper` · `assumptions-analyzer` · `advisor-researcher` · `phase-researcher` · `graphify` (query) | phase → `CONTEXT.md`, `PATTERNS.md`, `RESEARCH.md`, codebase maps |
@@ -55,7 +55,7 @@ cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it desc
 | **10** | Adversarial review ↔ fix loop | `review` (cmd) → `code-review-gate` (round) ↔ `bugfix-wave` · `code-review-protocol` · `qa` (cmd/agent) · `design-reviewer` · `ui-auditor` · `accessibility-tester` · `devex-review` | code → fixes (loop ≤6) |
 | **11** | Verify the goal | `verify` (cmd) → `verifier` · `converge` · `integration-checker` · `nyquist-auditor` · `dependency-manager` | code → `VERIFICATION.md`, gaps closed |
 | **12** | Automation coverage | `gate-automation` ← `test-master`/`playwright-expert` | code → Playwright/Maestro flows |
-| **13** | Security & compliance gate | `security-audit` (cmd) → `security-auditor` · `penetration-tester` · `compliance-auditor` · `security-reviewer` | code → `SECURITY.md`, open threats block ship |
+| **13** | Security & compliance gate | `security-audit` (cmd) → `security-auditor` · `cso` (`--diff`) · `penetration-tester` · `compliance-auditor` · `security-reviewer` | code → `SECURITY.md`, `.security-reports/*.json`, open threats block ship |
 | **14** | Document | `document-generate`/`code-documenter` · `content-qa` · `document-release` → `doc-verifier` | shipped surface → synced docs, CHANGELOG |
 | **15** | Ship & deploy | `finishing-a-development-branch` *(manual)* **or** `ship` → `land-and-deploy` · **infra lane** | branch → PR → merged & deployed |
 | **16** | Operate, retrospect, close | `health` (cmd) → `health-reporter` · `performance-engineer` · `incident-responder` · `retro` (cmd) → `retro` · milestone archive | milestone → dashboards, postmortems, archive + tag |
@@ -84,15 +84,20 @@ dev-kit supplies the assets, not the branch logic.)
 1. **Entry path (Stage 0)** — mutually exclusive by repo state, evaluated fresh **every milestone**, not just the
    first:
    - *Greenfield* (first milestone, no code, no docs) → skip the legacy and existing-docs sub-paths entirely; run
-     only `constitution` (+ `graphify` once code exists).
+     only `constitution` (+ `graphify` once code exists). `cso` also skips — there's nothing in the repo yet for
+     it to scan.
    - *Legacy / inherited / undocumented code* → run `spec-miner` → `gate-reverse-engineer` to recover SDD/PRD/ADRs
-     before Stage 1.
+     before Stage 1, and run `cso` for a full security baseline of the codebase being onboarded (secrets in git
+     history, dependency supply chain, CI/CD, infra — all of it pre-dates this pipeline's own tracking).
    - *Existing planning docs* (a pile of ADRs/PRDs/specs) → run `doc-classifier` → `doc-synthesizer` to ingest them.
      These two sub-paths are independent — a repo can trigger both, neither, or one.
-   - *Continuing milestone* (milestone 2+ of a project this pipeline already built) → none of the three sub-paths
-     above really apply — there's no undocumented legacy pile, the project's own docs are already current.
-     `constitution` runs in **update** mode (not init), `graphify` runs an **incremental** update (not a first
-     build), and neither `spec-miner` nor the doc-ingest pair fire. This is the common case after milestone 1.
+   - *Continuing milestone* (milestone 2+ of a project this pipeline already built) → none of the doc-recovery
+     sub-paths above really apply — there's no undocumented legacy pile, the project's own docs are already
+     current. `constitution` runs in **update** mode (not init), `graphify` runs an **incremental** update (not a
+     first build), and neither `spec-miner` nor the doc-ingest pair fire. `cso` still runs, full (not `--diff`) —
+     the repo now carries every prior milestone's shipped code, which is exactly the kind of accumulated-risk
+     surface (stale dependencies, drifted CI config, secrets that leaked since the last full sweep) a per-phase
+     `--diff` pass at Stage 13 wouldn't catch. This is the common case after milestone 1.
 2. **The per-phase loop (Stages 5–13)** — runs **once per roadmap phase** produced by Stage 3. Loop position lives in
    `STATE.md`. Stages 0–4 run once per milestone; Stages 14–16 run once at milestone close-out. Every per-phase
    conditional below is re-evaluated **for each phase**.
@@ -122,9 +127,11 @@ dev-kit supplies the assets, not the branch logic.)
 | UI/DX review passes (S10): `design-reviewer`, `ui-auditor`, `accessibility-tester`, `devex-review` | Phase shipped UI or a developer-facing surface | Skip; `code-review-gate` + `qa` still run |
 | `nyquist-auditor` (S11) | `verifier` Step 6d found requirements with no automated test coverage (`validation_gaps` non-empty) | Skip; nothing to fill |
 | `gate-automation` (S12) | Sprint diff added/changed **primary** user flows | No new flows required (internal-only changes excluded) |
+| `cso` (S0) | Entry path has existing code — Legacy or Continuing-milestone | Skip on a first-milestone Greenfield entry; nothing to scan yet |
 | `compliance-auditor` + product compliance skills (S13) | Regulated data/industry in scope (GDPR/HIPAA/PCI/SOC2…) | Skip |
 | `penetration-tester` (S13) | Active exploitation is **authorized and in scope** | Skip — agent refuses without written authorization |
-| `security-auditor` (S13) | Always runs; **branches internally** | With a threat model → verifies mitigations; without → general audit + recommends `cso` first |
+| `cso` (S13) | Always runs (`--diff` mode) | — |
+| `security-auditor` (S13) | Always runs; **branches internally** | With a threat model → verifies mitigations; without → falls back directly to `security-reviewer`'s general methodology |
 | **Ship mode** (S15) | Automated (`ship` → `land-and-deploy`) vs manual (`finishing-a-development-branch`) — an operator choice, not a repo predicate | Pick one path; both end in a merged/deployed or explicitly-kept branch |
 | Infra deploy specifics (S15) | Deploy platform detected (Fly/Render/Vercel/Netlify/GH Actions) | GitLab/unknown → `land-and-deploy` stops, hands off to manual merge |
 | `incident-responder` (S16) | An active production incident is underway | Skip |
@@ -151,7 +158,13 @@ Establish the rules of the game before any spec exists, and recover ground truth
 3. **Existing-docs path** *(a pile of ADRs/PRDs/specs already exists)* — **`doc-classifier`** (one per doc,
    parallel) types each as ADR/PRD/SPEC/DOC; **`doc-synthesizer`** merges them under precedence rules into
    `INGEST-CONFLICTS.md` + per-type intel, hard-blocking on LOCKED-vs-LOCKED contradictions.
-4. **`graphify`** — turn the repo (and any doc corpus) into a persistent, queryable `graph.json` +
+4. **`cso`** *(existing-code path — Legacy entry, or a Continuing-milestone entry at milestone 2+)* — a full
+   15-phase Chief-Security-Officer audit of whatever code is already in the repo, saved to
+   `.security-reports/*.json`. Skipped on a true first-milestone Greenfield entry — there's no code yet to scan.
+   This is `cso`'s *other* scheduled invocation; see Stage 13 for its per-phase companion run. Establishes the
+   security baseline `planner`'s Stage 7 `<threat_model>` step consults before assigning threat dispositions, and
+   the evidence `sdd-review-cto` can weigh at Stage 2.
+5. **`graphify`** — turn the repo (and any doc corpus) into a persistent, queryable `graph.json` +
    `GRAPH_REPORT.md`. `planner` and `phase-researcher` later query it for dependency context.
 
 ### Stage 1 — Requirements & product framing *(GWD steps 1–3)*
@@ -208,16 +221,16 @@ input is a fresh PRD. **Every milestone after that:** input is `docs/BACKLOG.md`
    architecture, ADR-formatted decisions with explicit trade-offs, risks/mitigations. Output: `SDD.md` + ADRs.
 2. **`diagram`** — editable `.mmd` + `.svg`/`.png` (optionally `.excalidraw`) as the single source of truth for
    every architecture/flow diagram the reviews will demand.
-3. **`cso`** — 15-phase Chief-Security-Officer audit at design time: attack-surface census, secrets archaeology,
-   supply chain, STRIDE threat model → a threat posture the later `security-auditor` will verify mitigations against.
-4. **`sdd-review-cto`** *(skill)* — the pipeline's **only** architecture/technical-strategy gate, and it runs here,
+3. **`sdd-review-cto`** *(skill)* — the pipeline's **only** architecture/technical-strategy gate, and it runs here,
    once, before the roadmap exists: pressure-tests the `SDD.md` + ADRs for technical soundness, ADR quality
    (alternatives + trade-offs actually recorded), innovation-token spend, scalability posture, technical-debt
    trajectory, and evolution path, then writes a locked **Architecture Decision Record** into the SDD's
    `## CTO Review` section. The Stage 2 counterpart to Stage 1's `spec-review-cpo`: CPO settles *what* to build,
-   CTO settles *whether the chosen architecture is sound to build on*. It defers security depth to `cso` (running
-   alongside) and does **not** review any phase's `PLAN.md` — that's `plan-review-eng`'s job at Stage 7, against a
-   different artifact. Nothing downstream re-litigates the architecture once this locks it.
+   CTO settles *whether the chosen architecture is sound to build on*. It defers security depth to `cso` — not
+   concurrent with this review (`cso` isn't a Stage 2 asset; see Stage 0 and Stage 13), so it weighs whatever
+   `.security-reports/` already exists rather than a fresh pass — and does **not** review any phase's `PLAN.md`
+   — that's `plan-review-eng`'s job at Stage 7, against a different artifact. Nothing downstream re-litigates the
+   architecture once this locks it.
 
 ### Stage 3 — Research & roadmap *(GWD step 7)*
 
@@ -425,11 +438,19 @@ the lighter tier, with the full set still available as an explicit escalation.
 ### Stage 13 — Security & compliance gate
 
 - **`security-audit`** *(command)* → **`security-auditor`** *(agent)* — verify every declared threat mitigation at
-  *all* entry points (not one grep hit) → `SECURITY.md`; **open threats block the phase from shipping**.
+  *all* entry points (not one grep hit) → `SECURITY.md`; **open threats block the phase from shipping**. Its
+  methodology home for the general-audit fieldwork pass is `security-reviewer` (below) — it does not restate that
+  methodology, only the threat-register-disposition verification that's unique to it.
+- **`cso`** *(skill, `--diff` mode)* — this phase's companion run to its Stage 0 full audit: an incremental sweep
+  of just this phase's changes (attack surface, secrets, supply chain, CI/CD, STRIDE), trend-tracked by fingerprint
+  against the prior `.security-reports/` entry so Resolved/Persistent/New findings are visible phase over phase.
+  Always has code to scan by construction — Stage 13 runs after Stage 8 (Execute) for this phase.
 - **`penetration-tester`** *(agent)* — authorized active exploitation (recon / OWASP / API / network / cloud).
 - **`compliance-auditor`** *(agent)* — map named regulations (GDPR/HIPAA/PCI/SOC2/…) to actual controls; the
   **product lane** `gdpr-ccpa-compliance` / `hipaa-compliance` skills supply the framework detail.
-- **`security-reviewer`** *(skill)* — the manual SAST + auth/input/crypto review methodology under all of the above.
+- **`security-reviewer`** *(skill)* — the manual SAST + auth/input/crypto review methodology `security-auditor`
+  declares as its methodology home; also the general-audit fallback `security-auditor` runs directly when a phase
+  has no `<threat_model>` to verify against.
 
 ---
 
@@ -542,8 +563,9 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 **All 94 core assets** (49 skills · 37 agents · 8 commands), by the stage that owns them:
 
 - **Stage 0:** `constitution`, `spec-miner`, `gate-reverse-engineer`, `doc-classifier`, `doc-synthesizer`, `graphify`
+  (`cso` also fires here on an existing-code entry path, but is counted once under Stage 13, its home)
 - **Stage 1:** `brainstorming`, `specify` (generate + clarify in one skill), `assumption-mapping`, `backlog-grooming`, `market-researcher`, `spec-review-cpo` (`the-fool` remains available as an optional extra pressure-test, no longer in the default list; `first-principles-thinking`, `clarify`, and `feature-forge` were folded into `specify`/`spec-review-cpo` — see the note at the top of this document)
-- **Stage 2:** `architecture-designer`, `diagram`, `cso`, `sdd-review-cto`
+- **Stage 2:** `architecture-designer`, `diagram`, `sdd-review-cto`
 - **Stage 3:** `project-researcher`, `research-synthesizer`, `roadmapper`
 - **Stage 4:** `design-consultation`, `design-html` (`plan-review-design` is introduced here conceptually but
   only executes — and is counted — under Stage 7; `design-handoff` is counted under Stage 8, where it actually
@@ -556,7 +578,7 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 - **Stage 10:** `review` (cmd), `code-review-gate`, `bugfix-wave`, `code-review-protocol`, `qa` (cmd), `qa` (agent), `design-reviewer`, `ui-auditor`, `accessibility-tester`, `devex-review`
 - **Stage 11:** `verify` (cmd), `verifier`, `converge`, `integration-checker`, `nyquist-auditor`, `dependency-manager`
 - **Stage 12:** `gate-automation`, `test-master`
-- **Stage 13:** `security-audit` (cmd), `security-auditor`, `penetration-tester`, `compliance-auditor`, `security-reviewer`
+- **Stage 13:** `security-audit` (cmd), `security-auditor`, `cso`, `penetration-tester`, `compliance-auditor`, `security-reviewer`
 - **Stage 14:** `document-generate`, `code-documenter`, `content-qa`, `document-release`, `doc-verifier`
 - **Stage 15:** `finishing-a-development-branch`, `ship`, `land-and-deploy`
 - **Stage 16:** `health` (cmd), `health-reporter`, `performance-engineer`, `incident-responder`, `retro` (cmd), `retro` (agent)
@@ -618,7 +640,19 @@ items, and positioned it explicitly as the requirement-level **remediation compi
 goal-backward **verdict**. The same audit found `nyquist-auditor` similarly wired to nothing — its `no_test_file` /
 `test_fails` / `no_automated_command` gap vocabulary matched neither `verifier`'s failed-truth gaps nor `converge`'s
 implementation tasks — and gave `verifier` a new Step 6d that emits a `validation_gaps` list in the shape
-`nyquist-auditor` actually consumes, orthogonal to pass/fail status.
+`nyquist-auditor` actually consumes, orthogonal to pass/fail status. The same audit also found `cso` misplaced at
+Stage 2: every one of its 15 phases (stack detection, attack-surface census, git-history secrets scan, dependency
+manifests, CI/CD configs, STRIDE against Phase 0's detected components) assumes an existing checkout, but Stage 2
+is the *first* artifact of a greenfield milestone — no code exists yet to scan. `cso` moved to Stage 0 (a full
+audit, gated on the entry path already having code — Legacy or Continuing-milestone, never a first-milestone
+Greenfield entry) and Stage 13 (`--diff` mode, per phase — always has code by construction, since Stage 13 runs
+after Stage 8's Execute). `security-auditor` was found to duplicate `security-reviewer`'s audit methodology,
+tool list, and report format nearly verbatim (~40 lines, including an identical worked example); it now declares
+`security-reviewer` its methodology home (the `debugger`/`systematic-debugging` pattern) and keeps only its
+unique job — verifying a `<threat_model>`'s declared dispositions. `planner`'s Stage 7 threat-modeling step and
+`sdd-review-cto`'s Stage 2 review were both wired to consult `cso`'s latest `.security-reports/` entry when one
+exists, replacing the prior doc claim of a direct Stage 2 → Stage 13 handoff that no code ever actually
+implemented.
 
 ---
 

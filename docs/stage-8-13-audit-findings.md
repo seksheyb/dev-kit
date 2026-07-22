@@ -172,7 +172,7 @@ lines for playwright/Maestro/infra/product updated).
 
 ## Stage 13 — Security & compliance gate
 
-### F15. `security-auditor` duplicates `security-reviewer` nearly verbatim — pair them — [ ]
+### F15. `security-auditor` duplicates `security-reviewer` nearly verbatim — pair them — [x]
 
 The agent's `<audit_methodology>` block repeats the skill's workflow, tool list
 (semgrep/gitleaks/npm audit/trivy), and even the identical FIND-001 SQL-injection
@@ -184,7 +184,7 @@ fieldwork pass, keeps only its unique job (threat-register verification by dispo
 SECURITY.md/structured returns), and drops the duplicated methodology/report-format
 text. Net-zero, removes ~40 lines of drift-prone duplication.
 
-### F16. `cso` vs `security-auditor`: intentional, but the doc overstates the linkage — [ ]
+### F16. `cso` vs `security-auditor`: intentional, but the doc overstates the linkage — [x]
 
 The real chain is cso (Stage 2 design-time posture, writes `.security-reports/*.json`) →
 **`planner`'s per-phase `<threat_model>`** (STRIDE, verified present in planner.md) →
@@ -196,6 +196,17 @@ text) is not literally true.
 posture report / SDD threat section, if present, when assigning dispositions") + correct
 the Stage 2/13 doc wording to describe the actual chain. `penetration-tester` and
 `compliance-auditor` are thin, distinct, properly gated — no change to them.
+
+**Resolution went further than proposed.** Follow-up review found the deeper problem: `cso`'s
+15 phases (stack detection, git-history secrets, dependency manifests, CI/CD configs, STRIDE
+against detected components) all assume an existing checkout, but Stage 2 is the *first*
+artifact of a greenfield milestone — there's no code yet for `cso` to find anything in. A
+one-line wiring fix alone would have pointed `planner` at a report that's usually empty.
+Instead `cso` was relocated: Stage 0 (full audit, gated on the entry path already having code
+— Legacy or Continuing-milestone, never a first-milestone Greenfield entry) and Stage 13
+(`--diff` mode, per phase — always has code by construction since Stage 13 runs after that
+phase's own Execute stage). `planner`'s one-liner and the doc-wording fix both still landed,
+now pointed at the corrected chain.
 
 ---
 

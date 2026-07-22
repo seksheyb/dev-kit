@@ -70,14 +70,22 @@ If the diff touches prompt/LLM files and the project has an eval suite, run the 
 
 ## Step 4: Test Coverage Audit
 
-Dispatch as a subagent if available (fresh context; the parent only needs the conclusion). 100% coverage is the goal — evaluate what was ACTUALLY coded (the diff), not what was planned.
+Dispatch as a subagent if available (fresh context; the parent only needs the conclusion). This is a **final whole-branch safety net, not a first-pass audit** — on the common path, `nyquist-auditor` already did this exact job per-phase at Stage 11 (one real behavioral test per gap in `verifier`'s `validation_gaps` list). Don't silently re-do that work.
 
-1. **Trace every changed codepath.** Read each changed file in full. Follow the data: where does input come from, what transforms it, where does it go, what can go wrong (null, invalid input, network failure, empty collection)? Map every conditional branch, error path, and call into helpers with their own branches.
-2. **Map user flows and error states.** Double-click/rapid resubmit, navigate-away mid-operation, stale data, slow connection, concurrent tabs; for every handled error, what does the user actually see, and can they recover? Empty/zero/boundary states.
+0. **Reuse Stage 11 output first.** For each phase this branch covers, check for a `VERIFICATION.md` with a `validation_gaps` list. For every gap already resolved there — `nyquist-auditor` reported it FILLED (a passing test exists for it now) or explicitly justified as SKIP — trust that result; do not re-derive it. Narrow everything below to only:
+   - gaps that were ESCALATED and never subsequently resolved, and
+   - code changed since the last `VERIFICATION.md`/`nyquist-auditor` pass — hotfixes made directly during Stage 13, or phases/workflows with no `VERIFICATION.md` at all (ad-hoc work, manual branches, or projects that skip the full per-phase loop).
+
+   If every phase this branch touches has a `VERIFICATION.md` with all gaps FILLED or justified-SKIP, and no code has changed since, there is no residual scope — output "Coverage already audited by `nyquist-auditor` for this branch's phase(s); no residual gaps" and skip straight to the Step 7 coverage gate below.
+
+100% coverage is the goal for whatever residual scope Step 0 leaves — evaluate what was ACTUALLY coded (the diff), not what was planned.
+
+1. **Trace every changed codepath in the residual scope.** Read each changed file in full. Follow the data: where does input come from, what transforms it, where does it go, what can go wrong (null, invalid input, network failure, empty collection)? Map every conditional branch, error path, and call into helpers with their own branches.
+2. **Map user flows and error states in the residual scope.** Double-click/rapid resubmit, navigate-away mid-operation, stale data, slow connection, concurrent tabs; for every handled error, what does the user actually see, and can they recover? Empty/zero/boundary states.
 3. **Check each branch against existing tests.** Both true AND false paths of each conditional; a test that triggers each specific error; integration/E2E for flows spanning 3+ components and for auth/payment/data-destruction paths. Quality scale: ★★★ behavior + edge + error, ★★ happy path, ★ smoke check.
 4. **REGRESSION RULE (mandatory):** if the diff modifies existing behavior and no test covers the changed path, write the regression test immediately — no asking, no skipping. Commit as `test: regression test for {what broke}`.
-5. **Output an ASCII coverage diagram** (code paths + user flows, TESTED/GAP per branch, overall percentage). All paths covered → "All new code paths have test coverage ✓" and continue.
-6. **Generate tests for uncovered paths.** Error handlers and edge cases first. Match the project's test conventions (read 2-3 existing tests). Run each generated test: passes → commit as `test: coverage for {feature}`; fails → fix once; still fails → revert and note the gap. Caps: ~30 paths analyzed, ~20 tests generated.
+5. **Output an ASCII coverage diagram** (code paths + user flows, TESTED/GAP per branch, overall percentage) — mark which entries were reused from `nyquist-auditor`'s prior pass vs. newly audited here. All paths covered → "All new code paths have test coverage ✓" and continue.
+6. **Generate tests for uncovered paths.** Error handlers and edge cases first. Match the project's test conventions (read 2-3 existing tests). Run each generated test: passes → commit as `test: coverage for {feature}`; fails → fix once; still fails → revert and note the gap. Caps apply to the residual scope only: ~30 paths analyzed, ~20 tests generated.
 7. **Coverage gate:** use CLAUDE.md's `## Test Coverage` Minimum/Target if present, else Minimum 60% / Target 80%. At or above target → pass. Between → ask: generate more tests (recommended) / ship anyway / mark paths intentionally uncovered. Below minimum → ask: generate more (max 2 passes) / explicit override. Test-only diffs or undeterminable percentage → skip the gate.
 
 ## Step 5: Plan Completion Audit

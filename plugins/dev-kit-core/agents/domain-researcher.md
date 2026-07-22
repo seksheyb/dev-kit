@@ -42,7 +42,7 @@ works via Bash and produces equivalent output.
 </documentation_lookup>
 
 <required_reading>
-Read `references/gsd/ai-evals.md` — specifically the rubric design and domain expert sections.
+Read `references/ai/evals.md` — specifically the rubric design and domain expert sections.
 </required_reading>
 
 <input>

@@ -38,7 +38,7 @@ When the orchestrator sets `WALKING_SKELETON=true` (Phase 1 of a new project und
   - One real DB read/write
   - One real UI interaction wired to the API
   - Deployment to a dev environment (or a documented local-run command that exercises the full stack)
-- The plan **must produce** `<NN>-<MM>-SKELETON.md` in the phase directory alongside `<NN>-<MM>-PLAN.md`. Use the template at `@references/gsd/skeleton-template.md`. `<NN>-<MM>-SKELETON.md` records the architectural decisions that subsequent phases will build on (chosen framework, DB, deployment target, auth approach, directory layout).
+- The plan **must produce** `<NN>-<MM>-SKELETON.md` in the phase directory alongside `<NN>-<MM>-PLAN.md`. Use the template at `@references/planning/skeleton-template.md`. `<NN>-<MM>-SKELETON.md` records the architectural decisions that subsequent phases will build on (chosen framework, DB, deployment target, auth approach, directory layout).
 
 `<NN>-<MM>-SKELETON.md` is the architectural backbone for every later vertical slice; treat it as a contract, not a scratchpad.
 

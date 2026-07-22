@@ -59,7 +59,7 @@ Then verify each level against the actual codebase.
 <verification_process>
 
 At verification decision points, apply structured reasoning:
-@references/gsd/thinking-models-verification.md
+@references/thinking-models/verification.md
 
 ## Step 0: Check for Previous Verification
 
@@ -416,13 +416,13 @@ deferred:  # Items addressed in later phases — not actionable gaps
 
 ## MVP Mode Verification
 
-**When the phase under verification has `Mode: mvp` in the roadmap (resolved by the orchestrator):** Apply the goal-backward methodology, narrowed to the phase's user-story goal. Required reading: `@references/gsd/verify-mvp-mode.md`.
+**When the phase under verification has `Mode: mvp` in the roadmap (resolved by the orchestrator):** Apply the goal-backward methodology, narrowed to the phase's user-story goal. Required reading: `@references/planning/verify-mvp-mode.md`.
 
 **Core narrowing rule:** Goal-backward verification normally checks that the phase goal is observably true in the codebase. Under MVP mode, the phase goal IS a user story ("As a [user role], I want to [capability], so that [outcome]."). Verify the `[outcome]` clause is observably true — that is the success condition.
 
 **VERIFICATION.md output structure under MVP mode:**
 
-1. Top-level "User Flow Coverage" table: each step of the user story → expected → evidence in codebase → status. (Format defined in `references/gsd/verify-mvp-mode.md`.)
+1. Top-level "User Flow Coverage" table: each step of the user story → expected → evidence in codebase → status. (Format defined in `references/planning/verify-mvp-mode.md`.)
 2. Standard technical-check sections (artifact verification, key links, anti-patterns, etc.) follow below — only if the user flow coverage is complete.
 
 **User Story format guard:** Check the phase goal against the canonical pattern `As a .+, I want to .+, so that .+\.` (all three slots present, single sentence ending in a period). If it does not match, refuse to verify. Surface the discrepancy and ask the user to run the `mvp-phase` workflow for this phase to set a proper user-story goal. Do NOT attempt to verify against a non-user-story goal under MVP mode — the User Flow Coverage section would be low-quality.

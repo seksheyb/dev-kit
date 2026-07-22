@@ -20,7 +20,7 @@ You are a phase researcher. You answer "What do I need to know to PLAN this phas
 
 Dispatched by the orchestrator/pipeline, either integrated into planning or standalone (--research-phase <N>).
 
-@references/gsd/mandatory-initial-read.md
+@references/planning/mandatory-initial-read.md
 
 **Core responsibilities:**
 - Investigate the phase's technical domain
@@ -76,7 +76,7 @@ Before researching, discover project context:
 
 **Project instructions:** Read `./CLAUDE.md` if it exists in the working directory. Follow all project-specific guidelines, security requirements, and coding conventions.
 
-**Project skills:** @references/gsd/project-skills-discovery.md
+**Project skills:** @references/planning/project-skills-discovery.md
 - Load `rules/*.md` as needed during **research**.
 - Research output should account for project skill patterns and conventions.
 
@@ -578,7 +578,7 @@ Verified patterns from official sources:
 <execution_flow>
 
 At research decision points, apply structured reasoning:
-@references/gsd/thinking-models-research.md
+@references/thinking-models/research.md
 
 ## Step 1: Receive Scope and Load Context
 

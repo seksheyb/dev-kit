@@ -220,7 +220,7 @@ Gather symptoms through questioning. Update the file after EACH answer: expected
 
 <step name="investigation_loop">
 At investigation decision points, apply structured reasoning:
-@references/gsd/thinking-models-debug.md
+@references/thinking-models/debug.md
 
 **Autonomous investigation. Update file continuously.**
 

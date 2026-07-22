@@ -4,7 +4,7 @@
 > distinguishes it from a horizontal layer. Referenced by `roadmapper.md` (phase
 > structure), `planner.md` (task decomposition, MVP mode), `writing-plans`, `specify`,
 > and `gate-plan-review`. This is the phase/plan-structure companion to
-> `references/gsd/planner-mvp-mode.md`, which covers the task-order mechanics inside a
+> `references/planning/planner-mvp-mode.md`, which covers the task-order mechanics inside a
 > single MVP phase.
 
 ## What a Vertical Slice Is
@@ -59,5 +59,5 @@ code" is not a justification. If you cannot name the dependent slices, it is not
 foundation — it is a horizontal layer, and you should restructure.
 
 Even a foundation phase should be the *thinnest* stack that unblocks the next slice (see
-the Walking Skeleton in `references/gsd/planner-mvp-mode.md`), not a full layer built out
+the Walking Skeleton in `references/planning/planner-mvp-mode.md`), not a full layer built out
 ahead of demand.

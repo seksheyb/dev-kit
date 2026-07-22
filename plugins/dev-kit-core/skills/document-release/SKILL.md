@@ -133,8 +133,26 @@ Definitions:
    diagrams and cross-reference against the diff. Flag any diagram entities that were renamed,
    split, removed, or moved in the code.
 
-The coverage map informs Steps 2-3 (what to audit and fix) and Step 9 (documentation debt in
-the PR body). Do NOT auto-generate missing documentation pages — flag gaps only.
+5. **Cross-reference the phase's spec requirement bank, if one exists.** The coverage map
+   above only answers "did we document what changed in this diff" — it can't tell you whether
+   the diff covers what was actually promised. Look for the relevant spec at
+   `docs/specs/<NNN-feature-name>/spec.md` (the `specify` skill's convention; adapt if this
+   project keeps requirements elsewhere). If found, read its `US-xxx` user stories and check
+   each one against both the diff and the coverage map:
+   - **Changed but undocumented** — the existing category from steps 1-3: shipped in the
+     diff, not yet covered by any doc.
+   - **Promised but never touched** — a distinct, new category: a `US-xxx` story that appears
+     in *neither* the diff nor the existing docs. This isn't a documentation gap, it's a
+     signal the story wasn't implemented on this branch (or was implemented elsewhere) —
+     surface it separately from the coverage map's gaps rather than folding it in, since the
+     fix for a doc gap is "write the doc" and the fix for this is "check whether the story
+     still needs building."
+   If no spec.md exists for this phase, skip this cross-reference silently and rely on the
+   diff-only coverage map above.
+
+The coverage map (plus the spec cross-reference, when available) informs Steps 2-3 (what to
+audit and fix) and Step 9 (documentation debt in the PR body). Do NOT auto-generate missing
+documentation pages — flag gaps only.
 
 ---
 
@@ -220,15 +238,18 @@ Rules:
 If CHANGELOG was not modified in this branch: skip this step.
 
 If it was, review the entry for voice:
-- **Sell test (Diataxis rubric):** score each entry 0-3:
-  - 1 point — answers "What changed?" (reference: names the feature/fix)
-  - 1 point — answers "Why should I care?" (explanation: user impact, pain removed)
-  - 1 point — answers "How do I use it?" (how-to: command, flag, or docs link)
-  - Entries scoring <2 need a rewrite. Entries scoring 3 are gold.
-- Lead with what the user can now **do** — "You can now..." not "Refactored the..."
+- **Methodology home: `content-qa`.** That skill already owns this concern — its editorial
+  pass formalizes "lead with what the user can now do, not what you did to the code" more
+  rigorously than a standalone rubric can (tiered vocabulary, P0-P2 severity, passive-voice
+  and hedging checks). Run each modified CHANGELOG entry (or the whole latest/"Unreleased"
+  section) through `content-qa`'s prose check instead of scoring it by hand.
+- **The CRITICAL rule above still governs how findings get applied.** content-qa's job here is
+  wording-level polish, same as this step's: make exact targeted edits per finding, never
+  delete/reorder/replace an entry, never regenerate one from scratch. If a finding would change
+  what an entry claims rather than how it's phrased, that crosses into "rewrite" — ask the user
+  per the rule above rather than auto-applying it.
 - Flag and rewrite any entry that reads like a commit message.
 - Internal/contributor changes belong in a separate "For contributors" subsection.
-- Auto-fix minor voice adjustments; ask the user if a rewrite would alter meaning.
 
 ---
 
@@ -295,9 +316,12 @@ If TODOS.md (or equivalent) does not exist, skip.
    - **Doc diff preview** — per modified file, what specifically changed.
    - **Documentation debt** — if the coverage map found gaps, a subsection listing:
      critical gaps (new public surface with zero coverage), common gaps (reference-only
-     coverage), and stale diagrams (entity names that drifted from the code). Each item gets
-     a one-line description of what's missing and which Diataxis quadrant would fill it. If
-     any debt items exist, suggest adding a `docs-debt` label to the PR/MR.
+     coverage), stale diagrams (entity names that drifted from the code), and — if a spec.md
+     was found in Step 1.5 — promised-but-never-touched stories (`US-xxx` items absent from
+     both the diff and the docs; flag as a possible scope gap, not just a doc gap). Each item
+     gets a one-line description of what's missing and which Diataxis quadrant would fill it
+     (not applicable for promised-but-never-touched items). If any debt items exist, suggest
+     adding a `docs-debt` label to the PR/MR.
 4. Before writing the body back, scan it for secrets/credentials/PII — do not push a body
    containing anything sensitive.
 5. Write it back with `gh pr edit --body-file` or `glab mr update -d`. If no PR/MR exists,

@@ -525,7 +525,6 @@ loop light; this latency window is a real cost, not a hidden one.
 
 - **`document-generate`** / **`code-documenter`** — Diataxis doc set + validated docstrings/API docs (every example
   actually compiles/runs).
-- **`content-qa`** — de-slop the prose (AI-ism scan, content-type-aware strictness) before publishing.
 - **`document-release`** — build a coverage map of shipped-vs-documented public surface, sync each doc against the
   diff, polish CHANGELOG voice (never clobber history), then **`doc-verifier`** *(agent)* re-verifies every checkable
   claim (file paths, commands, endpoints) against the filesystem.
@@ -726,9 +725,10 @@ threat in an early phase no longer blocks *that phase* from shipping, only the m
 done; the accumulated-risk window this opens was accepted explicitly in exchange for a lighter phase loop (Stages
 5–11, down from 5–12). `document-generate`/`document-release`/`doc-verifier` (Document) and
 `ship`/`land-and-deploy` (Ship & deploy) were also swapped — Ship & deploy now runs first, at Stage 13, and
-Document at Stage 14 — since `document-release`'s own "shipped-vs-documented coverage map" framing and
-`doc-verifier`'s filesystem-claim checks are both more meaningful once code is confirmed live than while a branch
-could still hit a merge conflict or get reverted by `land-and-deploy`'s escape hatch. Net renumbering: the
+Document at Stage 14 — since `document-release` polishes the CHANGELOG entry `ship` writes. That's a dependency on
+`ship`'s PR, not on `land-and-deploy`'s merge: `document-release` needs an open, unmerged diff to work against
+(it aborts if run from the base branch), so Document still runs before the PR lands, just after `ship` creates it.
+Net renumbering: the
 per-phase loop is now Stages 5–11; milestone close-out is Stages 12–15 (Final Review, Ship & deploy, Document,
 Operate/retrospect/close).
 

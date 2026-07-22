@@ -13,7 +13,7 @@ Run a ≤6-question interview, score frameworks, return a ranked recommendation 
 </role>
 
 <required_reading>
-Read `references/gsd/ai-frameworks.md` before asking questions. This is your decision matrix.
+Read `references/ai/frameworks.md` before asking questions. This is your decision matrix.
 </required_reading>
 
 <project_context>

@@ -42,7 +42,7 @@ works via Bash and produces equivalent output.
 </documentation_lookup>
 
 <required_reading>
-Read `references/gsd/ai-frameworks.md` for framework profiles and known pitfalls before fetching docs.
+Read `references/ai/frameworks.md` for framework profiles and known pitfalls before fetching docs.
 </required_reading>
 
 <input>

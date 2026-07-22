@@ -70,21 +70,31 @@ If the diff touches prompt/LLM files and the project has an eval suite, run the 
 
 ## Step 4: Test Coverage Audit
 
-Dispatch as a subagent if available (fresh context; the parent only needs the conclusion). 100% coverage is the goal — evaluate what was ACTUALLY coded (the diff), not what was planned.
+Dispatch as a subagent if available (fresh context; the parent only needs the conclusion). This is a **final whole-branch safety net, not a first-pass audit** — on the common path, `nyquist-auditor` already did this exact job per-phase at Stage 11 (one real behavioral test per gap in `verifier`'s `validation_gaps` list). Don't silently re-do that work.
 
-1. **Trace every changed codepath.** Read each changed file in full. Follow the data: where does input come from, what transforms it, where does it go, what can go wrong (null, invalid input, network failure, empty collection)? Map every conditional branch, error path, and call into helpers with their own branches.
-2. **Map user flows and error states.** Double-click/rapid resubmit, navigate-away mid-operation, stale data, slow connection, concurrent tabs; for every handled error, what does the user actually see, and can they recover? Empty/zero/boundary states.
+0. **Reuse Stage 11 output first.** For each phase this branch covers, check for a `VERIFICATION.md` with a `validation_gaps` list. For every gap already resolved there — `nyquist-auditor` reported it FILLED (a passing test exists for it now) or explicitly justified as SKIP — trust that result; do not re-derive it. Narrow everything below to only:
+   - gaps that were ESCALATED and never subsequently resolved, and
+   - code changed since the last `VERIFICATION.md`/`nyquist-auditor` pass — hotfixes made directly during Stage 13, or phases/workflows with no `VERIFICATION.md` at all (ad-hoc work, manual branches, or projects that skip the full per-phase loop).
+
+   If every phase this branch touches has a `VERIFICATION.md` with all gaps FILLED or justified-SKIP, and no code has changed since, there is no residual scope — output "Coverage already audited by `nyquist-auditor` for this branch's phase(s); no residual gaps" and skip straight to the Step 7 coverage gate below.
+
+100% coverage is the goal for whatever residual scope Step 0 leaves — evaluate what was ACTUALLY coded (the diff), not what was planned.
+
+1. **Trace every changed codepath in the residual scope.** Read each changed file in full. Follow the data: where does input come from, what transforms it, where does it go, what can go wrong (null, invalid input, network failure, empty collection)? Map every conditional branch, error path, and call into helpers with their own branches.
+2. **Map user flows and error states in the residual scope.** Double-click/rapid resubmit, navigate-away mid-operation, stale data, slow connection, concurrent tabs; for every handled error, what does the user actually see, and can they recover? Empty/zero/boundary states.
 3. **Check each branch against existing tests.** Both true AND false paths of each conditional; a test that triggers each specific error; integration/E2E for flows spanning 3+ components and for auth/payment/data-destruction paths. Quality scale: ★★★ behavior + edge + error, ★★ happy path, ★ smoke check.
 4. **REGRESSION RULE (mandatory):** if the diff modifies existing behavior and no test covers the changed path, write the regression test immediately — no asking, no skipping. Commit as `test: regression test for {what broke}`.
-5. **Output an ASCII coverage diagram** (code paths + user flows, TESTED/GAP per branch, overall percentage). All paths covered → "All new code paths have test coverage ✓" and continue.
-6. **Generate tests for uncovered paths.** Error handlers and edge cases first. Match the project's test conventions (read 2-3 existing tests). Run each generated test: passes → commit as `test: coverage for {feature}`; fails → fix once; still fails → revert and note the gap. Caps: ~30 paths analyzed, ~20 tests generated.
+5. **Output an ASCII coverage diagram** (code paths + user flows, TESTED/GAP per branch, overall percentage) — mark which entries were reused from `nyquist-auditor`'s prior pass vs. newly audited here. All paths covered → "All new code paths have test coverage ✓" and continue.
+6. **Generate tests for uncovered paths.** Error handlers and edge cases first. Match the project's test conventions (read 2-3 existing tests). Run each generated test: passes → commit as `test: coverage for {feature}`; fails → fix once; still fails → revert and note the gap. Caps apply to the residual scope only: ~30 paths analyzed, ~20 tests generated.
 7. **Coverage gate:** use CLAUDE.md's `## Test Coverage` Minimum/Target if present, else Minimum 60% / Target 80%. At or above target → pass. Between → ask: generate more tests (recommended) / ship anyway / mark paths intentionally uncovered. Below minimum → ask: generate more (max 2 passes) / explicit override. Test-only diffs or undeterminable percentage → skip the gate.
 
 ## Step 5: Plan Completion Audit
 
 If a plan file exists for this work (active plan in conversation context, or a recent plan file mentioning this branch/repo), audit it. No plan file → skip with "No plan file detected."
 
-1. **Extract actionable items** (checkboxes, numbered implementation steps, imperative statements, file-level specs, test requirements, data-model changes). Ignore context/background sections, open questions, and explicitly deferred items ("Future:", "Out of scope:"). Cap at 50.
+0. **Reuse Stage 11 output first.** If a `VERIFICATION.md` exists for the relevant phase(s), read its pass/fail verdicts (`gaps:` list, `status`, per-truth evidence) and scan the plan file for any `## Phase N: Convergence` task blocks `converge` appended — use both as **pre-confirmed evidence** for the plan items they cover, the same way `converge` itself treats `VERIFICATION.md` as pre-confirmed evidence rather than re-deriving it from scratch. A truth `verifier` marked passed with no later gap reopening it → DONE. A gap `verifier` flagged with no Convergence task closing it (or an unclosed one) → NOT DONE/PARTIAL, per the gap's `reason`. A plan item covered by an appended Convergence task → its status follows whether that task is now done in the diff. Only fall back to Steps 1-4 below — deriving status from the plan file blind — for phases with no `VERIFICATION.md` (manual/ad-hoc workflows that skipped Stage 11).
+
+1. **Extract actionable items** (checkboxes, numbered implementation steps, imperative statements, file-level specs, test requirements, data-model changes) not already classified in Step 0. Ignore context/background sections, open questions, and explicitly deferred items ("Future:", "Out of scope:"). Cap at 50.
 2. **Classify verifiability:** DIFF-VERIFIABLE (would show in `git diff <base>...HEAD`), CROSS-REPO (check file existence on disk if the sibling repo is reachable), EXTERNAL-STATE (DNS, SaaS config — cannot be proven from the diff).
 3. **Classify each item:** DONE (clear evidence, cite files), PARTIAL, NOT DONE, CHANGED (same goal via different approach — note the difference), UNVERIFIABLE (cite the specific manual check the user must perform).
 4. **Honesty rules:** be conservative with DONE — code that *handles* a deliverable is not the deliverable. Be generous with CHANGED. Prefer UNVERIFIABLE over silently assuming DONE.
@@ -94,13 +104,18 @@ If a plan file exists for this work (active plan in conversation context, or a r
 
 **Scope check (informational, non-blocking):** before the quality pass, compare stated intent (commit messages, TODOS.md entries, the plan file from Step 5 if one was found) against what the diff actually touches. Flag two kinds of drift: files/changes unrelated to the stated intent ("while I was in there..." creep) and stated requirements the diff doesn't address. Report one line — `Scope check: CLEAN` or `Scope check: DRIFT — <files/behavior not tied to stated intent>` / `Scope check: MISSING — <requirement not addressed>` — in the PR body; never blocks shipping.
 
-Review the full diff before shipping (dispatch as a subagent if available):
-- Correctness: logic errors, off-by-one, unhandled null/error paths, race conditions
-- Security: injection, secrets in the diff, authz gaps on new endpoints
-- Performance: N+1 queries, unbounded loops, missing indexes for new query patterns
-- Hygiene: dead code, debug leftovers, stale comments, unused imports
+**Scope the review — don't re-review what already went through Stage 10/12.** On the common path, `code-review-gate` (Stage 10) and `security-auditor`/`cso` (Stage 12) already adversarially reviewed the pre-existing diff. Split the diff before reviewing:
 
-Auto-fix mechanical findings (dead code, stale comments, imports) and commit them. For findings that need judgment (behavior changes, security trade-offs), **STOP** and ask. Optionally run an adversarial second pass — "try to break this diff" — with a fresh subagent for large or risky changes.
+- **Ship's own generated delta** — anything `ship` itself wrote or changed in Steps 2-5: auto-resolved merge conflicts (Step 2), fixes committed while triaging test failures (Step 3), generated coverage tests (Step 4), and any fixes made completing plan items (Step 5). This code was never seen by Stage 10 or 12, so it gets the **full mandatory review** below, dispatched as a subagent if available:
+  - Correctness: logic errors, off-by-one, unhandled null/error paths, race conditions
+  - Security: injection, secrets in the diff, authz gaps on new endpoints
+  - Performance: N+1 queries, unbounded loops, missing indexes for new query patterns
+  - Hygiene: dead code, debug leftovers, stale comments, unused imports
+- **The rest of the diff** — everything that already went through Stage 10/12's adversarial review — gets a **lightweight sanity skim only**: scan for anything glaring (a broken import, a leftover debug statement, a merge artifact), not a full Correctness/Security/Performance/Hygiene pass. Do not re-derive findings those gates already cleared.
+
+If Steps 2-5 produced no ship-generated delta (clean merge, no coverage gaps, no plan fixes), the full review has nothing to run against — the lightweight skim is the whole of Step 6.
+
+Auto-fix mechanical findings (dead code, stale comments, imports) and commit them. For findings that need judgment (behavior changes, security trade-offs), **STOP** and ask. Optionally run an adversarial second pass — "try to break this diff" — with a fresh subagent, scoped to ship's own delta, for large or risky changes.
 
 ## Step 7: Version bump (auto-decide)
 

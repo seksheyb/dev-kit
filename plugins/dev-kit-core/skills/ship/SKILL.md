@@ -104,13 +104,18 @@ If a plan file exists for this work (active plan in conversation context, or a r
 
 **Scope check (informational, non-blocking):** before the quality pass, compare stated intent (commit messages, TODOS.md entries, the plan file from Step 5 if one was found) against what the diff actually touches. Flag two kinds of drift: files/changes unrelated to the stated intent ("while I was in there..." creep) and stated requirements the diff doesn't address. Report one line — `Scope check: CLEAN` or `Scope check: DRIFT — <files/behavior not tied to stated intent>` / `Scope check: MISSING — <requirement not addressed>` — in the PR body; never blocks shipping.
 
-Review the full diff before shipping (dispatch as a subagent if available):
-- Correctness: logic errors, off-by-one, unhandled null/error paths, race conditions
-- Security: injection, secrets in the diff, authz gaps on new endpoints
-- Performance: N+1 queries, unbounded loops, missing indexes for new query patterns
-- Hygiene: dead code, debug leftovers, stale comments, unused imports
+**Scope the review — don't re-review what already went through Stage 10/12.** On the common path, `code-review-gate` (Stage 10) and `security-auditor`/`cso` (Stage 12) already adversarially reviewed the pre-existing diff. Split the diff before reviewing:
 
-Auto-fix mechanical findings (dead code, stale comments, imports) and commit them. For findings that need judgment (behavior changes, security trade-offs), **STOP** and ask. Optionally run an adversarial second pass — "try to break this diff" — with a fresh subagent for large or risky changes.
+- **Ship's own generated delta** — anything `ship` itself wrote or changed in Steps 2-5: auto-resolved merge conflicts (Step 2), fixes committed while triaging test failures (Step 3), generated coverage tests (Step 4), and any fixes made completing plan items (Step 5). This code was never seen by Stage 10 or 12, so it gets the **full mandatory review** below, dispatched as a subagent if available:
+  - Correctness: logic errors, off-by-one, unhandled null/error paths, race conditions
+  - Security: injection, secrets in the diff, authz gaps on new endpoints
+  - Performance: N+1 queries, unbounded loops, missing indexes for new query patterns
+  - Hygiene: dead code, debug leftovers, stale comments, unused imports
+- **The rest of the diff** — everything that already went through Stage 10/12's adversarial review — gets a **lightweight sanity skim only**: scan for anything glaring (a broken import, a leftover debug statement, a merge artifact), not a full Correctness/Security/Performance/Hygiene pass. Do not re-derive findings those gates already cleared.
+
+If Steps 2-5 produced no ship-generated delta (clean merge, no coverage gaps, no plan fixes), the full review has nothing to run against — the lightweight skim is the whole of Step 6.
+
+Auto-fix mechanical findings (dead code, stale comments, imports) and commit them. For findings that need judgment (behavior changes, security trade-offs), **STOP** and ask. Optionally run an adversarial second pass — "try to break this diff" — with a fresh subagent, scoped to ship's own delta, for large or risky changes.
 
 ## Step 7: Version bump (auto-decide)
 

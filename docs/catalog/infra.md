@@ -74,7 +74,7 @@ This plugin (`dev-kit-infra`) ships no agents or commands of its own — it is a
 - **What it does:** Runs an assess-instrument-collect-visualize-alert workflow with concrete code examples (structured Pino logging with correlation IDs, Prometheus Counter/Histogram instrumentation), builds RED/USE-method dashboards, and covers load testing (k6/Artillery) and CPU/memory profiling for capacity planning.
 - **Why not vanilla Claude Code:** It supplies the specific anti-pattern-vs-pattern contrast (e.g., string-interpolated logs vs. structured fields with a request ID) and the RED/USE dashboard methodology that vanilla Claude Code doesn't apply without being told which method fits which system.
 - **When to use:** Setting up application monitoring, adding observability, debugging production issues with logs/metrics/traces, load testing, profiling bottlenecks, or forecasting capacity needs.
-- **Then what:** Feed alerting thresholds back to `sre-engineer` for error-budget alignment.
+- **Then what:** Hand app-level bottleneck optimization to `performance-engineer` once load testing/profiling surfaces a candidate; feed alerting thresholds back to `sre-engineer` for error-budget alignment.
 - **Notes:** Focused on the instrumentation/tooling layer; `sre-engineer` owns the policy layer that decides what's worth alerting on.
 
 #### `chaos-engineer`

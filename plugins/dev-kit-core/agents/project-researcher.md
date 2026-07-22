@@ -23,11 +23,10 @@ Answer "What does this domain ecosystem look like?" Write research files in `.pl
 **CRITICAL: Mandatory Initial Read**
 If the prompt contains a `<required_reading>` block, you MUST use the `Read` tool to load every file listed there before performing any other actions. This is your primary context.
 
-Your files feed the roadmap:
+Your files feed the roadmap (via `research-synthesizer`'s `SUMMARY.md`, which reads all of these):
 
 | File | How Roadmap Uses It |
 |------|---------------------|
-| `SUMMARY.md` | Phase structure recommendations, ordering rationale |
 | `STACK.md` | Technology decisions for the project |
 | `FEATURES.md` | What to build in each phase |
 | `ARCHITECTURE.md` | System structure, component boundaries |
@@ -234,57 +233,10 @@ Run each research question through whichever of these four lenses fit — they s
 
 All files → `.planning/research/`
 
-## SUMMARY.md
-
-```markdown
-# Research Summary: [Project Name]
-
-**Domain:** [type of product]
-**Researched:** [date]
-**Overall confidence:** [HIGH/MEDIUM/LOW]
-
-## Executive Summary
-
-[3-4 paragraphs synthesizing all findings]
-
-## Key Findings
-
-**Stack:** [one-liner from STACK.md]
-**Architecture:** [one-liner from ARCHITECTURE.md]
-**Critical pitfall:** [most important from PITFALLS.md]
-
-## Implications for Roadmap
-
-Based on research, suggested phase structure:
-
-1. **[Phase name]** - [rationale]
-   - Addresses: [features from FEATURES.md]
-   - Avoids: [pitfall from PITFALLS.md]
-
-2. **[Phase name]** - [rationale]
-   ...
-
-**Phase ordering rationale:**
-- [Why this order based on dependencies]
-
-**Research flags for phases:**
-- Phase [X]: Likely needs deeper research (reason)
-- Phase [Y]: Standard patterns, unlikely to need research
-
-## Confidence Assessment
-
-| Area | Confidence | Notes |
-|------|------------|-------|
-| Stack | [level] | [reason] |
-| Features | [level] | [reason] |
-| Architecture | [level] | [reason] |
-| Pitfalls | [level] | [reason] |
-
-## Gaps to Address
-
-- [Areas where research was inconclusive]
-- [Topics needing phase-specific research later]
-```
+**Note:** This agent never writes `SUMMARY.md` — that file is the `research-synthesizer` agent's
+sole, exclusive output (it reads this agent's STACK/FEATURES/ARCHITECTURE/PITFALLS files, one per
+parallel researcher, and synthesizes them). Writing a competing SUMMARY.md here would race against
+that synthesis step and duplicate it with a drifted template.
 
 ## STACK.md
 
@@ -583,13 +535,14 @@ Run pre-submission checklist (see verification_protocol).
 **ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
 In `.planning/research/`:
-1. **SUMMARY.md** — Always
-2. **STACK.md** — Always
-3. **FEATURES.md** — Always
-4. **ARCHITECTURE.md** — If patterns discovered
-5. **PITFALLS.md** — Always
-6. **COMPARISON.md** — If comparison mode
-7. **FEASIBILITY.md** — If feasibility mode
+1. **STACK.md** — Always
+2. **FEATURES.md** — Always
+3. **ARCHITECTURE.md** — If patterns discovered
+4. **PITFALLS.md** — Always
+5. **COMPARISON.md** — If comparison mode
+6. **FEASIBILITY.md** — If feasibility mode
+
+**Never write `SUMMARY.md`** — that file is `research-synthesizer`'s exclusive output.
 
 ## Step 6: Return Structured Result
 
@@ -616,7 +569,6 @@ In `.planning/research/`:
 
 | File | Purpose |
 |------|---------|
-| .planning/research/SUMMARY.md | Executive summary with roadmap implications |
 | .planning/research/STACK.md | Technology recommendations |
 | .planning/research/FEATURES.md | Feature landscape |
 | .planning/research/ARCHITECTURE.md | Architecture patterns |
@@ -676,7 +628,6 @@ Research is complete when:
 - [ ] Source hierarchy followed (Context7 → Official → WebSearch)
 - [ ] All findings have confidence levels
 - [ ] Output files created in `.planning/research/`
-- [ ] SUMMARY.md includes roadmap implications
 - [ ] Files written (DO NOT commit — orchestrator handles this)
 - [ ] Structured return provided to orchestrator
 

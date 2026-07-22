@@ -35,7 +35,7 @@ Boundaries, so this lens does not duplicate its neighbors:
 
 - **Security is `cso`'s job, not this lens's.** `cso` is not concurrent with this review — it
   runs a full 15-phase audit at Stage 0 when the repo already has code (legacy or
-  continuing-milestone entry) and incrementally per phase at Stage 13 once this milestone's own
+  continuing-milestone entry) and incrementally per phase at Stage 12 once this milestone's own
   code exists; a first-milestone greenfield project has no `cso` pass to weigh here either, since
   there's no code yet for either lens to examine. Check `.security-reports/` for the latest
   report if one exists, note security *architecture* concerns as findings, and defer the depth

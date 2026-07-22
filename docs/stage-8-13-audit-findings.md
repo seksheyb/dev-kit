@@ -130,13 +130,17 @@ preserved), and position it explicitly against `verifier`:
 
 Also update its catalog entry + the `analyze`/`constitution` cross-notes.
 
-### F12. `dependency-manager` is misplaced at Stage 11 — move to the security gate — [ ]
+### F12. `dependency-manager` is misplaced at Stage 11 — move to the security gate — [x]
 
 A CVE/version/license sweep is not "did we build the goal" — it is the
 security/compliance gate's business, and the catalog already notes its overlap with
 `security-auditor`'s dependency fieldwork. **Proposal:** move it to the security stage
 (and move the lane-routing note for `license-engineer` with it). Net-zero relocation,
 mirrors the Stage 4→8 `design-handoff` move.
+
+Done alongside F14 — landed at the security gate's final number (Stage 12, post-fold).
+Catalog entry moved from the Engineer role to the Security/Compliance Reviewer role to
+match. `license-engineer`'s lane-routing note moved with it.
 
 ### F13. `nyquist-auditor` has a wiring hole: nothing produces its expected input — [x]
 
@@ -154,7 +158,7 @@ nyquist-auditor as `<gaps>`. Fix the conditional-table wording accordingly.
 
 ## Stage 12 — Automation coverage
 
-### F14. Fold Stage 12 into Stage 11 — [ ]
+### F14. Fold Stage 12 into Stage 11 — [x]
 
 Near-single-asset stage (`gate-automation`; test-master/playwright-expert are invoked
 helpers), and it answers the same question as Stage 11 — "is the goal actually covered?"
@@ -167,6 +171,12 @@ Renumbering cost is low: stage numbers 12–16 live almost entirely in the pipel
 (28 spots; catalog/plugins/companion docs have none). Result: pipeline becomes
 **Stage 0–15** (13→12 security, 14→13 document, 15→14 ship, 16→15 operate; lane routing
 lines for playwright/Maestro/infra/product updated).
+
+Done — renumbered as proposed. The "catalog/plugins/companion docs have none" claim
+didn't fully hold: the F15/F16 session (done between this finding being logged and being
+fixed) had added several Stage-13-numbered cross-references outside the pipeline doc
+(`planner.md`, `security-auditor.md`, `sdd-review-cto/SKILL.md`, `cso/SKILL.md`,
+`core-build-and-ship.md`) — all caught and renumbered to Stage 12 in this pass too.
 
 ---
 

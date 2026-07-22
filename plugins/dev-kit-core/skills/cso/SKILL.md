@@ -44,7 +44,7 @@ both gated on real code already being present:
 - **Stage 0, no flags (full audit)** — on an entry path where the repo already has code: the Legacy/inherited
   path, or a Continuing-milestone entry (milestone 2+, where prior milestones already shipped). Skipped on a
   first-milestone Greenfield entry. Establishes the baseline `.security-reports/` entry.
-- **Stage 13, `--diff` (per phase)** — after that phase's own Stage 8 (Execute) has run, so code always exists by
+- **Stage 12, `--diff` (per phase)** — after that phase's own Stage 8 (Execute) has run, so code always exists by
   construction even in a Greenfield milestone's first phase. Scans just this phase's branch changes and
   trend-tracks against the prior `.security-reports/` entry by fingerprint.
 

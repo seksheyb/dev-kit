@@ -29,8 +29,8 @@ Skill/Agent/Command spine those glue layers would drive.
 
 ## The pipeline at a glance
 
-Stages 0–4 run **once per milestone**. Stages 5–13 are the **per-phase loop** (repeat for every
-vertical slice the roadmap produced). Stages 14–16 close out the branch, the milestone, and the operate/learn
+Stages 0–4 run **once per milestone**. Stages 5–12 are the **per-phase loop** (repeat for every
+vertical slice the roadmap produced). Stages 13–15 close out the branch, the milestone, and the operate/learn
 cycle. Conditional stages are marked *(if …)*.
 
 **A milestone is the whole pipeline, not a phase.** One full Stage 0→16 traversal delivers one milestone. A new
@@ -53,12 +53,11 @@ cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it desc
 | **8** | Execute the phase | `using-git-worktrees` · `sprint-execution` · `test-driven-development` · `dispatching-parallel-agents` · `fullstack-guardian`/`secure-code-guardian` · `refactoring-specialist` · `guard` · `design-handoff` (Claude Design → codebase bridge, when UI in scope) · `verification-before-completion` · **lane skills** | plan → code + tests, per-track parallel |
 | **9** | Debug *(as needed)* | `debug` (cmd) → `debugger` ← `systematic-debugging` · `learn` | failure → root-cause fix + regression test |
 | **10** | Adversarial review ↔ fix loop | `review` (cmd) → `code-review-gate` (round) ↔ `bugfix-wave` · `code-review-protocol` · `qa` (cmd/agent) · `design-reviewer` · `ui-auditor` · `accessibility-tester` · `devex-review` | code → fixes (loop ≤6) |
-| **11** | Verify the goal | `verify` (cmd) → `verifier` · `converge` · `integration-checker` · `nyquist-auditor` · `dependency-manager` | code → `VERIFICATION.md`, gaps closed |
-| **12** | Automation coverage | `gate-automation` ← `test-master`/`playwright-expert` | code → Playwright/Maestro flows |
-| **13** | Security & compliance gate | `security-audit` (cmd) → `security-auditor` · `cso` (`--diff`) · `penetration-tester` · `compliance-auditor` · `security-reviewer` | code → `SECURITY.md`, `.security-reports/*.json`, open threats block ship |
-| **14** | Document | `document-generate`/`code-documenter` · `content-qa` · `document-release` → `doc-verifier` | shipped surface → synced docs, CHANGELOG |
-| **15** | Ship & deploy | `finishing-a-development-branch` *(manual)* **or** `ship` → `land-and-deploy` · **infra lane** | branch → PR → merged & deployed |
-| **16** | Operate, retrospect, close | `health` (cmd) → `health-reporter` · `performance-engineer` · `incident-responder` · `retro` (cmd) → `retro` · milestone archive | milestone → dashboards, postmortems, archive + tag |
+| **11** | Verify the goal | `verify` (cmd) → `verifier` · `converge` · `integration-checker` · `nyquist-auditor` · `gate-automation` ← `test-master`/`playwright-expert` | code → `VERIFICATION.md`, gaps closed, Playwright/Maestro flows |
+| **12** | Security & compliance gate | `security-audit` (cmd) → `security-auditor` · `cso` (`--diff`) · `penetration-tester` · `compliance-auditor` · `security-reviewer` · `dependency-manager` | code → `SECURITY.md`, `.security-reports/*.json`, dependency/license report, open threats block ship |
+| **13** | Document | `document-generate`/`code-documenter` · `content-qa` · `document-release` → `doc-verifier` | shipped surface → synced docs, CHANGELOG |
+| **14** | Ship & deploy | `finishing-a-development-branch` *(manual)* **or** `ship` → `land-and-deploy` · **infra lane** | branch → PR → merged & deployed |
+| **15** | Operate, retrospect, close | `health` (cmd) → `health-reporter` · `performance-engineer` · `incident-responder` · `retro` (cmd) → `retro` · milestone archive | milestone → dashboards, postmortems, archive + tag |
 
 **Always-on (cross-cutting, not a stage):** `context-save` / `context-restore` (session continuity),
 `learn` (durable knowledge), `guard` (safety), `graphify` (query anytime), `diagram` (any review/design
@@ -97,11 +96,11 @@ dev-kit supplies the assets, not the branch logic.)
      first build), and neither `spec-miner` nor the doc-ingest pair fire. `cso` still runs, full (not `--diff`) —
      the repo now carries every prior milestone's shipped code, which is exactly the kind of accumulated-risk
      surface (stale dependencies, drifted CI config, secrets that leaked since the last full sweep) a per-phase
-     `--diff` pass at Stage 13 wouldn't catch. This is the common case after milestone 1.
-2. **The per-phase loop (Stages 5–13)** — runs **once per roadmap phase** produced by Stage 3. Loop position lives in
-   `STATE.md`. Stages 0–4 run once per milestone; Stages 14–16 run once at milestone close-out. Every per-phase
+     `--diff` pass at Stage 12 wouldn't catch. This is the common case after milestone 1.
+2. **The per-phase loop (Stages 5–12)** — runs **once per roadmap phase** produced by Stage 3. Loop position lives in
+   `STATE.md`. Stages 0–4 run once per milestone; Stages 13–15 run once at milestone close-out. Every per-phase
    conditional below is re-evaluated **for each phase**.
-3. **The milestone loop (Stages 0→16)** — a full pipeline traversal is one milestone. Stage 16's close-out doesn't
+3. **The milestone loop (Stages 0→15)** — a full pipeline traversal is one milestone. Stage 15's close-out doesn't
    terminate the project — it checks `docs/BACKLOG.md`: if enough Now/Next items exist to justify one, the pipeline
    re-enters Stage 0 for the next milestone. See [New milestone = new project](#new-milestone--new-project).
 
@@ -118,7 +117,7 @@ dev-kit supplies the assets, not the branch logic.)
 | `plan-review-eng` / `-goal-backward` (S7) | **Always** (unconditional lenses) | — |
 | `spec-review-cpo` (S1) | A spec exists and a real scope/strategy call is needed before planning | Skip; no strategic/scope challenge happens for this spec at all — nothing downstream re-checks it |
 | `docs/BACKLOG.md` write (part of S1's `spec-review-cpo`) | The posture/milestone-split work identifies anything descoped from this milestone | Skip — nothing writes/updates the file this run; a milestone that descopes nothing leaves it untouched |
-| **Milestone loop** (after S16) | `docs/BACKLOG.md` has Now/Next items after close-out | Skip — project ends here; the backlog (if any) sits idle until someone manually starts a new milestone |
+| **Milestone loop** (after S15) | `docs/BACKLOG.md` has Now/Next items after close-out | Skip — project ends here; the backlog (if any) sits idle until someone manually starts a new milestone |
 | `refactoring-specialist` (S8) | A track touches existing code | Skip; new-file tracks don't need it |
 | `secure-code-guardian` (S8) | Track implements auth / input handling / crypto | Skip |
 | `fullstack-guardian` (S8) | Feature spans frontend + backend together | Use narrower lane skills instead |
@@ -126,19 +125,20 @@ dev-kit supplies the assets, not the branch logic.)
 | **Debug** (S9) | A bug / test failure / unexpected behavior occurs | Skip; execution continues |
 | UI/DX review passes (S10): `design-reviewer`, `ui-auditor`, `accessibility-tester`, `devex-review` | Phase shipped UI or a developer-facing surface | Skip; `code-review-gate` + `qa` still run |
 | `nyquist-auditor` (S11) | `verifier` Step 6d found requirements with no automated test coverage (`validation_gaps` non-empty) | Skip; nothing to fill |
-| `gate-automation` (S12) | Sprint diff added/changed **primary** user flows | No new flows required (internal-only changes excluded) |
+| `gate-automation` (S11) | Sprint diff added/changed **primary** user flows | No new flows required (internal-only changes excluded) |
 | `cso` (S0) | Entry path has existing code — Legacy or Continuing-milestone | Skip on a first-milestone Greenfield entry; nothing to scan yet |
-| `compliance-auditor` + product compliance skills (S13) | Regulated data/industry in scope (GDPR/HIPAA/PCI/SOC2…) | Skip |
-| `penetration-tester` (S13) | Active exploitation is **authorized and in scope** | Skip — agent refuses without written authorization |
-| `cso` (S13) | Always runs (`--diff` mode) | — |
-| `security-auditor` (S13) | Always runs; **branches internally** | With a threat model → verifies mitigations; without → falls back directly to `security-reviewer`'s general methodology |
-| **Ship mode** (S15) | Automated (`ship` → `land-and-deploy`) vs manual (`finishing-a-development-branch`) — an operator choice, not a repo predicate | Pick one path; both end in a merged/deployed or explicitly-kept branch |
-| Infra deploy specifics (S15) | Deploy platform detected (Fly/Render/Vercel/Netlify/GH Actions) | GitLab/unknown → `land-and-deploy` stops, hands off to manual merge |
-| `incident-responder` (S16) | An active production incident is underway | Skip |
+| `dependency-manager` (S12) | Always runs | — |
+| `compliance-auditor` + product compliance skills (S12) | Regulated data/industry in scope (GDPR/HIPAA/PCI/SOC2…) | Skip |
+| `penetration-tester` (S12) | Active exploitation is **authorized and in scope** | Skip — agent refuses without written authorization |
+| `cso` (S12) | Always runs (`--diff` mode) | — |
+| `security-auditor` (S12) | Always runs; **branches internally** | With a threat model → verifies mitigations; without → falls back directly to `security-reviewer`'s general methodology |
+| **Ship mode** (S14) | Automated (`ship` → `land-and-deploy`) vs manual (`finishing-a-development-branch`) — an operator choice, not a repo predicate | Pick one path; both end in a merged/deployed or explicitly-kept branch |
+| Infra deploy specifics (S14) | Deploy platform detected (Fly/Render/Vercel/Netlify/GH Actions) | GitLab/unknown → `land-and-deploy` stops, hands off to manual merge |
+| `incident-responder` (S15) | An active production incident is underway | Skip |
 | **Lane skills** (S8 mostly) | The project's actual stack matches the lane | Unmatched lanes never fire — a Python+React app invokes `python-pro`/`react-expert`, not `golang-pro`/`swift-expert` |
 
-**Rule of thumb:** the *unconditional* backbone every project runs is Stages 1 → 2 → 3 → 5 → 7 → 8 → 10 → 11 → 14 →
-15 → 16. Everything else keys off a predicate above. This is exactly why "193 assets placed" ≠ "193 assets fire for
+**Rule of thumb:** the *unconditional* backbone every project runs is Stages 1 → 2 → 3 → 5 → 7 → 8 → 10 → 11 → 13 →
+14 → 15. Everything else keys off a predicate above. This is exactly why "193 assets placed" ≠ "193 assets fire for
 any one project" — most runs exercise a minority of the catalog, selected by these gates.
 
 ---
@@ -161,7 +161,7 @@ Establish the rules of the game before any spec exists, and recover ground truth
 4. **`cso`** *(existing-code path — Legacy entry, or a Continuing-milestone entry at milestone 2+)* — a full
    15-phase Chief-Security-Officer audit of whatever code is already in the repo, saved to
    `.security-reports/*.json`. Skipped on a true first-milestone Greenfield entry — there's no code yet to scan.
-   This is `cso`'s *other* scheduled invocation; see Stage 13 for its per-phase companion run. Establishes the
+   This is `cso`'s *other* scheduled invocation; see Stage 12 for its per-phase companion run. Establishes the
    security baseline `planner`'s Stage 7 `<threat_model>` step consults before assigning threat dispositions, and
    the evidence `sdd-review-cto` can weigh at Stage 2.
 5. **`graphify`** — turn the repo (and any doc corpus) into a persistent, queryable `graph.json` +
@@ -227,7 +227,7 @@ input is a fresh PRD. **Every milestone after that:** input is `docs/BACKLOG.md`
    trajectory, and evolution path, then writes a locked **Architecture Decision Record** into the SDD's
    `## CTO Review` section. The Stage 2 counterpart to Stage 1's `spec-review-cpo`: CPO settles *what* to build,
    CTO settles *whether the chosen architecture is sound to build on*. It defers security depth to `cso` — not
-   concurrent with this review (`cso` isn't a Stage 2 asset; see Stage 0 and Stage 13), so it weighs whatever
+   concurrent with this review (`cso` isn't a Stage 2 asset; see Stage 0 and Stage 12), so it weighs whatever
    `.security-reports/` already exists rather than a fresh pass — and does **not** review any phase's `PLAN.md`
    — that's `plan-review-eng`'s job at Stage 7, against a different artifact. Nothing downstream re-litigates the
    architecture once this locks it.
@@ -427,15 +427,14 @@ the lighter tier, with the full set still available as an explicit escalation.
    real behavioral test targeting the hardest edge (never a trivially-passing one); FILLED / ESCALATED /
    justified-SKIP. Distinct from `converge`: this fills missing *test coverage* for requirements that already work,
    not missing *implementation*.
-5. **`dependency-manager`** *(agent)* — CVE / version-conflict / license / dead-weight sweep, incremental tested updates.
+5. **`gate-automation`** *(agent, GWD step 14 territory)* — diff the sprint for new/changed primary flows, author
+   golden-path + critical-edge E2E flows (Playwright web / Maestro mobile), run them locally, check for an
+   on-demand E2E CI job → `authoring-report.json`. Invokes **`test-master`** / **`playwright-expert`** (web lane)
+   for test-design guidance. A Stage 8–13 audit folded this in from its own former stage — it answers the same
+   question as `verifier`/`converge` above ("is the goal actually covered?") at the E2E-user-flow layer, and was
+   a near-single-asset stage on its own.
 
-### Stage 12 — Automation coverage *(GWD step 14)*
-
-- **`gate-automation`** *(agent)* — diff the sprint for new/changed primary flows, author golden-path + critical-edge
-  E2E flows (Playwright web / Maestro mobile), run them locally, check for an on-demand E2E CI job → `authoring-report.json`.
-  Invokes **`test-master`** / **`playwright-expert`** (web lane) for test-design guidance.
-
-### Stage 13 — Security & compliance gate
+### Stage 12 — Security & compliance gate
 
 - **`security-audit`** *(command)* → **`security-auditor`** *(agent)* — verify every declared threat mitigation at
   *all* entry points (not one grep hit) → `SECURITY.md`; **open threats block the phase from shipping**. Its
@@ -444,19 +443,25 @@ the lighter tier, with the full set still available as an explicit escalation.
 - **`cso`** *(skill, `--diff` mode)* — this phase's companion run to its Stage 0 full audit: an incremental sweep
   of just this phase's changes (attack surface, secrets, supply chain, CI/CD, STRIDE), trend-tracked by fingerprint
   against the prior `.security-reports/` entry so Resolved/Persistent/New findings are visible phase over phase.
-  Always has code to scan by construction — Stage 13 runs after Stage 8 (Execute) for this phase.
+  Always has code to scan by construction — Stage 12 runs after Stage 8 (Execute) for this phase.
 - **`penetration-tester`** *(agent)* — authorized active exploitation (recon / OWASP / API / network / cloud).
 - **`compliance-auditor`** *(agent)* — map named regulations (GDPR/HIPAA/PCI/SOC2/…) to actual controls; the
   **product lane** `gdpr-ccpa-compliance` / `hipaa-compliance` skills supply the framework detail.
 - **`security-reviewer`** *(skill)* — the manual SAST + auth/input/crypto review methodology `security-auditor`
   declares as its methodology home; also the general-audit fallback `security-auditor` runs directly when a phase
   has no `<threat_model>` to verify against.
+- **`dependency-manager`** *(agent)* — CVE / version-conflict / license / dead-weight sweep, incremental tested
+  updates. A Stage 8–13 audit moved this in from the verify stage — a dependency/license sweep answers "is this
+  compliant and safe to ship," the security gate's question, not "did we build the goal." Overlaps with
+  `security-auditor`'s own dependency fieldwork (both may surface the same CVE); that overlap is acceptable,
+  same layering as `security-auditor`/`security-reviewer` elsewhere in this stage. **Lane routing:** the
+  **specialized lane**'s `license-engineer` handles deep license-compliance questions this agent's sweep flags.
 
 ---
 
 ## Milestone close-out
 
-### Stage 14 — Document
+### Stage 13 — Document
 
 - **`document-generate`** / **`code-documenter`** — Diataxis doc set + validated docstrings/API docs (every example
   actually compiles/runs).
@@ -465,7 +470,7 @@ the lighter tier, with the full set still available as an explicit escalation.
   diff, polish CHANGELOG voice (never clobber history), then **`doc-verifier`** *(agent)* re-verifies every checkable
   claim (file paths, commands, endpoints) against the filesystem.
 
-### Stage 15 — Ship & deploy *(GWD step 15 territory)*
+### Stage 14 — Ship & deploy *(GWD step 15 territory)*
 
 - **`finishing-a-development-branch`** *(skill, manual)* — the safe 4-option (merge / PR / keep / discard) menu with a
   pre-merge test gate and provenance-checked worktree cleanup. **Or**, fully automated:
@@ -477,7 +482,7 @@ the lighter tier, with the full set still available as an explicit escalation.
   (CI/CD, go/no-go gates), `terraform-engineer` / `cloud-architect` (IaC, wave migrations), `kubernetes-specialist` /
   `docker-expert`, `sre-engineer` (SLIs/SLOs), `monitoring-expert`.
 
-### Stage 16 — Operate, retrospect, close
+### Stage 15 — Operate, retrospect, close
 
 - **`health`** *(command)* → **`health-reporter`** *(agent)* — weighted 0–10 codebase-quality dashboard with trend history.
 - **`performance-engineer`** *(agent)* — measure-first bottleneck elimination with before/after evidence.
@@ -518,10 +523,10 @@ These aren't a stage — they run *throughout* the pipeline:
 |-------|------|-------|
 | `context-save` / `context-restore` | Session continuity across `/clear`, branch switches, worktrees | At every boundary ‖ and on resume |
 | `learn` | Durable cross-session knowledge ledger | Whenever a gotcha/convention surfaces (esp. Stages 8–11) |
-| `guard` | Destructive-command + edit-scope safety | Any prod/shared-surface work (esp. Stage 8, 15) |
+| `guard` | Destructive-command + edit-scope safety | Any prod/shared-surface work (esp. Stage 8, 14) |
 | `graphify` | Persistent queryable knowledge graph | Built in Stage 0, queried in Stages 5, 7 |
 | `diagram` | Editable Mermaid → SVG/PNG artifacts | Any architecture/plan/design step (2, 4, 7) |
-| `writing-skills` | Codify a repeated workflow into a new dev-kit skill | Post-`retro`, when Stage 16 surfaces a reusable pattern |
+| `writing-skills` | Codify a repeated workflow into a new dev-kit skill | Post-`retro`, when Stage 15 surfaces a reusable pattern |
 
 ---
 
@@ -533,12 +538,12 @@ pipeline at the stages where their expertise is needed (overwhelmingly Stage 8 e
 | Lane (plugin) | Plugs into | Representative assets |
 |---|---|---|
 | **Backend** (`dev-kit-backend`, 26) | Stage 8 execution; `legacy-modernizer` at Stage 0/8 | `python-pro`, `golang-pro`, `rust-engineer`, `fastapi-expert`, `spring-boot-engineer`, `postgres-pro`, `api-designer`, `microservices-architect` |
-| **Web** (`dev-kit-web`, 11) | Stage 8; `playwright-expert` at Stage 12 | `react-expert`, `nextjs-developer`, `vue-expert`, `typescript-pro`, `electron-pro` |
-| **Mobile** (`dev-kit-mobile`, 4) | Stage 8; Maestro flows at Stage 12 | `swift-expert`, `kotlin-specialist`, `flutter-expert`, `react-native-expert` |
+| **Web** (`dev-kit-web`, 11) | Stage 8; `playwright-expert` at Stage 11 | `react-expert`, `nextjs-developer`, `vue-expert`, `typescript-pro`, `electron-pro` |
+| **Mobile** (`dev-kit-mobile`, 4) | Stage 8; Maestro flows at Stage 11 | `swift-expert`, `kotlin-specialist`, `flutter-expert`, `react-native-expert` |
 | **Data/AI** (`dev-kit-data-ai`, 17) | Stage 6 (eval contract) + Stage 8 | `eval-planner`, `eval-auditor`, `framework-selector`, `ai-researcher`, `rag-architect`, `prompt-engineer`, `ml-pipeline`, `llm-architect` |
-| **Infra** (`dev-kit-infra`, 14) | Stage 15 deploy + Stage 16 operate | `devops-engineer`, `terraform-engineer`, `cloud-architect`, `kubernetes-specialist`, `sre-engineer`, `chaos-engineer`, `monitoring-expert` |
-| **Specialized** (`dev-kit-specialized`, 19) | Stage 8 (domain build); `license-engineer` at Stage 11 | `payment-integration`, `fintech-engineer`, `healthcare-admin`, `mcp-developer`, `blockchain-developer`, `game-developer`, `seo-specialist` |
-| **Product** (`dev-kit-product`, 5) | Stage 1 (assumptions) + Stage 13/16 (compliance, analytics) | `ab-test-analysis`, `cohort-analysis`, `growth-loops`, `gdpr-ccpa-compliance`, `hipaa-compliance` |
+| **Infra** (`dev-kit-infra`, 14) | Stage 14 deploy + Stage 15 operate | `devops-engineer`, `terraform-engineer`, `cloud-architect`, `kubernetes-specialist`, `sre-engineer`, `chaos-engineer`, `monitoring-expert` |
+| **Specialized** (`dev-kit-specialized`, 19) | Stage 8 (domain build); `license-engineer` at Stage 12 | `payment-integration`, `fintech-engineer`, `healthcare-admin`, `mcp-developer`, `blockchain-developer`, `game-developer`, `seo-specialist` |
+| **Product** (`dev-kit-product`, 5) | Stage 1 (assumptions) + Stage 12/15 (compliance, analytics) | `ab-test-analysis`, `cohort-analysis`, `growth-loops`, `gdpr-ccpa-compliance`, `hipaa-compliance` |
 
 ---
 
@@ -547,7 +552,7 @@ pipeline at the stages where their expertise is needed (overwhelmingly Stage 8 e
 This document is the **Skill/Agent/Command spine**. A *running* GWD pipeline also needs three layers dev-kit
 deliberately leaves out — see [`workflow-recommendations.md`](workflow-recommendations.md) for the full table:
 
-- **Orchestration** *(not-yet-built)* — the persistent, cross-session sequencer that walks Stages 0→16, survives a
+- **Orchestration** *(not-yet-built)* — the persistent, cross-session sequencer that walks Stages 0→15, survives a
   `/clear`, governs auto/manual/sleep modes, holds the context boundaries ‖, and carries `STATE.md` / calibration
   state across many sessions. This is what actually *drives* everything above.
 - **Workflow** *(buildable today)* — bounded deterministic scripts for the fan-out/loop chunks: Stage 8 wave/track
@@ -563,7 +568,7 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 **All 94 core assets** (49 skills · 37 agents · 8 commands), by the stage that owns them:
 
 - **Stage 0:** `constitution`, `spec-miner`, `gate-reverse-engineer`, `doc-classifier`, `doc-synthesizer`, `graphify`
-  (`cso` also fires here on an existing-code entry path, but is counted once under Stage 13, its home)
+  (`cso` also fires here on an existing-code entry path, but is counted once under Stage 12, its home)
 - **Stage 1:** `brainstorming`, `specify` (generate + clarify in one skill), `assumption-mapping`, `backlog-grooming`, `market-researcher`, `spec-review-cpo` (`the-fool` remains available as an optional extra pressure-test, no longer in the default list; `first-principles-thinking`, `clarify`, and `feature-forge` were folded into `specify`/`spec-review-cpo` — see the note at the top of this document)
 - **Stage 2:** `architecture-designer`, `diagram`, `sdd-review-cto`
 - **Stage 3:** `project-researcher`, `research-synthesizer`, `roadmapper`
@@ -576,16 +581,15 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 - **Stage 8:** `using-git-worktrees`, `sprint-execution`, `test-driven-development`, `dispatching-parallel-agents`, `fullstack-guardian`, `secure-code-guardian`, `refactoring-specialist`, `guard`, `design-handoff`, `verification-before-completion`
 - **Stage 9:** `debug` (cmd), `debugger`, `systematic-debugging`
 - **Stage 10:** `review` (cmd), `code-review-gate`, `bugfix-wave`, `code-review-protocol`, `qa` (cmd), `qa` (agent), `design-reviewer`, `ui-auditor`, `accessibility-tester`, `devex-review`
-- **Stage 11:** `verify` (cmd), `verifier`, `converge`, `integration-checker`, `nyquist-auditor`, `dependency-manager`
-- **Stage 12:** `gate-automation`, `test-master`
-- **Stage 13:** `security-audit` (cmd), `security-auditor`, `cso`, `penetration-tester`, `compliance-auditor`, `security-reviewer`
-- **Stage 14:** `document-generate`, `code-documenter`, `content-qa`, `document-release`, `doc-verifier`
-- **Stage 15:** `finishing-a-development-branch`, `ship`, `land-and-deploy`
-- **Stage 16:** `health` (cmd), `health-reporter`, `performance-engineer`, `incident-responder`, `retro` (cmd), `retro` (agent)
+- **Stage 11:** `verify` (cmd), `verifier`, `converge`, `integration-checker`, `nyquist-auditor`, `gate-automation`, `test-master` (folded in from the former standalone Automation-coverage stage — see the note at the bottom of this document)
+- **Stage 12:** `security-audit` (cmd), `security-auditor`, `cso`, `penetration-tester`, `compliance-auditor`, `security-reviewer`, `dependency-manager` (relocated in from the verify stage — see the note at the bottom of this document)
+- **Stage 13:** `document-generate`, `code-documenter`, `content-qa`, `document-release`, `doc-verifier`
+- **Stage 14:** `finishing-a-development-branch`, `ship`, `land-and-deploy`
+- **Stage 15:** `health` (cmd), `health-reporter`, `performance-engineer`, `incident-responder`, `retro` (cmd), `retro` (agent)
 - **Cross-cutting:** `context-save`, `context-restore`, `learn`, `writing-skills` (+ `guard`, `graphify`, `diagram` listed above)
 
 **All 96 lane assets** route in via [Lane routing](#lane-routing) — predominantly at Stage 8, with the Data/AI eval
-pair at Stage 6, infra at Stages 15–16, and product analytics/compliance at Stages 1/13/16. The full roster, every
+pair at Stage 6, infra at Stages 14–15, and product analytics/compliance at Stages 1/12/15. The full roster, every
 one named against the stage it plugs into:
 
 **Backend** (`dev-kit-backend`, 26) — Stage 8 execution *(languages/frameworks/data/API)*; `legacy-modernizer` at
@@ -596,11 +600,11 @@ Stage 0/8:
 `sql-pro`, `api-designer`, `graphql-architect`, `microservices-architect`, `websocket-engineer`,
 `dotnet-framework-4.8-expert`, `legacy-modernizer`.
 
-**Web** (`dev-kit-web`, 11) — Stage 8; `playwright-expert` at Stage 12:
+**Web** (`dev-kit-web`, 11) — Stage 8; `playwright-expert` at Stage 11:
 `react-expert`, `nextjs-developer`, `angular-architect`, `vue-expert`, `vue-expert-js`, `javascript-pro`,
 `typescript-pro`, `playwright-expert`, `shopify-expert`, `wordpress-pro`, `electron-pro`.
 
-**Mobile** (`dev-kit-mobile`, 4) — Stage 8; Maestro flows at Stage 12:
+**Mobile** (`dev-kit-mobile`, 4) — Stage 8; Maestro flows at Stage 11:
 `flutter-expert`, `kotlin-specialist`, `react-native-expert`, `swift-expert`.
 
 **Data/AI** (`dev-kit-data-ai`, 17) — Stage 6 eval contract (`domain-researcher` → the eval pair) + Stage 8 build:
@@ -608,19 +612,19 @@ Stage 0/8:
 `fine-tuning-expert`, `nlp-engineer`, `reinforcement-learning-engineer`, `llm-architect`, `rag-architect`,
 `prompt-engineer`, `framework-selector`, `ai-researcher`, `eval-planner`, `eval-auditor`.
 
-**Infra** (`dev-kit-infra`, 14) — Stage 15 deploy + Stage 16 operate:
+**Infra** (`dev-kit-infra`, 14) — Stage 14 deploy + Stage 15 operate:
 `cloud-architect`, `terraform-engineer`, `azure-infra-engineer`, `docker-expert`, `kubernetes-specialist`,
 `platform-engineer`, `devops-engineer`, `sre-engineer`, `monitoring-expert`, `chaos-engineer`,
 `database-administrator`, `network-engineer`, `microsoft-ops`, `powershell-pro`.
 
-**Specialized** (`dev-kit-specialized`, 19) — Stage 8 domain build; `license-engineer` at Stage 11; MCP/tooling at
+**Specialized** (`dev-kit-specialized`, 19) — Stage 8 domain build; `license-engineer` at Stage 12; MCP/tooling at
 Stage 0/8:
 `cli-developer`, `devtools-engineer`, `mcp-developer`, `atlassian-mcp`, `slack-expert`, `license-engineer`,
 `fintech-engineer`, `healthcare-admin`, `legal-advisor`, `risk-manager`, `quant-analyst`, `payment-integration`,
 `embedded-systems`, `game-developer`, `iot-engineer`, `salesforce-developer`, `seo-specialist`,
 `blockchain-developer`, `visual-asset-generator`.
 
-**Product** (`dev-kit-product`, 5) — Stage 1 assumptions + Stage 13 compliance + Stage 16 analytics:
+**Product** (`dev-kit-product`, 5) — Stage 1 assumptions + Stage 12 compliance + Stage 15 analytics:
 `ab-test-analysis`, `cohort-analysis`, `growth-loops`, `gdpr-ccpa-compliance`, `hipaa-compliance`.
 
 **Total: 190 / 190 dev-kit assets placed** (94 core + 96 lane) — verified by diffing every catalog header against
@@ -645,14 +649,19 @@ Stage 2: every one of its 15 phases (stack detection, attack-surface census, git
 manifests, CI/CD configs, STRIDE against Phase 0's detected components) assumes an existing checkout, but Stage 2
 is the *first* artifact of a greenfield milestone — no code exists yet to scan. `cso` moved to Stage 0 (a full
 audit, gated on the entry path already having code — Legacy or Continuing-milestone, never a first-milestone
-Greenfield entry) and Stage 13 (`--diff` mode, per phase — always has code by construction, since Stage 13 runs
-after Stage 8's Execute). `security-auditor` was found to duplicate `security-reviewer`'s audit methodology,
-tool list, and report format nearly verbatim (~40 lines, including an identical worked example); it now declares
-`security-reviewer` its methodology home (the `debugger`/`systematic-debugging` pattern) and keeps only its
-unique job — verifying a `<threat_model>`'s declared dispositions. `planner`'s Stage 7 threat-modeling step and
-`sdd-review-cto`'s Stage 2 review were both wired to consult `cso`'s latest `.security-reports/` entry when one
-exists, replacing the prior doc claim of a direct Stage 2 → Stage 13 handoff that no code ever actually
-implemented.
+Greenfield entry) and the Security gate (`--diff` mode, per phase — always has code by construction, since that
+stage runs after Stage 8's Execute; numbered Stage 13 at the time, later renumbered Stage 12 — see below).
+`security-auditor` was found to duplicate `security-reviewer`'s audit methodology, tool list, and report format
+nearly verbatim (~40 lines, including an identical worked example); it now declares `security-reviewer` its
+methodology home (the `debugger`/`systematic-debugging` pattern) and keeps only its unique job — verifying a
+`<threat_model>`'s declared dispositions. `planner`'s Stage 7 threat-modeling step and `sdd-review-cto`'s Stage 2
+review were both wired to consult `cso`'s latest `.security-reports/` entry when one exists, replacing the prior
+doc claim of a direct Stage 2 → Security-gate handoff that no code ever actually implemented. A following Stage
+8–13 audit pass folded the near-single-asset Automation-coverage stage into the verify stage (`gate-automation`
+answers the same "is the goal covered" question `verifier`/`converge` do, at the E2E-user-flow layer) and moved
+`dependency-manager` out of the verify stage into the security gate (a CVE/license/version sweep is that gate's
+question, not "did we build the goal"; `license-engineer`'s lane-routing note moved with it) — renumbering
+Stages 12–16 down to 11–15 throughout this document.
 
 ---
 

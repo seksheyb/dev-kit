@@ -29,9 +29,9 @@ Skill/Agent/Command spine those glue layers would drive.
 
 ## The pipeline at a glance
 
-Stages 0–4 run **once per milestone**. Stages 5–12 are the **per-phase loop** (repeat for every
-vertical slice the roadmap produced). Stages 13–15 close out the branch, the milestone, and the operate/learn
-cycle. Conditional stages are marked *(if …)*.
+Stages 0–4 run **once per milestone**. Stages 5–11 are the **per-phase loop** (repeat for every
+vertical slice the roadmap produced). Stages 12–15 close out the milestone — Final Review, the branch, and the
+operate/learn cycle. Conditional stages are marked *(if …)*.
 
 **A milestone is the whole pipeline, not a phase.** One full Stage 0→16 traversal delivers one milestone. A new
 milestone is **not** a special continuation path — it re-enters Stage 0 and runs the entire pipeline again,
@@ -54,10 +54,10 @@ cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it desc
 | **9** | Debug *(as needed)* | `debug` (cmd) → `debugger` ← `systematic-debugging` · `learn` | failure → root-cause fix + regression test |
 | **10** | Adversarial review ↔ fix loop | `review` (cmd) → `code-review-gate` (round) ↔ `bugfix-wave` · `code-review-protocol` · `qa` (cmd/agent) · `ui-auditor` | code → fixes (loop ≤6) |
 | **11** | Verify the goal | `verify` (cmd) → `verifier` · `converge` · `integration-checker` · `nyquist-auditor` · `gate-automation` ← `test-master`/`playwright-expert` | code → `VERIFICATION.md`, gaps closed, Playwright/Maestro flows |
-| **12** | Security & compliance gate | `security-audit` (cmd) → `security-auditor` · `cso` (`--diff`) · `penetration-tester` · `compliance-auditor` · `security-reviewer` · `dependency-manager` | code → `SECURITY.md`, `.security-reports/*.json`, dependency/license report, open threats block ship |
-| **13** | Document | `document-generate`/`code-documenter` · `content-qa` · `document-release` → `doc-verifier` | shipped surface → synced docs, CHANGELOG |
-| **14** | Ship & deploy | `finishing-a-development-branch` *(manual)* **or** `ship` → `land-and-deploy` · **infra lane** | branch → PR → merged & deployed |
-| **15** | Operate, retrospect, close | `health` (cmd) → `health-reporter` · `performance-engineer` · `incident-responder` · `retro` (cmd) → `retro` · `design-reviewer` (full/deep) · `devex-review` · `accessibility-tester` · milestone archive | milestone → dashboards, postmortems, archive + tag |
+| **12** | Final Review *(milestone gate)* | **a. Functional:** `design-reviewer` (full/deep) · `devex-review` · `accessibility-tester` — **b. Security:** `security-audit` (cmd) → `security-auditor` · `cso` (`--diff`, whole-milestone) · `penetration-tester` · `compliance-auditor` · `security-reviewer` · `dependency-manager` | the milestone's whole shipped surface → design/DX/a11y scorecards + `SECURITY.md`, `.security-reports/*.json`, dependency/license report — open threats block the milestone from shipping |
+| **13** | Ship & deploy | `finishing-a-development-branch` *(manual)* **or** `ship` → `land-and-deploy` · **infra lane** | branch → PR → merged & deployed |
+| **14** | Document | `document-generate`/`code-documenter` · `content-qa` · `document-release` → `doc-verifier` | shipped surface → synced docs, CHANGELOG |
+| **15** | Operate, retrospect, close | `health` (cmd) → `health-reporter` · `performance-engineer` · `incident-responder` · `retro` (cmd) → `retro` · milestone archive | milestone → dashboards, postmortems, archive + tag |
 
 **Always-on (cross-cutting, not a stage):** `context-save` / `context-restore` (session continuity),
 `learn` (durable knowledge), `guard` (safety), `graphify` (query anytime), `diagram` (any review/design
@@ -95,10 +95,11 @@ dev-kit supplies the assets, not the branch logic.)
      current. `constitution` runs in **update** mode (not init), `graphify` runs an **incremental** update (not a
      first build), and neither `spec-miner` nor the doc-ingest pair fire. `cso` still runs, full (not `--diff`) —
      the repo now carries every prior milestone's shipped code, which is exactly the kind of accumulated-risk
-     surface (stale dependencies, drifted CI config, secrets that leaked since the last full sweep) a per-phase
-     `--diff` pass at Stage 12 wouldn't catch. This is the common case after milestone 1.
-2. **The per-phase loop (Stages 5–12)** — runs **once per roadmap phase** produced by Stage 3. Loop position lives in
-   `STATE.md`. Stages 0–4 run once per milestone; Stages 13–15 run once at milestone close-out. Every per-phase
+     surface (stale dependencies, drifted CI config, secrets that leaked since the last full sweep) Stage 12's own
+     `--diff` pass (scoped to *this* milestone's changes only) wouldn't catch. This is the common case after
+     milestone 1.
+2. **The per-phase loop (Stages 5–11)** — runs **once per roadmap phase** produced by Stage 3. Loop position lives in
+   `STATE.md`. Stages 0–4 run once per milestone; Stages 12–15 run once at milestone close-out. Every per-phase
    conditional below is re-evaluated **for each phase**.
 3. **The milestone loop (Stages 0→15)** — a full pipeline traversal is one milestone. Stage 15's close-out doesn't
    terminate the project — it checks `docs/BACKLOG.md`: if enough Now/Next items exist to justify one, the pipeline
@@ -127,15 +128,15 @@ dev-kit supplies the assets, not the branch logic.)
 | `nyquist-auditor` (S11) | `verifier` Step 6d found requirements with no automated test coverage (`validation_gaps` non-empty) | Skip; nothing to fill |
 | `gate-automation` (S11) | Sprint diff added/changed **primary** user flows | No new flows required (internal-only changes excluded) |
 | `cso` (S0) | Entry path has existing code — Legacy or Continuing-milestone | Skip on a first-milestone Greenfield entry; nothing to scan yet |
-| `dependency-manager` (S12) | Always runs | — |
-| `compliance-auditor` + product compliance skills (S12) | Regulated data/industry in scope (GDPR/HIPAA/PCI/SOC2…) | Skip |
-| `penetration-tester` (S12) | Active exploitation is **authorized and in scope** | Skip — agent refuses without written authorization |
-| `cso` (S12) | Always runs (`--diff` mode) | — |
-| `security-auditor` (S12) | Always runs; **branches internally** | With a threat model → verifies mitigations; without → falls back directly to `security-reviewer`'s general methodology |
-| **Ship mode** (S14) | Automated (`ship` → `land-and-deploy`) vs manual (`finishing-a-development-branch`) — an operator choice, not a repo predicate | Pick one path; both end in a merged/deployed or explicitly-kept branch |
-| Infra deploy specifics (S14) | Deploy platform detected (Fly/Render/Vercel/Netlify/GH Actions) | GitLab/unknown → `land-and-deploy` stops, hands off to manual merge |
+| `design-reviewer` (full/deep) / `devex-review` / `accessibility-tester` (S12a) | Milestone shipped UI or a developer-facing surface anywhere across its phases | Skip; Stage 12b (security) still runs |
+| `dependency-manager` (S12b) | Always runs | — |
+| `compliance-auditor` + product compliance skills (S12b) | Regulated data/industry in scope (GDPR/HIPAA/PCI/SOC2…) | Skip |
+| `penetration-tester` (S12b) | Active exploitation is **authorized and in scope** | Skip — agent refuses without written authorization |
+| `cso` (S12b) | Always runs (`--diff` mode, scoped to this milestone's accumulated changes) | — |
+| `security-auditor` (S12b) | Always runs; **branches internally** | With a threat model → verifies mitigations; without → falls back directly to `security-reviewer`'s general methodology |
+| **Ship mode** (S13) | Automated (`ship` → `land-and-deploy`) vs manual (`finishing-a-development-branch`) — an operator choice, not a repo predicate | Pick one path; both end in a merged/deployed or explicitly-kept branch |
+| Infra deploy specifics (S13) | Deploy platform detected (Fly/Render/Vercel/Netlify/GH Actions) | GitLab/unknown → `land-and-deploy` stops, hands off to manual merge |
 | `incident-responder` (S15) | An active production incident is underway | Skip |
-| `design-reviewer` (full/deep) / `devex-review` / `accessibility-tester` (S15) | Milestone shipped UI or a developer-facing surface anywhere across its phases | Skip; `health-reporter` + `retro` still run |
 | **Lane skills** (S8 mostly) | The project's actual stack matches the lane | Unmatched lanes never fire — a Python+React app invokes `python-pro`/`react-expert`, not `golang-pro`/`swift-expert` |
 
 **Rule of thumb:** the *unconditional* backbone every project runs is Stages 1 → 2 → 3 → 5 → 7 → 8 → 10 → 11 → 13 →
@@ -162,7 +163,7 @@ Establish the rules of the game before any spec exists, and recover ground truth
 4. **`cso`** *(existing-code path — Legacy entry, or a Continuing-milestone entry at milestone 2+)* — a full
    15-phase Chief-Security-Officer audit of whatever code is already in the repo, saved to
    `.security-reports/*.json`. Skipped on a true first-milestone Greenfield entry — there's no code yet to scan.
-   This is `cso`'s *other* scheduled invocation; see Stage 12 for its per-phase companion run. Establishes the
+   This is `cso`'s *other* scheduled invocation; see Stage 12 for its milestone-close companion run. Establishes the
    security baseline `planner`'s Stage 7 `<threat_model>` step consults before assigning threat dispositions, and
    the evidence `sdd-review-cto` can weigh at Stage 2.
 5. **`graphify`** — turn the repo (and any doc corpus) into a persistent, queryable `graph.json` +
@@ -420,11 +421,11 @@ the lighter tier, with the full set still available as an explicit escalation.
    diff against its own `UI-SPEC.md` (or abstract 6-pillar standards) → `UI-REVIEW.md`. Kept in the per-phase loop
    deliberately — it's diff-scoped and mechanical, unlike the three passes below.
 
-   **Deliberately NOT per-phase:** `design-reviewer`, `devex-review`, and `accessibility-tester` moved to Stage 15
-   (milestone close-out) — see the note there. They're expensive, browser-driven, whole-surface audits (cross-page
-   consistency, end-to-end developer journey, site-wide WCAG conformance) that don't decompose cleanly to one
-   phase's diff and would otherwise re-audit unchanged pages on every phase. Keeping the phase loop to
-   `code-review-gate`/`bugfix-wave`/`qa`/`ui-auditor` keeps Stage 10 fast on every phase.
+   **Deliberately NOT per-phase:** `design-reviewer`, `devex-review`, and `accessibility-tester` moved to Stage 12
+   (Final Review, sub-stage a — milestone close-out) — see that stage's note. They're expensive, browser-driven,
+   whole-surface audits (cross-page consistency, end-to-end developer journey, site-wide WCAG conformance) that
+   don't decompose cleanly to one phase's diff and would otherwise re-audit unchanged pages on every phase. Keeping
+   the phase loop to `code-review-gate`/`bugfix-wave`/`qa`/`ui-auditor` keeps Stage 10 fast on every phase.
 
 ### Stage 11 — Verify the goal
 
@@ -451,43 +452,64 @@ the lighter tier, with the full set still available as an explicit escalation.
    question as `verifier`/`converge` above ("is the goal actually covered?") at the E2E-user-flow layer, and was
    a near-single-asset stage on its own.
 
-### Stage 12 — Security & compliance gate
+---
+
+## Milestone close-out
+
+### Stage 12 — Final Review *(milestone gate — not per-phase; see Stage 10's note)*
+
+Runs once, after every phase in the milestone has cleared Stages 5–11. Two independent sub-stages — functional
+and security — both gate the milestone before Stage 13 (Ship & deploy).
+
+#### 12a. Functional
+
+*(if the milestone shipped UI or a developer-facing surface, across any of its phases)*
+
+- **`design-reviewer`** in full/deep mode *(cross-page consistency, whole-site AI-slop sweep, design-score delta
+  vs. the last milestone's `design-baseline.json` via regression mode)*.
+- **`devex-review`** *(the real, now-stable getting-started flow — TTHW, CLI `--help`, real errors — measuring a
+  whole-product journey that isn't meaningful mid-phase)*.
+- **`accessibility-tester`** *(site-wide WCAG 2.1 AA conformance)*.
+
+Moved here from the former per-phase Stage 10 slot — see that stage's note — to keep the phase loop light and
+because these three checks are inherently whole-surface, not diff-scoped.
+
+#### 12b. Security
 
 - **`security-audit`** *(command)* → **`security-auditor`** *(agent)* — verify every declared threat mitigation at
-  *all* entry points (not one grep hit) → `SECURITY.md`; **open threats block the phase from shipping**. Its
-  methodology home for the general-audit fieldwork pass is `security-reviewer` (below) — it does not restate that
-  methodology, only the threat-register-disposition verification that's unique to it.
-- **`cso`** *(skill, `--diff` mode)* — this phase's companion run to its Stage 0 full audit: an incremental sweep
-  of just this phase's changes (attack surface, secrets, supply chain, CI/CD, STRIDE), trend-tracked by fingerprint
-  against the prior `.security-reports/` entry so Resolved/Persistent/New findings are visible phase over phase.
-  Always has code to scan by construction — Stage 12 runs after Stage 8 (Execute) for this phase.
+  *all* entry points (not one grep hit), across every phase's threat model in the milestone, → `SECURITY.md`;
+  **open threats block the milestone from shipping**. Its methodology home for the general-audit fieldwork pass is
+  `security-reviewer` (below) — it does not restate that methodology, only the threat-register-disposition
+  verification that's unique to it.
+- **`cso`** *(skill, `--diff` mode)* — this milestone's companion run to its Stage 0 full audit: an incremental
+  sweep of everything this milestone's phases changed (attack surface, secrets, supply chain, CI/CD, STRIDE),
+  trend-tracked by fingerprint against the prior `.security-reports/` entry so Resolved/Persistent/New findings
+  are visible milestone over milestone. Always has code to scan by construction — Stage 12 runs after every phase
+  in the milestone has cleared Stage 8 (Execute).
 - **`penetration-tester`** *(agent)* — authorized active exploitation (recon / OWASP / API / network / cloud).
+  Genuinely a whole-system exercise, not a per-diff one.
 - **`compliance-auditor`** *(agent)* — map named regulations (GDPR/HIPAA/PCI/SOC2/…) to actual controls; the
   **product lane** `gdpr-ccpa-compliance` / `hipaa-compliance` skills supply the framework detail.
 - **`security-reviewer`** *(skill)* — the manual SAST + auth/input/crypto review methodology `security-auditor`
   declares as its methodology home; also the general-audit fallback `security-auditor` runs directly when a phase
   has no `<threat_model>` to verify against.
 - **`dependency-manager`** *(agent)* — CVE / version-conflict / license / dead-weight sweep, incremental tested
-  updates. A Stage 8–13 audit moved this in from the verify stage — a dependency/license sweep answers "is this
-  compliant and safe to ship," the security gate's question, not "did we build the goal." Overlaps with
-  `security-auditor`'s own dependency fieldwork (both may surface the same CVE); that overlap is acceptable,
-  same layering as `security-auditor`/`security-reviewer` elsewhere in this stage. **Lane routing:** the
-  **specialized lane**'s `license-engineer` handles deep license-compliance questions this agent's sweep flags.
+  updates. A dependency/license sweep answers "is this compliant and safe to ship," the security gate's question,
+  not "did we build the goal." Overlaps with `security-auditor`'s own dependency fieldwork (both may surface the
+  same CVE); that overlap is acceptable, same layering as `security-auditor`/`security-reviewer` elsewhere in this
+  stage. **Lane routing:** the **specialized lane**'s `license-engineer` handles deep license-compliance questions
+  this agent's sweep flags.
 
----
+**Trade-off, stated plainly:** this is a *detection-latency* cost, not a shipping-gate cost — Stage 13 (Ship &
+deploy) was always milestone-level; nothing in this pipeline ever shipped a single phase independently, and Stage
+13 still waits on Stage 12 clearing either way. What actually changes: under the old per-phase gate, a threat
+introduced in phase 2 was caught immediately after phase 2's own Stage 8, before phase 3 was built on top of it —
+the fix stayed isolated to one phase's surface. Now that same threat isn't caught until Final Review, potentially
+after several more phases have built on or alongside the vulnerable surface — the eventual fix may touch more of
+the codebase, and the vulnerability sits unflagged in the repo for longer. Chosen deliberately to keep the phase
+loop light; this latency window is a real cost, not a hidden one.
 
-## Milestone close-out
-
-### Stage 13 — Document
-
-- **`document-generate`** / **`code-documenter`** — Diataxis doc set + validated docstrings/API docs (every example
-  actually compiles/runs).
-- **`content-qa`** — de-slop the prose (AI-ism scan, content-type-aware strictness) before publishing.
-- **`document-release`** — build a coverage map of shipped-vs-documented public surface, sync each doc against the
-  diff, polish CHANGELOG voice (never clobber history), then **`doc-verifier`** *(agent)* re-verifies every checkable
-  claim (file paths, commands, endpoints) against the filesystem.
-
-### Stage 14 — Ship & deploy *(GWD step 15 territory)*
+### Stage 13 — Ship & deploy *(GWD step 15 territory)*
 
 - **`finishing-a-development-branch`** *(skill, manual)* — the safe 4-option (merge / PR / keep / discard) menu with a
   pre-merge test gate and provenance-checked worktree cleanup. **Or**, fully automated:
@@ -499,6 +521,20 @@ the lighter tier, with the full set still available as an explicit escalation.
   (CI/CD, go/no-go gates), `terraform-engineer` / `cloud-architect` (IaC, wave migrations), `kubernetes-specialist` /
   `docker-expert`, `sre-engineer` (SLIs/SLOs), `monitoring-expert`.
 
+### Stage 14 — Document
+
+- **`document-generate`** / **`code-documenter`** — Diataxis doc set + validated docstrings/API docs (every example
+  actually compiles/runs).
+- **`content-qa`** — de-slop the prose (AI-ism scan, content-type-aware strictness) before publishing.
+- **`document-release`** — build a coverage map of shipped-vs-documented public surface, sync each doc against the
+  diff, polish CHANGELOG voice (never clobber history), then **`doc-verifier`** *(agent)* re-verifies every checkable
+  claim (file paths, commands, endpoints) against the filesystem.
+
+**Runs after Ship & deploy, not before:** documents what's actually live rather than a branch that might still hit
+a merge conflict or get reverted by `land-and-deploy`'s escape hatch. `document-release`'s own framing already
+pointed this way — it builds a "shipped-vs-documented" coverage map, and `doc-verifier` checks claims against the
+filesystem — both more meaningful once the code is confirmed live than while it's still in flight.
+
 ### Stage 15 — Operate, retrospect, close
 
 - **`health`** *(command)* → **`health-reporter`** *(agent)* — weighted 0–10 codebase-quality dashboard with trend history.
@@ -506,13 +542,6 @@ the lighter tier, with the full set still available as an explicit escalation.
 - **`incident-responder`** *(agent)* — triage → contain → preserve evidence → diagnose → blameless postmortem, if
   production breaks; hands off to `compliance-auditor` for breach-notification obligations. `chaos-engineer` (infra
   lane) proactively rehearses these failures.
-- **Experience audit** *(if the milestone shipped UI or a developer-facing surface, across any of its phases)*:
-  **`design-reviewer`** in full/deep mode *(cross-page consistency, whole-site AI-slop sweep, design-score delta
-  vs. the last milestone's `design-baseline.json` via regression mode)*, **`devex-review`** *(the real,
-  now-stable getting-started flow — TTHW, CLI `--help`, real errors — measuring a whole-product journey that
-  isn't meaningful mid-phase)*, **`accessibility-tester`** *(site-wide WCAG 2.1 AA conformance)*. Moved here from
-  the former per-phase Stage 10 slot — see that stage's note — to keep the phase loop light and because these
-  three checks are inherently whole-surface, not diff-scoped.
 - **`retro`** *(command)* → **`retro`** *(agent)* — periodic engineering retrospective mined from git history.
 - **Product lane** analytics — `ab-test-analysis`, `cohort-analysis`, `growth-loops` — close the loop back to Stage 1's
   assumption bank with real usage evidence.
@@ -547,7 +576,7 @@ These aren't a stage — they run *throughout* the pipeline:
 |-------|------|-------|
 | `context-save` / `context-restore` | Session continuity across `/clear`, branch switches, worktrees | At every boundary ‖ and on resume |
 | `learn` | Durable cross-session knowledge ledger | Whenever a gotcha/convention surfaces (esp. Stages 8–11) |
-| `guard` | Destructive-command + edit-scope safety | Any prod/shared-surface work (esp. Stage 8, 14) |
+| `guard` | Destructive-command + edit-scope safety | Any prod/shared-surface work (esp. Stage 8, 13) |
 | `graphify` | Persistent queryable knowledge graph | Built in Stage 0, queried in Stages 5, 7 |
 | `diagram` | Editable Mermaid → SVG/PNG artifacts | Any architecture/plan/design step (2, 4, 7) |
 | `writing-skills` | Codify a repeated workflow into a new dev-kit skill | Post-`retro`, when Stage 15 surfaces a reusable pattern |
@@ -565,7 +594,7 @@ pipeline at the stages where their expertise is needed (overwhelmingly Stage 8 e
 | **Web** (`dev-kit-web`, 11) | Stage 8; `playwright-expert` at Stage 11 | `react-expert`, `nextjs-developer`, `vue-expert`, `typescript-pro`, `electron-pro` |
 | **Mobile** (`dev-kit-mobile`, 4) | Stage 8; Maestro flows at Stage 11 | `swift-expert`, `kotlin-specialist`, `flutter-expert`, `react-native-expert` |
 | **Data/AI** (`dev-kit-data-ai`, 17) | Stage 6 (eval contract) + Stage 8 | `eval-planner`, `eval-auditor`, `framework-selector`, `ai-researcher`, `rag-architect`, `prompt-engineer`, `ml-pipeline`, `llm-architect` |
-| **Infra** (`dev-kit-infra`, 14) | Stage 14 deploy + Stage 15 operate | `devops-engineer`, `terraform-engineer`, `cloud-architect`, `kubernetes-specialist`, `sre-engineer`, `chaos-engineer`, `monitoring-expert` |
+| **Infra** (`dev-kit-infra`, 14) | Stage 13 deploy + Stage 15 operate | `devops-engineer`, `terraform-engineer`, `cloud-architect`, `kubernetes-specialist`, `sre-engineer`, `chaos-engineer`, `monitoring-expert` |
 | **Specialized** (`dev-kit-specialized`, 19) | Stage 8 (domain build); `license-engineer` at Stage 12 | `payment-integration`, `fintech-engineer`, `healthcare-admin`, `mcp-developer`, `blockchain-developer`, `game-developer`, `seo-specialist` |
 | **Product** (`dev-kit-product`, 5) | Stage 1 (assumptions) + Stage 12/15 (compliance, analytics) | `ab-test-analysis`, `cohort-analysis`, `growth-loops`, `gdpr-ccpa-compliance`, `hipaa-compliance` |
 
@@ -604,16 +633,16 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 - **Stage 7:** `writing-plans`, `planner`, `plan-review` (cmd), `plan-reviewer`, `plan-review-eng`, `plan-review-design`, `plan-review-devex`, `plan-review-goal-backward`, `gate-plan-review`, `analyze` (`plan-review-eng` is a Stage 7 lens reviewing `PLAN.md`; the Stage 2 SDD/ADR review is now `sdd-review-cto`'s job. There is no `plan-review-ceo` — a founder-mode scope re-review is intentionally not part of this pipeline; scope is owned by `spec-review-cpo` at Stage 1)
 - **Stage 8:** `using-git-worktrees`, `sprint-execution`, `test-driven-development`, `dispatching-parallel-agents`, `fullstack-guardian`, `secure-code-guardian`, `refactoring-specialist`, `guard`, `design-handoff`, `verification-before-completion`
 - **Stage 9:** `debug` (cmd), `debugger`, `systematic-debugging`
-- **Stage 10:** `review` (cmd), `code-review-gate`, `bugfix-wave`, `code-review-protocol`, `qa` (cmd), `qa` (agent), `ui-auditor` (`design-reviewer`, `accessibility-tester`, and `devex-review` moved out to Stage 15 — see that stage's note and Stage 10's own note above)
+- **Stage 10:** `review` (cmd), `code-review-gate`, `bugfix-wave`, `code-review-protocol`, `qa` (cmd), `qa` (agent), `ui-auditor` (`design-reviewer`, `accessibility-tester`, and `devex-review` moved out to Stage 12 (Final Review, sub-stage a) — see that stage's note and Stage 10's own note above)
 - **Stage 11:** `verify` (cmd), `verifier`, `converge`, `integration-checker`, `nyquist-auditor`, `gate-automation`, `test-master` (folded in from the former standalone Automation-coverage stage — see the note at the bottom of this document)
-- **Stage 12:** `security-audit` (cmd), `security-auditor`, `cso`, `penetration-tester`, `compliance-auditor`, `security-reviewer`, `dependency-manager` (relocated in from the verify stage — see the note at the bottom of this document)
-- **Stage 13:** `document-generate`, `code-documenter`, `content-qa`, `document-release`, `doc-verifier`
-- **Stage 14:** `finishing-a-development-branch`, `ship`, `land-and-deploy`
-- **Stage 15:** `health` (cmd), `health-reporter`, `performance-engineer`, `incident-responder`, `design-reviewer`, `devex-review`, `accessibility-tester`, `retro` (cmd), `retro` (agent)
+- **Stage 12 (Final Review — milestone gate):** *12a functional:* `design-reviewer`, `devex-review`, `accessibility-tester` (moved in from the former per-phase Stage 10 — see Stage 10's note); *12b security:* `security-audit` (cmd), `security-auditor`, `cso`, `penetration-tester`, `compliance-auditor`, `security-reviewer`, `dependency-manager` (moved out of the per-phase loop to milestone cadence — see the note at the bottom of this document and Stage 12's own trade-off note)
+- **Stage 13:** `finishing-a-development-branch`, `ship`, `land-and-deploy` (swapped with Document — see Stage 14's note)
+- **Stage 14:** `document-generate`, `code-documenter`, `content-qa`, `document-release`, `doc-verifier` (swapped with Ship & deploy — runs after, not before, so it documents what's actually live)
+- **Stage 15:** `health` (cmd), `health-reporter`, `performance-engineer`, `incident-responder`, `retro` (cmd), `retro` (agent)
 - **Cross-cutting:** `context-save`, `context-restore`, `learn`, `writing-skills` (+ `guard`, `graphify`, `diagram` listed above)
 
 **All 96 lane assets** route in via [Lane routing](#lane-routing) — predominantly at Stage 8, with the Data/AI eval
-pair at Stage 6, infra at Stages 14–15, and product analytics/compliance at Stages 1/12/15. The full roster, every
+pair at Stage 6, infra at Stages 13/15, and product analytics/compliance at Stages 1/12/15. The full roster, every
 one named against the stage it plugs into:
 
 **Backend** (`dev-kit-backend`, 26) — Stage 8 execution *(languages/frameworks/data/API)*; `legacy-modernizer` at
@@ -636,7 +665,7 @@ Stage 0/8:
 `fine-tuning-expert`, `nlp-engineer`, `reinforcement-learning-engineer`, `llm-architect`, `rag-architect`,
 `prompt-engineer`, `framework-selector`, `ai-researcher`, `eval-planner`, `eval-auditor`.
 
-**Infra** (`dev-kit-infra`, 14) — Stage 14 deploy + Stage 15 operate:
+**Infra** (`dev-kit-infra`, 14) — Stage 13 deploy + Stage 15 operate:
 `cloud-architect`, `terraform-engineer`, `azure-infra-engineer`, `docker-expert`, `kubernetes-specialist`,
 `platform-engineer`, `devops-engineer`, `sre-engineer`, `monitoring-expert`, `chaos-engineer`,
 `database-administrator`, `network-engineer`, `microsoft-ops`, `powershell-pro`.
@@ -686,6 +715,22 @@ answers the same "is the goal covered" question `verifier`/`converge` do, at the
 `dependency-manager` out of the verify stage into the security gate (a CVE/license/version sweep is that gate's
 question, not "did we build the goal"; `license-engineer`'s lane-routing note moved with it) — renumbering
 Stages 12–16 down to 11–15 throughout this document.
+
+A later pass moved `design-reviewer`, `devex-review`, and `accessibility-tester` out of the per-phase Stage 10 loop
+into a milestone-level "Experience audit," on the grounds that they're expensive, whole-surface checks that don't
+decompose to a single phase's diff. A follow-up pass went further: the entire former Security & compliance gate
+(Stage 12 at the time) moved from per-phase to milestone cadence too, merging with that Experience audit into a
+single **Stage 12 — Final Review**, with explicit sub-stages `12a` (functional) and `12b` (security). This was a
+deliberate, flagged trade-off, not a mechanical relocation — moving security off the per-phase loop means an open
+threat in an early phase no longer blocks *that phase* from shipping, only the milestone, once every phase is
+done; the accumulated-risk window this opens was accepted explicitly in exchange for a lighter phase loop (Stages
+5–11, down from 5–12). `document-generate`/`document-release`/`doc-verifier` (Document) and
+`ship`/`land-and-deploy` (Ship & deploy) were also swapped — Ship & deploy now runs first, at Stage 13, and
+Document at Stage 14 — since `document-release`'s own "shipped-vs-documented coverage map" framing and
+`doc-verifier`'s filesystem-claim checks are both more meaningful once code is confirmed live than while a branch
+could still hit a merge conflict or get reverted by `land-and-deploy`'s escape hatch. Net renumbering: the
+per-phase loop is now Stages 5–11; milestone close-out is Stages 12–15 (Final Review, Ship & deploy, Document,
+Operate/retrospect/close).
 
 ---
 

@@ -538,6 +538,8 @@ filesystem — both more meaningful once the code is confirmed live than while i
 
 - **`health`** *(command)* → **`health-reporter`** *(agent)* — weighted 0–10 codebase-quality dashboard with trend history.
 - **`performance-engineer`** *(agent)* — measure-first bottleneck elimination with before/after evidence.
+- **`sre-engineer`** / **`monitoring-expert`** (infra lane) — Stage 13 set up the SLOs/dashboards; here they review
+  actual SLO/error-budget burn against this milestone's real data and tune alert thresholds from real signal.
 - **`incident-responder`** *(agent)* — triage → contain → preserve evidence → diagnose → blameless postmortem, if
   production breaks; hands off to `compliance-auditor` for breach-notification obligations. `chaos-engineer` (infra
   lane) proactively rehearses these failures.

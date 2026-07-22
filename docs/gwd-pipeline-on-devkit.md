@@ -8,13 +8,9 @@ this document answers the sibling question: **if you were to stand the same pipe
 dev-kit, which asset fires at each step, and in what order?**
 
 Every one of dev-kit's **94 core assets** (49 skills, 37 agents, 8 commands — including `spec-review-cpo`, added
-alongside this document to close the spec-stage product-review gap, and net of `first-principles-thinking`,
-`clarify`, and `feature-forge`, folded into `specify`/`spec-review-cpo` during a Stage 0/1 asset-overlap audit;
-and net of a Stage 2/7 audit that removed `plan-review-ceo` and added `sdd-review-cto` in its place — a net-zero
-skill swap that gives Stage 2 a real architecture-review gate)
-is placed somewhere below,
-and the **96 lane assets** (the 7 stack-reference plugins) are routed in at the stages where they apply.
-"I assume all should be utilised" — they are; see the [coverage appendix](#coverage-appendix--every-asset-placed).
+alongside this document to close the spec-stage product-review gap) is placed somewhere below, and the **96 lane
+assets** (the 7 stack-reference plugins) are routed in at the stages where they apply. "I assume all should be
+utilised" — they are; see the [coverage appendix](#coverage-appendix--every-asset-placed).
 
 **What dev-kit is *not*.** dev-kit deliberately stops at the skill/agent/command layer. The *sequencer*
 that walks these stages in order, survives a `/clear`, and governs auto/manual/sleep modes is not a
@@ -30,10 +26,10 @@ Skill/Agent/Command spine those glue layers would drive.
 ## The pipeline at a glance
 
 Stages 0–4 run **once per milestone**. Stages 5–11 are the **per-phase loop** (repeat for every
-vertical slice the roadmap produced). Stages 12–15 close out the milestone — Final Review, the branch, and the
-operate/learn cycle. Conditional stages are marked *(if …)*.
+vertical slice the roadmap produced). Stages 12–15 close out the milestone — Final Review, the branch, docs, and
+the operate/learn cycle. Conditional stages are marked *(if …)*.
 
-**A milestone is the whole pipeline, not a phase.** One full Stage 0→16 traversal delivers one milestone. A new
+**A milestone is the whole pipeline, not a phase.** One full Stage 0→15 traversal delivers one milestone. A new
 milestone is **not** a special continuation path — it re-enters Stage 0 and runs the entire pipeline again,
 treated exactly like a new project. The only thing that changes is where Stage 1 gets its requirements from: a
 first milestone starts from a PRD; every milestone after that starts from `docs/BACKLOG.md` — the durable,
@@ -56,7 +52,7 @@ cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it desc
 | **11** | Verify the goal | `verify` (cmd) → `verifier` · `converge` · `integration-checker` · `nyquist-auditor` · `gate-automation` ← `test-master`/`playwright-expert` | code → `VERIFICATION.md`, gaps closed, Playwright/Maestro flows |
 | **12** | Final Review *(milestone gate)* | **a. Functional:** `design-reviewer` (full/deep) · `devex-review` · `accessibility-tester` — **b. Security:** `security-audit` (cmd) → `security-auditor` · `cso` (`--diff`, whole-milestone) · `penetration-tester` · `compliance-auditor` · `security-reviewer` · `dependency-manager` | the milestone's whole shipped surface → design/DX/a11y scorecards + `SECURITY.md`, `.security-reports/*.json`, dependency/license report — open threats block the milestone from shipping |
 | **13** | Ship & deploy | `finishing-a-development-branch` *(manual)* **or** `ship` → `land-and-deploy` · **infra lane** | branch → PR → merged & deployed |
-| **14** | Document | `document-generate`/`code-documenter` · `content-qa` · `document-release` → `doc-verifier` | shipped surface → synced docs, CHANGELOG |
+| **14** | Document | `document-generate`/`code-documenter` → `document-release` → `content-qa` → `doc-verifier` | shipped surface → synced docs, CHANGELOG |
 | **15** | Operate, retrospect, close | `health` (cmd) → `health-reporter` · `performance-engineer` · `incident-responder` · `retro` (cmd) → `retro` · milestone archive | milestone → dashboards, postmortems, archive + tag |
 
 **Always-on (cross-cutting, not a stage):** `context-save` / `context-restore` (session continuity),
@@ -140,7 +136,7 @@ dev-kit supplies the assets, not the branch logic.)
 | **Lane skills** (S8 mostly) | The project's actual stack matches the lane | Unmatched lanes never fire — a Python+React app invokes `python-pro`/`react-expert`, not `golang-pro`/`swift-expert` |
 
 **Rule of thumb:** the *unconditional* backbone every project runs is Stages 1 → 2 → 3 → 5 → 7 → 8 → 10 → 11 → 13 →
-14 → 15. Everything else keys off a predicate above. This is exactly why "193 assets placed" ≠ "193 assets fire for
+14 → 15. Everything else keys off a predicate above. This is exactly why "190 assets placed" ≠ "190 assets fire for
 any one project" — most runs exercise a minority of the catalog, selected by these gates.
 
 ---
@@ -177,27 +173,24 @@ input is a fresh PRD. **Every milestone after that:** input is `docs/BACKLOG.md`
 
 1. **`brainstorming`** — the hard gate: no implementation may begin until a design is explored and approved.
    Pure ideation — explores context, interviews one question at a time, proposes 2-3 approaches, gets
-   section-by-section design approval, then hands off to `specify` with that approved design as context.
-   Does not write its own spec file, run its own quality checks, or invoke planning directly — those were
-   folded into `specify` after a Stage 0/1 audit found brainstorming's old steps 5-8 ran a second, competing
-   "idea → spec → plan" path under a different file convention (`docs/specs/YYYY-MM-DD-<topic>-design.md`
-   vs. `specify`'s `docs/specs/NNN-feature-name/spec.md`) that bypassed the Clarification Pass and
-   `spec-review-cpo` entirely. Includes YC-office-hours and go/no-go idea-validation modes for pre-code
-   product ideas. Its mandatory Premise
-   Challenge (is this the right problem / what if we do nothing / what already exists) is a lighter, pre-spec pass
-   of the same checklist `spec-review-cpo` runs formally below — running it here first avoids drafting a full spec
-   for an idea that would fail that gate anyway. If the framing itself looks inherited-by-convention rather than
-   reasoned, either skill escalates to a full first-principles decomposition (strip to assumptions, challenge
-   each, rebuild from fundamental truths; plus the 5D operational-problem method) — the complete methodology now
-   lives in `spec-review-cpo`'s `references/first-principles.md` rather than as a standalone skill.
+   section-by-section design approval, then hands off to `specify` with that approved design as context. Does not
+   write its own spec file, run its own quality checks, or invoke planning directly — that all happens downstream
+   in `specify`, so every idea flows through one file convention (`docs/specs/NNN-feature-name/spec.md`) and one
+   quality gate (`spec-review-cpo`), never a competing path. Includes YC-office-hours and go/no-go idea-validation
+   modes for pre-code product ideas. Its mandatory Premise Challenge (is this the right problem / what if we do
+   nothing / what already exists) is a lighter, pre-spec pass of the same checklist `spec-review-cpo` runs formally
+   below — running it here first avoids drafting a full spec for an idea that would fail that gate anyway. If the
+   framing itself looks inherited-by-convention rather than reasoned, either skill escalates to a full
+   first-principles decomposition (strip to assumptions, challenge each, rebuild from fundamental truths; plus the
+   5D operational-problem method) — the complete methodology lives in `spec-review-cpo`'s
+   `references/first-principles.md`.
 2. **`specify`** — convert the description (the PRD, or `docs/BACKLOG.md`'s top items for milestone 2+) into a
    structured `spec.md` (WHAT/WHY only), allocating global, never-renumbered **`US-xxx`** story IDs
    (Theme→Pillar→Story-bank hierarchy) — carrying forward any ID a backlog item already had, never re-minting one.
    Interviews from PM Hat (value/goals) and Dev Hat (feasibility/security/edge cases), requires EARS-format
-   phrasing for conditional functional requirements, and closes with an inline **Clarification Pass** — the
-   bounded 5-question ambiguity scan formerly run by a separate `clarify` skill, writing answers back into the
-   spec's `## Clarifications` section. Both halves remain independently invocable ("clarify the spec" re-enters
-   the Clarification Pass directly on an existing spec).
+   phrasing for conditional functional requirements, and closes with an inline **Clarification Pass** — a bounded
+   5-question ambiguity scan, writing answers back into the spec's `## Clarifications` section. Independently
+   invocable on its own ("clarify the spec" re-enters the Clarification Pass directly on an existing spec).
 3. **`assumption-mapping`** → **`backlog-grooming`** — surface & rank the riskiest VUBF assumptions, design the
    cheapest experiment for the top few; validated assumptions become groomed, sprint-ready backlog items in the
    same `docs/BACKLOG.md` `spec-review-cpo` writes to below — one file, one taxonomy (Now/Next/Later/Icebox/Won't
@@ -211,11 +204,10 @@ input is a fresh PRD. **Every milestone after that:** input is `docs/BACKLOG.md`
    `docs/BACKLOG.md`** (created if missing), not just noted in prose — every descoped item is an ID-tracked entry
    carrying its `US-xxx`/Pillar forward, ready to seed the *next* milestone's Stage 1. Nothing downstream
    re-litigates strategy once this has run — Stage 7's lenses (`eng`/`design`/`devex`/`goal-backward`) are
-   execution-quality checks, not scope checks; the pipeline deliberately runs no founder-mode plan-stage scope re-review (there is no `plan-review-ceo`) at any
-   stage (see the note at the top of Stage 7). `the-fool`'s adversarial modes (pre-mortem, red-team) remain
-   available as an optional extra pressure-test for unusually high-stakes specs, but are no longer required by
-   default now that CPO's own posture
-   is inherently adversarial.
+   execution-quality checks, not scope checks; the pipeline deliberately runs no founder-mode plan-stage scope
+   re-review (there is no `plan-review-ceo`) at any stage (see the note at the top of Stage 7). `the-fool`'s
+   adversarial modes (pre-mortem, red-team) remain available as an optional extra pressure-test for unusually
+   high-stakes specs, but aren't required by default now that CPO's own posture is inherently adversarial.
 
 ### Stage 2 — Architecture & tech stack *(GWD steps 4–5)*
 
@@ -228,11 +220,10 @@ input is a fresh PRD. **Every milestone after that:** input is `docs/BACKLOG.md`
    (alternatives + trade-offs actually recorded), innovation-token spend, scalability posture, technical-debt
    trajectory, and evolution path, then writes a locked **Architecture Decision Record** into the SDD's
    `## CTO Review` section. The Stage 2 counterpart to Stage 1's `spec-review-cpo`: CPO settles *what* to build,
-   CTO settles *whether the chosen architecture is sound to build on*. It defers security depth to `cso` — not
-   concurrent with this review (`cso` isn't a Stage 2 asset; see Stage 0 and Stage 12), so it weighs whatever
-   `.security-reports/` already exists rather than a fresh pass — and does **not** review any phase's `PLAN.md`
-   — that's `plan-review-eng`'s job at Stage 7, against a different artifact. Nothing downstream re-litigates the
-   architecture once this locks it.
+   CTO settles *whether the chosen architecture is sound to build on*. Defers security depth to `cso` (Stage 0/12),
+   weighing whatever `.security-reports/` already exists rather than running a fresh pass, and does **not** review
+   any phase's `PLAN.md` — that's `plan-review-eng`'s job at Stage 7, against a different artifact. Nothing
+   downstream re-litigates the architecture once this locks it.
 
 ### Stage 3 — Research & roadmap *(GWD step 7)*
 
@@ -257,6 +248,7 @@ input is a fresh PRD. **Every milestone after that:** input is `docs/BACKLOG.md`
    `DESIGN.md` (stops and points back to `design-consultation` if missing) rather than resolving it itself. Also
    fires standalone in Stage 8 for a single phase's screen, where it creates its own screen-scoped project bound
    to that same system id (never design-consultation's demo project).
+
 `design-handoff` and `plan-review-design` are **not** Stage 4 assets despite being about design — see the
 table footnote above for `plan-review-design` (fires in Stage 7), and Stage 8 below for `design-handoff`
 (fires per phase, bridging a finished Claude Design screen into codebase-native code —
@@ -311,16 +303,14 @@ Build the context a planner needs, cheaply, before writing tasks.
   failure modes into `AI-SPEC.md §1b`; the **data-ai lane** then owns the eval contract — **`eval-planner`** designs
   the strategy/rubrics, **`eval-auditor`** later audits coverage; **`framework-selector`** / **`ai-researcher`** /
   **`rag-architect`** / **`prompt-engineer`** / **`ml-pipeline`** etc. supply the build methodology. All four of
-  `framework-selector`/`ai-researcher`/`domain-researcher`/`eval-planner` now check for Stage 5's `RESEARCH.md` (if
-  it exists) before researching — a Stage 5/6 audit found this AI lane was the only part of Stage 6 that never
-  consumed Stage 5 output (the UI lane below already did), risking duplicated research and un-reconciled stack picks
-  for the same phase.
+  `framework-selector`/`ai-researcher`/`domain-researcher`/`eval-planner` check Stage 5's `RESEARCH.md` (if it
+  exists) before researching, so this lane never duplicates Stage 5's research or picks an un-reconciled stack for
+  the same phase.
 - **UI work (GWD step 10):** **`ui-researcher`** *(agent)* produces the `UI-SPEC.md` design contract (hard
   constraints: ≤4 font sizes, spacing multiples of 4, registry-safety vetting); **`ui-checker`** *(agent)* validates
-  it BLOCK/FLAG/PASS before planning may proceed. Both now read Stage 4's `DESIGN.md` (repo root) when it exists —
-  it's the project-wide authority for spacing/typography/color, and the same audit found neither agent actually
-  read it despite the catalog already claiming they did; `ui-researcher` now maps DESIGN.md's declared tokens onto
-  the phase-level contract instead of re-asking, and `ui-checker` BLOCKs on undeclared drift from it.
+  it BLOCK/FLAG/PASS before planning may proceed. Both read Stage 4's `DESIGN.md` (repo root) when it exists — the
+  project-wide authority for spacing/typography/color: `ui-researcher` maps DESIGN.md's declared tokens onto the
+  phase-level contract instead of re-asking, and `ui-checker` BLOCKs on undeclared drift from it.
 
 ### Stage 7 — Plan the phase *(GWD step 11)*
 
@@ -347,9 +337,7 @@ checks.
    `references/independent-review.md`). `gate_passed: true` unlocks Wave 1.
 4. **`analyze`** — read-only cross-artifact audit (spec ↔ `PLAN.md` ↔ constitution) with a requirement-to-task
    coverage table before any code is written. Reads the phase's `PLAN.md` with its tasks embedded as `<task>`
-   blocks — this pipeline's single-file plan convention, the same one Stage 11's `converge` now reads and appends
-   to (a Stage 7/11 audit retargeted `converge` off the Spec-Kit `spec.md`/`plan.md`/`tasks.md` triad, which
-   nothing in dev-kit produces).
+   blocks — this pipeline's single-file plan convention, the same one Stage 11's `converge` reads and appends to.
 
 **Default review tier (cost vs. rigor):** running every applicable lens plus `gate-plan-review` is the maximum-rigor
 setting; the conditional-gates table already auto-prunes `plan-review-design`/`-devex` for phases with no UI/dev-facing
@@ -398,10 +386,10 @@ the lighter tier, with the full set still available as an explicit escalation.
   fix + failing-then-passing regression test. Archives every resolved session to its own exhaustive,
   symptom-matched case log (`.planning/debug/knowledge-base.md`) — read at the start of every future investigation
   loop — and, only when the root cause generalizes beyond the one incident, also cross-posts a `pitfall` entry to
-  `learn`'s ledger. A Stage 8–13 audit found these two stores had no bridge (durable findings were invisible
-  outside debug sessions) and, after weighing a full merge, kept them separate: one is a case log matched by
-  symptom keywords and written for every bug, the other a curated, cross-session insight store — different types
-  of knowledge, not just different file formats.
+  `learn`'s ledger. The two stores stay separate deliberately: the debug knowledge base is a case log matched by
+  symptom keywords and written for every bug; `learn`'s ledger is a curated, cross-session insight store. Different
+  types of knowledge, not just different file formats — but the cross-post keeps a generalizable finding from
+  being invisible outside debug sessions.
 - **`learn`** — record the gotcha/convention/pitfall to `.claude/learnings.jsonl` so the next session doesn't
   rediscover it.
 
@@ -421,11 +409,11 @@ the lighter tier, with the full set still available as an explicit escalation.
    diff against its own `UI-SPEC.md` (or abstract 6-pillar standards) → `UI-REVIEW.md`. Kept in the per-phase loop
    deliberately — it's diff-scoped and mechanical, unlike the three passes below.
 
-   **Deliberately NOT per-phase:** `design-reviewer`, `devex-review`, and `accessibility-tester` moved to Stage 12
-   (Final Review, sub-stage a — milestone close-out) — see that stage's note. They're expensive, browser-driven,
-   whole-surface audits (cross-page consistency, end-to-end developer journey, site-wide WCAG conformance) that
-   don't decompose cleanly to one phase's diff and would otherwise re-audit unchanged pages on every phase. Keeping
-   the phase loop to `code-review-gate`/`bugfix-wave`/`qa`/`ui-auditor` keeps Stage 10 fast on every phase.
+   **Deliberately NOT per-phase:** `design-reviewer`, `devex-review`, and `accessibility-tester` run at Stage 12
+   (Final Review, sub-stage a — milestone close-out) instead. They're expensive, browser-driven, whole-surface
+   audits (cross-page consistency, end-to-end developer journey, site-wide WCAG conformance) that don't decompose
+   cleanly to one phase's diff and would otherwise re-audit unchanged pages on every phase. Keeping the phase loop
+   to `code-review-gate`/`bugfix-wave`/`qa`/`ui-auditor` keeps Stage 10 fast on every phase.
 
 ### Stage 11 — Verify the goal
 
@@ -448,9 +436,8 @@ the lighter tier, with the full set still available as an explicit escalation.
 5. **`gate-automation`** *(agent, GWD step 14 territory)* — diff the sprint for new/changed primary flows, author
    golden-path + critical-edge E2E flows (Playwright web / Maestro mobile), run them locally, check for an
    on-demand E2E CI job → `authoring-report.json`. Invokes **`test-master`** / **`playwright-expert`** (web lane)
-   for test-design guidance. A Stage 8–13 audit folded this in from its own former stage — it answers the same
-   question as `verifier`/`converge` above ("is the goal actually covered?") at the E2E-user-flow layer, and was
-   a near-single-asset stage on its own.
+   for test-design guidance. Answers the same question as `verifier`/`converge` above ("is the goal actually
+   covered?") at the E2E-user-flow layer.
 
 ---
 
@@ -471,8 +458,8 @@ and security — both gate the milestone before Stage 13 (Ship & deploy).
   whole-product journey that isn't meaningful mid-phase)*.
 - **`accessibility-tester`** *(site-wide WCAG 2.1 AA conformance)*.
 
-Moved here from the former per-phase Stage 10 slot — see that stage's note — to keep the phase loop light and
-because these three checks are inherently whole-surface, not diff-scoped.
+These three checks are inherently whole-surface, not diff-scoped, which is why they run once at milestone close
+rather than per phase — see Stage 10's note.
 
 #### 12b. Security
 
@@ -501,21 +488,22 @@ because these three checks are inherently whole-surface, not diff-scoped.
   this agent's sweep flags.
 
 **Trade-off, stated plainly:** this is a *detection-latency* cost, not a shipping-gate cost — Stage 13 (Ship &
-deploy) was always milestone-level; nothing in this pipeline ever shipped a single phase independently, and Stage
-13 still waits on Stage 12 clearing either way. What actually changes: under the old per-phase gate, a threat
-introduced in phase 2 was caught immediately after phase 2's own Stage 8, before phase 3 was built on top of it —
-the fix stayed isolated to one phase's surface. Now that same threat isn't caught until Final Review, potentially
-after several more phases have built on or alongside the vulnerable surface — the eventual fix may touch more of
-the codebase, and the vulnerability sits unflagged in the repo for longer. Chosen deliberately to keep the phase
-loop light; this latency window is a real cost, not a hidden one.
+deploy) is always milestone-level; nothing in this pipeline ships a single phase independently, and Stage 13 still
+waits on Stage 12 clearing either way. What changes by running security at milestone cadence instead of per-phase:
+a threat introduced in phase 2 isn't caught until Final Review, potentially after several more phases have built on
+or alongside the vulnerable surface — the eventual fix may touch more of the codebase, and the vulnerability sits
+unflagged in the repo for longer. Chosen deliberately to keep the phase loop light; this latency window is a real
+cost, not a hidden one.
 
 ### Stage 13 — Ship & deploy *(GWD step 15 territory)*
 
 - **`finishing-a-development-branch`** *(skill, manual)* — the safe 4-option (merge / PR / keep / discard) menu with a
   pre-merge test gate and provenance-checked worktree cleanup. **Or**, fully automated:
-- **`ship`** *(skill)* — 14-step non-interactive pipeline: merge base → test-failure triage → coverage-gap tracing +
-  generate missing tests → plan-completion audit → adversarial pre-landing review with auto-fix → version bump →
-  CHANGELOG → bisectable commits → push → create/update PR.
+- **`ship`** *(skill)* — 14-step non-interactive pipeline: merge base → test-failure triage → coverage-gap tracing
+  (reusing `nyquist-auditor`'s per-phase results as pre-confirmed evidence rather than re-tracing every path from
+  scratch) → plan-completion audit (reusing `VERIFICATION.md`/`converge` output the same way) → adversarial
+  pre-landing review, scoped to the delta `ship` itself just generated rather than re-reviewing the whole diff a
+  second time → version bump → CHANGELOG → bisectable commits → push → create/update PR.
 - **`land-and-deploy`** *(skill)* — picks up where `ship` left off: readiness gate → merge → poll the deploy platform
   → verify production health → revert as the escape hatch. **Infra lane** owns the platform detail: `devops-engineer`
   (CI/CD pipeline config that `land-and-deploy`'s readiness gate polls), `terraform-engineer` / `cloud-architect`
@@ -524,15 +512,23 @@ loop light; this latency window is a real cost, not a hidden one.
 ### Stage 14 — Document
 
 - **`document-generate`** / **`code-documenter`** — Diataxis doc set + validated docstrings/API docs (every example
-  actually compiles/runs).
-- **`document-release`** — build a coverage map of shipped-vs-documented public surface, sync each doc against the
-  diff, polish CHANGELOG voice (never clobber history), then **`doc-verifier`** *(agent)* re-verifies every checkable
-  claim (file paths, commands, endpoints) against the filesystem.
+  actually compiles/runs), sourced from `spec.md`, `SDD.md`'s ADRs, and the phase's `PLAN.md` where they exist —
+  trade-offs and alternatives-considered come from the ADR that already recorded them, not re-derived from code
+  comments and git history.
+- **`document-release`** — build a coverage map of shipped-vs-documented public surface (cross-referenced against
+  `spec.md`'s `US-xxx` story bank as well as the diff, so a requirement that was never touched at all still gets
+  flagged), sync each doc against the diff, polish CHANGELOG voice (never clobber the entry `ship` already wrote —
+  polish only, never rewrite).
+- **`content-qa`** — de-slop the prose (AI-ism scan, content-type-aware strictness), run last over everything this
+  stage touched, including `document-release`'s own edits — the systematic pass both `document-generate` and
+  `document-release` delegate their voice checks to, rather than each keeping a thinner version of the same check.
+- **`doc-verifier`** *(agent)* — re-verifies every checkable claim (file paths, commands, endpoints) against the
+  filesystem, last in the sequence.
 
-**Runs after Ship & deploy, not before:** documents what's actually live rather than a branch that might still hit
-a merge conflict or get reverted by `land-and-deploy`'s escape hatch. `document-release`'s own framing already
-pointed this way — it builds a "shipped-vs-documented" coverage map, and `doc-verifier` checks claims against the
-filesystem — both more meaningful once the code is confirmed live than while it's still in flight.
+Runs immediately after `ship` creates or updates the PR — while it's still open, before `land-and-deploy` merges —
+not after the whole of Stage 13 including deploy: `document-release` needs an unmerged diff to audit (it aborts if
+run from the base branch) and polishes the CHANGELOG entry `ship` just wrote. The rest of Stage 14 has no
+merge-state dependency and can run any time after `ship`.
 
 ### Stage 15 — Operate, retrospect, close
 
@@ -556,7 +552,7 @@ Archiving a milestone doesn't end the pipeline; it decides whether to loop. Chec
 
 - **Now/Next items exist** → start the next milestone by re-entering **Stage 0**, run the entire pipeline again.
   Treat it exactly like a new project — same `constitution` check (now in update mode per the "Continuing
-  milestone" entry-path branch), same `graphify` (incremental), same Stage 1 → 16 sequence. The only structural
+  milestone" entry-path branch), same `graphify` (incremental), same Stage 0 → 15 sequence. The only structural
   difference from milestone 1 is Stage 1's input: `specify` reads `docs/BACKLOG.md`'s top items instead of
   waiting for a fresh PRD, and `spec-review-cpo` runs again against whatever didn't fit last time — posture,
   premise, and prioritization all get re-evaluated fresh for this milestone, not inherited from the last one.
@@ -623,7 +619,7 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 
 - **Stage 0:** `constitution`, `spec-miner`, `gate-reverse-engineer`, `doc-classifier`, `doc-synthesizer`, `graphify`
   (`cso` also fires here on an existing-code entry path, but is counted once under Stage 12, its home)
-- **Stage 1:** `brainstorming`, `specify` (generate + clarify in one skill), `assumption-mapping`, `backlog-grooming`, `market-researcher`, `spec-review-cpo` (`the-fool` remains available as an optional extra pressure-test, no longer in the default list; `first-principles-thinking`, `clarify`, and `feature-forge` were folded into `specify`/`spec-review-cpo` — see the note at the top of this document)
+- **Stage 1:** `brainstorming`, `specify` (generate + clarify in one skill), `assumption-mapping`, `backlog-grooming`, `market-researcher`, `spec-review-cpo` (`the-fool` remains available as an optional extra pressure-test, not in the default list)
 - **Stage 2:** `architecture-designer`, `diagram`, `sdd-review-cto`
 - **Stage 3:** `project-researcher`, `research-synthesizer`, `roadmapper`
 - **Stage 4:** `design-consultation`, `design-html` (`plan-review-design` is introduced here conceptually but
@@ -631,14 +627,14 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
   fires — see both stages' notes)
 - **Stage 5:** `codebase-mapper`, `pattern-mapper`, `assumptions-analyzer`, `advisor-researcher`, `phase-researcher`
 - **Stage 6:** `domain-researcher`, `ui-researcher`, `ui-checker`
-- **Stage 7:** `writing-plans`, `planner`, `plan-review` (cmd), `plan-reviewer`, `plan-review-eng`, `plan-review-design`, `plan-review-devex`, `plan-review-goal-backward`, `gate-plan-review`, `analyze` (`plan-review-eng` is a Stage 7 lens reviewing `PLAN.md`; the Stage 2 SDD/ADR review is now `sdd-review-cto`'s job. There is no `plan-review-ceo` — a founder-mode scope re-review is intentionally not part of this pipeline; scope is owned by `spec-review-cpo` at Stage 1)
+- **Stage 7:** `writing-plans`, `planner`, `plan-review` (cmd), `plan-reviewer`, `plan-review-eng`, `plan-review-design`, `plan-review-devex`, `plan-review-goal-backward`, `gate-plan-review`, `analyze`
 - **Stage 8:** `using-git-worktrees`, `sprint-execution`, `test-driven-development`, `dispatching-parallel-agents`, `fullstack-guardian`, `secure-code-guardian`, `refactoring-specialist`, `guard`, `design-handoff`, `verification-before-completion`
 - **Stage 9:** `debug` (cmd), `debugger`, `systematic-debugging`
-- **Stage 10:** `review` (cmd), `code-review-gate`, `bugfix-wave`, `code-review-protocol`, `qa` (cmd), `qa` (agent), `ui-auditor` (`design-reviewer`, `accessibility-tester`, and `devex-review` moved out to Stage 12 (Final Review, sub-stage a) — see that stage's note and Stage 10's own note above)
-- **Stage 11:** `verify` (cmd), `verifier`, `converge`, `integration-checker`, `nyquist-auditor`, `gate-automation`, `test-master` (folded in from the former standalone Automation-coverage stage — see the note at the bottom of this document)
-- **Stage 12 (Final Review — milestone gate):** *12a functional:* `design-reviewer`, `devex-review`, `accessibility-tester` (moved in from the former per-phase Stage 10 — see Stage 10's note); *12b security:* `security-audit` (cmd), `security-auditor`, `cso`, `penetration-tester`, `compliance-auditor`, `security-reviewer`, `dependency-manager` (moved out of the per-phase loop to milestone cadence — see the note at the bottom of this document and Stage 12's own trade-off note)
-- **Stage 13:** `finishing-a-development-branch`, `ship`, `land-and-deploy` (swapped with Document — see Stage 14's note)
-- **Stage 14:** `document-generate`, `code-documenter`, `content-qa`, `document-release`, `doc-verifier` (swapped with Ship & deploy — runs after, not before, so it documents what's actually live)
+- **Stage 10:** `review` (cmd), `code-review-gate`, `bugfix-wave`, `code-review-protocol`, `qa` (cmd), `qa` (agent), `ui-auditor`
+- **Stage 11:** `verify` (cmd), `verifier`, `converge`, `integration-checker`, `nyquist-auditor`, `gate-automation`, `test-master`
+- **Stage 12 (Final Review — milestone gate):** *12a functional:* `design-reviewer`, `devex-review`, `accessibility-tester`; *12b security:* `security-audit` (cmd), `security-auditor`, `cso`, `penetration-tester`, `compliance-auditor`, `security-reviewer`, `dependency-manager`
+- **Stage 13:** `finishing-a-development-branch`, `ship`, `land-and-deploy`
+- **Stage 14:** `document-generate`, `code-documenter`, `document-release`, `content-qa`, `doc-verifier`
 - **Stage 15:** `health` (cmd), `health-reporter`, `performance-engineer`, `incident-responder`, `retro` (cmd), `retro` (agent)
 - **Cross-cutting:** `context-save`, `context-restore`, `learn`, `writing-skills` (+ `guard`, `graphify`, `diagram` listed above)
 
@@ -684,55 +680,7 @@ Stage 0/8:
 **Total: 190 / 190 dev-kit assets placed** (94 core + 96 lane) — verified by diffing every catalog header against
 this document. `spec-review-cpo` was added alongside this pipeline doc to close the spec-stage product-review gap
 (see [Conditional gates & branches](#conditional-gates--branches) and its full entry in
-[`core-discovery-and-design.md`](catalog/core-discovery-and-design.md#role-product--requirements-owner));
-`first-principles-thinking`, `clarify`, and `feature-forge` were later removed as standalone assets when a
-Stage 0/1 audit found their content duplicated inside `specify` and `spec-review-cpo` with no other functional
-caller — see the note at the top of this document. A subsequent Stage 2/7 audit made a net-zero skill swap:
-`plan-review-ceo` was removed (a founder-mode scope re-review of the plan re-litigated a decision `spec-review-cpo`
-already locks at Stage 1) and `sdd-review-cto` was added as Stage 2's architecture-strategy gate; `plan-review-eng`,
-formerly claimed to also review the SDD at Stage 2, is now a Stage 7-only lens over `PLAN.md`, and `analyze` was
-retargeted from the Spec-Kit `spec.md`/`plan.md`/`tasks.md` triad to this pipeline's single embedded-task `PLAN.md`.
-A subsequent Stage 8–13 audit retargeted Stage 11's `converge` the same way — off that same unproduced triad and
-onto `spec.md` + the phase's embedded-task `PLAN.md`, appending new `<task>` blocks instead of `tasks.md` checklist
-items, and positioned it explicitly as the requirement-level **remediation compiler** alongside `verifier`'s
-goal-backward **verdict**. The same audit found `nyquist-auditor` similarly wired to nothing — its `no_test_file` /
-`test_fails` / `no_automated_command` gap vocabulary matched neither `verifier`'s failed-truth gaps nor `converge`'s
-implementation tasks — and gave `verifier` a new Step 6d that emits a `validation_gaps` list in the shape
-`nyquist-auditor` actually consumes, orthogonal to pass/fail status. The same audit also found `cso` misplaced at
-Stage 2: every one of its 15 phases (stack detection, attack-surface census, git-history secrets scan, dependency
-manifests, CI/CD configs, STRIDE against Phase 0's detected components) assumes an existing checkout, but Stage 2
-is the *first* artifact of a greenfield milestone — no code exists yet to scan. `cso` moved to Stage 0 (a full
-audit, gated on the entry path already having code — Legacy or Continuing-milestone, never a first-milestone
-Greenfield entry) and the Security gate (`--diff` mode, per phase — always has code by construction, since that
-stage runs after Stage 8's Execute; numbered Stage 13 at the time, later renumbered Stage 12 — see below).
-`security-auditor` was found to duplicate `security-reviewer`'s audit methodology, tool list, and report format
-nearly verbatim (~40 lines, including an identical worked example); it now declares `security-reviewer` its
-methodology home (the `debugger`/`systematic-debugging` pattern) and keeps only its unique job — verifying a
-`<threat_model>`'s declared dispositions. `planner`'s Stage 7 threat-modeling step and `sdd-review-cto`'s Stage 2
-review were both wired to consult `cso`'s latest `.security-reports/` entry when one exists, replacing the prior
-doc claim of a direct Stage 2 → Security-gate handoff that no code ever actually implemented. A following Stage
-8–13 audit pass folded the near-single-asset Automation-coverage stage into the verify stage (`gate-automation`
-answers the same "is the goal covered" question `verifier`/`converge` do, at the E2E-user-flow layer) and moved
-`dependency-manager` out of the verify stage into the security gate (a CVE/license/version sweep is that gate's
-question, not "did we build the goal"; `license-engineer`'s lane-routing note moved with it) — renumbering
-Stages 12–16 down to 11–15 throughout this document.
-
-A later pass moved `design-reviewer`, `devex-review`, and `accessibility-tester` out of the per-phase Stage 10 loop
-into a milestone-level "Experience audit," on the grounds that they're expensive, whole-surface checks that don't
-decompose to a single phase's diff. A follow-up pass went further: the entire former Security & compliance gate
-(Stage 12 at the time) moved from per-phase to milestone cadence too, merging with that Experience audit into a
-single **Stage 12 — Final Review**, with explicit sub-stages `12a` (functional) and `12b` (security). This was a
-deliberate, flagged trade-off, not a mechanical relocation — moving security off the per-phase loop means an open
-threat in an early phase no longer blocks *that phase* from shipping, only the milestone, once every phase is
-done; the accumulated-risk window this opens was accepted explicitly in exchange for a lighter phase loop (Stages
-5–11, down from 5–12). `document-generate`/`document-release`/`doc-verifier` (Document) and
-`ship`/`land-and-deploy` (Ship & deploy) were also swapped — Ship & deploy now runs first, at Stage 13, and
-Document at Stage 14 — since `document-release` polishes the CHANGELOG entry `ship` writes. That's a dependency on
-`ship`'s PR, not on `land-and-deploy`'s merge: `document-release` needs an open, unmerged diff to work against
-(it aborts if run from the base branch), so Document still runs before the PR lands, just after `ship` creates it.
-Net renumbering: the
-per-phase loop is now Stages 5–11; milestone close-out is Stages 12–15 (Final Review, Ship & deploy, Document,
-Operate/retrospect/close).
+[`core-discovery-and-design.md`](catalog/core-discovery-and-design.md#role-product--requirements-owner)).
 
 ---
 

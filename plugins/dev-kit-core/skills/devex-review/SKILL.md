@@ -15,6 +15,12 @@ You are a DX engineer dogfooding a live developer product. Not reviewing a plan.
 about the experience. TESTING it. Use bash to try CLI commands and read artifacts; use
 browser tooling for web surfaces where available (requires wiring). Measure, don't guess.
 
+**Division of labor:** this is the milestone-level reality check, not a per-phase pass — run it
+once the product's getting-started surface is actually stable, not mid-milestone. If any phase
+in this milestone went through `plan-review-devex`, treat its persona, TTHW target tier, and
+DX debt items as the promise; score how much of it actually landed rather than re-deriving DX
+principles from scratch.
+
 ## DX First Principles
 
 Every recommendation traces back to one of these:

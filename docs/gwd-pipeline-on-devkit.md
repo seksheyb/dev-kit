@@ -52,12 +52,12 @@ cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it desc
 | **7** | Plan the phase | `writing-plans` · `planner` · `plan-review` (cmd) → `plan-reviewer` → 4 lenses (incl. `plan-review-design`) · `gate-plan-review` · `analyze` | context → `PLAN.md` (waves + tracks), reviewed & complexity-gated |
 | **8** | Execute the phase | `using-git-worktrees` · `sprint-execution` · `test-driven-development` · `dispatching-parallel-agents` · `fullstack-guardian`/`secure-code-guardian` · `refactoring-specialist` · `guard` · `design-handoff` (Claude Design → codebase bridge, when UI in scope) · `verification-before-completion` · **lane skills** | plan → code + tests, per-track parallel |
 | **9** | Debug *(as needed)* | `debug` (cmd) → `debugger` ← `systematic-debugging` · `learn` | failure → root-cause fix + regression test |
-| **10** | Adversarial review ↔ fix loop | `review` (cmd) → `code-review-gate` (round) ↔ `bugfix-wave` · `code-review-protocol` · `qa` (cmd/agent) · `design-reviewer` · `ui-auditor` · `accessibility-tester` · `devex-review` | code → fixes (loop ≤6) |
+| **10** | Adversarial review ↔ fix loop | `review` (cmd) → `code-review-gate` (round) ↔ `bugfix-wave` · `code-review-protocol` · `qa` (cmd/agent) · `ui-auditor` | code → fixes (loop ≤6) |
 | **11** | Verify the goal | `verify` (cmd) → `verifier` · `converge` · `integration-checker` · `nyquist-auditor` · `gate-automation` ← `test-master`/`playwright-expert` | code → `VERIFICATION.md`, gaps closed, Playwright/Maestro flows |
 | **12** | Security & compliance gate | `security-audit` (cmd) → `security-auditor` · `cso` (`--diff`) · `penetration-tester` · `compliance-auditor` · `security-reviewer` · `dependency-manager` | code → `SECURITY.md`, `.security-reports/*.json`, dependency/license report, open threats block ship |
 | **13** | Document | `document-generate`/`code-documenter` · `content-qa` · `document-release` → `doc-verifier` | shipped surface → synced docs, CHANGELOG |
 | **14** | Ship & deploy | `finishing-a-development-branch` *(manual)* **or** `ship` → `land-and-deploy` · **infra lane** | branch → PR → merged & deployed |
-| **15** | Operate, retrospect, close | `health` (cmd) → `health-reporter` · `performance-engineer` · `incident-responder` · `retro` (cmd) → `retro` · milestone archive | milestone → dashboards, postmortems, archive + tag |
+| **15** | Operate, retrospect, close | `health` (cmd) → `health-reporter` · `performance-engineer` · `incident-responder` · `retro` (cmd) → `retro` · `design-reviewer` (full/deep) · `devex-review` · `accessibility-tester` · milestone archive | milestone → dashboards, postmortems, archive + tag |
 
 **Always-on (cross-cutting, not a stage):** `context-save` / `context-restore` (session continuity),
 `learn` (durable knowledge), `guard` (safety), `graphify` (query anytime), `diagram` (any review/design
@@ -123,7 +123,7 @@ dev-kit supplies the assets, not the branch logic.)
 | `fullstack-guardian` (S8) | Feature spans frontend + backend together | Use narrower lane skills instead |
 | `guard` (S8) | Track touches prod / shared / destructive surface | Skip the freeze |
 | **Debug** (S9) | A bug / test failure / unexpected behavior occurs | Skip; execution continues |
-| UI/DX review passes (S10): `design-reviewer`, `ui-auditor`, `accessibility-tester`, `devex-review` | Phase shipped UI or a developer-facing surface | Skip; `code-review-gate` + `qa` still run |
+| `ui-auditor` (S10) | Phase shipped UI | Skip; `code-review-gate` + `qa` still run |
 | `nyquist-auditor` (S11) | `verifier` Step 6d found requirements with no automated test coverage (`validation_gaps` non-empty) | Skip; nothing to fill |
 | `gate-automation` (S11) | Sprint diff added/changed **primary** user flows | No new flows required (internal-only changes excluded) |
 | `cso` (S0) | Entry path has existing code — Legacy or Continuing-milestone | Skip on a first-milestone Greenfield entry; nothing to scan yet |
@@ -135,6 +135,7 @@ dev-kit supplies the assets, not the branch logic.)
 | **Ship mode** (S14) | Automated (`ship` → `land-and-deploy`) vs manual (`finishing-a-development-branch`) — an operator choice, not a repo predicate | Pick one path; both end in a merged/deployed or explicitly-kept branch |
 | Infra deploy specifics (S14) | Deploy platform detected (Fly/Render/Vercel/Netlify/GH Actions) | GitLab/unknown → `land-and-deploy` stops, hands off to manual merge |
 | `incident-responder` (S15) | An active production incident is underway | Skip |
+| `design-reviewer` (full/deep) / `devex-review` / `accessibility-tester` (S15) | Milestone shipped UI or a developer-facing surface anywhere across its phases | Skip; `health-reporter` + `retro` still run |
 | **Lane skills** (S8 mostly) | The project's actual stack matches the lane | Unmatched lanes never fire — a Python+React app invokes `python-pro`/`react-expert`, not `golang-pro`/`swift-expert` |
 
 **Rule of thumb:** the *unconditional* backbone every project runs is Stages 1 → 2 → 3 → 5 → 7 → 8 → 10 → 11 → 13 →
@@ -415,9 +416,15 @@ the lighter tier, with the full set still available as an explicit escalation.
    (verify-before-implementing; no gratitude-performance).
 4. **`qa`** *(command/agent)* — browser-driven QA on the running app/diff: health score, before/after screenshots,
    fix-then-regression-test loop (or `report_only`).
-5. UI/DX passes *(if applicable)*: **`design-reviewer`** *(live browser-driven audit + atomic fixes)*,
-   **`ui-auditor`** *(6-pillar spec-conformance score → `UI-REVIEW.md`)*, **`accessibility-tester`**
-   *(WCAG 2.1 AA conformance)*, **`devex-review`** *(actually test the getting-started flow, CLI `--help`, real errors)*.
+5. **`ui-auditor`** *(if phase shipped UI)* — cheap, static-grep-first, no browser required: scores this phase's
+   diff against its own `UI-SPEC.md` (or abstract 6-pillar standards) → `UI-REVIEW.md`. Kept in the per-phase loop
+   deliberately — it's diff-scoped and mechanical, unlike the three passes below.
+
+   **Deliberately NOT per-phase:** `design-reviewer`, `devex-review`, and `accessibility-tester` moved to Stage 15
+   (milestone close-out) — see the note there. They're expensive, browser-driven, whole-surface audits (cross-page
+   consistency, end-to-end developer journey, site-wide WCAG conformance) that don't decompose cleanly to one
+   phase's diff and would otherwise re-audit unchanged pages on every phase. Keeping the phase loop to
+   `code-review-gate`/`bugfix-wave`/`qa`/`ui-auditor` keeps Stage 10 fast on every phase.
 
 ### Stage 11 — Verify the goal
 
@@ -499,6 +506,13 @@ the lighter tier, with the full set still available as an explicit escalation.
 - **`incident-responder`** *(agent)* — triage → contain → preserve evidence → diagnose → blameless postmortem, if
   production breaks; hands off to `compliance-auditor` for breach-notification obligations. `chaos-engineer` (infra
   lane) proactively rehearses these failures.
+- **Experience audit** *(if the milestone shipped UI or a developer-facing surface, across any of its phases)*:
+  **`design-reviewer`** in full/deep mode *(cross-page consistency, whole-site AI-slop sweep, design-score delta
+  vs. the last milestone's `design-baseline.json` via regression mode)*, **`devex-review`** *(the real,
+  now-stable getting-started flow — TTHW, CLI `--help`, real errors — measuring a whole-product journey that
+  isn't meaningful mid-phase)*, **`accessibility-tester`** *(site-wide WCAG 2.1 AA conformance)*. Moved here from
+  the former per-phase Stage 10 slot — see that stage's note — to keep the phase loop light and because these
+  three checks are inherently whole-surface, not diff-scoped.
 - **`retro`** *(command)* → **`retro`** *(agent)* — periodic engineering retrospective mined from git history.
 - **Product lane** analytics — `ab-test-analysis`, `cohort-analysis`, `growth-loops` — close the loop back to Stage 1's
   assumption bank with real usage evidence.
@@ -590,12 +604,12 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 - **Stage 7:** `writing-plans`, `planner`, `plan-review` (cmd), `plan-reviewer`, `plan-review-eng`, `plan-review-design`, `plan-review-devex`, `plan-review-goal-backward`, `gate-plan-review`, `analyze` (`plan-review-eng` is a Stage 7 lens reviewing `PLAN.md`; the Stage 2 SDD/ADR review is now `sdd-review-cto`'s job. There is no `plan-review-ceo` — a founder-mode scope re-review is intentionally not part of this pipeline; scope is owned by `spec-review-cpo` at Stage 1)
 - **Stage 8:** `using-git-worktrees`, `sprint-execution`, `test-driven-development`, `dispatching-parallel-agents`, `fullstack-guardian`, `secure-code-guardian`, `refactoring-specialist`, `guard`, `design-handoff`, `verification-before-completion`
 - **Stage 9:** `debug` (cmd), `debugger`, `systematic-debugging`
-- **Stage 10:** `review` (cmd), `code-review-gate`, `bugfix-wave`, `code-review-protocol`, `qa` (cmd), `qa` (agent), `design-reviewer`, `ui-auditor`, `accessibility-tester`, `devex-review`
+- **Stage 10:** `review` (cmd), `code-review-gate`, `bugfix-wave`, `code-review-protocol`, `qa` (cmd), `qa` (agent), `ui-auditor` (`design-reviewer`, `accessibility-tester`, and `devex-review` moved out to Stage 15 — see that stage's note and Stage 10's own note above)
 - **Stage 11:** `verify` (cmd), `verifier`, `converge`, `integration-checker`, `nyquist-auditor`, `gate-automation`, `test-master` (folded in from the former standalone Automation-coverage stage — see the note at the bottom of this document)
 - **Stage 12:** `security-audit` (cmd), `security-auditor`, `cso`, `penetration-tester`, `compliance-auditor`, `security-reviewer`, `dependency-manager` (relocated in from the verify stage — see the note at the bottom of this document)
 - **Stage 13:** `document-generate`, `code-documenter`, `content-qa`, `document-release`, `doc-verifier`
 - **Stage 14:** `finishing-a-development-branch`, `ship`, `land-and-deploy`
-- **Stage 15:** `health` (cmd), `health-reporter`, `performance-engineer`, `incident-responder`, `retro` (cmd), `retro` (agent)
+- **Stage 15:** `health` (cmd), `health-reporter`, `performance-engineer`, `incident-responder`, `design-reviewer`, `devex-review`, `accessibility-tester`, `retro` (cmd), `retro` (agent)
 - **Cross-cutting:** `context-save`, `context-restore`, `learn`, `writing-skills` (+ `guard`, `graphify`, `diagram` listed above)
 
 **All 96 lane assets** route in via [Lane routing](#lane-routing) — predominantly at Stage 8, with the Data/AI eval

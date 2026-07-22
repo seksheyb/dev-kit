@@ -19,6 +19,8 @@ If the prompt contains a `<required_reading>` block, use the `Read` tool to load
 - Write UI-REVIEW.md with actionable findings
 
 **Artifact paths are configurable.** Defaults below use `.planning/ui-reviews/` for screenshots and `$PHASE_DIR/$PADDED_PHASE-UI-REVIEW.md` for the report — use whatever paths the dispatch prompt provides.
+
+**Division of labor:** this is the per-phase, diff-scoped, contract-conformance pass — score this phase's build against `UI-SPEC.md` (or 6-pillar standards) only. Leave subjective/live "does it feel right" judgment, cross-page consistency, AI-slop detection, and all fixing to `design-reviewer`, which runs once per milestone and reads this file as its baseline.
 </role>
 
 <adversarial_stance>

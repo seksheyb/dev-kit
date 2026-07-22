@@ -4,7 +4,7 @@
 
 ## Block Development Overview
 
-WordPress 6.4+ uses the Block Editor (Gutenberg) as the primary editing experience. Blocks are the fundamental building units.
+WordPress 7.0+ uses the Block Editor (Gutenberg) as the primary editing experience, with Gutenberg Phase 3 (Full Site Editing) now standard rather than experimental. Blocks are the fundamental building units.
 
 ### Block Types
 
@@ -12,7 +12,10 @@ WordPress 6.4+ uses the Block Editor (Gutenberg) as the primary editing experien
 |------|-------------|----------|
 | Static | Fixed HTML output | Simple content, images |
 | Dynamic | Server-rendered | Posts list, dynamic data |
+| PHP-only | Rendered via `render.php`, no JS build step | Simple dynamic blocks without a build pipeline |
 | Interactive | Client-side JS | Accordions, tabs, carousels |
+
+For simple blocks, a PHP-only block (register with `block.json` + `render.php`, no `edit.js`/build step required) is often lighter-weight than a full JS-based block — reach for the JS pipeline only when you need client-side interactivity or a custom edit UI.
 
 ---
 
@@ -72,7 +75,7 @@ my-block/
 
 ## Block Registration
 
-### block.json (WordPress 6.4+)
+### block.json (WordPress 7.0+)
 
 ```json
 {

@@ -1,11 +1,11 @@
 ---
 name: javascript-pro
-description: Writes, debugs, and refactors JavaScript code using modern ES2023+ features, async/await patterns, ESM module systems, and Node.js APIs. Use when building vanilla JavaScript applications, implementing Promise-based async flows, optimising browser or Node.js performance, working with Web Workers or Fetch API, or reviewing .js/.mjs/.cjs files for correctness and best practices.
+description: Writes, debugs, and refactors JavaScript code using modern ES2025+ features, async/await patterns, ESM module systems, and Node.js APIs. Use when building vanilla JavaScript applications, implementing Promise-based async flows, optimising browser or Node.js performance, working with Web Workers or Fetch API, or reviewing .js/.mjs/.cjs files for correctness and best practices.
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   domain: language
-  triggers: JavaScript, ES2023, async await, Node.js, vanilla JavaScript, Web Workers, Fetch API, browser API, module system
+  triggers: JavaScript, ES2025, ES2023, async await, Node.js, vanilla JavaScript, Web Workers, Fetch API, browser API, module system
   role: specialist
   scope: implementation
   output-format: code
@@ -27,7 +27,7 @@ metadata:
 
 1. **Analyze requirements** — Review `package.json`, module system, Node version, browser targets; confirm `.js`/`.mjs`/`.cjs` conventions
 2. **Design architecture** — Plan modules, async flows, and error handling strategies
-3. **Implement** — Write ES2023+ code with proper patterns and optimisations
+3. **Implement** — Write ES2025+ code with proper patterns and optimisations
 4. **Validate** — Run linter (`eslint --fix`); if linter fails, fix all reported issues and re-run before proceeding. Check for memory leaks with DevTools or `--inspect`, verify bundle size; if leaks are found, resolve them before continuing
 5. **Test** — Write comprehensive tests with Jest achieving 85%+ coverage; if coverage falls short, add missing cases and re-run. Confirm no unhandled Promise rejections
 
@@ -37,7 +37,7 @@ Load detailed guidance based on context:
 
 | Topic | Reference | Load When |
 |-------|-----------|-----------|
-| Modern Syntax | `references/modern-syntax.md` | ES2023+ features, optional chaining, private fields |
+| Modern Syntax | `references/modern-syntax.md` | ES2025+ features, optional chaining, private fields |
 | Async Patterns | `references/async-patterns.md` | Promises, async/await, error handling, event loop |
 | Modules | `references/modules.md` | ESM vs CJS, dynamic imports, package.json exports |
 | Browser APIs | `references/browser-apis.md` | Fetch, Web Workers, Storage, IntersectionObserver |
@@ -46,7 +46,7 @@ Load detailed guidance based on context:
 ## Constraints
 
 ### MUST DO
-- Use ES2023+ features exclusively
+- Use ES2025+ features exclusively
 - Use `X | null` or `X | undefined` patterns
 - Use optional chaining (`?.`) and nullish coalescing (`??`)
 - Use async/await for all asynchronous operations

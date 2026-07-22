@@ -45,7 +45,7 @@ Load detailed guidance based on context:
 | React 19 | `references/react-19-features.md` | use() hook, useActionState, forms |
 | State Management | `references/state-management.md` | Context, Zustand, Redux, TanStack |
 | Hooks | `references/hooks-patterns.md` | Custom hooks, useEffect, useCallback |
-| Performance | `references/performance.md` | memo, lazy, virtualization |
+| Performance | `references/performance.md` | React Compiler, memo, lazy, virtualization |
 | Testing | `references/testing-react.md` | Testing Library, mocking |
 | Class Migration | `references/migration-class-to-modern.md` | Converting class components to hooks/RSC |
 

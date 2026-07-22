@@ -27,6 +27,9 @@ test.use({ trace: 'on' });
 
 # View in UI mode
 npx playwright test --ui
+
+# Analyze a trace from the CLI without opening the HTML viewer
+npx playwright trace trace.zip
 ```
 
 ## Common Flaky Test Causes
@@ -140,7 +143,8 @@ await page.screenshot({ path: 'debug.png' });
 | `--headed` | Show browser |
 | `--ui` | UI mode |
 | `page.pause()` | Pause execution |
-| `show-trace` | View trace file |
+| `show-trace` | View trace file (HTML viewer) |
+| `npx playwright trace` | Analyze trace file (CLI, no GUI) |
 
 | Fix | Flaky Cause |
 |-----|-------------|

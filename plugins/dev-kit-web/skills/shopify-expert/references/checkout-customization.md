@@ -25,12 +25,12 @@
 
 | Extension | Purpose | API Version |
 |-----------|---------|-------------|
-| `Checkout::Dynamic::Render` | Add UI anywhere in checkout | 2024.10+ |
-| `Checkout::CartLineDetails::RenderAfter` | Below cart line items | 2024.10+ |
-| `Checkout::DeliveryAddress::RenderBefore` | Before delivery address | 2024.10+ |
-| `purchase.checkout.block.render` | Custom blocks in checkout | 2024.10+ |
-| `purchase.thank-you.block.render` | Thank you page | 2024.10+ |
-| `purchase.post-purchase.render` | Post-purchase upsell | 2024.10+ |
+| `Checkout::Dynamic::Render` | Add UI anywhere in checkout | 2026.7+ |
+| `Checkout::CartLineDetails::RenderAfter` | Below cart line items | 2026.7+ |
+| `Checkout::DeliveryAddress::RenderBefore` | Before delivery address | 2026.7+ |
+| `purchase.checkout.block.render` | Custom blocks in checkout | 2026.7+ |
+| `purchase.thank-you.block.render` | Thank you page | 2026.7+ |
+| `purchase.post-purchase.render` | Post-purchase upsell | 2026.7+ |
 
 ### Project Setup
 
@@ -57,7 +57,7 @@ extensions/
 
 ```toml
 # extensions/checkout-ui/shopify.extension.toml
-api_version = "2024-10"
+api_version = "2026-07"
 
 [[extensions]]
 type = "ui_extension"
@@ -295,7 +295,7 @@ npm run shopify app generate extension -- --type product_discounts
 
 ```toml
 # extensions/volume-discount/shopify.extension.toml
-api_version = "2024-10"
+api_version = "2026-07"
 
 [[extensions]]
 name = "Volume Discount"

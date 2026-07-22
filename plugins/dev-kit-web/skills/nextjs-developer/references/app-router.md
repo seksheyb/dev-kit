@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     default: 'My App',
     template: '%s | My App'
   },
-  description: 'Next.js 14 application',
+  description: 'Next.js 16 application',
 }
 
 export default function RootLayout({

@@ -1,5 +1,15 @@
 # TypeScript Configuration
 
+## Compiler Note (TS 7.0+)
+
+TypeScript 7.0 (GA July 2026) ports the compiler to native Go, claiming 8-12x faster
+full builds and much faster editor project load. It does **not** yet ship a stable
+programmatic compiler API — tools built on `ts.createProgram`/`ts.transform` (custom
+transformers, typescript-eslint, framework template checkers) should stay pinned to
+the JS compiler until a stable native API lands (targeted for 7.1). Everything below
+about `tsconfig.json` flags, project references, and incremental builds applies to
+both compilers; only the "Compiler API Usage" section is native-API-unstable.
+
 ## Strict Mode Configuration
 
 ```json
@@ -25,10 +35,9 @@
     "noPropertyAccessFromIndexSignature": true,
 
     // Module resolution
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
-    "allowImportingTsExtensions": true,
 
     // Emit
     "declaration": true,

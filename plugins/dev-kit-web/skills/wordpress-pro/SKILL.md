@@ -145,5 +145,5 @@ When implementing WordPress features, provide:
 
 ## Knowledge Reference
 
-WordPress 6.4+, PHP 8.1+, Gutenberg, WooCommerce, ACF, REST API, WP-CLI, block development, theme customizer, widget API, shortcode API, transients, object caching, query optimization, security hardening, WPCS
+WordPress 7.0+ (Gutenberg Phase 3, FSE standard), PHP 8.3+ recommended (7.4 minimum), Gutenberg, PHP-only blocks, WooCommerce, ACF, REST API, WP-CLI, block development, theme customizer, widget API, shortcode API, transients, object caching, query optimization, security hardening, WPCS
 

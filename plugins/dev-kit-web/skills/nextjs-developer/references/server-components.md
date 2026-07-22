@@ -87,6 +87,8 @@ export default async function Page() {
 // components/client-wrapper.tsx
 'use client'
 
+import { useState } from 'react'
+
 export function ClientWrapper({
   children,
   initialData,
@@ -99,7 +101,7 @@ export function ClientWrapper({
   return (
     <div>
       {/* Client Component UI */}
-      <button onClick={() => refresh()}>Refresh</button>
+      <button onClick={() => setData(initialData)}>Refresh</button>
       {/* Server Component children */}
       {children}
     </div>

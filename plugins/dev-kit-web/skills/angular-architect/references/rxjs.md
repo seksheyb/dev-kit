@@ -83,6 +83,8 @@ export class SubjectExamples {
 ## Higher-Order Operators
 
 ```typescript
+import { inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { switchMap, mergeMap, concatMap, exhaustMap } from 'rxjs/operators';
 
 export class HigherOrderExamples {
@@ -121,7 +123,7 @@ export class HigherOrderExamples {
 ## Error Handling
 
 ```typescript
-import { catchError, retry, retryWhen, delay, tap } from 'rxjs/operators';
+import { catchError, retry, retryWhen, delay, tap, mergeMap } from 'rxjs/operators';
 import { throwError, of, timer } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })

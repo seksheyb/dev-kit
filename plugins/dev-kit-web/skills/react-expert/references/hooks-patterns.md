@@ -118,6 +118,9 @@ const sortedItems = useMemo(() =>
 // - useMemo: When calculation is expensive AND deps rarely change
 ```
 
+On a React Compiler-enabled build, the compiler auto-memoizes most of these cases —
+see `references/performance.md` for when hand-written `useCallback`/`useMemo` are still needed.
+
 ## Effect Cleanup
 
 ```tsx

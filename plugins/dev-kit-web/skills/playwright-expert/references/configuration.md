@@ -120,6 +120,15 @@ export default defineConfig({
 BASE_URL=https://staging.example.com
 ```
 
+## HAR Recording via Tracing
+
+```typescript
+// Record a HAR file as part of the tracing API (in addition to routeFromHAR mocking)
+await context.tracing.startHar({ path: 'trace.har' });
+// ...run test steps...
+await context.tracing.stopHar();
+```
+
 ## CI Configuration
 
 ```yaml

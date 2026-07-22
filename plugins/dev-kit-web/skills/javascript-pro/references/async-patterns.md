@@ -332,3 +332,4 @@ const transformed = response.body.pipeThrough(transformStream);
 | `async function*` | Async iteration | `for await (const x of gen())` |
 | `AbortController` | Cancellation | `fetch(url, { signal })` |
 | `queueMicrotask()` | Priority microtask | `queueMicrotask(fn)` |
+| `Promise.try()` | Run sync-or-async fn safely | `await Promise.try(fn)` |

@@ -5,6 +5,9 @@
 ### Quick Deploy
 
 ```bash
+# Turbopack is the default bundler for `next dev` and `next build`
+# (no --turbo flag or experimental.turbo config needed)
+
 # Install Vercel CLI
 npm i -g vercel
 

@@ -81,7 +81,8 @@ describe('UserListComponent', () => {
 
 ```typescript
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { UsersService } from './users.service';
 import { User } from './user.model';
 
@@ -95,9 +96,9 @@ describe('UsersService', () => {
   ];
 
   beforeEach(() => {
+    // HttpClientTestingModule is deprecated; use the provider-based setup
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [UsersService]
+      providers: [UsersService, provideHttpClient(), provideHttpClientTesting()]
     });
 
     service = TestBed.inject(UsersService);
@@ -396,7 +397,7 @@ describe('authGuard', () => {
 | Test Type | Key Tools |
 |-----------|-----------|
 | Component | `TestBed`, `ComponentFixture`, `detectChanges()` |
-| Service | `HttpClientTestingModule`, `HttpTestingController` |
+| Service | `provideHttpClient()`, `provideHttpClientTesting()`, `HttpTestingController` |
 | RxJS | `TestScheduler`, marble diagrams |
 | NgRx Store | `provideMockStore`, `MockStore` |
 | Effects | `provideMockActions`, jasmine-marbles |

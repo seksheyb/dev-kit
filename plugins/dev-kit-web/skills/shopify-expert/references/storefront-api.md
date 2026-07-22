@@ -27,7 +27,7 @@
 // Storefront API uses public access tokens (safe for client-side)
 const STOREFRONT_ACCESS_TOKEN = 'your-storefront-access-token';
 const SHOP_DOMAIN = 'your-store.myshopify.com';
-const API_VERSION = '2024-10'; // Use latest stable version
+const API_VERSION = '2026-07'; // Use latest stable version
 
 // GraphQL endpoint
 const endpoint = `https://${SHOP_DOMAIN}/api/${API_VERSION}/graphql.json`;
@@ -85,7 +85,12 @@ const query = `
 
 ---
 
-## Hydrogen 2024 (Remix-based)
+## Hydrogen (Remix-based)
+
+**Hydrogen 2026.4+:** the Storefront API proxy is now always-on and backend consent mode
+is enabled by default. Don't wire up manual proxy configuration or assume consent mode is
+off — both are handled automatically; only override them if a project needs a documented
+exception.
 
 ### Project Setup
 
@@ -115,7 +120,7 @@ export default defineConfig({
   shopify: {
     storeDomain: 'your-store.myshopify.com',
     storefrontToken: process.env.PUBLIC_STOREFRONT_API_TOKEN!,
-    storefrontApiVersion: '2024-10',
+    storefrontApiVersion: '2026-07',
   },
   session: {
     storage: 'cookie', // or 'memory' for development

@@ -3,7 +3,7 @@
 ## Standalone Component Pattern
 
 ```typescript
-import { Component, signal, computed, effect } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -49,7 +49,7 @@ import { Component, input, output, model } from '@angular/core';
   `
 })
 export class SearchBoxComponent {
-  // Signal inputs (Angular 17.1+)
+  // Signal inputs
   placeholder = input<string>('Search...');
   initialQuery = input<string>('');
 
@@ -285,7 +285,7 @@ export class ProductListComponent {
 
 ## Quick Reference
 
-| Pattern | Angular 17+ Approach |
+| Pattern | Angular 21+ Approach |
 |---------|---------------------|
 | Component | Standalone by default |
 | State | Signals (`signal()`, `computed()`) |
@@ -294,4 +294,5 @@ export class ProductListComponent {
 | Two-way | `model<T>()` |
 | DI | `inject()` function |
 | Control Flow | `@if`, `@for`, `@switch` |
-| Change Detection | `ChangeDetectionStrategy.OnPush` |
+| Change Detection | `ChangeDetectionStrategy.OnPush`, zoneless by default |
+| Forms | Signal Forms (emerging) or Reactive Forms |

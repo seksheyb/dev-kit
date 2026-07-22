@@ -88,6 +88,15 @@ for (const item of await page.getByRole('listitem').all()) {
 }
 ```
 
+## Drag and Drop
+
+```typescript
+// First-class drag-and-drop API — avoid manual mouse.move()/mouse.down() sequences
+await page.getByRole('listitem', { name: 'Task A' }).drop(
+  page.getByRole('region', { name: 'In Progress' })
+);
+```
+
 ## Test IDs
 
 ```html
@@ -117,3 +126,4 @@ page.getByTestId('submit-button');
 | `getByText()` | Static text |
 | `filter()` | Narrowing results |
 | `nth()` / `first()` | Multiple matches |
+| `locator.drop()` | Drag-and-drop interactions |

@@ -88,8 +88,8 @@ plugin-name/
  * Plugin URI:        https://example.com/plugin-name
  * Description:       A brief description of what this plugin does.
  * Version:           1.0.0
- * Requires at least: 6.4
- * Requires PHP:      8.1
+ * Requires at least: 7.0
+ * Requires PHP:      7.4
  * Author:            Author Name
  * Author URI:        https://example.com
  * License:           GPL v2 or later
@@ -198,20 +198,20 @@ class Activator {
      * Check system requirements
      */
     private static function check_requirements(): void {
-        if (version_compare(PHP_VERSION, '8.1', '<')) {
+        if (version_compare(PHP_VERSION, '7.4', '<')) {
             deactivate_plugins(PLUGIN_NAME_BASENAME);
             wp_die(
-                esc_html__('This plugin requires PHP 8.1 or higher.', 'plugin-name'),
+                esc_html__('This plugin requires PHP 7.4 or higher (PHP 8.3+ recommended).', 'plugin-name'),
                 'Plugin Activation Error',
                 ['back_link' => true]
             );
         }
 
         global $wp_version;
-        if (version_compare($wp_version, '6.4', '<')) {
+        if (version_compare($wp_version, '7.0', '<')) {
             deactivate_plugins(PLUGIN_NAME_BASENAME);
             wp_die(
-                esc_html__('This plugin requires WordPress 6.4 or higher.', 'plugin-name'),
+                esc_html__('This plugin requires WordPress 7.0 or higher.', 'plugin-name'),
                 'Plugin Activation Error',
                 ['back_link' => true]
             );

@@ -149,7 +149,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 ### MUST DO
 - Use Liquid 2.0 syntax for themes
 - Implement proper metafield handling
-- Use Storefront API 2024-10 or newer
+- Use Storefront API 2026-07 or newer
 - Optimize images with Shopify CDN filters
 - Follow Shopify CLI workflows
 - Use App Bridge for embedded apps
@@ -180,5 +180,5 @@ When implementing Shopify solutions, provide:
 
 ## Knowledge Reference
 
-Shopify CLI 3.x, Liquid 2.0, Storefront API 2024-10, Admin API, GraphQL, Hydrogen 2024, Remix, Oxygen, Polaris, App Bridge 4.0, Checkout UI Extensions, Shopify Functions, metafields, metaobjects, theme architecture, Shopify Plus features
+Shopify CLI 3.x, Liquid 2.0, Storefront API 2026-07, Admin API, GraphQL, Hydrogen 2026.4+, Remix, Oxygen, Polaris, App Bridge 4.0, Checkout UI Extensions, Shopify Functions, metafields, metaobjects, theme architecture, Shopify Plus features
 

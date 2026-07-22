@@ -165,5 +165,5 @@ When implementing Playwright tests, provide:
 
 ## Knowledge Reference
 
-Playwright, Page Object Model, auto-waiting, locators, fixtures, API mocking, trace viewer, visual comparisons, parallel execution, CI/CD integration
+Playwright, Page Object Model, auto-waiting, locators, fixtures, API mocking, trace viewer, `npx playwright trace`, `locator.drop()`, `tracing.startHar()`, ARIA snapshots, visual comparisons, parallel execution, CI/CD integration
 

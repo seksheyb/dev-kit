@@ -22,7 +22,7 @@ WordPress uses a specific hierarchy to determine which template file renders con
 ```php
 <?php
 /**
- * Template hierarchy reference for WordPress 6.4+
+ * Template hierarchy reference for WordPress 7.0+
  *
  * Homepage:
  *   front-page.php → home.php → index.php
@@ -360,7 +360,7 @@ add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\enqueue_styles');
 
 ## Block Theme Development (FSE)
 
-WordPress 6.4+ fully supports Full Site Editing with block themes.
+As of WordPress 7.0, Full Site Editing (Gutenberg Phase 3) is the standard approach for new themes, not an optional or experimental one — build new themes as block themes unless there's a concrete reason to keep a classic (`functions.php`/PHP-template) theme.
 
 ### Block Theme Structure
 
@@ -388,7 +388,7 @@ block-theme/
     └── images/
 ```
 
-### theme.json (WordPress 6.4+)
+### theme.json (WordPress 7.0+)
 
 ```json
 {

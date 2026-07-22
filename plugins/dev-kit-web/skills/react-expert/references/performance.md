@@ -1,5 +1,13 @@
 # Performance Optimization
 
+## React Compiler
+
+React Compiler auto-memoizes components and values at build time, removing most of the
+need for hand-written `memo()`/`useMemo()`/`useCallback()`. Enable it via the Babel or
+Vite/Next.js plugin and let it handle the common cases below; reach for the manual APIs
+only where the compiler can't infer safety (refs escaping render, non-idiomatic hook
+usage) or where you're not yet on a compiler-enabled build.
+
 ## React.memo
 
 ```tsx

@@ -5,7 +5,9 @@ description: Use when the task involves Electron desktop applications — cross-
 
 # Electron Pro
 
-Knowledge pack for building cross-platform Electron desktop applications with Electron 27+ and native OS integrations — secure, performant desktop apps that feel native while maintaining code efficiency across Windows, macOS, and Linux, from architecture to signed, distributable installers.
+Knowledge pack for building cross-platform Electron desktop applications with Electron 40+ (latest stable, currently in the 42.x line) and native OS integrations — secure, performant desktop apps that feel native while maintaining code efficiency across Windows, macOS, and Linux, from architecture to signed, distributable installers.
+
+Electron ships a new major roughly every 8 weeks and only supports the latest 3 majors with security patches — pin to a version inside that window and plan upgrade cadence accordingly; falling further behind means losing patches.
 
 Before implementing, review desktop app requirements and OS targets, security constraints and native integration needs, and performance requirements and memory budgets; design following Electron security best practices.
 

@@ -165,3 +165,5 @@ When implementing Vue features in JavaScript:
 
 Vue 3 Composition API, JSDoc, ESM modules, Pinia, Vue Router 4, Vite, VueUse, Vitest, Vue Test Utils, JavaScript ES2022+
 
+**Vapor Mode (Vue 3.6+):** an opt-in compiler strategy (`<script setup vapor>`) that removes the Virtual DOM for eligible components. Everything above is VDOM-first Composition API and stays the default; reach for Vapor only when a component's render-heavy hot path needs it, and keep JSDoc typing identical either way.
+

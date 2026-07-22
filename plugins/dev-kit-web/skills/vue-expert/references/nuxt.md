@@ -1,43 +1,46 @@
-# Nuxt 3
+# Nuxt 4
 
 ## Project Structure
 
+Nuxt 4 nests app source under `app/`; only `server/`, `public/`, and config stay at the root.
+
 ```
 my-nuxt-app/
-├── app.vue              # Root component (optional)
 ├── nuxt.config.ts       # Nuxt configuration
 ├── package.json
 ├── tsconfig.json
 ├── .output/             # Build output
-├── assets/              # Uncompiled assets (CSS, images)
 ├── public/              # Static files (served at root)
-├── components/          # Auto-imported components
-│   ├── AppHeader.vue
-│   └── base/
-│       └── Button.vue   # Used as <BaseButton>
-├── composables/         # Auto-imported composables
-│   └── useAuth.ts
-├── layouts/             # Layout components
-│   ├── default.vue
-│   └── admin.vue
-├── middleware/          # Route middleware
-│   └── auth.ts
-├── pages/               # File-based routing
-│   ├── index.vue        # /
-│   ├── about.vue        # /about
-│   ├── users/
-│   │   ├── index.vue    # /users
-│   │   └── [id].vue     # /users/:id
-│   └── [...slug].vue    # Catch-all route
-├── plugins/             # Plugins
-│   └── api.ts
 ├── server/              # Server API routes
 │   ├── api/
 │   │   └── users.ts     # /api/users
 │   └── middleware/
 │       └── log.ts
-└── stores/              # Pinia stores
-    └── user.ts
+└── app/
+    ├── app.vue           # Root component (optional)
+    ├── assets/           # Uncompiled assets (CSS, images)
+    ├── components/       # Auto-imported components
+    │   ├── AppHeader.vue
+    │   └── base/
+    │       └── Button.vue   # Used as <BaseButton>
+    ├── composables/      # Auto-imported composables
+    │   └── useAuth.ts
+    ├── layouts/          # Layout components
+    │   ├── default.vue
+    │   └── admin.vue
+    ├── middleware/       # Route middleware
+    │   └── auth.ts
+    ├── pages/            # File-based routing
+    │   ├── index.vue        # /
+    │   ├── about.vue        # /about
+    │   ├── users/
+    │   │   ├── index.vue    # /users
+    │   │   └── [id].vue     # /users/:id
+    │   └── [...slug].vue    # Catch-all route
+    ├── plugins/          # Plugins
+    │   └── api.ts
+    └── stores/           # Pinia stores
+        └── user.ts
 ```
 
 ## File-based Routing
@@ -436,7 +439,7 @@ export default defineNuxtConfig({
     typeCheck: true
   },
 
-  // Vite is the default bundler in Nuxt 3
+  // Vite is the default bundler in Nuxt 4
   // Note: webpack is deprecated - use Vite for all new projects
   vite: {
     optimizeDeps: {
@@ -616,13 +619,13 @@ onMounted(() => {
 
 ### Progressive Hydration
 
+Nuxt has built-in lazy hydration for components prefixed with `Lazy` — no extra module needed. Pass a `hydrate-on-*` prop to defer hydration until the trigger condition is met:
+
 ```vue
 <script setup lang="ts">
-// Use nuxt-delay-hydration for non-critical content
-definePageMeta({
-  // Delay hydration until visible or idle
-  hydration: 'when-visible' // or 'on-idle'
-})
+function onHydrated() {
+  console.log('Component has been hydrated!')
+}
 </script>
 
 <template>
@@ -630,23 +633,16 @@ definePageMeta({
     <!-- Critical content hydrates immediately -->
     <header>Navigation</header>
 
-    <!-- Non-critical content can wait -->
-    <LazyBelowFoldContent />
+    <!-- Hydrate once the component enters the viewport -->
+    <LazyBelowFoldContent :hydrate-on-visible="{ rootMargin: '100px' }" @hydrated="onHydrated" />
+
+    <!-- Or hydrate when the browser is idle (optional max timeout in ms) -->
+    <LazySidebarWidget :hydrate-on-idle="2000" />
   </div>
 </template>
 ```
 
-```typescript
-// nuxt.config.ts - Configure delay hydration
-export default defineNuxtConfig({
-  modules: ['nuxt-delay-hydration'],
-
-  delayHydration: {
-    mode: 'init', // or 'mount'
-    debug: process.env.NODE_ENV === 'development'
-  }
-})
-```
+Other available strategies: `hydrate-on-interaction` (hydrate on click/mouseover/etc.), `hydrate-on-media-query`, and `hydrate-after` (fixed delay). Check current docs for the full list and options, since this API is still evolving.
 
 ## Quick Reference
 

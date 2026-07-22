@@ -1,11 +1,11 @@
 ---
 name: angular-architect
-description: Generates Angular 17+ standalone components, configures advanced routing with lazy loading and guards, implements NgRx state management, applies RxJS patterns, and optimizes bundle performance. Use when building Angular 17+ applications with standalone components or signals, setting up NgRx stores, establishing RxJS reactive patterns, performance tuning, or writing Angular tests for enterprise apps.
+description: Generates Angular 21+ standalone components, configures advanced routing with lazy loading and guards, implements NgRx state management, applies RxJS patterns, and optimizes bundle performance. Use when building Angular 21+ applications with standalone components, signals, or zoneless change detection, setting up NgRx stores, establishing RxJS reactive patterns, performance tuning, or writing Angular tests for enterprise apps.
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   domain: frontend
-  triggers: Angular, Angular 17, standalone components, signals, RxJS, NgRx, Angular performance, Angular routing, Angular testing
+  triggers: Angular, Angular 21, standalone components, signals, zoneless, Signal Forms, RxJS, NgRx, Angular performance, Angular routing, Angular testing
   role: specialist
   scope: implementation
   output-format: code
@@ -14,12 +14,12 @@ metadata:
 
 # Angular Architect
 
-Senior Angular architect specializing in Angular 17+ with standalone components, signals, and enterprise-grade application development.
+Senior Angular architect specializing in Angular 21+ with standalone components, signals, zoneless change detection, and enterprise-grade application development.
 
 ## Core Workflow
 
 1. **Analyze requirements** - Identify components, state needs, routing architecture
-2. **Design architecture** - Plan standalone components, signal usage, state flow
+2. **Design architecture** - Plan standalone components, signal usage, state flow; assume zoneless change detection (the Angular 21+ default) unless the project pins an older Angular version with ZoneJS
 3. **Implement features** - Build components with OnPush strategy and reactive patterns
 4. **Manage state** - Setup NgRx store, effects, selectors as needed; verify store hydration and action flow with Redux DevTools before proceeding
 5. **Optimize** - Apply performance best practices and bundle optimization; run `ng build --configuration production` to verify bundle size and flag regressions
@@ -122,8 +122,9 @@ export const selectUsersLoading = createSelector(selectUsersState, (s) => s.load
 ## Constraints
 
 ### MUST DO
-- Use standalone components (Angular 17+ default)
-- Use signals for reactive state where appropriate
+- Use standalone components (the only pattern for new code; NgModules are legacy)
+- Use signals for reactive state where appropriate; prefer Signal Forms over Reactive Forms for new form code where the project's Angular version supports it
+- Rely on zoneless change detection (Angular 21+ default, no ZoneJS) unless the target Angular version predates it
 - Use OnPush change detection strategy
 - Use strict TypeScript configuration
 - Implement proper error handling in RxJS streams

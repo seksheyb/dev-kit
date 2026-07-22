@@ -30,7 +30,7 @@
 | Sales Channel | Custom storefront | App Store |
 | Embedded App | Admin integration | Either |
 
-### Modern Stack (2024+)
+### Modern Stack
 
 ```bash
 # Create new Shopify app with Remix template
@@ -72,7 +72,7 @@ redirect_urls = [
 ]
 
 [webhooks]
-api_version = "2024-10"
+api_version = "2026-07"
 
   [[webhooks.subscriptions]]
   topics = ["products/create", "products/update", "products/delete"]
@@ -126,7 +126,7 @@ const shopify = shopifyApp({
   apiSecretKey: process.env.SHOPIFY_API_SECRET!,
   appUrl: process.env.SHOPIFY_APP_URL!,
   scopes: process.env.SCOPES?.split(","),
-  apiVersion: ApiVersion.October24,
+  apiVersion: ApiVersion.July26,
   distribution: AppDistribution.AppStore,
   sessionStorage: new PrismaSessionStorage(prisma),
   webhooks: {
@@ -168,7 +168,7 @@ async function setupShop(session: Session, admin: AdminApiContext) {
 }
 
 export default shopify;
-export const apiVersion = ApiVersion.October24;
+export const apiVersion = ApiVersion.July26;
 export const addDocumentResponseHeaders = shopify.addDocumentResponseHeaders;
 export const authenticate = shopify.authenticate;
 export const unauthenticated = shopify.unauthenticated;

@@ -1,11 +1,11 @@
 ---
 name: nextjs-developer
-description: "Use when building Next.js 14+ applications with App Router, server components, or server actions. Invoke to configure route handlers, implement middleware, set up API routes, add streaming SSR, write generateMetadata for SEO, scaffold loading.tsx/error.tsx boundaries, or deploy to Vercel. Triggers on: Next.js, Next.js 14, App Router, RSC, use server, Server Components, Server Actions, React Server Components, generateMetadata, loading.tsx, Next.js deployment, Vercel, Next.js performance."
+description: "Use when building Next.js 16+ applications with App Router, server components, or server actions. Invoke to configure route handlers, implement middleware, set up API routes, add streaming SSR, write generateMetadata for SEO, scaffold loading.tsx/error.tsx boundaries, or deploy to Vercel. Triggers on: Next.js, Next.js 16, App Router, RSC, use server, Server Components, Server Actions, React Server Components, generateMetadata, loading.tsx, Turbopack, Next.js deployment, Vercel, Next.js performance."
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   domain: frontend
-  triggers: Next.js, Next.js 14, App Router, Server Components, Server Actions, React Server Components, Next.js deployment, Vercel, Next.js performance
+  triggers: Next.js, Next.js 16, App Router, Server Components, Server Actions, React Server Components, Turbopack, Next.js deployment, Vercel, Next.js performance
   role: specialist
   scope: implementation
   output-format: code
@@ -14,7 +14,7 @@ metadata:
 
 # Next.js Developer
 
-Senior Next.js developer with expertise in Next.js 14+ App Router, server components, and full-stack deployment with focus on performance and SEO excellence.
+Senior Next.js developer with expertise in Next.js 16+ App Router, server components, and full-stack deployment with focus on performance and SEO excellence.
 
 ## Core Workflow
 
@@ -41,6 +41,7 @@ Load detailed guidance based on context:
 
 ### MUST DO (Next.js-specific)
 - Use App Router (`app/` directory), never Pages Router (`pages/`)
+- Build and run dev with Turbopack (the default bundler since Next.js 15/16 — no `--turbo` flag or `experimental.turbo` config needed)
 - Keep components as Server Components by default; add `'use client'` only at the leaf boundary where interactivity is required
 - Use native `fetch` with explicit `cache` / `next.revalidate` options — do not rely on implicit caching
 - Use `generateMetadata` (or the static `metadata` export) for all SEO — never hardcode `<title>` or `<meta>` tags in JSX
@@ -93,6 +94,8 @@ export default function Page() {
 import { revalidatePath } from 'next/cache'
 
 export async function createProduct(formData: FormData) {
+  // Server Actions accept at most 1,000 bound arguments per request;
+  // pass large payloads as a single object/FormData, not spread scalar args.
   const name = formData.get('name') as string
   await db.product.create({ data: { name } })
   revalidatePath('/products')
@@ -139,5 +142,5 @@ When implementing Next.js features, provide:
 
 ## Knowledge Reference
 
-Next.js 14+, App Router, React Server Components, Server Actions, Streaming SSR, Partial Prerendering, next/image, next/font, Metadata API, Route Handlers, Middleware, Edge Runtime, Turbopack, Vercel deployment
+Next.js 16+, App Router, React Server Components, Server Actions (1,000-argument request limit), Streaming SSR, Partial Prerendering, next/image, next/font, Metadata API, Route Handlers, Middleware, Edge Runtime, Turbopack (default bundler), Vercel deployment
 

@@ -1,6 +1,6 @@
 ---
 name: vue-expert
-description: Builds Vue 3 components with Composition API patterns, configures Nuxt 3 SSR/SSG projects, sets up Pinia stores, scaffolds Quasar/Capacitor mobile apps, implements PWA features, and optimises Vite builds. Use when creating Vue 3 applications with Composition API, writing reusable composables, managing state with Pinia, building hybrid mobile apps with Quasar or Capacitor, configuring service workers, or tuning Vite configuration and TypeScript integration.
+description: Builds Vue 3 components with Composition API patterns, configures Nuxt 4 SSR/SSG projects, sets up Pinia stores, scaffolds Quasar/Capacitor mobile apps, implements PWA features, and optimises Vite builds. Use when creating Vue 3 applications with Composition API, writing reusable composables, managing state with Pinia, building hybrid mobile apps with Quasar or Capacitor, configuring service workers, or tuning Vite configuration and TypeScript integration.
 license: MIT
 metadata:
   version: "1.1.0"
@@ -34,7 +34,7 @@ Load detailed guidance based on context:
 | Composition API | `references/composition-api.md` | ref, reactive, computed, watch, lifecycle |
 | Components | `references/components.md` | Props, emits, slots, provide/inject |
 | State Management | `references/state-management.md` | Pinia stores, actions, getters |
-| Nuxt 3 | `references/nuxt.md` | SSR, file-based routing, useFetch, Fastify, hydration |
+| Nuxt 4 | `references/nuxt.md` | SSR, file-based routing, useFetch, Fastify, hydration |
 | TypeScript | `references/typescript.md` | Typing props, generic components, type safety |
 | Mobile & Hybrid | `references/mobile-hybrid.md` | Quasar, Capacitor, PWA, service worker, mobile |
 | Build Tooling | `references/build-tooling.md` | Vite config, sourcemaps, optimization, bundling |
@@ -61,6 +61,8 @@ function increment() {
   <button @click="increment">Count: {{ count }} (doubled: {{ doubled }})</button>
 </template>
 ```
+
+Vue 3.6+ ships **Vapor Mode** (`<script setup vapor>`), a compiler strategy that removes the Virtual DOM for opted-in components. Default to standard VDOM Composition API below; reach for Vapor only when a component's render-performance profile calls for it, and never mix Vapor and VDOM children without checking current interop support.
 
 ## Constraints
 
@@ -94,5 +96,5 @@ When implementing Vue features, provide:
 
 ## Knowledge Reference
 
-Vue 3 Composition API, Pinia, Nuxt 3, Vue Router 4, Vite, VueUse, TypeScript, Vitest, Vue Test Utils, SSR/SSG, reactive programming, performance optimization
+Vue 3 Composition API (Vapor Mode-aware), Pinia, Nuxt 4, Vue Router 4, Vite, VueUse, TypeScript, Vitest, Vue Test Utils, SSR/SSG, reactive programming, performance optimization
 

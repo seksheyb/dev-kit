@@ -1,4 +1,4 @@
-# Modern JavaScript Syntax (ES2023+)
+# Modern JavaScript Syntax (ES2025+)
 
 ## Optional Chaining and Nullish Coalescing
 
@@ -190,6 +190,29 @@ const divided = 10n / 3n; // 3n (truncates)
 const power = 2n ** 64n;
 ```
 
+## ES2025 Additions
+
+```javascript
+// Promise.try() - run a function that may throw sync or return a promise
+const result = await Promise.try(() => maybeSyncOrAsync());
+
+// Set methods - native set algebra, no lodash needed
+const active = new Set(['a', 'b', 'c']);
+const admins = new Set(['b', 'c', 'd']);
+const activeAdmins = active.intersection(admins);
+const allUsers = active.union(admins);
+const nonAdmins = active.difference(admins);
+
+// Array.fromAsync() - build an array from an async iterable
+const rows = await Array.fromAsync(readLinesFromStream(stream));
+
+// JSON module imports - import JSON with an explicit type attribute
+import config from './config.json' with { type: 'json' };
+
+// RegExp.escape() - safely escape user input for use in a RegExp
+const pattern = new RegExp(RegExp.escape(userInput));
+```
+
 ## Pattern Matching (Stage 3 Proposal)
 
 ```javascript
@@ -215,10 +238,10 @@ function handleResponse({ status, data, error }) {
 }
 ```
 
-## Iterator Helpers (Stage 3)
+## Iterator Helpers (ES2025)
 
 ```javascript
-// When available - chaining iterator operations
+// Native iterator chaining, no library needed
 const result = [1, 2, 3, 4, 5]
   .values()
   .map(x => x * 2)
@@ -270,3 +293,7 @@ const zonedTime = now.toZonedDateTimeISO('America/New_York');
 | Object.hasOwn() | ES2022 | `Object.hasOwn(obj, 'key')` |
 | Array.findLast() | ES2023 | `arr.findLast(fn)` |
 | toSorted() | ES2023 | `arr.toSorted()` |
+| Set methods | ES2025 | `setA.union(setB)` |
+| Promise.try() | ES2025 | `Promise.try(fn)` |
+| Array.fromAsync() | ES2025 | `Array.fromAsync(iter)` |
+| Iterator helpers | ES2025 | `iter.map(fn).toArray()` |

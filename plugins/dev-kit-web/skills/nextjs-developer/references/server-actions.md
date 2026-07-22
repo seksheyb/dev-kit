@@ -373,8 +373,13 @@ export async function createPost(formData: FormData) {
 // components/form.tsx
 'use client'
 
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createPost } from '@/app/actions'
+
 export function CreatePostForm() {
   const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
   async function handleSubmit(formData: FormData) {
     const result = await createPost(formData)
@@ -459,4 +464,5 @@ export async function createPost(formData: FormData) {
 4. **Auth checks** - Verify session before mutations
 5. **Rate limiting** - Protect against abuse
 6. **Type safety** - Define input/output types
+7. **Argument limit** - Next.js caps bound arguments at 1,000 per Server Action request; pass large payloads as a single object or `FormData`, not many individual scalar args
 7. **Optimistic updates** - Use useOptimistic for better UX

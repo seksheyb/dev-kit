@@ -120,7 +120,7 @@ dev-kit supplies the assets, not the branch logic.)
 | `guard` (S8) | Track touches prod / shared / destructive surface | Skip the freeze |
 | **Debug** (S9) | A bug / test failure / unexpected behavior occurs | Skip; execution continues |
 | UI/DX review passes (S10): `design-reviewer`, `ui-auditor`, `accessibility-tester`, `devex-review` | Phase shipped UI or a developer-facing surface | Skip; `code-review-gate` + `qa` still run |
-| `nyquist-auditor` (S11) | `verifier`/`converge` surfaced validation gaps | Skip; nothing to fill |
+| `nyquist-auditor` (S11) | `verifier` Step 6d found requirements with no automated test coverage (`validation_gaps` non-empty) | Skip; nothing to fill |
 | `gate-automation` (S12) | Sprint diff added/changed **primary** user flows | No new flows required (internal-only changes excluded) |
 | `compliance-auditor` + product compliance skills (S13) | Regulated data/industry in scope (GDPR/HIPAA/PCI/SOC2…) | Skip |
 | `penetration-tester` (S13) | Active exploitation is **authorized and in scope** | Skip — agent refuses without written authorization |
@@ -400,6 +400,8 @@ the lighter tier, with the full set still available as an explicit escalation.
 
 1. **`verify`** *(command)* → **`verifier`** *(agent)* — goal-backward: observable truths → artifact exists /
    substantive / wired / real data flowing → key-link checks → `VERIFICATION.md` (passed / gaps_found / human_needed).
+   Step 6d additionally checks each requirement for real automated test coverage (independent of pass/fail status)
+   and structures any misses as a `validation_gaps` list — `nyquist-auditor`'s actual input, below.
 2. **`converge`** — the remediation compiler: assess present-state code against `spec.md` + the phase's `PLAN.md`(s)
    (plus the constitution, and `VERIFICATION.md`'s gaps as pre-confirmed evidence when present), append
    missing/partial/contradicts/unrequested gaps as new `<task>` blocks under a `## Phase N: Convergence` header at
@@ -408,8 +410,10 @@ the lighter tier, with the full set still available as an explicit escalation.
    complementary, not redundant.
 3. **`integration-checker`** *(agent)* — cross-phase wiring: every export imported *and used*, every API route has a
    real consumer, sensitive routes are auth-protected, E2E flows trace end-to-end.
-4. **`nyquist-auditor`** *(agent)* — for each validation gap, write a real behavioral test targeting the hardest edge
-   (never a trivially-passing one); FILLED / ESCALATED / justified-SKIP.
+4. **`nyquist-auditor`** *(agent)* — dispatched with `verifier`'s `validation_gaps` as `<gaps>`; for each, write a
+   real behavioral test targeting the hardest edge (never a trivially-passing one); FILLED / ESCALATED /
+   justified-SKIP. Distinct from `converge`: this fills missing *test coverage* for requirements that already work,
+   not missing *implementation*.
 5. **`dependency-manager`** *(agent)* — CVE / version-conflict / license / dead-weight sweep, incremental tested updates.
 
 ### Stage 12 — Automation coverage *(GWD step 14)*
@@ -611,7 +615,10 @@ retargeted from the Spec-Kit `spec.md`/`plan.md`/`tasks.md` triad to this pipeli
 A subsequent Stage 8–13 audit retargeted Stage 11's `converge` the same way — off that same unproduced triad and
 onto `spec.md` + the phase's embedded-task `PLAN.md`, appending new `<task>` blocks instead of `tasks.md` checklist
 items, and positioned it explicitly as the requirement-level **remediation compiler** alongside `verifier`'s
-goal-backward **verdict**.
+goal-backward **verdict**. The same audit found `nyquist-auditor` similarly wired to nothing — its `no_test_file` /
+`test_fails` / `no_automated_command` gap vocabulary matched neither `verifier`'s failed-truth gaps nor `converge`'s
+implementation tasks — and gave `verifier` a new Step 6d that emits a `validation_gaps` list in the shape
+`nyquist-auditor` actually consumes, orthogonal to pass/fail status.
 
 ---
 

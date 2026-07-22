@@ -259,6 +259,19 @@ Status: WIRED (state displayed) | NOT_WIRED (state exists, not rendered)
 
 **6c.** Check for orphaned requirements: if the REQUIREMENTS document maps additional IDs to this phase that don't appear in ANY plan's `requirements` field, flag as **ORPHANED** — expected but unclaimed. ORPHANED requirements MUST appear in the verification report.
 
+**6d. Detect validation gaps (feeds `nyquist-auditor`).** A requirement can be functionally ✓ SATISFIED per 6b (the behavior works) yet have zero automated test proving it — that is a *different* gap than a goal gap, and it is `nyquist-auditor`'s job to fill, not converge's or a re-run of this agent. For every requirement from 6a-6b, determine whether it has real automated test coverage:
+
+1. If the phase's `RESEARCH.md` has a "Phase Requirements → Test Map" table, read its `Automated Command`/`File Exists?` columns as a starting hint — a prediction made before implementation, not evidence; confirm against the actual repo state below rather than trusting it.
+2. Search for a test file/case exercising the requirement's behavior: by naming convention against the touched module/component, or an explicit requirement-ID reference in a test name/comment/docstring.
+3. Classify the requirement into exactly one of:
+   - **`no_test_file`** — no test file/case found that exercises this requirement.
+   - **`test_fails`** — a targeting test exists but fails when run (a test-authoring problem `nyquist-auditor` diagnoses — distinct from an implementation bug, which Steps 7/7b already surface).
+   - **`no_automated_command`** — a test exists but has no clear runnable command/CI entry tying it to the project's test runner.
+   - Has a real, passing, automated test → no gap; omit it.
+4. Skip requirements whose only meaningful verification is inherently manual (the Step 8 "always needs human" categories — visual appearance, real-time behavior, external service, etc.). Those belong in `human_verification`, never in `validation_gaps` — a requirement must not appear in both.
+
+Record each gap as `{gap_id, task_id, requirement, gap_type}` — `task_id` traced from the PLAN.md task that implements the requirement (from 6a's mapping), `requirement` the human-readable text `nyquist-auditor` needs to write a real behavioral test against.
+
 ## Step 7: Scan for Anti-Patterns
 
 Identify files modified in this phase from the SUMMARY key-files section (or extract commit hashes and list their files). Run anti-pattern detection on each file:
@@ -365,6 +378,8 @@ Classify status using this decision tree IN ORDER (most restrictive first):
 
 **Score:** `verified_truths / total_truths`
 
+**`validation_gaps` (Step 6d) never affects this decision tree.** A requirement can be fully SATISFIED — contributing to a `passed` status — while still lacking an automated test; that's an orthogonal axis `nyquist-auditor` closes independently, not a blocker on this verification.
+
 ## Step 9b: Filter Deferred Items
 
 Before reporting gaps, check whether any identified gap is explicitly addressed in a LATER phase of the current milestone (goal or success criteria text of later roadmap phases). If a clear, specific match exists → move the gap to a `deferred` list, recording which phase addresses it and the matching evidence. Be conservative: vague or tangential matches do NOT defer a gap — when in doubt, keep it as a real gap.
@@ -460,6 +475,11 @@ human_verification: # Only if status: human_needed
   - test: "What to do"
     expected: "What should happen"
     why_human: "Why can't verify programmatically"
+validation_gaps: # Only if any requirement lacks automated test coverage (Step 6d) — independent of status
+  - gap_id: "VG1"
+    task_id: "Task N"
+    requirement: "Requirement text nyquist-auditor needs to test against"
+    gap_type: no_test_file | test_fails | no_automated_command
 ---
 
 # Phase {X}: {Name} Verification Report
@@ -511,6 +531,12 @@ human_verification: # Only if status: human_needed
 | Requirement | Source Plan | Description | Status | Evidence |
 | ----------- | ----------- | ----------- | ------ | -------- |
 
+### Validation Gaps
+(only if any requirement lacks automated test coverage — Step 6d; for `nyquist-auditor`, not a goal gap)
+
+| Gap ID | Task ID | Requirement | Gap Type |
+| ------ | ------- | ----------- | -------- |
+
 ### Anti-Patterns Found
 
 | File | Line | Pattern | Severity | Impact |
@@ -553,6 +579,13 @@ Structured gaps in VERIFICATION.md frontmatter for the gap-closure planning work
 1. **{Test name}** — {what to do}
    - Expected: {what should happen}
 Automated checks passed. Awaiting human verification.
+
+{If validation_gaps is non-empty, regardless of status:}
+### Validation Gaps
+{N} requirements lack automated test coverage — independent of the status above:
+1. **{requirement}** — {gap_type}
+Dispatch `nyquist-auditor` with `<gaps>` = VERIFICATION.md's `validation_gaps` list and
+`<required_reading>` = this phase's `PLAN.md`(s), `SUMMARY.md`(s), and this `VERIFICATION.md`.
 ```
 
 </output>
@@ -633,6 +666,7 @@ return <div>No messages</div>  // Always shows "no messages"
 - [ ] Data-flow trace (Level 4) run on wired artifacts that render dynamic data
 - [ ] All key links verified
 - [ ] Requirements coverage assessed (if applicable)
+- [ ] Validation gaps detected and structured for `nyquist-auditor` (Step 6d)
 - [ ] Anti-patterns scanned and categorized
 - [ ] Behavioral spot-checks run on runnable code (or skipped with reason)
 - [ ] Human verification items identified

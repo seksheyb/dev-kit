@@ -138,7 +138,7 @@ security/compliance gate's business, and the catalog already notes its overlap w
 (and move the lane-routing note for `license-engineer` with it). Net-zero relocation,
 mirrors the Stage 4→8 `design-handoff` move.
 
-### F13. `nyquist-auditor` has a wiring hole: nothing produces its expected input — [ ]
+### F13. `nyquist-auditor` has a wiring hole: nothing produces its expected input — [x]
 
 Its gap vocabulary (`no_test_file` / `test_fails` / `no_automated_command`) is
 per-requirement test coverage, but verifier's gaps are goal gaps (missing/stub artifacts

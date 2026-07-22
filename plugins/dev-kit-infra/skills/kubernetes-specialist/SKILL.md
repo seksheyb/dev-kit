@@ -5,7 +5,7 @@ license: MIT
 metadata:
   version: "1.1.1"
   domain: infrastructure
-  triggers: Kubernetes, K8s, kubectl, Helm, container orchestration, pod deployment, RBAC, NetworkPolicy, Ingress, StatefulSet, Operator, CRD, CustomResourceDefinition, ArgoCD, Flux, GitOps, Istio, Linkerd, service mesh, multi-cluster, cost optimization, VPA, spot instances
+  triggers: Kubernetes, K8s, kubectl, Helm, container orchestration, pod deployment, RBAC, NetworkPolicy, Ingress, Gateway API, HTTPRoute, StatefulSet, Operator, CRD, CustomResourceDefinition, ArgoCD, Flux, GitOps, Istio, Linkerd, service mesh, multi-cluster, cost optimization, VPA, spot instances
   role: specialist
   scope: infrastructure
   output-format: manifests
@@ -17,7 +17,7 @@ metadata:
 ## When to Use This Skill
 
 - Deploying workloads (Deployments, StatefulSets, DaemonSets, Jobs)
-- Configuring networking (Services, Ingress, NetworkPolicies)
+- Configuring networking (Services, Gateway API/Ingress, NetworkPolicies)
 - Managing configuration (ConfigMaps, Secrets, environment variables)
 - Setting up persistent storage (PV, PVC, StorageClasses)
 - Creating Helm charts for application packaging
@@ -39,7 +39,7 @@ Load detailed guidance based on context:
 | Topic | Reference | Load When |
 |-------|-----------|-----------|
 | Workloads | `references/workloads.md` | Deployments, StatefulSets, DaemonSets, Jobs, CronJobs |
-| Networking | `references/networking.md` | Services, Ingress, NetworkPolicies, DNS |
+| Networking | `references/networking.md` | Services, Gateway API, Ingress, NetworkPolicies, DNS |
 | Configuration | `references/configuration.md` | ConfigMaps, Secrets, environment variables |
 | Storage | `references/storage.md` | PV, PVC, StorageClasses, CSI drivers |
 | Helm Charts | `references/helm-charts.md` | Chart structure, values, templates, hooks, testing, repositories |

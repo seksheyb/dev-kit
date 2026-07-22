@@ -23,6 +23,7 @@ Knowledge pack for Microsoft enterprise operations: Windows Server and Active Di
 - Run pre-change verification flows before modifying infrastructure.
 - Define post-change validation and rollback paths.
 - Produce impact assessments and plan maintenance windows.
+- Target PowerShell 7 (current LTS) for new automation; keep 5.1 only for legacy Windows-only/RSAT-bound scripts that haven't been ported.
 
 ### Infra change checklist
 - Scope documented (domains, OUs, zones, scopes).

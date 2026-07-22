@@ -4,7 +4,7 @@
 
 ```dockerfile
 # Build stage
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production && npm cache clean --force
@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
@@ -51,7 +51,6 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 ## Docker Compose (Development)
 
 ```yaml
-version: '3.8'
 services:
   app:
     build:
@@ -69,7 +68,7 @@ services:
         condition: service_healthy
 
   db:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
@@ -93,7 +92,7 @@ volumes:
 | Non-root user | `USER nodejs` or `USER 1001` |
 | Minimal base image | Use `-alpine` or `-slim` variants |
 | No secrets in image | Use runtime env vars or secrets |
-| Pin versions | `FROM node:20.10.0-alpine` not `latest` |
+| Pin versions | `FROM node:22.14.0-alpine` not `latest` |
 | Scan images | `docker scout`, `trivy`, `snyk` |
 | Health checks | `HEALTHCHECK` instruction |
 | .dockerignore | Exclude `node_modules`, `.git`, `.env` |

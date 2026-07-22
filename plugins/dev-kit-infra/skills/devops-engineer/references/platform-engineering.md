@@ -28,7 +28,7 @@ spec:
           forProvider:
             dbInstanceClass: db.t3.micro
             engine: postgres
-            engineVersion: "15"
+            engineVersion: "17"
             masterUsername: admin
             allocatedStorage: 20
 ```

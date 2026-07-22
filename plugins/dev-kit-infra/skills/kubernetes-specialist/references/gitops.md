@@ -393,7 +393,8 @@ spec:
 
 ```bash
 # Install controller
-kubectl apply -f https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.24.0/controller.yaml
+kubectl apply -f https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.37.0/controller.yaml
+# Check the releases page for the current version before installing: https://github.com/bitnami-labs/sealed-secrets/releases
 
 # Install kubeseal CLI
 brew install kubeseal
@@ -479,7 +480,7 @@ fleet-repo/
 │   └── another-app/
 ├── infrastructure/
 │   ├── cert-manager/
-│   └── ingress-nginx/
+│   └── gateway-api/
 └── clusters/
     ├── dev/
     ├── staging/
@@ -496,7 +497,7 @@ myapp-manifests/
 # Infrastructure repo
 infrastructure/
 ├── cert-manager/
-└── ingress-nginx/
+└── gateway-api/
 
 # Fleet repo (references others)
 fleet-infra/

@@ -201,7 +201,7 @@ spec:
         operator: Exists
       containers:
       - name: node-exporter
-        image: prom/node-exporter:latest
+        image: prom/node-exporter:v1.12.1
         args:
         - --path.procfs=/host/proc
         - --path.sysfs=/host/sys
@@ -302,7 +302,7 @@ spec:
           serviceAccountName: backup-sa
           containers:
           - name: backup
-            image: myregistry.io/backup-tool:latest
+            image: myregistry.io/backup-tool:v1.4.2
             command: ["/usr/local/bin/backup.sh"]
             env:
             - name: S3_BUCKET
@@ -342,7 +342,7 @@ spec:
 spec:
   initContainers:
   - name: wait-for-db
-    image: busybox:latest
+    image: busybox:1.36
     command: ['sh', '-c']
     args:
     - |
@@ -352,7 +352,7 @@ spec:
       done
       echo "Database is ready"
   - name: migrate-schema
-    image: myregistry.io/migrations:latest
+    image: myregistry.io/migrations:v1.2.0
     command: ["/app/migrate", "up"]
     env:
     - name: DATABASE_URL
@@ -362,7 +362,7 @@ spec:
           key: url
   containers:
   - name: app
-    image: myregistry.io/app:latest
+    image: myregistry.io/app:v2.3.1
 ```
 
 ## Best Practices

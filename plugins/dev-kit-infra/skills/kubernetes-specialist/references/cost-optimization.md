@@ -379,7 +379,7 @@ spec:
           serviceAccountName: scaler
           containers:
             - name: kubectl
-              image: bitnami/kubectl:latest
+              image: bitnami/kubectl:1.36
               command:
                 - /bin/sh
                 - -c
@@ -401,7 +401,7 @@ spec:
           serviceAccountName: scaler
           containers:
             - name: kubectl
-              image: bitnami/kubectl:latest
+              image: bitnami/kubectl:1.36
               command:
                 - /bin/sh
                 - -c

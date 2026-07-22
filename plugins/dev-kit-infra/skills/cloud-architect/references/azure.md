@@ -69,7 +69,7 @@ Comprehensive guide for Azure services, patterns, and Cloud Adoption Framework i
    - Backup and disaster recovery
 
 5. **Security**
-   - Azure AD (Entra ID)
+   - Microsoft Entra ID
    - Network Security Groups and Firewalls
    - Azure Key Vault
    - Microsoft Defender for Cloud
@@ -102,7 +102,7 @@ Comprehensive guide for Azure services, patterns, and Cloud Adoption Framework i
 **Azure Kubernetes Service (AKS)**
 - Managed Kubernetes control plane
 - Azure CNI or kubenet networking
-- Azure AD integration
+- Microsoft Entra ID integration
 - Virtual nodes (Azure Container Instances)
 - Best practices: Use system node pools, enable autoscaling, implement network policies
 
@@ -229,7 +229,7 @@ Comprehensive guide for Azure services, patterns, and Cloud Adoption Framework i
 
 ### Security and Identity
 
-**Azure Active Directory (Microsoft Entra ID)**
+**Microsoft Entra ID**
 - Identity and access management
 - Conditional Access policies
 - Multi-factor authentication
@@ -532,7 +532,7 @@ requests
 
 ## Identity and Access
 
-### Azure AD Best Practices
+### Microsoft Entra ID Best Practices
 
 - Enable MFA for all users
 - Use Conditional Access policies

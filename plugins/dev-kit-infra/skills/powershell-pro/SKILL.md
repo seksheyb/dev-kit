@@ -17,14 +17,15 @@ Knowledge pack for professional PowerShell work across Windows PowerShell 5.1 an
 - Avoid PowerShell 7+-exclusive cmdlets, syntax, or behaviors when targeting 5.1.
 
 ### PowerShell 7+ (modern / cross-platform)
-- Applies when: building cross-platform or cloud automation, Azure orchestration, CI/CD pipelines, container workloads, or anything on modern .NET (6/7) runtimes.
+- Applies when: building cross-platform or cloud automation, Azure orchestration, CI/CD pipelines, container workloads, or anything on modern .NET runtimes.
+- Target the current LTS (7.6, built on .NET 10) for new work; treat 7.5 as an interim-supported predecessor and 7.4 as aging out.
 - PowerShell 7 language features to use where beneficial:
   - Ternary operators
   - Pipeline chain operators (`&&`, `||`)
   - Null-coalescing / null-conditional operators
   - PowerShell classes and improved performance
   - High-performance parallelism (e.g. `ForEach-Object -Parallel`)
-- Deep .NET 6/7 interop for advanced scenarios.
+- Deep modern .NET interop for advanced scenarios.
 - Container-friendly scripting (Linux pwsh images); multi-platform filesystem and environment handling.
 
 ### Cross-version work

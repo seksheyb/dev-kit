@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: ghcr.io/org/app:latest
+          image: ghcr.io/org/app:1.4.2
           ports:
             - containerPort: 3000
           resources:
@@ -62,29 +62,27 @@ spec:
       targetPort: 3000
   type: ClusterIP
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
   name: app
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
-  ingressClassName: nginx
-  tls:
-    - hosts: [app.example.com]
-      secretName: app-tls
+  parentRefs:
+    - name: shared-gateway
+  hostnames: ["app.example.com"]
   rules:
-    - host: app.example.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: app
-                port:
-                  number: 80
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: app
+          port: 80
 ```
+
+The community `ingress-nginx` project was retired in 2026 with no further releases; route new traffic through the Gateway API (`Gateway`/`HTTPRoute`) via a maintained controller (Envoy Gateway, Cilium, Istio, or a commercial NGINX ingress). Use `ingress2gateway` to migrate existing `Ingress` objects.
 
 ## ConfigMap and Secrets
 
@@ -135,7 +133,7 @@ spec:
 |----------|---------|
 | Deployment | Manages ReplicaSets, rolling updates |
 | Service | Internal load balancing, DNS |
-| Ingress | External HTTP/HTTPS routing |
+| HTTPRoute (Gateway API) | External HTTP/HTTPS routing |
 | ConfigMap | Non-sensitive configuration |
 | Secret | Sensitive data (base64 encoded) |
 | HPA | Auto-scaling based on metrics |

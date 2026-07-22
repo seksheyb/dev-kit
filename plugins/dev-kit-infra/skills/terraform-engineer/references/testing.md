@@ -156,13 +156,15 @@ tests/
 ```go
 module github.com/example/terraform-modules/tests
 
-go 1.21
+go 1.26
 
 require (
-    github.com/gruntwork-io/terratest v0.45.0
-    github.com/stretchr/testify v1.8.4
+    github.com/gruntwork-io/terratest v1.0.0
+    github.com/stretchr/testify v1.9.0
 )
 ```
+
+Terratest 1.0+ follows semantic versioning, with breaking changes reserved for major releases; some cloud-API helpers now take an explicit `context.Context` as their second argument, so check the changelog when upgrading across a major version.
 
 **Basic Terratest**
 ```go
@@ -349,7 +351,7 @@ plugin "terraform" {
 
 plugin "aws" {
   enabled = true
-  version = "0.27.0"
+  version = "0.48.0"
   source  = "github.com/terraform-linters/tflint-ruleset-aws"
 }
 
@@ -397,7 +399,7 @@ tflint --format=json
 ```yaml
 repos:
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.83.6
+    rev: v1.101.1
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
@@ -438,12 +440,12 @@ jobs:
   terraform-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.6.0
+          terraform_version: 1.15.2
 
       - name: Terraform Format
         run: terraform fmt -check -recursive

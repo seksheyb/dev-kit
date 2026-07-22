@@ -96,88 +96,96 @@ spec:
   - 203.0.113.0/24  # Restrict source IPs
 ```
 
-## Ingress Resources
+## Ingress and Gateway API
 
-### NGINX Ingress
+Prefer the Gateway API (GA, part of core Kubernetes routing) over the legacy `Ingress` object for
+new traffic-routing setups. The community `ingress-nginx` controller has been retired with no
+further releases or CVE fixes — do not adopt it for new clusters. Route through a maintained
+Gateway API implementation (Cilium, Envoy Gateway, Istio, or a vendor's controller) instead; use
+the `ingress2gateway` CLI to migrate existing `Ingress` manifests.
+
+### Gateway and HTTPRoute (host + TLS)
 
 ```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
 metadata:
-  name: web-ingress
+  name: web-gateway
   namespace: production
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
-    nginx.ingress.kubernetes.io/rate-limit: "100"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
-  ingressClassName: nginx
-  tls:
-  - hosts:
-    - www.example.com
-    - api.example.com
-    secretName: example-tls
+  gatewayClassName: cilium   # or envoy-gateway, istio, etc.
+  listeners:
+  - name: https
+    protocol: HTTPS
+    port: 443
+    hostname: "*.example.com"
+    tls:
+      certificateRefs:
+      - name: example-tls
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: web-route
+  namespace: production
+spec:
+  parentRefs:
+  - name: web-gateway
+  hostnames:
+  - www.example.com
+  - api.example.com
   rules:
-  - host: www.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: frontend-service
-            port:
-              number: 80
-  - host: api.example.com
-    http:
-      paths:
-      - path: /v1
-        pathType: Prefix
-        backend:
-          service:
-            name: api-service
-            port:
-              number: 8080
-      - path: /v2
-        pathType: Prefix
-        backend:
-          service:
-            name: api-v2-service
-            port:
-              number: 8080
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: frontend-service
+      port: 80
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /v1
+    backendRefs:
+    - name: api-service
+      port: 8080
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /v2
+    backendRefs:
+    - name: api-v2-service
+      port: 8080
 ```
 
 ### Path-Based Routing
 
 ```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
-  name: app-ingress
+  name: app-route
   namespace: production
 spec:
-  ingressClassName: nginx
+  parentRefs:
+  - name: web-gateway
+  hostnames:
+  - app.example.com
   rules:
-  - host: app.example.com
-    http:
-      paths:
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: backend-api
-            port:
-              number: 8080
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: frontend
-            port:
-              number: 80
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /api
+    backendRefs:
+    - name: backend-api
+      port: 8080
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: frontend
+      port: 80
 ```
 
 ## NetworkPolicy (Zero Trust)
@@ -343,7 +351,7 @@ spec:
       value: "2"
   containers:
   - name: app
-    image: myapp:latest
+    image: myapp:v1.4.0
 ```
 
 ## Service Mesh (Istio Example)
@@ -441,7 +449,7 @@ endpoints:
 2. **Least Privilege**: Only open required ports and protocols
 3. **Service Selection**: Use ClusterIP by default, LoadBalancer sparingly
 4. **DNS Names**: Use service DNS names, avoid hardcoded IPs
-5. **TLS Termination**: Terminate TLS at Ingress when possible
+5. **TLS Termination**: Terminate TLS at the Gateway when possible
 6. **Health Checks**: Configure proper health check paths
-7. **Rate Limiting**: Apply rate limits at Ingress level
+7. **Rate Limiting**: Apply rate limits at the Gateway/route level
 8. **Monitoring**: Expose metrics endpoints for Prometheus

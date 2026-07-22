@@ -132,7 +132,7 @@ stages: [test, build, deploy]
 
 test:
   stage: test
-  image: node:20
+  image: node:22
   script:
     - npm ci && npm test
 
@@ -214,19 +214,19 @@ pipeline {
 ### Multi-stage Docker Build
 
 ```dockerfile
-FROM node:20 AS deps
+FROM node:22 AS deps
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
 
-FROM node:20 AS builder
+FROM node:22 AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM node:20-slim AS runner
+FROM node:22-slim AS runner
 WORKDIR /app
 ENV NODE_ENV production
 COPY --from=deps /app/node_modules ./node_modules
@@ -244,7 +244,7 @@ jobs:
   test:
     parallelism: 4
     docker:
-      - image: cimg/node:20
+      - image: cimg/node:22
     steps:
       - checkout
       - run: npm ci
@@ -328,7 +328,7 @@ echo "✓ Release $VERSION ready for production"
       ${{ runner.os }}-deps-
 
 - name: Cache Docker layers
-  uses: docker/build-push-action@v4
+  uses: docker/build-push-action@v6
   with:
     context: .
     cache-from: type=gha
@@ -347,11 +347,11 @@ jobs:
   test:
     strategy:
       matrix:
-        node: [18, 20, 22]
+        node: [20, 22, 24]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
       - run: npm ci && npm test
@@ -363,7 +363,7 @@ jobs:
         platform: [linux/amd64, linux/arm64]
     runs-on: ubuntu-latest
     steps:
-      - uses: docker/build-push-action@v4
+      - uses: docker/build-push-action@v6
         with:
           platforms: ${{ matrix.platform }}
           tags: app:${{ github.sha }}

@@ -417,7 +417,7 @@ spec:
 
 ```bash
 # Install Kiali
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.20/samples/addons/kiali.yaml
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.30/samples/addons/kiali.yaml
 
 # Access dashboard
 istioctl dashboard kiali
@@ -427,7 +427,7 @@ istioctl dashboard kiali
 
 ```bash
 # Install Jaeger
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.20/samples/addons/jaeger.yaml
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.30/samples/addons/jaeger.yaml
 
 # Access dashboard
 istioctl dashboard jaeger

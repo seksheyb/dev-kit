@@ -14,7 +14,7 @@ metadata:
 
 # Terraform Engineer
 
-Senior Terraform engineer specializing in infrastructure as code across AWS, Azure, and GCP with expertise in modular design, state management, and production-grade patterns.
+Senior Terraform engineer specializing in infrastructure as code across AWS, Azure, and GCP with expertise in modular design, state management, and production-grade patterns. Terraform itself is BSL-licensed; HCL and state files are fully compatible with OpenTofu, the MPL-licensed fork — treat OpenTofu as a drop-in alternative when licensing is a constraint.
 
 ## Core Workflow
 
@@ -104,16 +104,16 @@ output "bucket_id" {
 }
 ```
 
-### Remote Backend Configuration (S3 + DynamoDB)
+### Remote Backend Configuration (S3, native locking)
 
 ```hcl
 terraform {
   backend "s3" {
-    bucket         = "my-tf-state"
-    key            = "env/prod/terraform.tfstate"
-    region         = "us-east-1"
-    encrypt        = true
-    dynamodb_table = "terraform-lock"
+    bucket       = "my-tf-state"
+    key          = "env/prod/terraform.tfstate"
+    region       = "us-east-1"
+    encrypt      = true
+    use_lockfile = true # Terraform >= 1.10; use dynamodb_table on older versions
   }
 }
 ```
@@ -127,11 +127,11 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"
+      version = "~> 6.0"
     }
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.0"
+      version = "~> 4.0"
     }
   }
 }

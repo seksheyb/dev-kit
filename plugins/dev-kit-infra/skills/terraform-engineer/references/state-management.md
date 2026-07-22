@@ -7,17 +7,19 @@
 # backend.tf
 terraform {
   backend "s3" {
-    bucket         = "my-terraform-state"
-    key            = "production/vpc/terraform.tfstate"
-    region         = "us-east-1"
-    encrypt        = true
-    dynamodb_table = "terraform-state-lock"
+    bucket       = "my-terraform-state"
+    key          = "production/vpc/terraform.tfstate"
+    region       = "us-east-1"
+    encrypt      = true
+    use_lockfile = true # native S3 locking (Terraform >= 1.10) — no DynamoDB table needed
 
     # Optional: Enable versioning for state file history
     versioning = true
   }
 }
 ```
+
+Legacy setups still pinned below Terraform 1.10 use a DynamoDB table for locking instead of `use_lockfile`; `dynamodb_table` is deprecated once you're on 1.11+.
 
 **S3 Bucket Setup**
 ```hcl
@@ -62,7 +64,8 @@ resource "aws_s3_bucket_public_access_block" "terraform_state" {
   restrict_public_buckets = true
 }
 
-# DynamoDB table for state locking
+# Legacy: DynamoDB table for state locking (only needed on Terraform < 1.10,
+# or if you haven't migrated to native S3 locking via `use_lockfile`)
 resource "aws_dynamodb_table" "terraform_lock" {
   name           = "terraform-state-lock"
   billing_mode   = "PAY_PER_REQUEST"
@@ -219,11 +222,11 @@ terraform {
 **Environment-specific backend configs**
 ```hcl
 # config/backend-prod.hcl
-bucket         = "terraform-state-prod"
-key            = "vpc/terraform.tfstate"
-region         = "us-east-1"
-encrypt        = true
-dynamodb_table = "terraform-lock-prod"
+bucket       = "terraform-state-prod"
+key          = "vpc/terraform.tfstate"
+region       = "us-east-1"
+encrypt      = true
+use_lockfile = true
 ```
 
 ```bash
@@ -288,7 +291,7 @@ terraform force-unlock LOCK_ID
 **Prevent Concurrent Modifications**
 ```hcl
 # State locking happens automatically with supported backends
-# DynamoDB for S3, automatic for Azure Blob and GCS
+# S3 (native use_lockfile, or legacy DynamoDB), automatic for Azure Blob and GCS
 
 # Disable locking for specific operations (not recommended)
 terraform apply -lock=false  # DON'T DO THIS IN PRODUCTION

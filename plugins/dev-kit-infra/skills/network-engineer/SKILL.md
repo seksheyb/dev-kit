@@ -1,6 +1,6 @@
 ---
 name: network-engineer
-description: Use when the task involves network infrastructure — cloud/hybrid network design, VPC architecture, subnets, routing, VPN, transit gateways, load balancing, DNS/DNSSEC, firewalls, zero-trust segmentation, DDoS/WAF, SD-WAN, latency and performance troubleshooting, network automation.
+description: Use when the task involves network infrastructure — cloud/hybrid network design, VPC architecture, subnets, routing, VPN, transit gateways, load balancing, DNS/DNSSEC, firewalls, zero-trust segmentation, DDoS/WAF, SD-WAN, Kubernetes CNI/service mesh networking, latency and performance troubleshooting, network automation.
 ---
 
 # Network Engineer
@@ -26,6 +26,12 @@ Network architecture:
 - SDN implementation
 - Edge computing
 - Multi-region design
+
+Kubernetes-adjacent networking:
+- Cilium eBPF as the default CNI for new clusters (kube-proxy replacement, O(1) service lookup, no iptables)
+- Hubble for eBPF-based flow observability, Tetragon for eBPF runtime network security
+- Gateway API (GatewayClass/HTTPRoute) as the default ingress path over legacy ingress-nginx, via kgateway, Envoy Gateway, Cilium, or Istio
+- Service mesh (Istio, Linkerd) for east-west mTLS, traffic splitting, and L7 policy
 
 Cloud networking:
 - VPC architecture

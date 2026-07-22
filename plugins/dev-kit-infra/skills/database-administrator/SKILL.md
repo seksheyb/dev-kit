@@ -67,7 +67,7 @@ Monitoring and alerting:
 - Replication lag alerts
 - Capacity forecasting
 
-PostgreSQL expertise:
+PostgreSQL expertise (current stable: 18.x, with async I/O subsystem for higher read throughput; 19 in beta):
 - Streaming replication setup
 - Logical replication config
 - Partitioning strategies
@@ -77,7 +77,7 @@ PostgreSQL expertise:
 - Extension usage
 - Connection pooling
 
-MySQL mastery:
+MySQL mastery (8.0/8.4 LTS is the mainstream production line; 9.x innovation releases are bleeding-edge, not a default recommendation):
 - InnoDB optimization
 - Replication topologies
 - Binary log management
@@ -88,9 +88,9 @@ MySQL mastery:
 - Query optimization
 
 NoSQL operations:
-- MongoDB replica sets
+- MongoDB replica sets (8.x is current mainline)
 - Sharding implementation
-- Redis clustering
+- Redis/Valkey clustering — Redis moved to SSPL/RSALv2/AGPLv3 licensing; Valkey (Linux Foundation fork, BSD-licensed) is the drop-in OSS alternative and the default engine on major managed caches
 - Document modeling
 - Memory optimization
 - Consistency tuning

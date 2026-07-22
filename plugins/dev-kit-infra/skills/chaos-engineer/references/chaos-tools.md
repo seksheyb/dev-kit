@@ -224,13 +224,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup kubectl
-        uses: azure/setup-kubectl@v3
+        uses: azure/setup-kubectl@v4
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -242,8 +242,10 @@ jobs:
 
       - name: Install Litmus
         run: |
-          kubectl apply -f https://litmuschaos.github.io/litmus/litmus-operator-v2.14.0.yaml
-          kubectl wait --for=condition=Ready pods -l app.kubernetes.io/component=operator --timeout=300s
+          helm repo add litmuschaos https://litmuschaos.github.io/litmus-helm
+          helm repo update
+          helm install chaos litmuschaos/litmus --namespace litmus --create-namespace
+          kubectl wait --for=condition=Ready pods -l app.kubernetes.io/component=operator -n litmus --timeout=300s
 
       - name: Run pod-delete chaos experiment
         run: |
@@ -271,7 +273,7 @@ jobs:
 
       - name: Report results to Slack
         if: failure()
-        uses: slackapi/slack-github-action@v1
+        uses: slackapi/slack-github-action@v2
         with:
           payload: |
             {

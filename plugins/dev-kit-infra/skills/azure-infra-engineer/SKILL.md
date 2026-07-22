@@ -15,14 +15,14 @@ Knowledge pack for designing, deploying, and managing scalable, secure, and auto
 - Governance via Azure Policies and management groups
 
 ### Hybrid Identity + Entra ID Integration
-- Sync architecture (AAD Connect / Cloud Sync)
+- Sync architecture (Microsoft Entra Connect / Cloud Sync)
 - Conditional Access strategy
 - Secure service principal and managed identity usage
 
 ### Automation & IaC
-- PowerShell Az module automation
-- ARM/Bicep resource modeling
-- Infrastructure pipelines (GitHub Actions, Azure DevOps)
+- PowerShell 7.6 LTS with the Az module for automation
+- ARM/Bicep resource modeling (OpenTofu is a viable drop-in when licensing matters)
+- Infrastructure pipelines (GitHub Actions on current runners, Azure DevOps)
 
 ### Operational Excellence
 - Monitoring, metrics, and alert design

@@ -117,10 +117,9 @@ service:
 
 ingress:
   enabled: true
-  className: "nginx"
+  className: "cilium"   # or envoy-gateway, istio — any maintained Gateway API implementation; ingress-nginx is retired
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
   hosts:
     - host: myapp.example.com
       paths:
@@ -450,7 +449,7 @@ spec:
   restartPolicy: Never
   containers:
   - name: test
-    image: curlimages/curl:latest
+    image: curlimages/curl:8.21.0
     command: ['sh', '-c']
     args:
     - |

@@ -329,11 +329,11 @@ CacheBehaviors:
 **Cost Reduction Strategies**
 1. Right-size memory allocation
 2. Minimize cold starts (provisioned concurrency for critical paths)
-3. Use ARM64 (Graviton2) - 20% cheaper
+3. Use ARM64 (Graviton3/4) - 20% cheaper
 4. Optimize package size for faster cold starts
 5. Use Lambda Layers for shared dependencies
 
-**Graviton2 Migration**
+**Graviton Migration**
 ```yaml
 # SAM template with ARM64
 Resources:

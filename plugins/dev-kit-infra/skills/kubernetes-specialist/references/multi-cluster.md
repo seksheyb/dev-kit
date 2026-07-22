@@ -8,7 +8,7 @@
 
 ```bash
 # Install clusterctl CLI
-curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/v1.6.0/clusterctl-linux-amd64 -o clusterctl
+curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/v1.9.5/clusterctl-linux-amd64 -o clusterctl
 chmod +x clusterctl && sudo mv clusterctl /usr/local/bin/
 
 # Initialize management cluster with AWS provider
@@ -74,7 +74,7 @@ metadata:
   namespace: clusters
 spec:
   replicas: 3
-  version: v1.28.0
+  version: v1.36.2  # pin to your cluster's supported minor (N-2 window)
   machineTemplate:
     infrastructureRef:
       apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
@@ -115,7 +115,7 @@ spec:
   template:
     spec:
       clusterName: production-cluster
-      version: v1.28.0
+      version: v1.36.2  # pin to your cluster's supported minor (N-2 window)
       bootstrap:
         configRef:
           apiVersion: bootstrap.cluster.x-k8s.io/v1beta1
@@ -221,10 +221,11 @@ spec:
     spec:
       containers:
         - name: external-dns
-          image: k8s.gcr.io/external-dns/external-dns:v0.14.0
+          image: registry.k8s.io/external-dns/external-dns:v0.15.1
           args:
             - --source=service
             - --source=ingress
+            - --source=gateway-httproute   # discover HTTPRoute backends (Gateway API)
             - --provider=aws
             - --aws-zone-type=public
             - --registry=txt
@@ -346,7 +347,7 @@ spec:
 # Install Velero with S3
 velero install \
   --provider aws \
-  --plugins velero/velero-plugin-for-aws:v1.8.0 \
+  --plugins velero/velero-plugin-for-aws:v1.11.1 \
   --bucket velero-backups \
   --backup-location-config region=us-west-2 \
   --snapshot-location-config region=us-west-2 \
@@ -380,7 +381,7 @@ metadata:
   name: restore-production
   namespace: velero
 spec:
-  backupName: daily-backup-20240115
+  backupName: daily-backup-20260721
   includedNamespaces:
     - production
   restorePVs: true
@@ -390,9 +391,9 @@ spec:
 ### Active-Passive Failover
 
 ```yaml
-# Primary cluster ingress
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+# Primary cluster HTTPRoute (Gateway API — ingress-nginx is retired, do not use Ingress for new setups)
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
   name: myapp
   annotations:
@@ -400,21 +401,22 @@ metadata:
     external-dns.alpha.kubernetes.io/set-identifier: primary
     external-dns.alpha.kubernetes.io/aws-weight: "100"
 spec:
+  parentRefs:
+    - name: web-gateway
+  hostnames:
+    - myapp.example.com
   rules:
-    - host: myapp.example.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: myapp
-                port:
-                  number: 80
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: myapp
+          port: 80
 ---
-# Secondary cluster ingress
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+# Secondary cluster HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
   name: myapp
   annotations:
@@ -422,9 +424,12 @@ metadata:
     external-dns.alpha.kubernetes.io/set-identifier: secondary
     external-dns.alpha.kubernetes.io/aws-weight: "0"
 spec:
+  parentRefs:
+    - name: web-gateway
+  hostnames:
+    - myapp.example.com
   rules:
-    - host: myapp.example.com
-      # ... same backend config
+    - # ... same backend config
 ```
 
 ## Centralized Management Tools

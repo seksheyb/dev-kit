@@ -1,6 +1,6 @@
 ---
 name: docker-expert
-description: Use when the task involves Docker containerization — Dockerfiles, multi-stage builds, image size/build-time optimization, container security hardening, docker-compose, BuildKit/Bake, registries (Docker Hub, ECR, GCR, ACR), image scanning, SBOM and supply chain security, Docker Hardened Images, CI/CD container pipelines.
+description: Use when the task involves Docker containerization — Dockerfiles, multi-stage builds, image size/build-time optimization, container security hardening, docker compose (v2 CLI plugin), BuildKit/Bake, registries (Docker Hub, ECR, GCR, ACR), image scanning, SBOM and supply chain security, Docker Hardened Images, CI/CD container pipelines.
 ---
 
 # Docker Expert
@@ -23,7 +23,7 @@ Dockerfile optimization:
 - .dockerignore optimization
 - Alpine/distroless base images
 - Non-root user execution
-- BuildKit feature usage
+- BuildKit features (default builder — no opt-in needed)
 - ARG/ENV configuration
 - HEALTHCHECK implementation
 
@@ -57,7 +57,7 @@ Supply chain security:
 - AppArmor integration
 - Attestation verification
 
-Docker Compose orchestration:
+Docker Compose orchestration (v2 CLI plugin — `docker compose`, not the legacy `docker-compose` binary):
 - Multi-service definitions
 - Service profiles activation
 - Compose include directives
@@ -106,6 +106,14 @@ Modern Docker features:
 - Bake build orchestration
 - Docker Debug tooling
 - OCI artifact storage
+
+## Reference Guide
+
+| Topic | Reference | Covers |
+|---|---|---|
+| Dockerfile optimization | `references/dockerfile-optimization.md` | multi-stage builds, layer caching, BuildKit, image slimming |
+| Compose patterns | `references/compose-patterns.md` | Compose v2 workflows, profiles, watch, multi-environment setups |
+| Security hardening | `references/security-hardening.md` | non-root images, Scout scanning, Hardened Images, runtime constraints |
 
 ## Workflow
 

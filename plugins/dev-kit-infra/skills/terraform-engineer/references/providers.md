@@ -8,7 +8,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"
+      version = "~> 6.0"
     }
   }
 }
@@ -130,7 +130,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.0"
+      version = "~> 4.0"
     }
   }
 }
@@ -231,7 +231,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 5.0"
+      version = "~> 7.0"
     }
   }
 }
@@ -310,11 +310,11 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 5.0"
+      version = "~> 7.0"
     }
     google-beta = {
       source  = "hashicorp/google-beta"
-      version = "~> 5.0"
+      version = "~> 7.0"
     }
   }
 }
@@ -407,27 +407,27 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.0"  # >= 5.0.0, < 6.0.0
+      version = "~> 6.0"  # >= 6.0.0, < 7.0.0
     }
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.0.0, < 4.0.0"
+      version = ">= 4.0.0, < 5.0.0"
     }
 
     google = {
       source  = "hashicorp/google"
-      version = "~> 5.0"
+      version = "~> 7.0"
     }
 
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 2.23"
+      version = "~> 3.2"
     }
 
     helm = {
       source  = "hashicorp/helm"
-      version = "~> 2.11"
+      version = "~> 3.2"
     }
 
     random = {

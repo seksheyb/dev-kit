@@ -445,7 +445,7 @@ service:
 
 **Cross-Cloud Identity**
 ```
-Corporate IdP (Okta/Azure AD)
+Corporate IdP (Okta/Microsoft Entra ID)
          |
     SAML/OIDC
          |

@@ -165,7 +165,7 @@ metadata:
 spec:
   containers:
   - name: app
-    image: myapp:latest
+    image: myapp:v1.4.0
     env:
     # Single value from ConfigMap
     - name: DATABASE_HOST
@@ -203,7 +203,7 @@ metadata:
 spec:
   containers:
   - name: app
-    image: myapp:latest
+    image: myapp:v1.4.0
     volumeMounts:
     # Mount entire ConfigMap as directory
     - name: config-volume
@@ -342,7 +342,7 @@ metadata:
 spec:
   containers:
   - name: app
-    image: myapp:latest
+    image: myapp:v1.4.0
     env:
     # Application settings
     - name: APP_NAME
@@ -427,7 +427,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: myapp:latest
+        image: myapp:v1.4.0
         volumeMounts:
         - name: config
           mountPath: /etc/config

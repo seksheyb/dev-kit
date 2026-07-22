@@ -112,20 +112,20 @@ kubectl get events -n production --field-selector involvedObject.name=web-app-7d
 ```bash
 # Attach debug container to running pod
 kubectl debug -it web-app-7d5c8b9f4-xk2pm -n production \
-  --image=busybox:latest \
+  --image=busybox:1.36 \
   --target=web-app
 
 # Create copy of pod with debug tools
 kubectl debug web-app-7d5c8b9f4-xk2pm -n production \
   -it \
-  --image=ubuntu:latest \
+  --image=ubuntu:24.04 \
   --share-processes \
   --copy-to=web-app-debug
 
 # Debug with different image
 kubectl debug web-app-7d5c8b9f4-xk2pm -n production \
   -it \
-  --image=nicolaka/netshoot:latest \
+  --image=nicolaka/netshoot:v0.16 \
   --target=web-app
 ```
 
@@ -133,10 +133,10 @@ kubectl debug web-app-7d5c8b9f4-xk2pm -n production \
 
 ```bash
 # Create privileged pod on specific node
-kubectl debug node/node-01 -it --image=ubuntu:latest
+kubectl debug node/node-01 -it --image=ubuntu:24.04
 
 # Access node filesystem
-kubectl debug node/node-01 -it --image=ubuntu:latest -- chroot /host
+kubectl debug node/node-01 -it --image=ubuntu:24.04 -- chroot /host
 ```
 
 ## Common Issues and Solutions
@@ -173,7 +173,7 @@ kubectl logs web-app-7d5c8b9f4-xk2pm -n production --previous
 kubectl describe pod web-app-7d5c8b9f4-xk2pm -n production | grep -A 10 "Liveness"
 
 # Debug with different command
-kubectl run debug-pod --image=myapp:latest -it --rm --restart=Never -- /bin/sh
+kubectl run debug-pod --image=myregistry.io/myapp:v1.2.0 -it --rm --restart=Never -- /bin/sh
 
 # Check resource limits
 kubectl describe pod web-app-7d5c8b9f4-xk2pm -n production | grep -A 10 "Limits"
@@ -212,7 +212,7 @@ kubectl get pod web-app-7d5c8b9f4-xk2pm -n production --show-labels
 kubectl get service web-app -n production -o yaml | grep -A 3 selector
 
 # Test service connectivity from debug pod
-kubectl run debug --image=nicolaka/netshoot:latest -it --rm -n production -- bash
+kubectl run debug --image=nicolaka/netshoot:v0.16 -it --rm -n production -- bash
 # Inside pod:
 curl http://web-app.production.svc.cluster.local
 nslookup web-app.production.svc.cluster.local
@@ -245,7 +245,7 @@ kubectl get networkpolicy -n production
 kubectl describe networkpolicy default-deny-all -n production
 
 # Test connectivity
-kubectl run test-connectivity --image=nicolaka/netshoot:latest -it --rm -n production -- bash
+kubectl run test-connectivity --image=nicolaka/netshoot:v0.16 -it --rm -n production -- bash
 # Inside pod:
 curl -v http://web-app:80
 nc -zv web-app 80
@@ -351,7 +351,7 @@ metadata:
 spec:
   containers:
   - name: netshoot
-    image: nicolaka/netshoot:latest
+    image: nicolaka/netshoot:v0.16
     command: ["/bin/sleep", "3600"]
   restartPolicy: Never
 ```

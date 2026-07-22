@@ -134,7 +134,8 @@ co = cohere.Client("YOUR_API_KEY")
 
 def rerank(query: str, results: list, top_n: int = 5) -> list:
     docs = [r.payload.get("text", "") for r in results]
-    reranked = co.rerank(query=query, documents=docs, top_n=top_n, model="rerank-english-v3.0")
+    # Verify current model id against provider docs — these churn frequently
+    reranked = co.rerank(query=query, documents=docs, top_n=top_n, model="rerank-v3.5")
     return [results[r.index] for r in reranked.results]
 ```
 

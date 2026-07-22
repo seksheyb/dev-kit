@@ -8,10 +8,9 @@
 |-------|------------|------------|-----------|----------|
 | **text-embedding-3-large** | 3072 (or 256-3072) | 8191 | Best quality, flexible dims | OpenAI |
 | **text-embedding-3-small** | 1536 (or 256-1536) | 8191 | Cost-effective, good quality | OpenAI |
-| **embed-english-v3.0** | 1024 | 512 | Excellent compression, fast | Cohere |
-| **embed-multilingual-v3.0** | 1024 | 512 | 100+ languages | Cohere |
-| **voyage-large-2** | 1536 | 16000 | Long context, code-aware | Voyage AI |
-| **voyage-code-2** | 1536 | 16000 | Code retrieval specialist | Voyage AI |
+| **embed-v4.0** | 1536 (or 256-1536) | 128000 | Multimodal (text+image), excellent compression | Cohere |
+| **voyage-4** | 1024 (or 256-2048) | 32000 | Long context, general-purpose, MoE | Voyage AI |
+| **voyage-code-3** | 1024 (or 256-2048) | 32000 | Code retrieval specialist | Voyage AI |
 | **BGE-large-en-v1.5** | 1024 | 512 | Open source, high quality | BAAI |
 | **BGE-M3** | 1024 | 8192 | Multi-lingual, multi-granularity | BAAI |
 | **E5-large-v2** | 1024 | 512 | Strong benchmark performance | Microsoft |
@@ -51,24 +50,25 @@ When to Avoid:
 - When open-source is required
 ```
 
-### Cohere embed-v3
+### Cohere embed-v4
 ```
 Best For:
+- Multimodal applications (text + image embeddings in one model)
 - Multi-lingual applications (100+ languages)
 - Search-optimized retrieval (search_document/search_query types)
 - Compression (int8/binary quantization built-in)
 - Production with cost constraints
 
 When to Avoid:
-- Very long documents (512 token limit)
-- Code-heavy retrieval tasks
+- Code-heavy retrieval tasks (use a code-specialized model instead)
+- Air-gapped or offline deployments
 ```
 
 ### Voyage AI
 ```
 Best For:
 - Code retrieval and technical documentation
-- Long-context documents (16K tokens)
+- Long-context documents (32K tokens)
 - Domain-specific fine-tuning options
 - Legal/financial specialized models
 
@@ -163,7 +163,7 @@ co = cohere.Client(api_key="your-api-key")
 # Document embeddings (for indexing)
 doc_embeddings = co.embed(
     texts=["Installation guide content...", "Configuration steps..."],
-    model="embed-english-v3.0",
+    model="embed-v4.0",  # verify current model id against Cohere docs before shipping
     input_type="search_document",  # Use for documents being indexed
     truncate="END"
 ).embeddings
@@ -171,21 +171,21 @@ doc_embeddings = co.embed(
 # Query embeddings (for search)
 query_embedding = co.embed(
     texts=["how to install"],
-    model="embed-english-v3.0",
+    model="embed-v4.0",
     input_type="search_query",  # Use for search queries
 ).embeddings[0]
 
-# Multilingual
+# Multilingual (embed-v4 is multilingual by default, no separate model)
 multilingual_embedding = co.embed(
     texts=["Comment installer le logiciel?"],  # French
-    model="embed-multilingual-v3.0",
+    model="embed-v4.0",
     input_type="search_query"
 ).embeddings[0]
 
 # Compressed embeddings (int8)
 compressed = co.embed(
     texts=["Document content..."],
-    model="embed-english-v3.0",
+    model="embed-v4.0",
     input_type="search_document",
     embedding_types=["int8"]  # 4x smaller than float32
 ).embeddings
@@ -212,7 +212,7 @@ vo = voyageai.Client(api_key="your-api-key")
 # General embeddings
 result = vo.embed(
     texts=["Installation guide for the software..."],
-    model="voyage-large-2",
+    model="voyage-4",  # verify current model id against Voyage AI docs before shipping
     input_type="document"
 )
 embeddings = result.embeddings
@@ -223,14 +223,14 @@ code_result = vo.embed(
         "def install_package(name):\n    subprocess.run(['pip', 'install', name])",
         "How do I install packages in Python?"
     ],
-    model="voyage-code-2",
+    model="voyage-code-3",
     input_type="document"  # or "query" for search
 )
 
-# Long context (up to 16K tokens)
+# Long context (up to 32K tokens)
 long_doc_embedding = vo.embed(
-    texts=[very_long_document],  # Up to 16K tokens
-    model="voyage-large-2",
+    texts=[very_long_document],  # Up to 32K tokens
+    model="voyage-4",
     input_type="document"
 ).embeddings[0]
 ```
@@ -521,13 +521,13 @@ Start
   │   └─ Yes → BGE-large or E5-large (open source)
   │
   ├─ Multi-lingual requirement?
-  │   └─ Yes → Cohere embed-multilingual-v3 or BGE-M3
+  │   └─ Yes → Cohere embed-v4 (multilingual by default) or BGE-M3
   │
   ├─ Code/technical documentation?
-  │   └─ Yes → Voyage-code-2
+  │   └─ Yes → Voyage-code-3
   │
   ├─ Long documents (>8K tokens)?
-  │   └─ Yes → Voyage-large-2 or nomic-embed-text
+  │   └─ Yes → Voyage-4 or nomic-embed-text
   │
   ├─ Cost is primary concern?
   │   └─ Yes → text-embedding-3-small (reduced dims)
@@ -545,10 +545,10 @@ Start
 | Task | Recommendation |
 |------|----------------|
 | Production RAG (English) | text-embedding-3-small/large |
-| Multi-lingual | Cohere embed-multilingual-v3 |
-| Code retrieval | Voyage-code-2 |
+| Multi-lingual | Cohere embed-v4 |
+| Code retrieval | Voyage-code-3 |
 | Self-hosted | BGE-large-en-v1.5 |
-| Long documents | Voyage-large-2, nomic-embed-text |
+| Long documents | Voyage-4, nomic-embed-text |
 | Prototyping | all-MiniLM-L6-v2 (fast, free) |
 | Maximum quality | text-embedding-3-large |
 | Cost optimized | text-embedding-3-small @ 512 dims |

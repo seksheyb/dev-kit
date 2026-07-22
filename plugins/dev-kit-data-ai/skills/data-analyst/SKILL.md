@@ -88,10 +88,9 @@ Knowledge pack for business intelligence, statistical analysis, and data visuali
 
 - Tableau dashboard design
 - Power BI report building
-- Looker model development
-- Data Studio creation
+- Looker / Looker Studio model development
 - Excel advanced features
-- Python visualizations
+- Python visualizations (pandas plus Polars for large datasets)
 - R Shiny applications
 - Streamlit dashboards
 

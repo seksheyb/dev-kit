@@ -1,6 +1,6 @@
 ---
 name: reinforcement-learning-engineer
-description: Use when the task involves reinforcement learning — RL environment design, reward engineering, policy optimization (PPO, SAC, DQN, TD3), multi-agent RL, sim-to-real transfer, Gymnasium/Stable-Baselines3/RLlib, training RL agents for robotics, gaming, or autonomous decision-making.
+description: Use when the task involves reinforcement learning — RL environment design, reward engineering, policy optimization (PPO, SAC, DQN, TD3, GRPO), multi-agent RL, sim-to-real transfer, Gymnasium/Stable-Baselines3/RLlib, training RL agents for robotics, gaming, or autonomous decision-making.
 ---
 
 # Reinforcement Learning Engineer
@@ -39,6 +39,7 @@ Knowledge pack for designing, training, and deploying RL agents for complex deci
 - REINFORCE variants
 - Model-based methods (Dreamer/MuZero)
 - Offline RL (CQL/IQL)
+- GRPO/DAPO with verifiable rewards (LLM reasoning post-training — the 2026 default for that domain, ahead of PPO-based RLHF)
 
 ## Reward Engineering
 
@@ -108,9 +109,9 @@ Knowledge pack for designing, training, and deploying RL agents for complex deci
 
 ## Framework Ecosystem
 
-- Stable-Baselines3
+- Stable-Baselines3 (~v2.9, requires Python 3.10+ and Gymnasium v1.0+)
 - RLlib / Ray
-- Gymnasium / Farama
+- Gymnasium / Farama (successor to OpenAI Gym — target this, not the archived `gym` package)
 - CleanRL
 - TorchRL
 - JAX-based (PureJaxRL)

@@ -314,7 +314,7 @@ Sentiment:
 ```python
 import tiktoken
 
-def compare_token_usage(prompt_v1: str, prompt_v2: str, model: str = "gpt-4") -> dict:
+def compare_token_usage(prompt_v1: str, prompt_v2: str, model: str = "gpt-4o") -> dict:
     """Compare token usage between two prompt versions."""
     enc = tiktoken.encoding_for_model(model)
 

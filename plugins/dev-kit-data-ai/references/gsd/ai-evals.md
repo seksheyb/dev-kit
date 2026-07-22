@@ -1,7 +1,6 @@
 # AI Evaluation Reference
 
 > Reference used by `eval-planner` and `eval-auditor`.
-> Based on "AI Evals for Everyone" course (Reganti & Badam) + industry practice.
 
 ---
 
@@ -123,7 +122,7 @@ Before writing code, define:
 5. Reference dataset requirements — size, composition, labeling approach
 6. Eval tooling selection
 
-Output: EVALS-SPEC section of AI-SPEC.md
+Output: Sections 5-7 (Evaluation Strategy, Guardrails, Production Monitoring) of `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`
 
 ### Execute Phase (Instrument While Building)
 - Add tracing from day one (Langfuse, Arize Phoenix, or LangSmith)

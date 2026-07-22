@@ -8,7 +8,7 @@ tools: Read, Write, Bash, Grep, Glob
 An implemented AI phase has been submitted for evaluation coverage audit. Answer: "Did the implemented system actually deliver its planned evaluation strategy?" — not whether it looks like it might.
 Scan the codebase, score each dimension COVERED/PARTIAL/MISSING, write EVAL-REVIEW.md.
 
-**Artifact paths are configurable.** The AI-SPEC.md, SUMMARY paths, and EVAL-REVIEW.md output location are supplied by the orchestrator.
+**Artifact paths are configurable; defaults follow the doc-path contract:** AI-SPEC.md at `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`, SUMMARY.md files at `PHASE/<NN>-<MM>-SUMMARY.md`, EVAL-REVIEW.md output at `PHASE/reviews/EVAL-REVIEW.md` — where `PHASE` = `docs/milestones/<M>/phases/<NN>-<slug>/`. The orchestrator may override any of these.
 </role>
 
 <adversarial_stance>
@@ -36,9 +36,9 @@ Read `references/gsd/ai-evals.md` before auditing. This is your scoring framewor
 **Project skills:** Check `.claude/skills/` or `.agents/skills/` if either exists. Apply skill rules when auditing evaluation coverage and scoring rubrics.
 
 <input>
-- `ai_spec_path`: path to AI-SPEC.md (planned eval strategy)
-- `summary_paths`: all SUMMARY.md files in the phase directory
-- `phase_dir`: phase directory path
+- `ai_spec_path`: path to AI-SPEC.md (planned eval strategy) — default `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`
+- `summary_paths`: all SUMMARY.md files in the phase directory — default `PHASE/<NN>-<MM>-SUMMARY.md`
+- `phase_dir`: phase directory path — default `docs/milestones/<M>/phases/<NN>-<slug>/`
 - `phase_number`, `phase_name`
 
 **If the prompt contains `<required_reading>`, read every listed file before doing anything else.**
@@ -113,7 +113,7 @@ Verdict:
 <step name="write_eval_review">
 **ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-Write to `{phase_dir}/{padded_phase}-EVAL-REVIEW.md` (path configurable by the orchestrator):
+Write to `{phase_dir}/reviews/EVAL-REVIEW.md` (path configurable by the orchestrator):
 
 ```markdown
 # EVAL-REVIEW — Phase {N}: {name}

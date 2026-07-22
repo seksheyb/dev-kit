@@ -152,7 +152,7 @@ print(f"Sparse: {df_sparse['sparse_col'].memory_usage() / 1e6:.4f} MB")
 print(f"Dense: {df_sparse['dense_col'].memory_usage() / 1e6:.4f} MB")
 ```
 
-### Nullable Types (pandas 2.0+)
+### Nullable Types (pandas 3.0)
 
 ```python
 # Use nullable types for proper NA handling with memory efficiency
@@ -164,7 +164,9 @@ df = df.astype({
     'category': 'category', # Categorical
 })
 
-# Arrow-backed types for even better memory (pandas 2.0+)
+# pandas 3.0 infers a PyArrow-backed str dtype by default for string columns
+# (falls back to NumPy object if pyarrow isn't installed) - 2-4x faster
+# groupby/string ops than legacy object dtype. Install pyarrow to get this path.
 df['name'] = df['name'].astype('string[pyarrow]')
 df['category'] = df['category'].astype('category')
 ```

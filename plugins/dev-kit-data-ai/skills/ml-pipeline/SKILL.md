@@ -79,7 +79,7 @@ with mlflow.start_run():
 from kfp.v2 import dsl
 from kfp.v2.dsl import component, Input, Output, Dataset, Model, Metrics
 
-@component(base_image="python:3.10", packages_to_install=["scikit-learn", "mlflow"])
+@component(base_image="python:3.12", packages_to_install=["scikit-learn", "mlflow"])
 def train_model(
     train_data: Input[Dataset],
     model_output: Output[Model],
@@ -154,5 +154,5 @@ When implementing a pipeline, provide:
 
 ## Knowledge Reference
 
-MLflow, Kubeflow Pipelines, Apache Airflow, Prefect, Feast, Weights & Biases, Neptune, DVC, Great Expectations, Ray, Horovod, Kubernetes, Docker, S3/GCS/Azure Blob, model registry patterns, feature store architecture, distributed training, hyperparameter optimization
+MLflow (3.x adds native GenAI/LLM tracing alongside classic experiment tracking), Kubeflow Pipelines, Apache Airflow (3.x: event-driven/asset-based scheduling alongside cron, DAG bundles), Prefect, Feast, Weights & Biases, Neptune, DVC, Great Expectations, Ray, Horovod, Kubernetes, Docker, S3/GCS/Azure Blob, model registry patterns, feature store architecture, distributed training, hyperparameter optimization
 

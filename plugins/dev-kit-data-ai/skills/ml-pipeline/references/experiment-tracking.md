@@ -24,6 +24,10 @@ Experiment tracking enables reproducibility, comparison, and collaboration in ML
 
 ## MLflow Integration
 
+MLflow 3.x extends beyond classic experiment tracking with native GenAI/LLM tracing and
+evaluation — reach for it there too if the pipeline includes an LLM component, not just
+traditional model training.
+
 ### Basic Experiment Tracking
 
 ```python

@@ -59,7 +59,7 @@ def merge_lora_adapter(
 
 # Usage
 # merge_lora_adapter(
-#     "meta-llama/Llama-3.1-8B",
+#     "meta-llama/Llama-4-Scout-17B-16E-Instruct",
 #     "./lora-adapter",
 #     "./merged-model"
 # )
@@ -120,7 +120,7 @@ def merge_multiple_adapters(
 
 # Usage: Combine coding and chat adapters
 # merge_multiple_adapters(
-#     "meta-llama/Llama-3.1-8B",
+#     "meta-llama/Llama-4-Scout-17B-16E-Instruct",
 #     {"./coding-lora": 0.6, "./chat-lora": 0.4},
 #     "./merged-model"
 # )
@@ -372,6 +372,9 @@ print(response.choices[0].message.content)
 ```
 
 ### Text Generation Inference (TGI)
+
+TGI has lost mindshare to vLLM (and SGLang) for new OSS serving deployments — prefer vLLM
+unless the deployment already standardizes on TGI/Hugging Face infrastructure.
 
 ```yaml
 # docker-compose.yml for TGI
@@ -649,7 +652,7 @@ Is latency critical (<100ms)?
 ├── Yes → Use vLLM with tensor parallelism
 └── No
     ├── Is batch throughput priority?
-    │   ├── Yes → Use vLLM or TGI
+    │   ├── Yes → Use vLLM (continuous batching + paged KV cache); pair with Triton for fleet-level routing
     │   └── No → Standard HF inference is fine
     └── Is memory constrained?
         ├── Yes → Use GGUF + llama.cpp or AWQ

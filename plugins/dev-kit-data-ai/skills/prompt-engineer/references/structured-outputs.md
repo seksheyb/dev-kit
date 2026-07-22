@@ -160,7 +160,7 @@ from openai import OpenAI
 client = OpenAI()
 
 response = client.chat.completions.create(
-    model="gpt-4-turbo-preview",
+    model="gpt-4o",
     response_format={"type": "json_object"},  # Enforces JSON output
     messages=[
         {
@@ -253,58 +253,63 @@ for block in response.content:
         print(f"Email: {contact.get('email', 'N/A')}")
 ```
 
-### OpenAI Function Calling
+### OpenAI Tool Calling
 
 ```python
 from openai import OpenAI
 
 client = OpenAI()
 
-functions = [
+tools = [
     {
-        "name": "analyze_sentiment",
-        "description": "Analyze sentiment of customer feedback",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "sentiment": {
-                    "type": "string",
-                    "enum": ["positive", "negative", "neutral", "mixed"]
+        "type": "function",
+        "function": {
+            "name": "analyze_sentiment",
+            "description": "Analyze sentiment of customer feedback",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "sentiment": {
+                        "type": "string",
+                        "enum": ["positive", "negative", "neutral", "mixed"]
+                    },
+                    "confidence": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                    },
+                    "key_phrases": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Phrases that indicate sentiment"
+                    },
+                    "topics": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Main topics discussed"
+                    }
                 },
-                "confidence": {
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 1
-                },
-                "key_phrases": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "Phrases that indicate sentiment"
-                },
-                "topics": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "Main topics discussed"
-                }
-            },
-            "required": ["sentiment", "confidence"]
+                "required": ["sentiment", "confidence"]
+            }
         }
     }
 ]
 
 response = client.chat.completions.create(
-    model="gpt-4-turbo-preview",
+    model="gpt-4o",
     messages=[
         {"role": "user", "content": f"Analyze this feedback: {feedback}"}
     ],
-    functions=functions,
-    function_call={"name": "analyze_sentiment"}  # Force specific function
+    tools=tools,
+    tool_choice={"type": "function", "function": {"name": "analyze_sentiment"}}  # Force specific tool
 )
 
-# Parse function call
-fn_call = response.choices[0].message.function_call
-result = json.loads(fn_call.arguments)
+# Parse tool call
+tool_call = response.choices[0].message.tool_calls[0]
+result = json.loads(tool_call.function.arguments)
 ```
+
+Note: model names and API shapes shift frequently — verify against current provider docs before shipping.
 
 ---
 

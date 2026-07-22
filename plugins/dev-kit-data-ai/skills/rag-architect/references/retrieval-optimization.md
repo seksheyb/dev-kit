@@ -139,7 +139,7 @@ def rerank_results(
     query: str,
     documents: list[str],
     top_n: int = 5,
-    model: str = "rerank-english-v3.0"
+    model: str = "rerank-v3.5"  # Cohere rerank family — check provider docs for current model id
 ) -> list[dict]:
     """Rerank documents using Cohere."""
     response = co.rerank(

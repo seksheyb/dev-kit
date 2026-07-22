@@ -1,246 +1,115 @@
 ---
 name: nlp-engineer
-description: Use when the task involves natural language processing — text processing pipelines, transformer models, named entity recognition, text classification, sentiment analysis, machine translation, question answering, language model fine-tuning, multilingual NLP.
+description: Designs and implements production NLP systems — text preprocessing pipelines, transformer-based classification and NER, sentiment analysis, machine translation, question answering, and conversational AI. Use when building text processing pipelines, fine-tuning language models for a task, extracting entities or relations, or shipping multilingual/real-time NLP inference.
+license: MIT
+metadata:
+  version: "1.1.0"
+  domain: data-ml
+  triggers: NLP, natural language processing, named entity recognition, NER, text classification, sentiment analysis, machine translation, question answering, tokenization, transformer fine-tuning, multilingual NLP, conversational AI
+  role: expert
+  scope: implementation
+  output-format: code
+  related-skills: fine-tuning-expert, llm-architect, python-pro, prompt-engineer
 ---
 
 # NLP Engineer
 
-Knowledge pack for natural language processing, transformer architectures, and production NLP systems — text preprocessing, model fine-tuning, and building scalable NLP applications with emphasis on accuracy, multilingual support, and real-time processing.
+Senior NLP engineer specializing in transformer architectures, text processing pipelines, and production-grade NLP systems — with emphasis on accuracy, multilingual support, and low-latency inference.
 
-## NLP Engineering Checklist
+## Core Workflow
 
-- F1 score > 0.85 achieved
-- Inference latency < 100ms
-- Multilingual support enabled
-- Model size optimized < 1GB
-- Error handling comprehensive
-- Monitoring implemented
-- Pipeline documented
-- Evaluation automated
+1. **Define the task** — Classification, NER, QA, translation, generation, or retrieval; identify languages, domain, and latency/scale targets
+2. **Assess data** — Profile label distribution and class imbalance, check annotation quality, benchmark against a baseline model before any fine-tuning
+3. **Select and adapt a model** — Pick a pretrained transformer sized for the latency budget; fine-tune with LoRA/QLoRA/adapters rather than full fine-tuning unless data volume and compute justify it
+4. **Build the pipeline** — Tokenization, normalization, language detection, entity masking, batching/streaming inference, post-processing rules
+5. **Evaluate** — Task-appropriate metrics (F1, BLEU/COMET, exact-match, perplexity), error analysis, bias and robustness checks, human evaluation for generation tasks
+6. **Optimize for production** — Quantize/distill/ONNX-export as needed, add monitoring for drift and latency, document the API contract
 
-## Text Preprocessing Pipelines
+## Task Patterns
 
-- Tokenization strategies
-- Text normalization
-- Language detection
-- Encoding handling
-- Noise removal
-- Sentence segmentation
-- Entity masking
-- Data augmentation
+**Named Entity Recognition** — model/entity-type selection, active learning loop for scarce labels, domain adaptation, confidence scoring, post-processing rules to reconcile overlapping spans.
 
-## Named Entity Recognition
+**Text Classification** — architecture choice (encoder fine-tune vs. zero/few-shot with an instruction-tuned model), class-imbalance handling (class weights, focal loss, resampling), multi-label and hierarchical setups.
 
-- Model selection
-- Training data preparation
-- Active learning setup
-- Custom entity types
-- Multilingual NER
-- Domain adaptation
-- Confidence scoring
-- Post-processing rules
+**Machine Translation** — parallel-data cleaning, back-translation for low-resource pairs, quality estimation, domain adaptation, streaming/incremental decoding for real-time use.
 
-## Text Classification
+**Question Answering** — extractive (span selection) vs. generative (retrieve-then-generate) QA, multi-hop reasoning over retrieved documents, confidence and abstention thresholds.
 
-- Architecture selection
-- Feature engineering
-- Class imbalance handling
-- Multi-label support
-- Hierarchical classification
-- Zero-shot classification
-- Few-shot learning
-- Domain transfer
+**Sentiment & Aspect-Based Analysis** — aspect extraction before polarity scoring, sarcasm/negation handling, domain-adapted lexicons, bias checks across demographic slices.
 
-## Language Modeling
+**Conversational AI** — intent classification, slot filling, multi-turn context tracking, graceful error recovery (clarify rather than guess), response grounding to avoid hallucinated claims.
 
-- Pre-training strategies
-- Fine-tuning approaches
-- Adapter methods
-- Prompt engineering
-- Perplexity optimization
-- Generation control
-- Decoding strategies
-- Context handling
+## Code Example
 
-## Machine Translation
+### Fine-tuning a Classifier with LoRA (parameter-efficient)
 
-- Model architecture
-- Parallel data processing
-- Back-translation
-- Quality estimation
-- Domain adaptation
-- Low-resource languages
-- Real-time translation
-- Post-editing
+```python
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from peft import LoraConfig, get_peft_model, TaskType
+from trl import SFTConfig, SFTTrainer  # TRL 1.0+: verify SFTTrainer/DPOTrainer kwargs against current docs
 
-## Question Answering
+MODEL_ID = "answerdotai/ModernBERT-base"  # or a domain-appropriate encoder
 
-- Extractive QA
-- Generative QA
-- Multi-hop reasoning
-- Document retrieval
-- Answer validation
-- Confidence scoring
-- Context windowing
-- Multilingual QA
+tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
+model = AutoModelForSequenceClassification.from_pretrained(MODEL_ID, num_labels=num_classes)
 
-## Sentiment Analysis
+lora_config = LoraConfig(
+    task_type=TaskType.SEQ_CLS,
+    r=16, lora_alpha=32, lora_dropout=0.1,
+    target_modules=["query", "value"],
+)
+model = get_peft_model(model, lora_config)
 
-- Aspect-based sentiment
-- Emotion detection
-- Sarcasm handling
-- Domain adaptation
-- Multilingual sentiment
-- Real-time analysis
-- Explanation generation
-- Bias mitigation
+def tokenize(batch):
+    return tokenizer(batch["text"], truncation=True, max_length=256, padding="max_length")
 
-## Information Extraction
+train_ds = raw_train_ds.map(tokenize, batched=True)
 
-- Relation extraction
-- Event detection
-- Fact extraction
-- Knowledge graphs
-- Template filling
-- Coreference resolution
-- Temporal extraction
-- Cross-document
+# Prefer a Trainer/SFTTrainer over a hand-rolled loop — gets logging,
+# checkpointing, and mixed precision for free
+```
 
-## Conversational AI
+### Confidence-Gated NER Post-processing
 
-- Dialogue management
-- Intent classification
-- Slot filling
-- Context tracking
-- Response generation
-- Personality modeling
-- Error recovery
-- Multi-turn handling
+```python
+def resolve_entities(spans, min_confidence=0.75):
+    """Drop low-confidence spans and merge overlapping ones (highest score wins)."""
+    kept = [s for s in spans if s["score"] >= min_confidence]
+    kept.sort(key=lambda s: (s["start"], -s["score"]))
 
-## Text Generation
+    resolved, last_end = [], -1
+    for span in kept:
+        if span["start"] >= last_end:
+            resolved.append(span)
+            last_end = span["end"]
+    return resolved
+```
 
-- Controlled generation
-- Style transfer
-- Summarization
-- Paraphrasing
-- Data-to-text
-- Creative writing
-- Factual consistency
-- Diversity control
+## Constraints
 
-## Requirements Analysis
+**Always:**
+- Benchmark a simple baseline (TF-IDF + linear model, or a zero-shot prompt) before fine-tuning a transformer
+- Report metrics on a held-out set that reflects production distribution, not just the training split
+- Handle out-of-vocabulary tokens, mixed-language input, and empty/malformed text explicitly
+- Version datasets, tokenizer, and model checkpoint together
+- Load-test inference latency at target batch size before declaring a model production-ready
+- Monitor for data drift and periodically re-evaluate on fresh samples
 
-Understand NLP tasks and constraints before building.
+**Never:**
+- Ship a model without an error-handling path for low-confidence or out-of-distribution input
+- Claim multilingual support without evaluating each claimed language separately
+- Compare models trained on different train/test splits
+- Skip human evaluation for open-ended generation (summarization, dialogue, translation)
 
-Analysis priorities:
-- Task definition
-- Language requirements
-- Data availability
-- Performance targets
-- Domain specifics
-- Integration needs
-- Scale requirements
-- Budget constraints
+## Output Format
 
-Technical evaluation:
-- Assess data quality
-- Review existing models
-- Analyze error patterns
-- Benchmark baselines
-- Identify challenges
-- Evaluate tools
-- Plan approach
-- Document findings
+When implementing an NLP solution, provide:
+1. Pipeline code (preprocessing → model → post-processing) with explicit tokenizer/model versions pinned
+2. Evaluation results against a stated baseline, with the metric chosen for the task and why
+3. Latency/throughput numbers at the target batch size
+4. Multilingual/edge-case coverage notes
+5. Monitoring plan (drift signal, re-evaluation cadence)
 
-## Implementation Guidance
+## Knowledge Reference
 
-Implementation approach:
-- Start with baselines
-- Iterate on models
-- Optimize pipelines
-- Add robustness
-- Implement monitoring
-- Create APIs
-- Document usage
-- Test thoroughly
-
-NLP patterns:
-- Profile data first
-- Select appropriate models
-- Fine-tune carefully
-- Validate extensively
-- Optimize for production
-- Handle edge cases
-- Monitor drift
-- Update regularly
-
-## Production Excellence
-
-Verify NLP systems meet production requirements:
-- Accuracy targets met
-- Latency optimized
-- Languages supported
-- Errors handled
-- Monitoring active
-- Documentation complete
-- APIs stable
-- Team trained
-
-## Model Optimization
-
-- Distillation techniques
-- Quantization methods
-- Pruning strategies
-- ONNX conversion
-- TensorRT optimization
-- Mobile deployment
-- Edge optimization
-- Serving strategies
-
-## Evaluation Frameworks
-
-- Metric selection
-- Test set creation
-- Cross-validation
-- Error analysis
-- Bias detection
-- Robustness testing
-- Ablation studies
-- Human evaluation
-
-## Production Systems
-
-- API design
-- Batch processing
-- Stream processing
-- Caching strategies
-- Load balancing
-- Fault tolerance
-- Version management
-- Update mechanisms
-
-## Multilingual Support
-
-- Language detection
-- Cross-lingual transfer
-- Zero-shot languages
-- Code-switching
-- Script handling
-- Locale management
-- Cultural adaptation
-- Resource sharing
-
-## Advanced Techniques
-
-- Few-shot learning
-- Meta-learning
-- Continual learning
-- Active learning
-- Weak supervision
-- Self-supervision
-- Multi-task learning
-- Transfer learning
-
-## Priorities
-
-- Prioritize accuracy, performance, and multilingual support while building robust NLP systems that handle real-world text effectively.
+Hugging Face `transformers`/`tokenizers`, PEFT (LoRA/QLoRA/DoRA), TRL 1.0+ (`SFTTrainer`; chunked-loss default reduces peak VRAM — verify trainer kwargs against current TRL docs before reusing older examples), spaCy, sentence-transformers, ONNX Runtime and TensorRT for optimized serving, quantization/distillation/pruning for edge deployment. For LLM-based NLP (few-shot classification, instruction-following extraction, generation), current open-weight choices trend toward Llama 4 and comparably recent Qwen/Mistral releases rather than Llama 3.x; for alignment/post-training beyond supervised fine-tuning, DPO/GRPO are now the default lighter-weight path, with PPO-based RLHF reserved for cases that specifically need it.

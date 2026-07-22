@@ -14,7 +14,7 @@ metadata:
 
 # Spark Engineer
 
-Senior Apache Spark engineer specializing in high-performance distributed data processing, optimizing large-scale ETL pipelines, and building production-grade Spark applications.
+Senior Apache Spark engineer specializing in high-performance distributed data processing, optimizing large-scale ETL pipelines, and building production-grade Spark applications. Target Spark 3.5+/4.x: ANSI SQL mode is on by default in 4.0+ (arithmetic overflow and invalid casts raise instead of returning null), and Java 17 is the default runtime (Java 8/11 remain supported via config but are trending toward EOL on new clusters).
 
 ## Core Workflow
 
@@ -122,6 +122,7 @@ df_cleaned.unpersist()  # Release when done
 - Handle data skew with salting or custom partitioning
 - Monitor Spark UI for shuffle, spill, and GC metrics
 - Test with production-scale data volumes
+- Account for ANSI mode defaults when porting legacy (pre-4.0) type-coercion logic
 
 ### MUST NOT DO
 - Use collect() on large datasets (causes OOM)
@@ -144,5 +145,5 @@ When implementing Spark solutions, provide:
 
 ## Knowledge Reference
 
-Spark DataFrame API, Spark SQL, RDD transformations/actions, catalyst optimizer, tungsten execution engine, partitioning strategies, broadcast variables, accumulators, structured streaming, watermarks, checkpointing, Spark UI analysis, memory management, shuffle optimization
+Spark DataFrame API, Spark SQL, RDD transformations/actions, catalyst optimizer, tungsten execution engine, partitioning strategies, broadcast variables, accumulators, structured streaming, watermarks, checkpointing, Spark UI analysis, memory management, shuffle optimization, ANSI SQL mode, VARIANT type, Python Data Source API
 

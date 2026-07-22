@@ -4,7 +4,7 @@
 
 ## Overview
 
-DataFrame operations form the foundation of pandas work. This reference covers indexing, selection, filtering, and sorting with pandas 2.0+ best practices.
+DataFrame operations form the foundation of pandas work. This reference covers indexing, selection, filtering, and sorting with pandas 3.0 best practices (compatible with 2.x).
 
 ---
 
@@ -352,15 +352,19 @@ df.reset_index(level='team')
 
 ### When to Use `.copy()`
 
+Copy-on-Write (CoW) is always on in pandas 3.0 — there's no flag to toggle. Every subset
+is implicitly a copy already, but writing through a chained reference to the original
+still raises `ChainedAssignmentError` rather than silently mutating the parent.
+
 ```python
 # ALWAYS copy when modifying a subset
 subset = df[df['age'] > 25].copy()
-subset['new_col'] = 100  # Safe, no SettingWithCopyWarning
+subset['new_col'] = 100  # Safe, independent copy
 
-# Without copy - may raise warning or fail silently
+# Without an explicit copy - raises ChainedAssignmentError under CoW
 # BAD:
 # subset = df[df['age'] > 25]
-# subset['new_col'] = 100  # SettingWithCopyWarning!
+# subset['new_col'] = 100  # ChainedAssignmentError!
 
 # Deep copy (default) - copies data
 df_copy = df.copy()  # or df.copy(deep=True)

@@ -16,6 +16,8 @@ metadata:
 
 Expert pandas developer specializing in efficient data manipulation, analysis, and transformation workflows with production-grade performance patterns.
 
+**Target: pandas 3.0+.** Copy-on-Write (CoW) is always on — there is no opt-in flag anymore. Chained assignment (`df[df.x > 0]['y'] = 1`) now raises instead of silently no-op'ing, and `SettingWithCopyWarning` no longer exists because the underlying semantics changed. String columns default to a PyArrow-backed `str` dtype (falls back to NumPy object if `pyarrow` isn't installed) — 2-4x faster than legacy object dtype for string/groupby ops. If migrating from pandas <2.3, follow pandas' own upgrade path through 2.3 before jumping to 3.0. For very large datasets where pandas' single-node model itself is the bottleneck, consider Polars instead — this skill stays pandas-scoped.
+
 ## Core Workflow
 
 1. **Assess data structure** — Examine dtypes, memory usage, missing values, data quality:
@@ -63,7 +65,8 @@ df['tax'] = df['price'] * 0.2
 ### Safe Subsetting with `.copy()`
 
 ```python
-# ❌ AVOID: chained indexing triggers SettingWithCopyWarning
+# ❌ AVOID: chained indexing — under always-on Copy-on-Write, this now raises
+# ChainedAssignmentError instead of silently failing
 df['A']['B'] = 1
 
 # ✅ USE: .loc[] with explicit copy when mutating a subset
@@ -157,12 +160,12 @@ print(df.memory_usage(deep=True).sum() / 1e6, "MB after optimization")
 - Use method chaining for readability
 - Preserve index integrity through operations
 - Validate data quality before and after transformations
-- Use `.copy()` when modifying subsets to avoid SettingWithCopyWarning
+- Use `.copy()` when modifying subsets — Copy-on-Write is always on in pandas 3.0, so chained assignment raises instead of warning
 
 ### MUST NOT DO
 - Iterate over DataFrame rows with `.iterrows()` unless absolutely necessary
 - Use chained indexing (`df['A']['B']`) — use `.loc[]` or `.iloc[]`
-- Ignore SettingWithCopyWarning messages
+- Ignore `ChainedAssignmentError` — it means the write silently would have been lost pre-3.0
 - Load entire large datasets without chunking
 - Use deprecated methods (`.ix`, `.append()` — use `pd.concat()`)
 - Convert to Python lists for operations possible in pandas

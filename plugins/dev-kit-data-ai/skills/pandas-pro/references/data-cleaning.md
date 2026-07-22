@@ -4,7 +4,7 @@
 
 ## Overview
 
-Data cleaning is critical for reliable analysis. This reference covers handling missing values, duplicates, type conversion, and data validation with pandas 2.0+ patterns.
+Data cleaning is critical for reliable analysis. This reference covers handling missing values, duplicates, type conversion, and data validation with pandas 3.0 patterns (compatible with 2.x).
 
 ---
 
@@ -202,7 +202,12 @@ df['name'] = df['name'].astype(str)
 
 # Safe conversion with errors handling
 df['age'] = pd.to_numeric(df['age'], errors='coerce')  # Invalid -> NaN
-df['age'] = pd.to_numeric(df['age'], errors='ignore')  # Keep original if invalid
+# errors='ignore' was removed in pandas 3.0 - wrap in try/except to keep the
+# original column on failure instead:
+try:
+    df['age'] = pd.to_numeric(df['age'], errors='raise')
+except ValueError:
+    pass  # keep original column
 
 # Convert multiple columns
 df = df.astype({'age': 'int64', 'salary': 'float64'})
@@ -462,7 +467,7 @@ def clean_and_validate(
 3. **Use nullable types** - `Int64`, `string`, `boolean` for proper NA handling
 4. **Validate after cleaning** - Ensure data meets expectations
 5. **Use method chaining** - Readable, maintainable cleaning pipelines
-6. **Copy before modifying** - Avoid SettingWithCopyWarning
+6. **Copy before modifying** - Under always-on Copy-on-Write (pandas 3.0), chained assignment raises `ChainedAssignmentError` instead of warning
 7. **Handle edge cases** - Empty strings, whitespace, invalid formats
 
 ---

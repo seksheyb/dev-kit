@@ -9,237 +9,96 @@ Knowledge pack for statistical analysis, machine learning, and translating compl
 
 ## Data Science Checklist
 
-- Statistical significance p<0.05 verified
-- Model performance validated thoroughly
-- Cross-validation completed properly
-- Assumptions verified rigorously
-- Bias checked systematically
-- Results reproducible consistently
-- Insights actionable clearly
-- Communication effective comprehensively
+- Statistical significance verified (report exact p-values and effect sizes, not just p<0.05)
+- Model performance validated with proper cross-validation and held-out test data
+- Assumptions checked, bias assessed, results reproducible
+- Insights actionable and clearly communicated to stakeholders
 
 ## Exploratory Analysis
 
-- Data profiling
-- Distribution analysis
-- Correlation studies
-- Outlier detection
-- Missing data patterns
-- Feature relationships
-- Hypothesis generation
+- Data profiling, distribution analysis, correlation studies
+- Outlier detection, missing data patterns
+- Feature relationships, hypothesis generation
 - Visual exploration
-
-## Statistical Modeling
-
-- Hypothesis testing
-- Regression analysis
-- Time series modeling
-- Survival analysis
-- Bayesian methods
-- Causal inference
-- Experimental design
-- Power analysis
-
-## Machine Learning
-
-- Problem formulation
-- Feature engineering
-- Algorithm selection
-- Model training
-- Hyperparameter tuning
-- Cross-validation
-- Ensemble methods
-- Model interpretation
-
-## Feature Engineering
-
-- Domain knowledge application
-- Transformation techniques
-- Interaction features
-- Dimensionality reduction
-- Feature selection
-- Encoding strategies
-- Scaling methods
-- Time-based features
-
-## Model Evaluation
-
-- Performance metrics
-- Validation strategies
-- Bias detection
-- Error analysis
-- Business impact
-- A/B test design
-- Lift measurement
-- ROI calculation
-
-## Statistical Methods
-
-- Hypothesis testing
-- Regression analysis
-- ANOVA/MANOVA
-- Time series models
-- Survival analysis
-- Bayesian methods
-- Causal inference
-- Experimental design
-
-## ML Algorithms
-
-- Linear models
-- Tree-based methods
-- Neural networks
-- Ensemble methods
-- Clustering
-- Dimensionality reduction
-- Anomaly detection
-- Recommendation systems
-
-## Time Series Analysis
-
-- Trend decomposition
-- Seasonality detection
-- ARIMA modeling
-- Prophet forecasting
-- State space models
-- Deep learning approaches
-- Anomaly detection
-- Forecast validation
-
-## Visualization
-
-- Statistical plots
-- Interactive dashboards
-- Storytelling graphics
-- Geographic visualization
-- Network graphs
-- 3D visualization
-- Animation techniques
-- Presentation design
-
-## Business Communication
-
-- Executive summaries
-- Technical documentation
-- Stakeholder presentations
-- Insight storytelling
-- Recommendation framing
-- Limitation discussion
-- Next steps planning
-- Impact measurement
 
 ## Problem Definition
 
-Understand the business problem and translate it to analytics.
+Understand the business problem and translate it to analytics before touching data:
+- Interview stakeholders, define objectives and success metrics
+- Take inventory of available data and assess its quality
+- Formulate hypotheses, select methodology, plan timeline and deliverables
+- Document assumptions and align expectations up front
 
-Definition priorities:
-- Business understanding
-- Success metrics
-- Data inventory
-- Hypothesis formulation
-- Methodology selection
-- Timeline planning
-- Deliverable definition
-- Stakeholder alignment
+## Statistical Methods
 
-Problem evaluation:
-- Interview stakeholders
-- Define objectives
-- Identify constraints
-- Assess data quality
-- Plan approach
-- Set milestones
-- Document assumptions
-- Align expectations
+- Hypothesis testing, regression analysis, ANOVA/MANOVA
+- Time series modeling, survival analysis
+- Bayesian methods, causal inference
+- Experimental design, power analysis
 
-## Implementation Guidance
+## Machine Learning
 
-Implementation approach:
-- Explore data
-- Engineer features
-- Test hypotheses
-- Build models
-- Validate results
-- Generate insights
-- Create visualizations
-- Communicate findings
+- Problem formulation, feature engineering, algorithm selection
+- Model training, hyperparameter tuning, cross-validation
+- Ensemble methods, model interpretation
+- Algorithm families: linear models, tree-based methods, neural networks, clustering,
+  dimensionality reduction, anomaly detection, recommendation systems
 
-Science patterns:
-- Start with EDA
-- Test assumptions
-- Iterate models
-- Validate thoroughly
-- Document process
-- Peer review
-- Communicate clearly
-- Monitor impact
+## Feature Engineering
 
-## Scientific Excellence
+- Domain knowledge application, transformation techniques, interaction features
+- Dimensionality reduction, feature selection
+- Encoding strategies, scaling methods, time-based features
 
-Verify the analysis delivers impactful insights and models:
-- Analysis rigorous
-- Models validated
-- Insights actionable
-- Bias controlled
-- Documentation complete
-- Reproducibility ensured
-- Business value clear
-- Next steps defined
+## Model Evaluation
+
+- Performance metrics, validation strategies, bias detection, error analysis
+- Business impact, A/B test design, lift measurement, ROI calculation
+- Verify: analysis is rigorous, models are validated, insights are actionable, bias is
+  controlled, documentation is complete, reproducibility is ensured
+
+## Time Series Analysis
+
+- Trend decomposition, seasonality detection
+- ARIMA modeling, Prophet forecasting, state space models
+- Deep learning approaches (temporal fusion transformers, N-BEATS) for longer horizons
+- Anomaly detection, forecast validation
 
 ## Experimental Design
 
-- A/B testing
-- Multi-armed bandits
-- Factorial designs
-- Response surface
-- Sequential testing
-- Sample size calculation
-- Randomization strategies
-- Control variables
-
-## Advanced Techniques
-
-- Deep learning
-- Reinforcement learning
-- Transfer learning
-- AutoML approaches
-- Bayesian optimization
-- Genetic algorithms
-- Graph analytics
-- Text mining
+- A/B testing, multi-armed bandits, factorial designs, response surface methodology
+- Sequential testing, sample size calculation
+- Randomization strategies, control variables
 
 ## Causal Inference
 
-- Randomized experiments
-- Propensity scoring
-- Instrumental variables
-- Difference-in-differences
-- Regression discontinuity
-- Synthetic controls
-- Mediation analysis
-- Sensitivity analysis
+- Randomized experiments, propensity scoring, instrumental variables
+- Difference-in-differences, regression discontinuity, synthetic controls
+- Mediation analysis, sensitivity analysis
+
+## Advanced Techniques
+
+- Deep learning, reinforcement learning, transfer learning
+- AutoML approaches, Bayesian optimization
+- Graph analytics, text mining
+
+## Visualization & Business Communication
+
+- Statistical plots, interactive dashboards, geographic and network visualization
+- Executive summaries vs. technical documentation — match depth to audience
+- Insight storytelling, recommendation framing, limitation discussion, next steps
 
 ## Tools & Libraries
 
-- Pandas proficiency
-- NumPy operations
-- Scikit-learn
-- XGBoost/LightGBM
-- StatsModels
-- Plotly/Seaborn
-- PySpark
-- SQL mastery
+- Pandas, NumPy, scikit-learn, XGBoost/LightGBM, StatsModels
+- Plotly/Seaborn for visualization, PySpark for distributed workloads
+- SQL for data access; reach for Polars alongside pandas on large single-node datasets
 
-## Research Practices
+## Implementation Approach
 
-- Literature review
-- Methodology selection
-- Peer review
-- Code review
-- Result validation
-- Documentation standards
-- Knowledge sharing
-- Continuous learning
+- Explore data, engineer features, test hypotheses, build models
+- Validate results, generate insights, create visualizations, communicate findings
+- Iterate models, document process, get peer review, monitor impact after deployment
 
 ## Priorities
 

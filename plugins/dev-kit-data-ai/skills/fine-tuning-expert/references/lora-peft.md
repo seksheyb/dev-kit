@@ -22,9 +22,10 @@ Parameter-Efficient Fine-Tuning (PEFT) methods train only a small subset of mode
 from peft import LoraConfig, get_peft_model, TaskType
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-# Load base model
+# Load base model (illustrative model ID — verify current model names against the
+# provider's model card; Llama 4 Scout is MoE, so mixed dense/MoE guidance below applies)
 model = AutoModelForCausalLM.from_pretrained(
-    "meta-llama/Llama-3.1-8B",
+    "meta-llama/Llama-4-Scout-17B-16E-Instruct",
     torch_dtype=torch.bfloat16,
     device_map="auto",
     attn_implementation="flash_attention_2"  # Use Flash Attention if available
@@ -105,7 +106,7 @@ bnb_config = BitsAndBytesConfig(
 
 # Load quantized model
 model = AutoModelForCausalLM.from_pretrained(
-    "meta-llama/Llama-3.1-70B",
+    "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
     quantization_config=bnb_config,
     device_map="auto",
     attn_implementation="flash_attention_2"
@@ -131,9 +132,12 @@ model = get_peft_model(model, lora_config)
 
 | Model | Full FT | LoRA (r=16) | QLoRA (r=16) |
 |-------|---------|-------------|--------------|
-| Llama 3.1 8B | ~64 GB | ~18 GB | ~6 GB |
-| Llama 3.1 70B | ~560 GB | ~160 GB | ~48 GB |
+| 8B dense (e.g. Llama 3.1 8B) | ~64 GB | ~18 GB | ~6 GB |
+| 70B dense (e.g. Llama 3.1 70B) | ~560 GB | ~160 GB | ~48 GB |
 | Mistral 7B | ~56 GB | ~16 GB | ~5 GB |
+
+Figures are for dense architectures. MoE models (Llama 4 Scout/Maverick, Mixtral) hold total
+parameters in memory but activate only a subset per token — budget for total size, not active size.
 
 ## Training with PEFT
 
@@ -152,7 +156,7 @@ training_args = TrainingArguments(
     logging_steps=10,
     save_strategy="steps",
     save_steps=100,
-    evaluation_strategy="steps",
+    eval_strategy="steps",
     eval_steps=100,
     bf16=True,
     gradient_checkpointing=True,
@@ -163,13 +167,14 @@ training_args = TrainingArguments(
     report_to="wandb"
 )
 
-# Using TRL's SFTTrainer for instruction tuning
+# Using TRL's SFTTrainer for instruction tuning (TRL 1.0+ argument names —
+# verify against current TRL docs before shipping, this crossed a major version)
 trainer = SFTTrainer(
     model=model,
     args=training_args,
     train_dataset=train_dataset,
     eval_dataset=eval_dataset,
-    tokenizer=tokenizer,
+    processing_class=tokenizer,
     max_seq_length=2048,
     packing=True,                        # Pack short sequences for efficiency
     dataset_text_field="text"
@@ -190,8 +195,10 @@ TARGET_MODULES = {
     "falcon": ["query_key_value", "dense", "dense_h_to_4h", "dense_4h_to_h"],
     "gpt2": ["c_attn", "c_proj", "c_fc"],
     "phi": ["q_proj", "k_proj", "v_proj", "dense", "fc1", "fc2"],
-    "qwen2": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+    "qwen": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
 }
+# MoE architectures (Llama 4, Mixtral) additionally expose per-expert gate/up/down projections —
+# inspect model.named_modules() and confirm whether to target the router, shared experts, or both.
 
 def get_target_modules(model_name: str, include_mlp: bool = True) -> list[str]:
     """Get appropriate target modules for a model architecture."""
@@ -215,7 +222,7 @@ def get_target_modules(model_name: str, include_mlp: bool = True) -> list[str]:
 from peft import PeftModel
 
 # Load base model and adapter
-base_model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.1-8B")
+base_model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-4-Scout-17B-16E-Instruct")
 model = PeftModel.from_pretrained(base_model, "path/to/lora-adapter")
 
 # Method 1: Merge adapter weights into base model

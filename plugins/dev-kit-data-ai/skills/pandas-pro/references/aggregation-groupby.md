@@ -4,7 +4,7 @@
 
 ## Overview
 
-Aggregation transforms data from individual records to summary statistics. This reference covers GroupBy, pivot tables, crosstab, and advanced aggregation patterns with pandas 2.0+.
+Aggregation transforms data from individual records to summary statistics. This reference covers GroupBy, pivot tables, crosstab, and advanced aggregation patterns, targeting pandas 3.0 (compatible with 2.x).
 
 ---
 

@@ -285,6 +285,11 @@ def schedule_pipeline(
 
 ## Apache Airflow
 
+Target Airflow 3.x. The DAG/TaskFlow patterns below remain valid, but Airflow 3.x's asset-based,
+event-driven scheduling is now the recommended trigger for retraining pipelines — prefer it over
+pure `schedule_interval` cron strings when a pipeline should fire on new data landing rather than
+on a clock.
+
 ### ML Pipeline DAG
 
 ```python

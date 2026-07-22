@@ -319,12 +319,19 @@ f_context_relevance = Feedback(
 )
 
 # Wrap your RAG chain
-from langchain.chains import RetrievalQA
+# RetrievalQA is deprecated (moved to langchain_classic in LangChain 1.0) -
+# build the chain with create_retrieval_chain instead. Verify against
+# current LangChain docs, since chain-construction APIs continue to evolve.
+from langchain.chains import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_core.prompts import ChatPromptTemplate
 
-rag_chain = RetrievalQA.from_chain_type(
-    llm=llm,
-    retriever=vector_store.as_retriever()
-)
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "Answer the question using only the given context:\n\n{context}"),
+    ("human", "{input}"),
+])
+question_answer_chain = create_stuff_documents_chain(llm, prompt)
+rag_chain = create_retrieval_chain(vector_store.as_retriever(), question_answer_chain)
 
 tru_recorder = TruChain(
     rag_chain,
@@ -334,7 +341,7 @@ tru_recorder = TruChain(
 
 # Run with recording
 with tru_recorder as recording:
-    response = rag_chain.invoke({"query": "How do I configure authentication?"})
+    response = rag_chain.invoke({"input": "How do I configure authentication?"})
 
 # View results
 tru.run_dashboard()  # Opens web UI

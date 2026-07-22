@@ -219,14 +219,14 @@ Knowledge pack covering the complete machine learning lifecycle: pipeline develo
 
 ## Tooling Ecosystem
 
-- MLflow for tracking
+- MLflow for tracking, model registry, and GenAI/LLM tracing (3.x adds native LLM eval/tracing alongside classic experiment tracking)
 - Kubeflow pipelines
 - Ray for scaling
 - Optuna for hyperparameter optimization
 - DVC for versioning
 - BentoML for serving
 - Seldon for deployment
-- Feature stores
+- Feature stores (Feast and equivalents)
 
 ## Advanced Techniques
 

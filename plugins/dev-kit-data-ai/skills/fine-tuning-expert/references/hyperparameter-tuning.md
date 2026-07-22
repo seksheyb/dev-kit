@@ -55,7 +55,7 @@ def find_learning_rate(
         model=model,
         args=training_args,
         train_dataset=train_dataset,
-        tokenizer=tokenizer
+        processing_class=tokenizer  # `tokenizer=` is deprecated; use processing_class
     )
 
     # Custom LR schedule that increases exponentially
@@ -439,7 +439,7 @@ def hyperparameter_search(
 
     training_args = TrainingArguments(
         output_dir="./hp_search",
-        evaluation_strategy="epoch",
+        eval_strategy="epoch",
         save_strategy="no",
         report_to="none"
     )
@@ -449,7 +449,7 @@ def hyperparameter_search(
         args=training_args,
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
-        tokenizer=tokenizer
+        processing_class=tokenizer
     )
 
     best_trial = trainer.hyperparameter_search(

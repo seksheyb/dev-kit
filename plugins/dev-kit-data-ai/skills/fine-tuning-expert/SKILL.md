@@ -1,11 +1,11 @@
 ---
 name: fine-tuning-expert
-description: "Use when fine-tuning LLMs, training custom models, or adapting foundation models for specific tasks. Invoke for configuring LoRA/QLoRA adapters, preparing JSONL training datasets, setting hyperparameters for fine-tuning runs, adapter training, transfer learning, finetuning with Hugging Face PEFT, OpenAI fine-tuning, instruction tuning, RLHF, DPO, or quantizing and deploying fine-tuned models. Trigger terms include: LoRA, QLoRA, PEFT, finetuning, fine-tuning, adapter tuning, LLM training, model training, custom model."
+description: "Use when fine-tuning LLMs, training custom models, or adapting foundation models for specific tasks. Invoke for configuring LoRA/QLoRA/DoRA adapters, preparing JSONL training datasets, setting hyperparameters for fine-tuning runs, adapter training, transfer learning, finetuning with Hugging Face PEFT and TRL, OpenAI fine-tuning, instruction tuning, preference optimization (DPO, GRPO, RLHF), or quantizing and deploying fine-tuned models. Trigger terms include: LoRA, QLoRA, DoRA, PEFT, finetuning, fine-tuning, adapter tuning, LLM training, model training, custom model, DPO, GRPO."
 license: MIT
 metadata:
   version: "1.1.0"
   domain: data-ml
-  triggers: fine-tuning, fine tuning, finetuning, LoRA, QLoRA, PEFT, adapter tuning, transfer learning, model training, custom model, LLM training, instruction tuning, RLHF, model optimization, quantization
+  triggers: fine-tuning, fine tuning, finetuning, LoRA, QLoRA, DoRA, PEFT, adapter tuning, transfer learning, model training, custom model, LLM training, instruction tuning, DPO, GRPO, RLHF, model optimization, quantization
   role: expert
   scope: implementation
   output-format: code
@@ -28,6 +28,10 @@ Senior ML engineer specializing in LLM fine-tuning, parameter-efficient methods,
    - Checkpoint: collect perplexity, task-specific metrics (BLEU/ROUGE), and latency numbers
 5. **Deployment** — Merge adapter weights, quantize, measure inference throughput before serving
 
+For alignment/preference tasks, default to DPO or GRPO over vanilla PPO-based RLHF — lighter-weight
+and the current standard for instruction-following and reasoning post-training; reserve full RLHF
+for cases that specifically need an online reward model.
+
 ## Reference Guide
 
 Load detailed guidance based on context:
@@ -49,8 +53,9 @@ from peft import LoraConfig, get_peft_model, TaskType
 from trl import SFTTrainer
 import torch
 
-# 1. Load base model and tokenizer
-model_id = "meta-llama/Llama-3-8B"
+# 1. Load base model and tokenizer (illustrative model ID — verify current model names
+# against the provider's model card before pinning a training run)
+model_id = "meta-llama/Llama-4-Scout-17B-16E-Instruct"
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 tokenizer.pad_token = tokenizer.eos_token
 
@@ -98,7 +103,8 @@ training_args = TrainingArguments(
     load_best_model_at_end=True,
 )
 
-# 5. Train
+# 5. Train (TRL 1.0+ argument names — verify against current TRL docs before shipping,
+# this crossed a major version and older 0.x-era kwargs may have been renamed)
 trainer = SFTTrainer(
     model=model,
     args=training_args,

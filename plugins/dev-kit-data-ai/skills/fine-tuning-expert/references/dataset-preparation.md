@@ -97,7 +97,8 @@ def sharegpt_to_messages(example: ShareGPTExample, system_prompt: str = "") -> d
 ```python
 from transformers import AutoTokenizer
 
-tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.1-8B-Instruct")
+# Illustrative model ID — verify current model names against the provider's model card
+tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-4-Scout-17B-16E-Instruct")
 
 def format_instruction_prompt(
     instruction: str,
@@ -535,6 +536,6 @@ dataset = prepare_dataset("raw_data.jsonl", "./processed", tokenizer)
 
 ## Related References
 
-- `lora-peft.md` - Training configuration
+- `lora-peft.md` - LoRA/PEFT adapter configuration
 - `evaluation-metrics.md` - Measuring dataset quality impact
 - `hyperparameter-tuning.md` - Adjusting training for dataset size

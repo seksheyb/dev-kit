@@ -64,7 +64,7 @@ Knowledge pack for designing and implementing comprehensive data platforms — p
 
 ## Big Data Tools
 
-- Apache Spark
+- Apache Spark 4.x (ANSI SQL mode on by default — overflow/invalid casts now raise instead of silently nulling; Java 17 default runtime)
 - Apache Kafka
 - Apache Flink
 - Apache Beam
@@ -86,7 +86,7 @@ Knowledge pack for designing and implementing comprehensive data platforms — p
 
 ## Orchestration
 
-- Apache Airflow
+- Apache Airflow 3.x (asset-based, event-driven scheduling over cron-only DAGs)
 - Prefect patterns
 - Dagster workflows
 - Luigi pipelines

@@ -4,7 +4,7 @@
 
 ## Overview
 
-Combining DataFrames is essential for working with relational data. This reference covers merge, join, concat, and advanced combination strategies with pandas 2.0+.
+Combining DataFrames is essential for working with relational data. This reference covers merge, join, concat, and advanced combination strategies, targeting pandas 3.0 (compatible with 2.x).
 
 ---
 

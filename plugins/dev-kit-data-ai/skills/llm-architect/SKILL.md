@@ -1,6 +1,6 @@
 ---
 name: llm-architect
-description: Use when the task involves production LLM and AI systems — LLM architecture, serving and inference at scale (vLLM, TGI, Triton, quantization, KV cache, continuous batching), RAG pipelines, fine-tuning (LoRA/QLoRA, RLHF), prompt engineering, safety guardrails and content filtering, multi-model routing, token/cost optimization, AI training pipelines, model governance and ethical AI.
+description: Use when the task involves production LLM and AI systems — LLM architecture, serving and inference at scale (vLLM, Triton, quantization, KV cache, continuous batching), RAG pipelines, fine-tuning (LoRA/QLoRA, DPO/GRPO post-training), prompt engineering, safety guardrails and content filtering, multi-model routing, token/cost optimization, AI training pipelines, model governance and ethical AI.
 ---
 
 # LLM Architect
@@ -33,11 +33,10 @@ Knowledge pack for designing and implementing production large language model an
 
 ## Serving Patterns
 
-- vLLM deployment
-- TGI optimization
-- Triton inference server
+- vLLM as the primary token-generation engine (paged KV cache, continuous/inflight batching, async scheduling are table stakes; treat TGI as legacy — vLLM and SGLang have taken its mindshare)
+- Triton inference server wrapped around vLLM for fleet-level routing, rate-limiting, and metrics
 - Model sharding
-- Quantization (4-bit, 8-bit)
+- Quantization (FP8 on modern accelerators; 4-bit/8-bit for memory-constrained deployments)
 - KV cache optimization
 - Continuous batching
 - Speculative decoding
@@ -80,7 +79,7 @@ Knowledge pack for designing and implementing production large language model an
 
 - LoRA/QLoRA tuning
 - Instruction tuning
-- RLHF implementation
+- Preference optimization (DPO/SimPO/KTO) and GRPO/DAPO with verifiable rewards for reasoning — the default post-training pipeline, with vanilla PPO-based RLHF as the heavier legacy option
 - Constitutional AI
 - Chain-of-thought
 - Few-shot learning
@@ -239,6 +238,7 @@ Knowledge pack for designing and implementing production large language model an
 - Test thoroughly, including failure modes; scale gradually.
 - Track bias and fairness metrics; verify regulatory and compliance requirements.
 - Document the system and keep monitoring, alerting, and rollback paths ready.
+- Treat OTel-native instrumentation, a prompt registry, and an eval suite in CI as baseline requirements for shipping an LLM system, not optional add-ons.
 
 ## Priorities
 

@@ -11,7 +11,7 @@ color: "#34D399"
 #           command: "echo 'AI-SPEC written' 2>/dev/null || true"
 ---
 
-> Note: artifact paths (.planning/, PLAN.md, RESEARCH.md, etc.) are orchestrator-configurable; paths shown below are the defaults.
+> Note: artifact paths (AI-SPEC.md, CONTEXT.md, RESEARCH.md) are supplied by the orchestrator as concrete paths; canonical locations follow `references/doc-sitemap.md` — see `<input>` below.
 
 <role>
 You are an AI researcher. Answer: "How do I correctly implement this AI system with the chosen framework?"
@@ -49,10 +49,10 @@ Read `references/gsd/ai-frameworks.md` for framework profiles and known pitfalls
 - `framework`: selected framework name and version
 - `system_type`: RAG | Multi-Agent | Conversational | Extraction | Autonomous | Content | Code | Hybrid
 - `model_provider`: OpenAI | Anthropic | Model-agnostic
-- `ai_spec_path`: path to AI-SPEC.md
+- `ai_spec_path`: path to AI-SPEC.md — canonically `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`
 - `phase_context`: phase name and goal
-- `context_path`: path to CONTEXT.md if it exists
-- `research_path`: path to RESEARCH.md if it exists — Stage 5's `phase-researcher` may have already verified a package version, flagged a supply-chain concern via its Package Legitimacy Audit, or found a pitfall relevant to this same framework; check before re-fetching what's already there
+- `context_path`: path to CONTEXT.md if it exists — canonically `docs/milestones/<M>/phases/<NN>-<slug>/CONTEXT.md`
+- `research_path`: path to RESEARCH.md if it exists — canonically `docs/milestones/<M>/phases/<NN>-<slug>/RESEARCH.md`. Stage 5's `phase-researcher` may have already verified a package version, flagged a supply-chain concern via its Package Legitimacy Audit, or found a pitfall relevant to this same framework; check before re-fetching what's already there
 
 **If prompt contains `<required_reading>`, read every listed file before doing anything else.**
 </input>

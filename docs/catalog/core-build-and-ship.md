@@ -162,7 +162,7 @@
 - **Why not vanilla Claude Code:** Vanilla Claude Code asked "is this phase done?" tends to trust the SUMMARY narrative and treat file existence as proof of implementation; this agent's four-level artifact check and stub-detection patterns specifically exist because "exists" and "wired" and "producing real data" are three different (and often false) things.
 - **When to use:** Dispatched by the orchestrator/pipeline after a phase completes; also backs the `/verify` command.
 - **Then what:** A VERIFICATION.md with per-truth status, artifact/key-link tables, and — if gaps exist — structured YAML gap entries that a gap-closure planning workflow can consume directly.
-- **Notes:** Supports re-verification mode that reuses a previous run's must-haves and does a lighter regression check on items that already passed, rather than re-deriving everything from scratch.
+- **Notes:** Supports re-verification mode that reuses a previous run's must-haves and does a lighter regression check on items that already passed, rather than re-deriving everything from scratch. This is Stage 11's **verdict** gate over roadmap-level truths — distinct from `converge` (see [`core-discovery-and-design.md`](core-discovery-and-design.md)), the **remediation compiler** that sweeps every FR/SC/AC/constitution principle and turns gaps into new `<task>` blocks; `converge` treats a `VERIFICATION.md` gaps list as pre-confirmed input evidence when one exists.
 
 #### `integration-checker` (agent)
 

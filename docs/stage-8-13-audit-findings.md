@@ -105,7 +105,7 @@ cross-references. **Proposal:** one line each way.
 
 ## Stage 11 — Verify the goal
 
-### F11. `converge` is dead code in this pipeline — retarget it — [ ]
+### F11. `converge` is dead code in this pipeline — retarget it — [x]
 
 It hard-requires the Spec-Kit `spec.md`/`plan.md`/`tasks.md` triad and STOPs if any is
 missing. Grep-verified: **nothing in dev-kit produces `plan.md` or `tasks.md`** —

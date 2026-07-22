@@ -332,8 +332,9 @@ checks.
    `references/independent-review.md`). `gate_passed: true` unlocks Wave 1.
 4. **`analyze`** — read-only cross-artifact audit (spec ↔ `PLAN.md` ↔ constitution) with a requirement-to-task
    coverage table before any code is written. Reads the phase's `PLAN.md` with its tasks embedded as `<task>`
-   blocks — this pipeline's single-file plan convention — not a separate `plan.md`/`tasks.md` pair (that Spec-Kit
-   triad is what Stage 11's `converge` operates on, a different lineage).
+   blocks — this pipeline's single-file plan convention, the same one Stage 11's `converge` now reads and appends
+   to (a Stage 7/11 audit retargeted `converge` off the Spec-Kit `spec.md`/`plan.md`/`tasks.md` triad, which
+   nothing in dev-kit produces).
 
 **Default review tier (cost vs. rigor):** running every applicable lens plus `gate-plan-review` is the maximum-rigor
 setting; the conditional-gates table already auto-prunes `plan-review-design`/`-devex` for phases with no UI/dev-facing
@@ -399,8 +400,12 @@ the lighter tier, with the full set still available as an explicit escalation.
 
 1. **`verify`** *(command)* → **`verifier`** *(agent)* — goal-backward: observable truths → artifact exists /
    substantive / wired / real data flowing → key-link checks → `VERIFICATION.md` (passed / gaps_found / human_needed).
-2. **`converge`** — assess present-state code against spec/plan/tasks, append missing/partial/contradicts gaps as a
-   new `## Phase N: Convergence` task block (never rewrites existing tasks).
+2. **`converge`** — the remediation compiler: assess present-state code against `spec.md` + the phase's `PLAN.md`(s)
+   (plus the constitution, and `VERIFICATION.md`'s gaps as pre-confirmed evidence when present), append
+   missing/partial/contradicts/unrequested gaps as new `<task>` blocks under a `## Phase N: Convergence` header at
+   the end of the relevant `PLAN.md` (never rewrites existing tasks). An exhaustive requirement-level sweep
+   (FR/SC/AC + constitution MUST) that `verifier`'s roadmap-truth check doesn't attempt — the two are
+   complementary, not redundant.
 3. **`integration-checker`** *(agent)* — cross-phase wiring: every export imported *and used*, every API route has a
    real consumer, sensitive routes are auth-protected, E2E flows trace end-to-end.
 4. **`nyquist-auditor`** *(agent)* — for each validation gap, write a real behavioral test targeting the hardest edge
@@ -603,6 +608,10 @@ caller — see the note at the top of this document. A subsequent Stage 2/7 audi
 already locks at Stage 1) and `sdd-review-cto` was added as Stage 2's architecture-strategy gate; `plan-review-eng`,
 formerly claimed to also review the SDD at Stage 2, is now a Stage 7-only lens over `PLAN.md`, and `analyze` was
 retargeted from the Spec-Kit `spec.md`/`plan.md`/`tasks.md` triad to this pipeline's single embedded-task `PLAN.md`.
+A subsequent Stage 8–13 audit retargeted Stage 11's `converge` the same way — off that same unproduced triad and
+onto `spec.md` + the phase's embedded-task `PLAN.md`, appending new `<task>` blocks instead of `tasks.md` checklist
+items, and positioned it explicitly as the requirement-level **remediation compiler** alongside `verifier`'s
+goal-backward **verdict**.
 
 ---
 

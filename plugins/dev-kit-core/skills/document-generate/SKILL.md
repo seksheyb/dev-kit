@@ -29,9 +29,25 @@ You follow the **Diataxis framework** — four quadrants, each serving a differe
 **This is the most important step.** Do not skip or rush it. Documentation quality is directly proportional to how well you understand the code.
 
 1. **Map the project structure** (find, excluding `.git`, `node_modules`, `dist`, `build`, `.next`).
-2. **Read the entry points:** README, ARCHITECTURE, CONTRIBUTING, CLAUDE.md/AGENTS.md; the manifest (package.json / Cargo.toml / pyproject.toml / go.mod); main entry files; configuration and examples.
-3. **Read the source for each target entity:** implementation files end-to-end (not just signatures); the tests — they reveal intended behavior, edge cases, and usage patterns; related modules up- and downstream; inline comments, especially `NOTE:`, `DESIGN:`, `WHY:`.
-4. **Build a concept map** before writing:
+2. **Read the upstream planning artifacts first — canonical sources, not a fallback.** If this
+   project uses the GSD/spec-kit planning convention, read whichever of these exist for the
+   target before anything else:
+   - The relevant `spec.md` (`docs/specs/<NNN-feature-name>/spec.md`, or wherever this
+     project's spec lives if the convention differs) — the "why" and the user-facing
+     requirements (`US-xxx` stories) the target was built to satisfy.
+   - `docs/architecture/SDD.md` and its ADRs (`docs/architecture/ADRs/`) — the system design
+     and the trade-off analysis already written up for each significant decision.
+   - The relevant `PLAN.md` (`.planning/phases/<phase>/*-PLAN.md`) — what was actually scoped
+     and built, and why it was scoped that way.
+
+   These are frequently more reliable than re-deriving intent from code: a spec's `US-xxx`
+   states the requirement directly, and an ADR's "Alternatives Considered" is exactly the
+   trade-off analysis reference-grade docs need — reading it beats reconstructing it from
+   comments or git archaeology. If none of these exist (pre-dates the convention, or the
+   project plans elsewhere), skip silently and continue with the reads below.
+3. **Read the entry points:** README, ARCHITECTURE, CONTRIBUTING, CLAUDE.md/AGENTS.md; the manifest (package.json / Cargo.toml / pyproject.toml / go.mod); main entry files; configuration and examples.
+4. **Read the source for each target entity:** implementation files end-to-end (not just signatures); the tests — they reveal intended behavior, edge cases, and usage patterns; related modules up- and downstream; inline comments, especially `NOTE:`, `DESIGN:`, `WHY:`.
+5. **Build a concept map** before writing:
 
 ```
 Target: [feature/module name]
@@ -40,10 +56,10 @@ Key concepts: [the 3-5 concepts a reader must understand]
 Public surface: [commands, functions, config options, API endpoints]
 Dependencies / Dependents:
 Edge cases: [from tests and code]
-Design decisions: [non-obvious "why" choices]
+Design decisions: [non-obvious "why" choices — from spec.md/SDD.md/ADRs when they exist, else inferred from code, comments, and git history]
 ```
 
-5. Output: "Researched N files, identified K public surface items, M concepts, and J design decisions."
+6. Output: "Researched N files (including [spec.md/SDD.md/PLAN.md if read]), identified K public surface items, M concepts, and J design decisions."
 
 ## Step 2: Diataxis Partitioning
 
@@ -73,7 +89,14 @@ Rules: accuracy over elegance — every claim traceable to code. "Accepts a stri
 
 Explanation docs answer "why does this work this way?" — the design rationale.
 
-Template: opening paragraph (the problem, stated for a smart reader who hasn't seen the code); **The problem** (concrete failure modes without this design, not abstract risks); **The approach** (how the design solves it — include ASCII or Mermaid diagrams for architecture); **Trade-offs** (what was given up — every design trades something; name it); **Alternatives considered** (from comments, ADRs, or git history where discoverable).
+Template: opening paragraph (the problem, stated for a smart reader who hasn't seen the code); **The problem** (concrete failure modes without this design, not abstract risks); **The approach** (how the design solves it — include ASCII or Mermaid diagrams for architecture); **Trade-offs** (what was given up — every design trades something; name it); **Alternatives considered** (what else was on the table and why it lost).
+
+Sourcing Trade-offs and Alternatives considered: if `docs/architecture/SDD.md` and its ADRs
+cover the decision in question, pull both sections directly from there first — an ADR's
+"Consequences"/trade-offs and "Alternatives Considered" fields are already written in exactly
+the shape this quadrant wants; quote or closely paraphrase rather than re-deriving from
+scratch. Only fall back to grepping comments (`NOTE:`, `DESIGN:`, `WHY:`) or git history when
+no SDD.md/ADR exists for that decision.
 
 Rules: lead with the problem, not the solution. ASCII diagrams are grep-able, diff-friendly, render everywhere. "We chose X over Y because Z" is the gold standard. Don't repeat reference material — link to it.
 
@@ -113,9 +136,16 @@ Before committing, review each document:
 
 **Completeness gate:** reference covers 100% of the public surface; how-tos cover the top 3 tasks a user would attempt; tutorials reach a working result in ≤3 steps; explanations name trade-offs, not just choices.
 
-**Voice gate:** written for a smart person who hasn't seen the code; no jargon without a brief inline gloss on first use; active voice, concrete nouns, short sentences; "You can now..." not "The system provides...".
+**Voice gate — methodology home: `content-qa`.** That skill owns prose-voice quality: it runs
+an AI-pattern audit (hollow intensifiers, hedging stacks, tiered vocabulary, em-dash
+frequency) then an editorial pass (passive-voice chains, "There is/are" openers, reading
+level), scored by severity (P0-P2) under a "Documentation" content-type profile (clarity over
+voice, bullets kept where they aid scanning). Invoke `content-qa` against each generated
+document rather than re-checking voice by hand here — this step does not restate a thinner
+version of that pass. In one line: docs should read as written for a smart person who hasn't
+seen the code, in active voice, without unglossed jargon.
 
-Fix any failures before proceeding.
+Fix any failures — from the accuracy/completeness gates above and from content-qa's findings — before proceeding.
 
 ## Step 9: Commit & Output
 
@@ -128,6 +158,7 @@ Fix any failures before proceeding.
 ## Important Rules
 
 - **Research before writing.** Step 1 is not optional. Insufficient research produces surface-level documentation.
+- **Planning artifacts are canonical, not a fallback.** When spec.md, SDD.md/ADRs, or PLAN.md exist, they state intent, requirements, and trade-offs directly — prefer reading them over reconstructing the same information from code, comments, or git history.
 - **Accuracy is non-negotiable.** Every example must work; every API description must match the code. Unsure → read the source again, do not guess.
 - **Quadrants serve different readers.** Don't mix tutorial content into reference docs or reference content into how-tos.
 - **Time to first result in tutorials.** No working result by step 3 → restructure.

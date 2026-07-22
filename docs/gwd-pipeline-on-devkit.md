@@ -518,8 +518,8 @@ loop light; this latency window is a real cost, not a hidden one.
   CHANGELOG → bisectable commits → push → create/update PR.
 - **`land-and-deploy`** *(skill)* — picks up where `ship` left off: readiness gate → merge → poll the deploy platform
   → verify production health → revert as the escape hatch. **Infra lane** owns the platform detail: `devops-engineer`
-  (CI/CD, go/no-go gates), `terraform-engineer` / `cloud-architect` (IaC, wave migrations), `kubernetes-specialist` /
-  `docker-expert`, `sre-engineer` (SLIs/SLOs), `monitoring-expert`.
+  (CI/CD pipeline config that `land-and-deploy`'s readiness gate polls), `terraform-engineer` / `cloud-architect`
+  (IaC, wave migrations), `kubernetes-specialist` / `docker-expert`, `sre-engineer` (SLIs/SLOs), `monitoring-expert`.
 
 ### Stage 14 — Document
 

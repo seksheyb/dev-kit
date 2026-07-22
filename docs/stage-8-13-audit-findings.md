@@ -33,11 +33,29 @@ catalog entry (not just the pipeline doc) — and removed an equally-unverified
 `using-git-worktrees` claim on that same line (`bugfix-wave/SKILL.md` doesn't reference
 it either; that's an F2-shaped gap, left for when F2 is picked up).
 
-### F2. `sprint-execution` doesn't reference `using-git-worktrees` — [ ]
+### F2. `sprint-execution` doesn't reference `using-git-worktrees` — [x]
 
 Step 1.4 asks for a worktree but never names the skill — its own worktree mechanics are
 subagent-side (`isolation: "worktree"`), while using-git-worktrees governs the
 orchestrator's own workspace. **Proposal:** one-line cross-ref in §1.
+
+Done, with the premise pressure-tested first: is orchestrator-level isolation even needed
+given most execution happens in track-subagent worktrees? Yes, narrower than track
+isolation but real — §6 merges track branches into the integration branch and writes
+state/roadmap files directly from the orchestrator's own workspace, outside any track
+worktree. Wired as delegation, not a new requirement: `using-git-worktrees` already
+detects existing isolation and no-ops if the orchestrator is already inside one (e.g.
+dispatched by a higher-level pipeline), so this doesn't force worktree creation in the
+common case. User flagged residual uncertainty about whether this is worth the
+indirection at all — left as-is for now, open to revisiting.
+
+Also found while fixing this: `using-git-worktrees`'s catalog Notes claimed `bugfix-wave`
+"assumes this skill's worktree conventions (`.worktrees/` ownership)" — checked, and it
+doesn't; `bugfix-wave` uses a different path (`.claude/worktrees/<id>`) and never
+references the skill. Corrected the catalog claim to say so explicitly rather than
+silently drop it; the underlying inconsistency (should `bugfix-wave` actually adopt the
+`.worktrees/` convention, or is its own path intentional?) is unreconciled — a candidate
+for a future pass, not fixed here.
 
 ### F3. `guard` vs `verification-before-completion`: no overlap — [-]
 

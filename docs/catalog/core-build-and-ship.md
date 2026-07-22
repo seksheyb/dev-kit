@@ -45,7 +45,7 @@
 - **Why not vanilla Claude Code:** Vanilla Claude Code has no standard protocol for detecting existing isolation or preferring native worktree tooling, so it either fights the harness by shelling out `git worktree add` when a native tool already exists, or skips baseline verification and starts implementing on a workspace that was already broken.
 - **When to use:** "Use when starting feature work that needs isolation from current workspace or before executing implementation plans."
 - **Then what:** An isolated workspace with dependencies installed and a passing baseline test run, ready for implementation to begin.
-- **Notes:** `bugfix-wave` and `finishing-a-development-branch` both assume this skill's worktree conventions (`.worktrees/` ownership, provenance-based cleanup).
+- **Notes:** `sprint-execution` §1 now names this skill for the orchestrator's own workspace isolation (distinct from the per-track `isolation="worktree"` it sets up separately on each subagent dispatch — see that entry's notes). `finishing-a-development-branch` also assumes this skill's worktree conventions (`.worktrees/` ownership, provenance-based cleanup). `bugfix-wave` uses a different path convention (`.claude/worktrees/<id>`) and doesn't reference this skill — the "assumes conventions" claim doesn't hold for it; flagged, not yet reconciled.
 
 #### `finishing-a-development-branch` (skill)
 

@@ -11,6 +11,8 @@ Ensure work happens in an isolated workspace. Prefer your platform's native work
 
 **Core principle:** Detect existing isolation first. Then use native tools. Then fall back to git. Never fight the harness.
 
+**Note for orchestrator skills** (e.g. `sprint-execution`): this isolates *your own* workspace — the one you write state/roadmap files from and merge subagent work into — not the per-subagent isolation you set up separately via `isolation="worktree"` on each Task/Agent dispatch. Different layer, same underlying mechanism.
+
 **Announce at start:** "I'm using the using-git-worktrees skill to set up an isolated workspace."
 
 ## Step 0: Detect Existing Isolation

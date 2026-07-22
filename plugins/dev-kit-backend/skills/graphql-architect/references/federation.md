@@ -5,7 +5,7 @@
 ```typescript
 // users-subgraph/schema.graphql
 extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.5", import: ["@key", "@shareable"])
+  @link(url: "https://specs.apollo.dev/federation/v2.15", import: ["@key", "@shareable"])
 
 type User @key(fields: "id") {
   id: ID!
@@ -56,7 +56,7 @@ const server = new ApolloServer({
 ```graphql
 # products-subgraph/schema.graphql
 extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.5", import: [
+  @link(url: "https://specs.apollo.dev/federation/v2.15", import: [
     "@key",
     "@shareable",
     "@interfaceObject"
@@ -144,7 +144,7 @@ const resolvers = {
 
 ```graphql
 extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.5", import: [
+  @link(url: "https://specs.apollo.dev/federation/v2.15", import: [
     "@key",
     "@requires",
     "@provides",
@@ -331,7 +331,7 @@ interface Account {
 }
 
 # orders-subgraph (doesn't know about User/AdminUser)
-extend schema @link(url: "https://specs.apollo.dev/federation/v2.5", import: ["@key", "@interfaceObject"])
+extend schema @link(url: "https://specs.apollo.dev/federation/v2.15", import: ["@key", "@interfaceObject"])
 
 type Order @key(fields: "id") {
   id: ID!

@@ -1,5 +1,37 @@
 # Async PHP Patterns
 
+## FrankenPHP (Default Modern Runtime)
+
+FrankenPHP is the current default recommendation for worker-mode/async PHP — it's the
+runtime behind Laravel Octane and Symfony's runtime component, and needs no extra
+extension beyond the FrankenPHP binary/Docker image.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+// worker.php — FrankenPHP worker mode entrypoint
+ignore_user_abort(true);
+
+$myApp = new App();
+
+$handler = static function () use ($myApp) {
+    echo $myApp->handle($_SERVER['REQUEST_URI']);
+};
+
+$running = true;
+while ($running) {
+    $running = \frankenphp_handle_request($handler);
+    // Reset per-request state (DI container, static caches) between iterations
+    gc_collect_cycles();
+}
+```
+
+Reach for Swoole or ReactPHP below when the app needs long-lived coroutines,
+raw WebSocket servers, or fine-grained event-loop control beyond what a
+worker-mode runtime provides.
+
 ## Swoole HTTP Server
 
 ```php
@@ -256,6 +288,7 @@ $connection->query('SELECT * FROM users WHERE id = ?', [42])
 
 declare(strict_types=1);
 
+use React\EventLoop\Loop;
 use React\Promise\Promise;
 use React\Promise\Deferred;
 use function React\Promise\all;
@@ -397,7 +430,8 @@ $server->start();
 
 | Technology | Use Case | Performance |
 |------------|----------|-------------|
-| Swoole | High-performance servers, WebSockets | Very High |
+| FrankenPHP | Default worker-mode runtime (Laravel Octane, Symfony Runtime) | Very High |
+| Swoole | Long-lived coroutines, raw WebSocket servers | Very High |
 | ReactPHP | Event-driven apps, real-time | High |
 | Amphp | Modern async framework | High |
 | Fibers | Native async (PHP 8.1+) | Medium |

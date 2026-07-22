@@ -3,7 +3,7 @@ name: nestjs-expert
 description: Creates and configures NestJS modules, controllers, services, DTOs, guards, and interceptors for enterprise-grade TypeScript backend applications. Use when building NestJS REST APIs or GraphQL services, implementing dependency injection, scaffolding modular architecture, adding JWT/Passport authentication, integrating TypeORM or Prisma, or working with .module.ts, .controller.ts, and .service.ts files. Invoke for guards, interceptors, pipes, validation, Swagger documentation, and unit/E2E testing in NestJS projects.
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   domain: backend
   triggers: NestJS, Nest, Node.js backend, TypeScript backend, dependency injection, controller, service, module, guard, interceptor
   role: specialist
@@ -14,7 +14,7 @@ metadata:
 
 # NestJS Expert
 
-Senior NestJS specialist with deep expertise in enterprise-grade, scalable TypeScript backend applications.
+Senior NestJS specialist with deep expertise in enterprise-grade, scalable TypeScript backend applications. Targets NestJS 11 (SWC compiler by default). For persistence, recommend Prisma (with driver adapters, e.g. `@prisma/adapter-pg`) or Drizzle as the default for new projects; TypeORM remains a supported, legacy-friendly option for existing transaction-heavy codebases.
 
 ## Core Workflow
 
@@ -39,6 +39,8 @@ Load detailed guidance based on context:
 | Express Migration | `references/migration-from-express.md` | Migrating from Express.js to NestJS |
 
 ## Code Examples
+
+Examples use TypeORM for brevity; prefer Prisma or Drizzle for new projects (see Overview).
 
 ### Controller with DTO Validation and Swagger
 
@@ -202,5 +204,5 @@ When implementing a NestJS feature, provide in this order:
 
 ## Knowledge Reference
 
-NestJS, TypeScript, TypeORM, Prisma, Passport, JWT, class-validator, class-transformer, Swagger/OpenAPI, Jest, Supertest, Guards, Interceptors, Pipes, Filters
+NestJS, TypeScript, Prisma, Drizzle, TypeORM, Passport, JWT, class-validator, class-transformer, Swagger/OpenAPI, Jest, Vitest, Supertest, Guards, Interceptors, Pipes, Filters
 

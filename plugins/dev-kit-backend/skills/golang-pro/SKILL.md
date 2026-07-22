@@ -14,7 +14,7 @@ metadata:
 
 # Golang Pro
 
-Senior Go developer with deep expertise in Go 1.21+, concurrent programming, and cloud-native microservices. Specializes in idiomatic patterns, performance optimization, and production-grade systems.
+Senior Go developer with deep expertise in Go 1.24+, concurrent programming, and cloud-native microservices. Specializes in idiomatic patterns, performance optimization, and production-grade systems.
 
 ## Core Workflow
 
@@ -22,8 +22,8 @@ Senior Go developer with deep expertise in Go 1.21+, concurrent programming, and
 2. **Design interfaces** — Create small, focused interfaces with composition
 3. **Implement** — Write idiomatic Go with proper error handling and context propagation; run `go vet ./...` before proceeding
 4. **Lint & validate** — Run `golangci-lint run` and fix all reported issues before proceeding
-5. **Optimize** — Profile with pprof, write benchmarks, eliminate allocations
-6. **Test** — Table-driven tests with `-race` flag, fuzzing, 80%+ coverage; confirm race detector passes before committing
+5. **Optimize** — Profile with pprof, write benchmarks, eliminate allocations; rely on Go 1.25's container-aware `GOMAXPROCS` (respects cgroup CPU limits) instead of manually tuning it for containerized deployments
+6. **Test** — Table-driven tests with `-race` flag, fuzzing, `testing/synctest` for deterministic concurrent-code tests, 80%+ coverage; confirm race detector passes before committing
 
 ## Reference Guide
 
@@ -36,6 +36,7 @@ Load detailed guidance based on context:
 | Generics | `references/generics.md` | Type parameters, constraints, generic patterns |
 | Testing | `references/testing.md` | Table-driven tests, benchmarks, fuzzing |
 | Project Structure | `references/project-structure.md` | Module layout, internal packages, go.mod |
+| gRPC & Microservices | `references/grpc-microservices.md` | Service definitions, interceptors, health checks, service discovery, resilience patterns |
 
 ## Core Pattern Example
 
@@ -95,7 +96,7 @@ Key properties demonstrated: bounded goroutine lifetime via `ctx`, error propaga
 - Handle all errors explicitly (no naked returns)
 - Write table-driven tests with subtests
 - Document all exported functions, types, and packages
-- Use `X | Y` union constraints for generics (Go 1.18+)
+- Use `X | Y` union constraints for generics; use generic type aliases (`type Pair[T any] = pair[T]`, Go 1.24+) to simplify long-parameterized names
 - Propagate errors with fmt.Errorf("%w", err)
 - Run race detector on tests (-race flag)
 
@@ -118,5 +119,5 @@ When implementing Go features, provide:
 
 ## Knowledge Reference
 
-Go 1.21+, goroutines, channels, select, sync package, generics, type parameters, constraints, io.Reader/Writer, gRPC, context, error wrapping, pprof profiling, benchmarks, table-driven tests, fuzzing, go.mod, internal packages, functional options
+Go 1.24+/1.25, goroutines, channels, select, sync package, generics, type parameters, generic type aliases, constraints, io.Reader/Writer, gRPC, context, error wrapping, pprof profiling, benchmarks, table-driven tests, fuzzing, testing/synctest, container-aware GOMAXPROCS, go.mod tool directives, internal packages, functional options
 

@@ -4,7 +4,7 @@
 
 ```dockerfile
 # Multi-stage build for minimal image size
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Copy and restore dependencies (cached layer)
@@ -24,7 +24,7 @@ FROM build AS publish
 RUN dotnet publish "WebApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # Runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
@@ -189,7 +189,7 @@ app.MapHealthChecks("/health/live", new HealthCheckOptions
     "ExpirationMinutes": 60
   },
   "Features": {
-    "EnableSwagger": true,
+    "EnableOpenApi": true,
     "EnableMetrics": true
   }
 }

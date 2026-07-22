@@ -1,5 +1,13 @@
 # Reactive WebFlux
 
+Reach for WebFlux when the workload is genuinely high-concurrency streaming or
+backpressure-sensitive. For plain I/O-bound scaling (the common case — calling a
+database or downstream HTTP service and waiting), enable virtual threads
+(`spring.threads.virtual.enabled=true`) on the standard servlet stack first — it
+gets the same scaling benefit without the reactive programming model's
+complexity cost. Security, Data JPA, and transaction management all work
+transparently with virtual threads.
+
 ## WebFlux Controller
 
 ```java

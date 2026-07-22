@@ -152,6 +152,11 @@ class PostServiceTest extends TestCase
 
 ## Pest PHP
 
+Pest 4 (built on PHPUnit 12) adds browser testing (`visit()->click()->assertSee()`, Playwright-powered),
+visual regression/snapshot assertions, and smoke testing (`assertNoSmoke()`) — check `composer.lock` for
+`pestphp/pest` version 4 before recommending browser tests; on Pest 2/3 stick to HTTP-level feature tests
+or Dusk for browser coverage.
+
 ```php
 <?php
 

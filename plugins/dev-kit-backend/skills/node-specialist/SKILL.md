@@ -9,6 +9,16 @@ Knowledge pack for building, optimizing, and debugging Node.js backend applicati
 
 Before implementing, review the project structure, package.json, and configurations; review architecture, dependencies, and environment setup; analyze async patterns, stream usage, and performance characteristics; then implement solutions following Node.js backend best practices.
 
+## Reference Guide
+
+Load detailed guidance based on context:
+
+| Topic | Reference | Load When |
+|-------|-----------|-----------|
+| Async Patterns | `references/async-patterns.md` | Promises, async/await, AsyncLocalStorage, event-driven code, node:test |
+| Performance | `references/performance.md` | Event loop lag, memory leaks, GC tuning, connection pooling, profiling |
+| Streams | `references/streams.md` | Readable/Writable/Transform streams, pipeline(), backpressure |
+
 ## Node.js Development Checklist
 
 - Package.json correctly configured
@@ -30,6 +40,7 @@ Before implementing, review the project structure, package.json, and configurati
 - Events and EventEmitter
 - HTTP/HTTPS modules
 - Native addons and N-API
+- Node 24 (Active LTS) as the default target; Node 22 (Maintenance LTS) for older codebases
 
 ## Asynchronous Patterns
 
@@ -39,6 +50,9 @@ Before implementing, review the project structure, package.json, and configurati
 - Promise.allSettled and race
 - AsyncLocalStorage usage
 - Top-level await
+- Native `fetch`, `FormData`, and Web Streams for HTTP calls — no need for `node-fetch`/`axios` on simple requests
+- Native `WebSocket` global for outbound client connections (server-side still uses `ws`/Socket.IO)
+- `node:test` as the default test runner (assertions, mocks, coverage, watch mode) — reach for Jest/Vitest only when the project already depends on their ecosystem
 
 ## Performance Optimization
 
@@ -55,19 +69,19 @@ Before implementing, review the project structure, package.json, and configurati
 - OWASP Top 10 mitigation
 - npm audit and dependency vetting
 - CORS and helmet configuration
-- Rate limiting and DDoD protection
+- Rate limiting and DDoS protection (see `references/performance.md` for connection/throughput tuning)
 - JWT and session management
-- Secure password hashing (Argon2, bcrypt)
+- Secure password hashing (Argon2id first, bcrypt as fallback)
 - Input validation and sanitization
 
 ## Framework Ecosystem
 
-- Express.js and Fastify architecture
+- Express 5 (current default) and Fastify 5 architecture
 - NestJS dependency injection
 - GraphQL servers (Apollo/Mercurius)
-- ORMs/Query Builders (Prisma, TypeORM, Drizzle, Knex)
+- ORMs/Query Builders — Prisma or Drizzle as the default choice for new projects; TypeORM/Knex for existing transaction-heavy codebases
 - Message queues (RabbitMQ, BullMQ, Kafka)
-- WebSockets (Socket.io, ws)
+- WebSockets (Socket.io, ws) — native `WebSocket` global for simple outbound clients
 
 ## Development Workflow
 
@@ -92,7 +106,7 @@ Implementation approach:
 
 - Optimize I/O bound operations
 - Setup proper logging (Pino/Winston)
-- Implement validation (Zod/Joi)
+- Implement validation (Zod first, Joi for legacy schemas)
 - Construct proper error classes
 - Implement graceful degradation
 - Setup thorough unit and integration testing

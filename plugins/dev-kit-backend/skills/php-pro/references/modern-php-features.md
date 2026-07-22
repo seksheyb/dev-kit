@@ -1,4 +1,4 @@
-# Modern PHP 8.3+ Features
+# Modern PHP 8.4+ Features
 
 ## Strict Types & Type Declarations
 
@@ -125,6 +125,40 @@ class Configuration
 }
 ```
 
+## Property Hooks & Asymmetric Visibility (PHP 8.4+)
+
+```php
+<?php
+
+declare(strict_types=1);
+
+final class Product
+{
+    // Asymmetric visibility: public read, private write — no manual getter needed
+    public private(set) string $sku;
+
+    public function __construct(string $sku)
+    {
+        $this->sku = $sku;
+    }
+
+    // Property hooks replace boilerplate getter/setter pairs
+    public string $name {
+        get => ucfirst($this->rawName);
+        set => $this->rawName = strtolower($value);
+    }
+
+    private string $rawName = '';
+}
+
+// array_find / array_any / array_all (PHP 8.4+) replace manual foreach loops
+$users = [['id' => 1, 'active' => false], ['id' => 2, 'active' => true]];
+
+$firstActive = array_find($users, fn($u) => $u['active']);
+$hasActive   = array_any($users, fn($u) => $u['active']);
+$allActive   = array_all($users, fn($u) => $u['active']);
+```
+
 ## Attributes (Metadata)
 
 ```php
@@ -169,6 +203,13 @@ class UserDto
 
     #[Validate(min: 8, max: 100)]
     public string $password;
+}
+
+// Built-in #[\Deprecated] attribute (PHP 8.4+) — replaces @deprecated docblocks
+final class LegacyMailer
+{
+    #[\Deprecated(message: 'use MailerService::send() instead', since: '2.0')]
+    public function sendMail(string $to, string $body): void {}
 }
 ```
 
@@ -321,3 +362,8 @@ class NotFoundException extends \Exception
 | Pure intersection types | 8.1+ | `A&B $param` |
 | DNF types | 8.2+ | `(A&B)\|C $param` |
 | Constants in traits | 8.2+ | `trait T { const X = 1; }` |
+| Property hooks | 8.4+ | `public string $name { get => ...; set => ...; }` |
+| Asymmetric visibility | 8.4+ | `public private(set) string $sku` |
+| `array_find`/`array_any`/`array_all` | 8.4+ | `array_find($items, fn($i) => ...)` |
+| `#[\Deprecated]` attribute | 8.4+ | `#[\Deprecated(message: '...')]` |
+| Pipe operator | 8.5+ | `$value \|> strtoupper(...) \|> trim(...)` |

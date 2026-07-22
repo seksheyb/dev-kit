@@ -267,12 +267,11 @@ async fn rwlock_example() {
 }
 ```
 
-## Async Traits (with async-trait)
+## Async Traits
+
+Native `async fn` in traits (stable since 1.75) is the default — no macro needed for the common case:
 
 ```rust
-use async_trait::async_trait;
-
-#[async_trait]
 trait AsyncRepository {
     async fn find_by_id(&self, id: u64) -> Result<User, Error>;
     async fn save(&self, user: User) -> Result<(), Error>;
@@ -282,7 +281,6 @@ struct DatabaseRepository {
     pool: sqlx::PgPool,
 }
 
-#[async_trait]
 impl AsyncRepository for DatabaseRepository {
     async fn find_by_id(&self, id: u64) -> Result<User, Error> {
         sqlx::query_as("SELECT * FROM users WHERE id = $1")
@@ -302,6 +300,8 @@ impl AsyncRepository for DatabaseRepository {
     }
 }
 ```
+
+Native `async fn` in traits returns an anonymous future type, so the trait is not `dyn`-compatible out of the box. Reach for the `async-trait` crate's `#[async_trait]` macro only when a call site needs `Box<dyn AsyncRepository>` or another trait-object use — it boxes the futures to restore object safety at a small runtime cost.
 
 ## Pin and Futures
 
@@ -451,7 +451,7 @@ fn single_threaded() {
 - Avoid holding locks across .await points
 - Use timeout for all external I/O operations
 - Implement graceful shutdown with channels
-- Use async-trait for trait-based async code
+- Prefer native `async fn` in traits; reach for the `async-trait` crate only when a trait needs `dyn` object safety
 - Prefer try_join! over manual error handling
 - Use Arc<Mutex<T>> sparingly (channels often better)
 - Test async code with tokio::test macro

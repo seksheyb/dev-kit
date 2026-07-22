@@ -335,18 +335,19 @@ SET GLOBAL binlog_expire_logs_seconds = 604800;  -- 7 days
 
 ```sql
 -- On replica: Check replication lag
-SHOW SLAVE STATUS\G
+-- SHOW SLAVE STATUS is deprecated as of MySQL 8.0.23; use SHOW REPLICA STATUS
+SHOW REPLICA STATUS\G
 
--- Parse seconds behind master
+-- Parse seconds behind source
 SELECT
-    IF(Slave_IO_Running = 'Yes' AND Slave_SQL_Running = 'Yes',
-       Seconds_Behind_Master,
+    IF(Replica_IO_Running = 'Yes' AND Replica_SQL_Running = 'Yes',
+       Seconds_Behind_Source,
        NULL) as replication_lag_seconds
-FROM (SHOW SLAVE STATUS) s;
+FROM (SHOW REPLICA STATUS) s;
 
 -- Parallel replication (MySQL 8.0+)
-SET GLOBAL slave_parallel_workers = 4;
-SET GLOBAL slave_parallel_type = 'LOGICAL_CLOCK';
+SET GLOBAL replica_parallel_workers = 4;
+SET GLOBAL replica_parallel_type = 'LOGICAL_CLOCK';
 ```
 
 ## Table Optimization

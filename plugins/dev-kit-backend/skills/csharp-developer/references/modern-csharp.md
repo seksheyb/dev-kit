@@ -31,10 +31,9 @@ public record Customer(int Id, string Name, string Email);
 // Record with validation
 public record OrderRequest(int ProductId, int Quantity)
 {
-    public OrderRequest : this(ProductId, Quantity)
-    {
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(Quantity);
-    }
+    public int Quantity { get; init; } = Quantity > 0
+        ? Quantity
+        : throw new ArgumentOutOfRangeException(nameof(Quantity));
 }
 
 // Pattern matching with records
@@ -234,6 +233,32 @@ var message = GetUser(id) switch
 };
 ```
 
+## C# 14 (.NET 10)
+
+```csharp
+// field keyword — field-backed property without a manual backing field
+public string Name
+{
+    get => field;
+    set => field = value?.Trim() ?? throw new ArgumentNullException(nameof(value));
+}
+
+// Null-conditional assignment
+customer?.Address = newAddress;
+
+// Extension members — properties/static members, not just methods
+public static class StringExtensions
+{
+    extension(string s)
+    {
+        public bool IsBlank => string.IsNullOrWhiteSpace(s);
+    }
+}
+
+// Unbound generic nameof
+var typeName = nameof(List<>);
+```
+
 ## Quick Reference
 
 | Feature | C# Version | Example |
@@ -246,3 +271,6 @@ var message = GetUser(id) switch
 | Collection expressions | C# 12 | `int[] x = [1, 2, 3];` |
 | Init-only properties | C# 9 | `public string Name { get; init; }` |
 | Record types | C# 9 | `record Person(string Name);` |
+| `field` keyword | C# 14 | `get => field; set => field = value;` |
+| Extension members | C# 14 | `extension(string s) { public bool IsBlank => ...; }` |
+| Null-conditional assignment | C# 14 | `obj?.Prop = value;` |

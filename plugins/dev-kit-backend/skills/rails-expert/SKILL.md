@@ -1,6 +1,6 @@
 ---
 name: rails-expert
-description: Rails 7+ specialist that optimizes Active Record queries with includes/eager_load, implements Turbo Frames and Turbo Streams for partial page updates, configures Action Cable for WebSocket connections, sets up Sidekiq workers for background job processing, and writes comprehensive RSpec test suites. Use when building Rails 7+ web applications with Hotwire, real-time features, or background job processing. Invoke for Active Record optimization, Turbo Frames/Streams, Action Cable, Sidekiq, RSpec Rails.
+description: Rails 7+ specialist (targets Rails 8.1/8.0 defaults, gated by Gemfile.lock) that optimizes Active Record queries with includes/eager_load, implements Turbo Frames and Turbo Streams for partial page updates, configures Action Cable for WebSocket connections, sets up Solid Queue or Sidekiq workers for background job processing, and writes comprehensive RSpec test suites. Use when building Rails 7+ web applications with Hotwire, real-time features, or background job processing. Invoke for Active Record optimization, Turbo Frames/Streams, Action Cable, Sidekiq, Solid Queue, RSpec Rails.
 license: MIT
 metadata:
   version: "1.1.0"
@@ -35,12 +35,12 @@ Load detailed guidance based on context:
 | Hotwire/Turbo | `references/hotwire-turbo.md` | Turbo Frames, Streams, Stimulus controllers |
 | Active Record | `references/active-record.md` | Models, associations, queries, performance |
 | Background Jobs | `references/background-jobs.md` | Sidekiq, job design, queues, error handling |
-| Testing | `references/rspec-testing.md` | Model/request/system specs, factories |
+| Testing | `references/rspec-testing.md` | Model/request/system specs, factories (a fresh `rails new` ships Minitest by default — add `rspec-rails` to switch to the RSpec conventions this skill teaches) |
 | API Development | `references/api-development.md` | API-only mode, serialization, authentication |
 
 ## Version-Specific Defaults
 
-Rails 8.x replaced several Redis-backed defaults with database-backed "Solid" adapters. Match recommendations to the project's actual version:
+Rails 8.x (current point release: 8.1, Oct 2025) replaced several Redis-backed defaults with database-backed "Solid" adapters. Match recommendations to the project's actual version — always confirm via `Gemfile.lock` rather than assuming:
 
 | Concern | Rails 8.x (default) | Rails 7.x (default) |
 |---------|---------------------|----------------------|

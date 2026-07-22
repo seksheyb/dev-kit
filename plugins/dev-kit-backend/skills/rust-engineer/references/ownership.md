@@ -218,6 +218,11 @@ impl Drop for FileGuard {
 } // Drop called automatically here
 ```
 
+## Edition 2024 Notes
+
+- `impl Trait` in return position now captures all in-scope generic parameters and lifetimes by default; use the `use<'a, T>` bound to opt a function out of capturing a specific one.
+- `unsafe_op_in_unsafe_fn` is deny-by-default: an `unsafe fn` body no longer implicitly grants an unsafe context — wrap unsafe operations inside it in their own `unsafe { }` block with a documented invariant, same as any other function.
+
 ## Common Patterns
 
 ```rust

@@ -34,7 +34,7 @@ Load detailed guidance based on context:
 | REST Patterns | `references/rest-patterns.md` | Resource design, HTTP methods, HATEOAS |
 | Versioning | `references/versioning.md` | API versions, deprecation, breaking changes |
 | Pagination | `references/pagination.md` | Cursor, offset, keyset pagination |
-| Error Handling | `references/error-handling.md` | Error responses, RFC 7807, status codes |
+| Error Handling | `references/error-handling.md` | Error responses, RFC 9457, status codes |
 | OpenAPI | `references/openapi.md` | OpenAPI 3.1, documentation, code generation |
 
 ## Constraints
@@ -43,7 +43,7 @@ Load detailed guidance based on context:
 - Follow REST principles (resource-oriented, proper HTTP methods)
 - Use consistent naming conventions (snake_case or camelCase — pick one, apply everywhere)
 - Include comprehensive OpenAPI 3.1 specification
-- Design proper error responses with actionable messages (RFC 7807)
+- Design proper error responses with actionable messages (RFC 9457)
 - Implement pagination for all collection endpoints
 - Version APIs with clear deprecation policies
 - Document authentication and authorization
@@ -135,7 +135,7 @@ components:
         next_cursor: { type: string, nullable: true }
         has_more:    { type: boolean }
 
-    Problem:                       # RFC 7807 Problem Details
+    Problem:                       # RFC 9457 Problem Details
       type: object
       required: [type, title, status]
       properties:
@@ -179,7 +179,7 @@ security:
   - BearerAuth: []
 ```
 
-### RFC 7807 Error Response (copy-paste)
+### RFC 9457 Error Response (copy-paste)
 
 ```json
 {
@@ -213,5 +213,5 @@ When delivering an API design, provide:
 
 ## Knowledge Reference
 
-REST architecture, OpenAPI 3.1, GraphQL, HTTP semantics, JSON:API, HATEOAS, OAuth 2.0, JWT, RFC 7807 Problem Details, API versioning patterns, pagination strategies, rate limiting, webhook design, SDK generation
+REST architecture, OpenAPI 3.1, GraphQL, HTTP semantics, JSON:API, HATEOAS, OAuth 2.0, JWT, RFC 9457 Problem Details, API versioning patterns, pagination strategies, rate limiting, webhook design, SDK generation
 

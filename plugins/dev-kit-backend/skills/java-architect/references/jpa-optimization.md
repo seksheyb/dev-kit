@@ -1,5 +1,9 @@
 # JPA Optimization
 
+Targets Hibernate ORM 7 (Jakarta EE 11 / JPA 3.2, as shipped by Spring Boot 4). The
+N+1 avoidance, projection, and batching patterns below are unchanged from prior
+Hibernate versions.
+
 ## Optimized Entity Design
 
 ```java

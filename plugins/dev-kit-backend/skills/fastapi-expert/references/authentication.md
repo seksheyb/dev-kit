@@ -31,7 +31,7 @@ async def login(
 
 ```python
 from datetime import datetime, timedelta, UTC
-from jose import JWTError, jwt
+import jwt
 from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -79,7 +79,7 @@ async def get_current_user(
         user_id = int(payload.get("sub"))
         if payload.get("type") != "access":
             raise credentials_exception
-    except (JWTError, ValueError, TypeError):
+    except (jwt.PyJWTError, ValueError, TypeError):
         raise credentials_exception
 
     user = await get_user_db(db, user_id)
@@ -132,7 +132,7 @@ async def refresh_token(
         if payload.get("type") != "refresh":
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid token type")
         user_id = int(payload.get("sub"))
-    except (JWTError, ValueError):
+    except (jwt.PyJWTError, ValueError):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid refresh token")
 
     user = await get_user_db(db, user_id)

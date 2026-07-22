@@ -1,5 +1,11 @@
 # Entity Framework Core
 
+> EF Core 10 (ships with .NET 10) maps complex types natively to JSON columns and
+> supports LINQ queries/indexes over nested JSON paths — prefer that over hand-rolled
+> JSON serialization for nested value objects. Note: as of EF Core 10, complex-type
+> column names that collide are uniquified with a numeric suffix instead of silently
+> sharing a column.
+
 ## DbContext Configuration
 
 ```csharp
@@ -325,19 +331,20 @@ public partial class InitialCreate : Migration
     }
 }
 
-// Apply migrations at startup
-public static async Task Main(string[] args)
+// Apply migrations at startup (top-level statements, Program.cs)
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
 {
-    var host = CreateHostBuilder(args).Build();
-
-    using (var scope = host.Services.CreateScope())
-    {
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        await context.Database.MigrateAsync();
-    }
-
-    await host.RunAsync();
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await context.Database.MigrateAsync();
 }
+
+await app.RunAsync();
 ```
 
 ## Performance Optimization

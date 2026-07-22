@@ -1,9 +1,14 @@
 # Livewire Components
 
+Examples target Livewire 3 (current namespace `App\Livewire`, `dispatch()` for events, `wire:model.live`
+for real-time binding). Check `composer.lock` for `livewire/livewire` — on Livewire 2 the namespace is
+`App\Http\Livewire`, `wire:model` is live by default, and events use `emit`/`emitTo`/`emitUp` instead of
+`dispatch`.
+
 ## Component Patterns
 
 ```php
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -60,7 +65,7 @@ class PostList extends Component
     {{-- Search --}}
     <input
         type="text"
-        wire:model.debounce.300ms="search"
+        wire:model.live.debounce.300ms="search"
         placeholder="Search posts..."
         class="form-input"
     >
@@ -114,7 +119,7 @@ class PostList extends Component
 ## Form Component
 
 ```php
-namespace App\Http\Livewire;
+namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Post;
@@ -193,7 +198,7 @@ class PostForm extends Component
         <label for="title">Title</label>
         <input
             type="text"
-            wire:model.defer="title"
+            wire:model="title"
             id="title"
             class="@error('title') border-red-500 @enderror"
         >
@@ -206,7 +211,7 @@ class PostForm extends Component
     <div>
         <label for="content">Content</label>
         <textarea
-            wire:model.defer="content"
+            wire:model="content"
             id="content"
             class="@error('content') border-red-500 @enderror"
         ></textarea>
@@ -301,37 +306,37 @@ class PostForm extends Component
 ## Events
 
 ```php
-// Emit event
+use Livewire\Attributes\On;
+
+// Dispatch event
 class PostList extends Component
 {
     public function deletePost($postId): void
     {
         Post::find($postId)->delete();
 
-        $this->emit('postDeleted', $postId);
+        $this->dispatch('post-deleted', postId: $postId);
     }
 }
 
 // Listen to event
 class PostStats extends Component
 {
-    protected $listeners = ['postDeleted' => 'updateStats'];
-
+    #[On('post-deleted')]
     public function updateStats($postId): void
     {
         // Update statistics
     }
 }
 
-// Emit to specific component
-$this->emitTo('post-stats', 'refresh');
+// Dispatch to a specific component
+$this->dispatch('refresh')->to('post-stats');
 
-// Emit to parent/children
-$this->emitUp('saved');
-$this->emitSelf('refresh');
+// Dispatch to self only / skip re-render of others
+$this->dispatch('saved')->self();
 
-// Browser events
-$this->dispatchBrowserEvent('post-saved', ['id' => $post->id]);
+// Dispatch to the browser (listened to with window.addEventListener, same as below)
+$this->dispatch('post-saved', id: $post->id);
 ```
 
 ## Listen to Browser Events
@@ -477,13 +482,13 @@ class PostForm extends Component
 
 ## Performance Tips
 
-1. **Use wire:model.defer** - Batch updates on form submit
-2. **Lazy load components** - Use wire:init for heavy operations
+1. **Leave wire:model deferred (the v3 default)** - Only add `.live` where real-time feedback is worth the extra round-trip
+2. **Lazy load components** - Use `#[Lazy]` or wire:init for heavy operations
 3. **Cache computed properties** - Use #[Computed] attribute
 4. **Disable polling when hidden** - Use wire:poll.visible
 5. **Optimize queries** - Eager load relationships
 6. **Use wire:key** - Prevent re-rendering entire lists
-7. **Debounce input** - Use wire:model.debounce
+7. **Debounce live input** - Use wire:model.live.debounce
 8. **Use pagination** - Don't load all records at once
 
 ```php

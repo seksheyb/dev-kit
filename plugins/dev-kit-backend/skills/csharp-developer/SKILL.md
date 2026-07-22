@@ -1,6 +1,6 @@
 ---
 name: csharp-developer
-description: "Use when building C# applications with .NET 8+, ASP.NET Core APIs, or Blazor web apps. Builds REST APIs using minimal or controller-based routing, configures database access with Entity Framework Core, implements async patterns and cancellation, structures applications with CQRS via MediatR, and scaffolds Blazor components with state management. Invoke for C#, .NET, ASP.NET Core, Blazor, Entity Framework, EF Core, Minimal API, MAUI, SignalR."
+description: "Use when building C# applications with .NET 10+, ASP.NET Core APIs, or Blazor web apps. Builds REST APIs using minimal or controller-based routing, configures database access with Entity Framework Core, implements async patterns and cancellation, structures applications with CQRS, and scaffolds Blazor components with state management. Invoke for C#, .NET, ASP.NET Core, Blazor, Entity Framework, EF Core, Minimal API, MAUI, SignalR."
 license: MIT
 metadata:
   version: "1.1.0"
@@ -14,7 +14,7 @@ metadata:
 
 # C# Developer
 
-Senior C# developer with mastery of .NET 8+ and Microsoft ecosystem. Specializes in high-performance web APIs, cloud-native solutions, and modern C# language features.
+Senior C# developer with mastery of .NET 10+ and Microsoft ecosystem. Specializes in high-performance web APIs, cloud-native solutions, and modern C# language features.
 
 ## When to Use This Skill
 
@@ -22,7 +22,7 @@ Senior C# developer with mastery of .NET 8+ and Microsoft ecosystem. Specializes
 - Implementing Entity Framework Core data access
 - Creating Blazor web applications (Server/WASM)
 - Optimizing .NET performance with Span<T>, Memory<T>
-- Implementing CQRS with MediatR
+- Implementing CQRS with a mediator pattern
 - Setting up authentication/authorization
 
 ## Core Workflow
@@ -51,7 +51,7 @@ Load detailed guidance based on context:
 
 ### MUST DO
 - Enable nullable reference types in all projects
-- Use file-scoped namespaces and primary constructors (C# 12)
+- Use file-scoped namespaces and primary constructors (C# 14)
 - Apply async/await for all I/O operations — always accept and forward `CancellationToken`:
   ```csharp
   // Correct
@@ -69,6 +69,7 @@ Load detailed guidance based on context:
   }
   ```
 - Use strongly-typed configuration with `IOptions<T>`
+- Before adding MediatR for CQRS, confirm license eligibility — it went commercial (free under $5M org revenue, paid above); for license-sensitive orgs use the source-generator-based `Mediator` package, Wolverine, or a hand-rolled `IRequestHandler<T>` dispatcher instead
 
 ### MUST NOT DO
 - Use blocking calls (`.Result`, `.Wait()`) in async code:
@@ -98,7 +99,7 @@ When implementing .NET features, provide:
 ## Example: Minimal API Endpoint
 
 ```csharp
-// Program.cs (file-scoped, .NET 8 minimal API)
+// Program.cs (file-scoped, .NET 10 minimal API)
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IProductService, ProductService>();
 
@@ -121,5 +122,5 @@ app.Run();
 
 ## Knowledge Reference
 
-C# 12, .NET 8, ASP.NET Core, Minimal APIs, Blazor (Server/WASM), Entity Framework Core, MediatR, xUnit, Moq, Benchmark.NET, SignalR, gRPC, Azure SDK, Polly, FluentValidation, Serilog
+C# 14, .NET 10, ASP.NET Core, Minimal APIs, Blazor (Server/WASM), Entity Framework Core, Mediator/MediatR, xUnit, Moq, Benchmark.NET, SignalR, gRPC, Azure SDK, Polly, FluentValidation, Serilog
 

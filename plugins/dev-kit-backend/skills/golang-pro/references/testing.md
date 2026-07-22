@@ -258,6 +258,38 @@ func FuzzAdd(f *testing.F) {
 }
 ```
 
+## Deterministic Concurrency Tests (testing/synctest, Go 1.25+)
+
+```go
+import "testing/synctest"
+
+// synctest.Test runs f in an isolated "bubble" with a virtualized clock:
+// time.Sleep, timers, and context deadlines advance instantly and
+// deterministically instead of depending on wall-clock time.
+func TestTimeout(t *testing.T) {
+    synctest.Test(t, func(t *testing.T) {
+        ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+        defer cancel()
+
+        done := make(chan struct{})
+        go func() {
+            time.Sleep(10 * time.Second)
+            close(done)
+        }()
+
+        select {
+        case <-ctx.Done():
+            // Deterministic: virtual time advances past the deadline
+            // without the test actually waiting 5 real seconds.
+        case <-done:
+            t.Fatal("expected context to time out first")
+        }
+    })
+}
+```
+
+Prefer `testing/synctest` over ad hoc time-mocking (fake clocks, injected `time.Now` functions) for goroutines and channels gated on timers or deadlines.
+
 ## Test Coverage
 
 ```go

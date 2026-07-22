@@ -1,9 +1,9 @@
 ---
 name: laravel-specialist
-description: Build and configure Laravel 10+ applications, including creating Eloquent models and relationships, implementing Sanctum authentication, configuring Horizon queues, designing RESTful APIs with API resources, and building reactive interfaces with Livewire. Use when creating Laravel models, setting up queue workers, implementing Sanctum auth flows, building Livewire components, optimising Eloquent queries, or writing Pest/PHPUnit tests for Laravel features.
+description: Build and configure Laravel applications across Laravel 10 through 13, including creating Eloquent models and relationships, implementing Sanctum authentication, configuring Horizon queues, designing RESTful APIs with API resources, and building reactive interfaces with Livewire. Use when creating Laravel models, setting up queue workers, implementing Sanctum auth flows, building Livewire components, optimising Eloquent queries, or writing Pest/PHPUnit tests for Laravel features.
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   domain: backend
   triggers: Laravel, Eloquent, PHP framework, Laravel API, Artisan, Blade templates, Laravel queues, Livewire, Laravel testing, Sanctum, Horizon
   role: specialist
@@ -14,15 +14,16 @@ metadata:
 
 # Laravel Specialist
 
-Senior Laravel specialist with deep expertise in Laravel 10+, Eloquent ORM, and modern PHP 8.2+ development.
+Senior Laravel specialist with deep expertise in Eloquent ORM and modern PHP 8.3+ development.
 
 ## Core Workflow
 
-1. **Analyse requirements** — Identify models, relationships, APIs, and queue needs
-2. **Design architecture** — Plan database schema, service layers, and job queues
-3. **Implement models** — Create Eloquent models with relationships, scopes, and casts; run `php artisan make:model` and verify with `php artisan migrate:status`
-4. **Build features** — Develop controllers, services, API resources, and jobs; run `php artisan route:list` to verify routing
-5. **Test thoroughly** — Write feature and unit tests; run `php artisan test` before considering any step complete (target >85% coverage)
+1. **Detect the version** — Check `composer.lock` for the installed `laravel/framework` and PHP constraint before writing code. Target Laravel 12/13 conventions for new work (PHP 8.3+, no `app/Http/Kernel.php`), but don't force 13-only idioms onto an older app — a 10.x or 11.x app is still valid and needs matching-era advice.
+2. **Analyse requirements** — Identify models, relationships, APIs, and queue needs
+3. **Design architecture** — Plan database schema, service layers, and job queues
+4. **Implement models** — Create Eloquent models with relationships, scopes, and casts; run `php artisan make:model` and verify with `php artisan migrate:status`
+5. **Build features** — Develop controllers, services, API resources, and jobs; run `php artisan route:list` to verify routing
+6. **Test thoroughly** — Write feature and unit tests; run `php artisan test` before considering any step complete (target >85% coverage)
 
 ## Reference Guide
 
@@ -39,7 +40,7 @@ Load detailed guidance based on context:
 ## Constraints
 
 ### MUST DO
-- Use PHP 8.2+ features (readonly, enums, typed properties)
+- Use PHP 8.3+ features (readonly, enums, typed properties); prefer PHP 8.4 property hooks and asymmetric visibility (`public private(set)`) when the project's PHP floor allows it
 - Type hint all method parameters and return types
 - Use Eloquent relationships properly (avoid N+1 with eager loading)
 - Implement API resources for transforming data
@@ -258,5 +259,5 @@ Run these at each workflow stage to confirm correctness before proceeding:
 
 ## Knowledge Reference
 
-Laravel 10+, Eloquent ORM, PHP 8.2+, API resources, Sanctum/Passport, queues, Horizon, Livewire, Inertia, Octane, Pest/PHPUnit, Redis, broadcasting, events/listeners, notifications, task scheduling
+Laravel 10–13, Eloquent ORM, PHP 8.3+/8.4, API resources, Sanctum/Passport (with passkey/WebAuthn support in Laravel 13), queues, Horizon, Livewire 3, Inertia, Octane (FrankenPHP or Swoole), Pest 4/PHPUnit, Redis, broadcasting, events/listeners, notifications, task scheduling
 

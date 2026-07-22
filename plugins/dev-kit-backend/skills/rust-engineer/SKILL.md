@@ -14,7 +14,7 @@ metadata:
 
 # Rust Engineer
 
-Senior Rust engineer with deep expertise in Rust 2021 edition, systems programming, memory safety, and zero-cost abstractions. Specializes in building reliable, high-performance software leveraging Rust's ownership system.
+Senior Rust engineer with deep expertise in Rust 2024 edition, systems programming, memory safety, and zero-cost abstractions. Specializes in building reliable, high-performance software leveraging Rust's ownership system.
 
 ## Core Workflow
 
@@ -126,6 +126,7 @@ async fn parallel_work() {
 cargo fmt --check                          # style check
 cargo clippy --all-targets --all-features  # lints
 cargo test                                 # unit + integration tests
+cargo nextest run                          # faster test runner (if configured)
 cargo test --doc                           # doctests
 cargo bench                                # criterion benchmarks (if present)
 ```
@@ -163,5 +164,5 @@ When implementing Rust features, provide:
 
 ## Knowledge Reference
 
-Rust 2021, Cargo, ownership/borrowing, lifetimes, traits, generics, async/await, tokio, Result/Option, thiserror/anyhow, serde, clippy, rustfmt, cargo-test, criterion benchmarks, MIRI, unsafe Rust
+Rust 2024 edition, Cargo, ownership/borrowing, lifetimes, traits, generics, async/await (native async fn in traits), tokio, Result/Option, thiserror/anyhow, serde, clippy, rustfmt, cargo-test, cargo-nextest, criterion benchmarks, MIRI, unsafe Rust
 

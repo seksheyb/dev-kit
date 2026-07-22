@@ -17,10 +17,10 @@ class ProcessPost implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 3;
-    public $timeout = 120;
-    public $maxExceptions = 3;
-    public $backoff = [60, 120, 300]; // Exponential backoff
+    public int $tries = 3;
+    public int $timeout = 120;
+    public int $maxExceptions = 3;
+    public array $backoff = [60, 120, 300]; // Exponential backoff
 
     public function __construct(
         public Post $post,
@@ -333,6 +333,7 @@ php artisan horizon:status
 ## Monitoring
 
 ```php
+use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\Facades\Queue;

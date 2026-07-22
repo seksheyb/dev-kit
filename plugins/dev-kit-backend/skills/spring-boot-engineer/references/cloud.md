@@ -211,6 +211,10 @@ spring:
 
 ## Circuit Breaker - Resilience4j
 
+For simple retry or throttling needs, prefer Spring's built-in `@Retryable` and `@ConcurrencyLimit`
+annotations (no extra dependency required) before reaching for Resilience4j. Resilience4j remains
+the right choice for circuit breakers and bulkheads.
+
 ```java
 @Service
 @RequiredArgsConstructor
@@ -463,7 +467,7 @@ spec:
 
 ```dockerfile
 # Dockerfile (Multi-stage)
-FROM eclipse-temurin:17-jdk-alpine AS build
+FROM eclipse-temurin:25-jdk-alpine AS build
 WORKDIR /workspace/app
 
 COPY mvnw .
@@ -474,7 +478,7 @@ COPY src src
 RUN ./mvnw install -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 VOLUME /tmp
 ARG DEPENDENCY=/workspace/app/target/dependency
 COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib

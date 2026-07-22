@@ -5,9 +5,18 @@ description: Use when the task involves Elixir or the BEAM ecosystem — Phoenix
 
 # Elixir Expert
 
-Knowledge pack for building fault-tolerant, concurrent, and distributed systems with Elixir 1.15+ and OTP — spanning Phoenix web applications, real-time features with LiveView, and leveraging the BEAM VM for maximum reliability and scalability.
+Knowledge pack for building fault-tolerant, concurrent, and distributed systems with Elixir 1.18+ (OTP 27+) and OTP — spanning Phoenix web applications, real-time features with LiveView, and leveraging the BEAM VM for maximum reliability and scalability.
 
 Before implementing, review mix.exs configuration, supervision trees, and OTP patterns; analyze process architecture, GenServer implementations, and fault tolerance strategies; then implement solutions following Elixir idioms and OTP best practices.
+
+## Reference Guide
+
+Load detailed guidance based on context:
+
+| Topic | Reference | Load When |
+|-------|-----------|-----------|
+| OTP Patterns | `references/otp-patterns.md` | GenServer, Supervisor trees, Registry, Task, ETS, "let it crash" |
+| Phoenix & LiveView | `references/phoenix-liveview.md` | Contexts, LiveView/LiveComponent, streams, PubSub, Channels, forms |
 
 ## Elixir Development Checklist
 
@@ -16,7 +25,7 @@ Before implementing, review mix.exs configuration, supervision trees, and OTP pa
 - Proper supervision tree design
 - Comprehensive pattern matching usage
 - ExUnit tests with doctests
-- Dialyzer type specifications
+- Rely on the built-in compiler type system first; Dialyzer/`@spec` as supplementary
 - Documentation with ExDoc
 - OTP behavior implementations
 
@@ -140,6 +149,7 @@ Before implementing, review mix.exs configuration, supervision trees, and OTP pa
 - Documentation with ExDoc
 - Static analysis with Dialyzer
 - Code quality with Credo
+- Native `JSON` module (stdlib since 1.18) or Jason for encode/decode
 
 ## Development Workflow
 
@@ -165,7 +175,7 @@ Technical evaluation:
 - Check fault tolerance design
 - Assess process bottlenecks
 - Profile memory usage
-- Verify type specifications
+- Check compiler type inference / Dialyzer findings
 - Review test coverage
 - Evaluate documentation
 
@@ -181,7 +191,7 @@ Implementation approach:
 - Apply pattern matching extensively
 - Create pipelines for transforms
 - Handle errors at proper level
-- Write specs for Dialyzer
+- Lean on the set-theoretic compiler type system; add `@spec`/Dialyzer where it adds precision
 - Document with examples
 
 Development patterns:
@@ -202,7 +212,7 @@ Ensure fault tolerance and operational excellence.
 Quality verification:
 
 - Credo passes with strict mode
-- Dialyzer clean with specs
+- Compiler type checks clean; Dialyzer clean where specs are used
 - Test coverage > 85%
 - Documentation complete
 - Supervision tree validated
@@ -224,7 +234,7 @@ Quality verification:
 ## Deployment Patterns
 
 - Mix releases configuration
-- Distillery migration
+- Multi-environment release configs
 - Docker containerization
 - Kubernetes deployment
 - Hot code upgrades

@@ -293,9 +293,14 @@ EXECUTE FUNCTION refresh_daily_sales();
 
 ```sql
 -- PostgreSQL: Force index usage (use sparingly)
+-- PostgreSQL has no native hint syntax; use planner switches instead
+-- (the /*+ ... */ hint block below is Oracle/MySQL syntax and is NOT valid on PostgreSQL)
 SET enable_seqscan = OFF;
-SELECT /*+ IndexScan(orders idx_orders_customer) */ * FROM orders WHERE customer_id = 123;
+SELECT * FROM orders WHERE customer_id = 123;
 SET enable_seqscan = ON;
+-- To get Oracle/MySQL-style hints on PostgreSQL, install the pg_hint_plan extension, e.g.:
+-- /*+ IndexScan(orders idx_orders_customer) */
+-- SELECT * FROM orders WHERE customer_id = 123;
 
 -- SQL Server: Query hints
 SELECT * FROM orders WITH (INDEX(idx_orders_customer_date))

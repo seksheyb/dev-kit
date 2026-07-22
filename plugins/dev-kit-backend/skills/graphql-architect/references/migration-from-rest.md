@@ -1106,15 +1106,15 @@ type User {
 
 **Related Skills:**
 - **graphql-architect/references/schema-design.md** - Type system patterns and schema structure
-- **graphql-architect/references/federation-guide.md** - Multi-service GraphQL architecture
-- **backend-developer** - REST API implementation patterns
+- **graphql-architect/references/federation.md** - Multi-service GraphQL architecture
 - **api-designer** - API design principles and consistency
+- **microservices-architect** - Service boundary and inter-service patterns
 
 **When to Escalate:**
-- Federation across microservices → See federation-guide.md
-- Schema design questions → See schema-design.md
-- Complex subscription requirements → Consult graphql-architect
-- Performance optimization → Partner with performance-engineer
+- Federation across microservices → See references/federation.md
+- Schema design questions → See references/schema-design.md
+- Complex subscription requirements → See references/subscriptions.md
+- Query/database performance optimization → Partner with database-optimizer
 
 ---
 

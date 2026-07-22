@@ -1,9 +1,9 @@
 ---
 name: java-architect
-description: Use when building, configuring, or debugging enterprise Java applications with Spring Boot 3.x, microservices, or reactive programming. Invoke to implement WebFlux endpoints, optimize JPA queries and database performance, configure Spring Security with OAuth2/JWT, or resolve authentication issues and async processing challenges in cloud-native Spring applications.
+description: Use when building, configuring, or debugging enterprise Java applications with Spring Boot 4.x (Spring Framework 7), microservices, or reactive programming. Invoke to implement WebFlux endpoints, optimize JPA/Hibernate queries and database performance, configure Spring Security with OAuth2/JWT, or resolve authentication issues and async processing challenges in cloud-native Spring applications.
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   domain: language
   triggers: Spring Boot, Java, microservices, Spring Cloud, JPA, Hibernate, WebFlux, reactive, Java Enterprise
   role: architect
@@ -14,7 +14,7 @@ metadata:
 
 # Java Architect
 
-Enterprise Java specialist focused on Spring Boot 3.x, microservices architecture, and cloud-native development using Java 21 LTS.
+Enterprise Java specialist focused on Spring Boot 4.x (Spring Framework 7), microservices architecture, and cloud-native development targeting current LTS Java (25, with 21 as the prior LTS still fine for existing projects).
 
 ## Core Workflow
 
@@ -40,7 +40,8 @@ Load detailed guidance based on context:
 ## Constraints
 
 ### MUST DO
-- Use Java 21 LTS features (records, sealed classes, pattern matching)
+- Use modern Java LTS features (records, sealed classes, pattern matching)
+- Prefer virtual threads (`spring.threads.virtual.enabled=true`) for I/O-bound scaling on the servlet stack before reaching for WebFlux
 - Apply database migrations (Flyway/Liquibase)
 - Document APIs with OpenAPI/Swagger
 - Use proper exception handling hierarchy
@@ -128,5 +129,5 @@ public class SecurityConfig {
 
 ## Knowledge Reference
 
-Spring Boot 3.x, Java 21, Spring WebFlux, Project Reactor, Spring Data JPA, Spring Security, OAuth2/JWT, Hibernate, R2DBC, Spring Cloud, Resilience4j, Micrometer, JUnit 5, TestContainers, Mockito, Maven/Gradle
+Spring Boot 4.x, Spring Framework 7, Java 21/25 LTS, Spring WebFlux, Project Reactor, Spring Data JPA, Spring Security 7, OAuth2/JWT, Hibernate 7, R2DBC, Spring Cloud, built-in `@Retryable`/`@ConcurrencyLimit`, Resilience4j, Micrometer, JUnit 5, TestContainers, Mockito, Maven/Gradle
 

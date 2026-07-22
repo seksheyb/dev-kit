@@ -33,10 +33,10 @@ SELECT * FROM pg_create_physical_replication_slot('replica_1');
 systemctl stop postgresql
 
 # Remove data directory
-rm -rf /var/lib/postgresql/14/main/*
+rm -rf /var/lib/postgresql/17/main/*
 
 # Base backup from primary
-pg_basebackup -h primary-host -D /var/lib/postgresql/14/main \
+pg_basebackup -h primary-host -D /var/lib/postgresql/17/main \
   -U replicator -P -v -R -X stream -S replica_1
 
 # -R creates standby.signal and recovery config
@@ -225,7 +225,7 @@ SELECT now() - pg_last_xact_replay_timestamp() AS current_delay;
 ```bash
 # On standby server
 # Promote standby to primary
-pg_ctl promote -D /var/lib/postgresql/14/main
+pg_ctl promote -D /var/lib/postgresql/17/main
 
 # Or use SQL
 SELECT pg_promote();
@@ -246,13 +246,13 @@ pg_autoctl create monitor --hostname monitor-host --pgdata /var/lib/monitor
 # Setup primary
 pg_autoctl create postgres \
   --hostname primary-host \
-  --pgdata /var/lib/postgresql/14/main \
+  --pgdata /var/lib/postgresql/17/main \
   --monitor postgres://monitor-host/pg_auto_failover
 
 # Setup standby
 pg_autoctl create postgres \
   --hostname standby-host \
-  --pgdata /var/lib/postgresql/14/main \
+  --pgdata /var/lib/postgresql/17/main \
   --monitor postgres://monitor-host/pg_auto_failover
 
 # Check status
@@ -289,7 +289,7 @@ bootstrap:
 postgresql:
   listen: 0.0.0.0:5432
   connect_address: node1:5432
-  data_dir: /var/lib/postgresql/14/main
+  data_dir: /var/lib/postgresql/17/main
   authentication:
     replication:
       username: replicator
@@ -374,16 +374,16 @@ pg_basebackup -h localhost -U postgres \
 systemctl stop postgresql
 
 # Restore base backup
-rm -rf /var/lib/postgresql/14/main/*
-tar -xzf /backup/base/20241201/base.tar.gz -C /var/lib/postgresql/14/main
+rm -rf /var/lib/postgresql/17/main/*
+tar -xzf /backup/base/20260601/base.tar.gz -C /var/lib/postgresql/17/main
 
 # Create recovery.signal
-touch /var/lib/postgresql/14/main/recovery.signal
+touch /var/lib/postgresql/17/main/recovery.signal
 
 # Configure recovery
 # postgresql.conf or postgresql.auto.conf:
 restore_command = 'cp /backup/wal/%f %p'
-recovery_target_time = '2024-12-01 14:30:00'
+recovery_target_time = '2026-06-01 14:30:00'
 # Or: recovery_target_xid, recovery_target_name, recovery_target_lsn
 
 # Start PostgreSQL (will recover to target)
@@ -428,7 +428,7 @@ FROM pg_replication_slots;
 SELECT * FROM pg_stat_replication;
 
 -- 2. Check logs on standby
--- tail -f /var/log/postgresql/postgresql-14-main.log
+-- tail -f /var/log/postgresql/postgresql-17-main.log
 
 -- 3. Check replication slot exists
 SELECT * FROM pg_replication_slots WHERE slot_name = 'replica_1';
@@ -437,7 +437,7 @@ SELECT * FROM pg_replication_slots WHERE slot_name = 'replica_1';
 SELECT pg_create_physical_replication_slot('replica_1');
 
 -- 5. Check WAL files available
--- ls -lh /var/lib/postgresql/14/main/pg_wal/
+-- ls -lh /var/lib/postgresql/17/main/pg_wal/
 
 -- Standby too far behind?
 -- Option 1: Increase wal_keep_size

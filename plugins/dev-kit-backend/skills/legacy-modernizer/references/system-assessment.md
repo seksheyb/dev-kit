@@ -387,7 +387,7 @@ class ModernizationRoadmap:
         return timeline
 
 # Example roadmap
-roadmap = ModernizationRoadmap(start_date=date(2024, 1, 1))
+roadmap = ModernizationRoadmap(start_date=date(2026, 1, 1))
 
 roadmap.add_phase(MigrationPhase(
     name="Assessment & Planning",

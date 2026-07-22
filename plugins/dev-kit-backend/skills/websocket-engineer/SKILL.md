@@ -153,6 +153,7 @@ function sendMessage(roomId, text) {
 - Mix WebSocket and HTTP on the same port without explicit upgrade handling
 - Forget to handle connection cleanup (presence records, room membership, in-flight timers)
 - Skip load testing before production — connection-count spikes behave differently from HTTP traffic spikes
+- Pin `socket.io`/`ws` to an older minor version — keep both on latest patch; the `ws` transitive dependency has had CVEs and Socket.IO ships fixes in patch releases
 
 ## Output Templates
 

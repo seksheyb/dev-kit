@@ -1,5 +1,7 @@
 # Testing Patterns
 
+> Examples use Jest, still fully supported. Vitest (SWC-powered) is the modern alternative NestJS 11 scaffolds now offer — same `Test.createTestingModule()` API, swap `jest.fn()` for `vi.fn()`.
+
 ## Unit Test Setup
 
 ```typescript

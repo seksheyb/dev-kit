@@ -163,18 +163,19 @@ location /socket.io/ {
 ### Shared State in Redis
 
 ```javascript
-const Redis = require('ioredis');
-const redis = new Redis();
+const { createClient } = require('redis');
+const redis = createClient({ url: 'redis://localhost:6379' });
+await redis.connect();
 
 // Store user connection info
 io.on('connection', async (socket) => {
   const userId = socket.handshake.auth.userId;
 
   // Track which server has this user
-  await redis.hset('user:connections', userId, process.env.SERVER_ID);
+  await redis.hSet('user:connections', userId, process.env.SERVER_ID);
 
   // Store user presence
-  await redis.hset(`user:${userId}`, {
+  await redis.hSet(`user:${userId}`, {
     socketId: socket.id,
     serverId: process.env.SERVER_ID,
     connectedAt: Date.now(),
@@ -182,14 +183,14 @@ io.on('connection', async (socket) => {
   });
 
   socket.on('disconnect', async () => {
-    await redis.hdel('user:connections', userId);
+    await redis.hDel('user:connections', userId);
     await redis.del(`user:${userId}`);
   });
 });
 
 // Send message to specific user across cluster
 async function sendToUser(userId, event, data) {
-  const serverId = await redis.hget('user:connections', userId);
+  const serverId = await redis.hGet('user:connections', userId);
 
   if (serverId === process.env.SERVER_ID) {
     // User is on this server
@@ -280,10 +281,10 @@ process.on('SIGINT', gracefulShutdown);
 const cluster = require('cluster');
 const os = require('os');
 
-if (cluster.isMaster) {
+if (cluster.isPrimary) {
   const numWorkers = os.cpus().length;
 
-  console.log(`Master ${process.pid} starting ${numWorkers} workers`);
+  console.log(`Primary ${process.pid} starting ${numWorkers} workers`);
 
   for (let i = 0; i < numWorkers; i++) {
     cluster.fork();

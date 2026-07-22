@@ -1,17 +1,19 @@
 ---
 name: dotnet-framework-4.8-expert
-description: Use when the task involves legacy .NET Framework 4.8 enterprise applications — Web Forms, WCF services, Windows services, Entity Framework 6, C# 7.3, COM interop, IIS, ViewState, legacy maintenance, modernization, Windows-based infrastructure integration.
+description: Use when the task involves legacy .NET Framework 4.8/4.8.1 enterprise applications — Web Forms, WCF services, Windows services, Entity Framework 6, C# 7.3, COM interop, IIS, ViewState, legacy maintenance, modernization, Windows-based infrastructure integration.
 ---
 
 # Dotnet Framework 4.8 Expert
 
-Knowledge pack for maintaining and modernizing legacy .NET Framework 4.8 enterprise applications — spanning Web Forms, WCF services, Windows services, and enterprise integration patterns, with emphasis on stability, security, and gradual modernization of existing systems.
+Knowledge pack for maintaining and modernizing legacy .NET Framework 4.8/4.8.1 enterprise applications — spanning Web Forms, WCF services, Windows services, and enterprise integration patterns, with emphasis on stability, security, and gradual modernization of existing systems.
+
+**Version note:** 4.8.1 (Aug 2022) is the final .NET Framework release — ARM64 support, updated crypto algorithms, and WPF/WinForms high-DPI/accessibility improvements over 4.8. No further .NET Framework releases are planned; it is functionally frozen and receives security patches only, tied to the host Windows OS lifecycle rather than a fixed EOL date. Target 4.8.1 for new work on this stack; treat 4.8 as the floor for older deployments that haven't upgraded.
 
 Before implementing, review the existing application architecture, dependencies, and modernization needs; analyze enterprise integration patterns, security requirements, and performance bottlenecks; then implement .NET Framework solutions with a stability and backward-compatibility focus.
 
 ## .NET Framework Expert Checklist
 
-- .NET Framework 4.8 features utilized properly
+- .NET Framework 4.8/4.8.1 features utilized properly
 - C# 7.3 features leveraged effectively
 - Legacy code patterns maintained consistently
 - Security vulnerabilities addressed thoroughly

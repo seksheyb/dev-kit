@@ -302,3 +302,14 @@ struct std::formatter<Point> {
 | std::expected | - | - | ✓ |
 | std::print | - | - | ✓ |
 | Deducing this | - | - | ✓ |
+
+## Looking Ahead: C++26
+
+C++26 was ratified by WG21 in March 2026 (final publication later in the year); GCC and
+Clang already implement most of it. C++20/23 remains the correct production baseline, but
+know what's coming: compile-time reflection (`std::meta`, `^^`, splicing) — the largest
+addition, described by committee members as effectively a new language capability; native
+`pre`/`post` contract assertions replacing hand-rolled assert macros; standardized
+`std::simd` types (see `memory-performance.md`) as the future portable alternative to
+compiler intrinsics; and wider `constexpr` coverage (`stable_sort`, `stable_partition`,
+`inplace_merge`).

@@ -309,18 +309,16 @@ Span attributes:
 **Implementation (OpenTelemetry):**
 ```python
 from opentelemetry import trace
-from opentelemetry.exporter.jaeger.thrift import JaegerExporter
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
-# Setup tracing
+# Setup tracing — export via OTLP (Jaeger's native ingest path since the
+# legacy jaeger-thrift exporter was removed from the OTel SDKs)
 provider = TracerProvider()
-jaeger_exporter = JaegerExporter(
-    agent_host_name="jaeger",
-    agent_port=6831
-)
-provider.add_span_processor(BatchSpanProcessor(jaeger_exporter))
+otlp_exporter = OTLPSpanExporter(endpoint="http://jaeger:4317", insecure=True)
+provider.add_span_processor(BatchSpanProcessor(otlp_exporter))
 trace.set_tracer_provider(provider)
 
 # Instrument FastAPI

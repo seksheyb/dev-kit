@@ -20,7 +20,12 @@ src/main/java/com/example/
     └── rest/           # REST controllers
 ```
 
-## Modern pom.xml (Spring Boot 3.2)
+## Modern pom.xml (Spring Boot 4.1)
+
+Boot 4 runs on Spring Framework 7 / Jakarta EE 11 (Servlet 6.1). The embedded server
+choice is Tomcat or Jetty only — Undertow doesn't implement Servlet 6.1 and is no
+longer a supported option. Prefer the technology-specific starters below over the
+old combined "classic" starters, which are deprecated migration bridges.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -30,7 +35,7 @@ src/main/java/com/example/
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version>
+        <version>4.1.0</version>
     </parent>
 
     <groupId>com.example</groupId>
@@ -39,9 +44,9 @@ src/main/java/com/example/
     <packaging>jar</packaging>
 
     <properties>
-        <java.version>21</java.version>
-        <mapstruct.version>1.5.5.Final</mapstruct.version>
-        <testcontainers.version>1.19.3</testcontainers.version>
+        <java.version>25</java.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <testcontainers.version>1.20.4</testcontainers.version>
     </properties>
 
     <dependencies>
@@ -149,6 +154,10 @@ spring:
     enabled: true
     baseline-on-migrate: true
     locations: classpath:db/migration
+
+  threads:
+    virtual:
+      enabled: true  # production-standard for I/O-bound scaling on the servlet stack
 
 server:
   port: 8080

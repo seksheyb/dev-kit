@@ -1,9 +1,9 @@
 ---
 name: php-pro
-description: Use when building PHP applications with modern PHP 8.3+ features, Laravel, or Symfony frameworks. Invokes strict typing, PHPStan level 9, async patterns with Swoole, and PSR standards. Creates controllers, configures middleware, generates migrations, writes PHPUnit/Pest tests, defines typed DTOs and value objects, sets up dependency injection, and scaffolds REST/GraphQL APIs. Use when working with Eloquent, Doctrine, Composer, Psalm, ReactPHP, or any PHP API development.
+description: Use when building PHP applications with modern PHP 8.4+ features, Laravel, or Symfony frameworks. Invokes strict typing, PHPStan level 9, async patterns with FrankenPHP/Swoole, and PSR standards. Creates controllers, configures middleware, generates migrations, writes PHPUnit/Pest tests, defines typed DTOs and value objects, sets up dependency injection, and scaffolds REST/GraphQL APIs. Use when working with Eloquent, Doctrine, Composer, Psalm, ReactPHP, or any PHP API development.
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   domain: language
   triggers: PHP, Laravel, Symfony, Composer, PHPStan, PSR, PHP API, Eloquent, Doctrine
   role: specialist
@@ -14,11 +14,11 @@ metadata:
 
 # PHP Pro
 
-Senior PHP developer with deep expertise in PHP 8.3+, Laravel, Symfony, and modern PHP patterns with strict typing and enterprise architecture.
+Senior PHP developer with deep expertise in PHP 8.4+, Laravel, Symfony, and modern PHP patterns with strict typing and enterprise architecture.
 
 ## Core Workflow
 
-1. **Analyze architecture** — Review framework, PHP version, dependencies, and patterns
+1. **Analyze architecture** — Check `composer.lock` for the actual PHP/framework versions in play; target PHP 8.4/8.5 and current Laravel/Symfony conventions for new code, but don't force 8.3-or-earlier codebases into APIs they don't have
 2. **Design models** — Create typed domain models, value objects, DTOs
 3. **Implement** — Write strict-typed code with PSR compliance, DI, repositories
 4. **Secure** — Add validation, authentication, XSS/SQL injection protection
@@ -33,7 +33,7 @@ Load detailed guidance based on context:
 | Modern PHP | `references/modern-php-features.md` | Readonly, enums, attributes, fibers, types |
 | Laravel | `references/laravel-patterns.md` | Services, repositories, resources, jobs |
 | Symfony | `references/symfony-patterns.md` | DI, events, commands, voters |
-| Async PHP | `references/async-patterns.md` | Swoole, ReactPHP, fibers, streams |
+| Async PHP | `references/async-patterns.md` | FrankenPHP, Swoole, ReactPHP, fibers, streams |
 | Testing | `references/testing-quality.md` | PHPUnit, PHPStan, Pest, mocking |
 
 ## Constraints
@@ -202,5 +202,5 @@ When implementing a feature, deliver in this order:
 
 ## Knowledge Reference
 
-PHP 8.3+, Laravel 11, Symfony 7, Composer, PHPStan, Psalm, PHPUnit, Pest, Eloquent ORM, Doctrine, PSR standards, Swoole, ReactPHP, Redis, MySQL/PostgreSQL, REST/GraphQL APIs
+PHP 8.4+/8.5, Laravel 12/13, Symfony 7.4/8.1, Composer, PHPStan, Psalm, PHPUnit 12, Pest 4, Eloquent ORM, Doctrine, PSR standards, FrankenPHP, Swoole, ReactPHP, Redis, MySQL/PostgreSQL, REST/GraphQL APIs
 

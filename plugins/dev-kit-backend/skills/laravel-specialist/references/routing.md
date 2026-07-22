@@ -281,10 +281,14 @@ class EnsureUserIsAdmin
     }
 }
 
-// Register in app/Http/Kernel.php
-protected $middlewareAliases = [
-    'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
-];
+// Register in bootstrap/app.php (Laravel 11+; app/Http/Kernel.php no longer exists)
+->withMiddleware(function (Middleware $middleware): void {
+    $middleware->alias([
+        'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+    ]);
+})
+
+// On Laravel 10, register the alias in app/Http/Kernel.php's $middlewareAliases instead
 
 // Use in routes
 Route::middleware('admin')->group(function () {

@@ -478,15 +478,16 @@ SELECT
     END as status;
 
 -- Replication lag (on replica)
+-- SHOW SLAVE STATUS is deprecated as of MySQL 8.0.23; use SHOW REPLICA STATUS
 SELECT
-    Seconds_Behind_Master as lag_seconds,
+    Seconds_Behind_Source as lag_seconds,
     CASE
-        WHEN Slave_IO_Running = 'No' OR Slave_SQL_Running = 'No' THEN 'CRITICAL - Replication stopped'
-        WHEN Seconds_Behind_Master > 300 THEN 'CRITICAL'
-        WHEN Seconds_Behind_Master > 60 THEN 'WARNING'
+        WHEN Replica_IO_Running = 'No' OR Replica_SQL_Running = 'No' THEN 'CRITICAL - Replication stopped'
+        WHEN Seconds_Behind_Source > 300 THEN 'CRITICAL'
+        WHEN Seconds_Behind_Source > 60 THEN 'WARNING'
         ELSE 'OK'
     END as status
-FROM (SHOW SLAVE STATUS) s;
+FROM (SHOW REPLICA STATUS) s;
 ```
 
 ## Monitoring Best Practices

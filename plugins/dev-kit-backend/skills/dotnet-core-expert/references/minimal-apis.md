@@ -8,16 +8,15 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 // Configure middleware
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference(); // interactive UI (Scalar.AspNetCore); Swashbuckle still works if Swagger UI specifically is wanted
 }
 
 app.UseHttpsRedirection();
@@ -155,7 +154,9 @@ public class ValidationFilter<T> : IEndpointFilter where T : class
         if (!validationResult.IsValid)
         {
             return Results.ValidationProblem(
-                validationResult.ToDictionary());
+                validationResult.Errors.ToDictionary(
+                    e => e.PropertyName,
+                    e => new[] { e.ErrorMessage }));
         }
 
         return await next(context);

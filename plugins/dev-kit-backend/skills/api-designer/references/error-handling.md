@@ -18,9 +18,9 @@ Consistent, informative error responses are critical for API usability.
 }
 ```
 
-### RFC 7807 Problem Details
+### RFC 9457 Problem Details
 
-Standardized error format (application/problem+json):
+Standardized error format (application/problem+json). RFC 9457 obsoletes the earlier RFC 7807 and is the current reference:
 
 ```http
 HTTP/1.1 404 Not Found

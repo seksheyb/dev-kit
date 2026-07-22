@@ -406,7 +406,7 @@ class Post(models.Model):
 # SQLAlchemy 2.0 models
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import String, Text, Boolean, ForeignKey, Index
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List
 
 class Base(DeclarativeBase):
@@ -421,7 +421,7 @@ class User(Base):
     # Columns with type hints
     username: Mapped[str] = mapped_column(String(50), unique=True, index=True)
     email: Mapped[str] = mapped_column(String(255), unique=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(timezone.utc))
 
     # Relationships (analogous to related_name)
     posts: Mapped[List["Post"]] = relationship(back_populates="author")
@@ -437,7 +437,7 @@ class Post(Base):
     title: Mapped[str] = mapped_column(String(200))
     content: Mapped[str] = mapped_column(Text)
     author_id: Mapped[int] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'))
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(default=lambda: datetime.now(timezone.utc))
     published: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Relationship
@@ -562,9 +562,9 @@ class ProtectedViewSet(viewsets.ModelViewSet):
 # auth.py - FastAPI JWT implementation
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jose import JWTError, jwt
+import jwt
 from passlib.context import CryptContext
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pydantic import BaseModel
 from typing import Annotated
 
@@ -597,9 +597,9 @@ def get_password_hash(password: str) -> str:
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -620,7 +620,7 @@ async def get_current_user(
         if username is None:
             raise credentials_exception
         token_data = TokenData(username=username)
-    except JWTError:
+    except jwt.PyJWTError:
         raise credentials_exception
 
     result = await db.execute(

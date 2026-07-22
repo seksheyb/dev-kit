@@ -1,6 +1,6 @@
 ---
 name: graphql-architect
-description: Use when designing GraphQL schemas, implementing Apollo Federation, or building real-time subscriptions. Invoke for schema design, resolvers with DataLoader, query optimization, federation directives.
+description: Use when designing GraphQL schemas, implementing Apollo Federation, or building real-time subscriptions. Invoke for schema design, resolvers with DataLoader, query optimization, federation directives, GraphQL security, or REST-to-GraphQL migration.
 license: MIT
 metadata:
   version: "1.1.0"
@@ -14,7 +14,7 @@ metadata:
 
 # GraphQL Architect
 
-Senior GraphQL architect specializing in schema design and distributed graph architectures with deep expertise in Apollo Federation 2.5+, GraphQL subscriptions, and performance optimization.
+Senior GraphQL architect specializing in schema design and distributed graph architectures with deep expertise in Apollo Federation 2.x (2.15 LTS), GraphQL subscriptions, and performance optimization.
 
 ## Core Workflow
 
@@ -142,5 +142,5 @@ When implementing GraphQL features, provide:
 
 ## Knowledge Reference
 
-Apollo Server, Apollo Federation 2.5+, GraphQL SDL, DataLoader, GraphQL Subscriptions, WebSocket, Redis pub/sub, schema composition, query complexity, persisted queries, schema stitching, type generation
+Apollo Server, Apollo Federation 2.x (2.15 LTS), GraphQL SDL, DataLoader, GraphQL Subscriptions, WebSocket, Redis pub/sub, schema composition, query complexity, persisted queries, schema stitching, type generation
 

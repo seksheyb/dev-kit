@@ -1,6 +1,6 @@
 ---
 name: spring-boot-engineer
-description: Generates Spring Boot 3.x configurations, creates REST controllers, implements Spring Security 6 authentication flows, sets up Spring Data JPA repositories, and configures reactive WebFlux endpoints. Use when building Spring Boot 3.x applications, microservices, or reactive Java applications; invoke for Spring Data JPA, Spring Security 6, WebFlux, Spring Cloud integration, Java REST API design, or Microservices Java architecture.
+description: Generates Spring Boot 4.x (Spring Framework 7) configurations, creates REST controllers, implements Spring Security 7 authentication flows, sets up Spring Data JPA repositories, and configures reactive WebFlux endpoints. Use when building Spring Boot 4.x applications, microservices, or reactive Java applications; invoke for Spring Data JPA, Spring Security 7, WebFlux, Spring Cloud integration, Java REST API design, or Microservices Java architecture.
 license: MIT
 metadata:
   version: "1.1.0"
@@ -31,7 +31,7 @@ Load detailed guidance based on context:
 |-------|-----------|-----------|
 | Web Layer | `references/web.md` | Controllers, REST APIs, validation, exception handling |
 | Data Access | `references/data.md` | Spring Data JPA, repositories, transactions, projections |
-| Security | `references/security.md` | Spring Security 6, OAuth2, JWT, method security |
+| Security | `references/security.md` | Spring Security 7, OAuth2, JWT, method security |
 | Cloud Native | `references/cloud.md` | Spring Cloud, Config, Discovery, Gateway, resilience |
 | Testing | `references/testing.md` | @SpringBootTest, MockMvc, Testcontainers, test slices |
 
@@ -183,6 +183,9 @@ class ProductControllerTest {
 | Transaction scope | `@Transactional` on multi-step writes; `@Transactional(readOnly = true)` on reads |
 | Hide internals | Catch domain exceptions in `@RestControllerAdvice`; return problem details, not stack traces |
 | Externalize secrets | Use environment variables or Spring Cloud Config — never `application.properties` |
+| Scale blocking I/O | Enable `spring.threads.virtual.enabled=true` instead of reaching for WebFlux by default |
+| Call downstream HTTP services | Prefer a declarative `@HttpExchange` interface client over hand-rolled `WebClient` boilerplate |
+| Disable CSRF explicitly for stateless APIs | `.csrf(AbstractHttpConfigurer::disable)` with a comment — Spring Security 7 enables CSRF for API requests by default |
 
 ### MUST NOT DO
 - Use field injection (`@Autowired` on fields)
@@ -192,4 +195,5 @@ class ProductControllerTest {
 - Store secrets or credentials in `application.properties`/`application.yml`
 - Hardcode URLs, credentials, or environment-specific values
 - Use deprecated Spring Boot 2.x patterns (e.g., `WebSecurityConfigurerAdapter`)
+- Assume CSRF is off by default for stateless JWT/token APIs (Spring Security 7 changed this)
 

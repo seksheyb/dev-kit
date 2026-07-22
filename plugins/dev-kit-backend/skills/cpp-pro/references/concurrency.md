@@ -56,7 +56,8 @@ class LockFreeStack {
 
 public:
     void push(const T& value) {
-        Node* new_node = new Node(value);
+        auto owned_node = std::make_unique<Node>(value);
+        Node* new_node = owned_node.release();
         new_node->next = head_.load(std::memory_order_relaxed);
 
         while (!head_.compare_exchange_weak(new_node->next, new_node,
@@ -77,8 +78,8 @@ public:
         }
 
         if (old_head) {
-            result = old_head->data;
-            delete old_head;  // Note: ABA problem exists
+            std::unique_ptr<Node> owned_node(old_head);  // RAII cleanup; note: ABA problem exists
+            result = owned_node->data;
             return true;
         }
         return false;

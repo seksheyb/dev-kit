@@ -387,11 +387,11 @@ public class OptimizedQueries(AppDbContext context)
     }
 
     // Use compiled queries for repeated queries
-    private static readonly Func<AppDbContext, int, Task<Product?>> GetProductById =
+    private static readonly Func<AppDbContext, int, ValueTask<Product?>> GetProductById =
         EF.CompileAsyncQuery((AppDbContext ctx, int id) =>
             ctx.Products.FirstOrDefault(p => p.Id == id));
 
-    public Task<Product?> GetProductOptimizedAsync(int id)
+    public ValueTask<Product?> GetProductOptimizedAsync(int id)
     {
         return GetProductById(context, id);
     }

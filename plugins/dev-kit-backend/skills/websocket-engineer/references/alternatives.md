@@ -264,6 +264,11 @@ server.listen(3000);
 - Binary data transfer
 - Custom protocol needed
 
+Note: for a simple client that only needs a bare WebSocket connection (no rooms, no
+fallback transport), Node 21+ ships a browser-compatible native `WebSocket` global —
+no `ws` dependency needed on the client side. Servers still need `ws`, Socket.IO, or
+uWebSockets.js.
+
 ### Choose SSE When:
 
 - One-way server-to-client only

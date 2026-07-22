@@ -157,7 +157,7 @@ async def get_user(
 
 # Deprecation headers
 response.headers["X-API-Deprecation"] = "V1 deprecated, migrate to V2"
-response.headers["X-API-Sunset"] = "2024-12-31"
+response.headers["X-API-Sunset"] = "2027-06-30"
 ```
 
 ## Framework Migration (Flask to FastAPI)

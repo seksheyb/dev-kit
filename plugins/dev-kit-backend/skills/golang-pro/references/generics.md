@@ -226,6 +226,22 @@ func (r Result[T]) UnwrapOr(defaultValue T) T {
 }
 ```
 
+## Generic Type Aliases (Go 1.24+)
+
+```go
+// Parameterized type aliases are fully supported: an alias can carry its
+// own type parameters, distinct from the aliased type's parameters.
+type Pair[T any] = pair[T]
+
+type pair[T any] struct {
+    First, Second T
+}
+
+// Useful for shortening long instantiations or re-exporting an internal
+// generic type under a stable public name without a wrapper struct.
+type StringPair = Pair[string]
+```
+
 ## Comparable Constraint
 
 ```go

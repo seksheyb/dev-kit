@@ -32,6 +32,9 @@ public class User {
     @Builder.Default
     private Boolean active = true;
 
+    @Column
+    private LocalDateTime lastLoginAt;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Address> addresses = new ArrayList<>();

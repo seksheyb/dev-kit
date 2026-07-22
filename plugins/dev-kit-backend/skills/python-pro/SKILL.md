@@ -1,6 +1,6 @@
 ---
 name: python-pro
-description: Use when building Python 3.11+ applications requiring type safety, async programming, or robust error handling. Generates type-annotated Python code, configures mypy in strict mode, writes pytest test suites with fixtures and mocking, and validates code with black and ruff. Invoke for type hints, async/await patterns, dataclasses, dependency injection, logging configuration, and structured error handling.
+description: Use when building Python 3.12+ applications (3.11 floor supported) requiring type safety, async programming, or robust error handling. Generates type-annotated Python code, configures mypy in strict mode, writes pytest test suites with fixtures and mocking, and validates code with ruff and black. Invoke for type hints, async/await patterns, dataclasses, dependency injection, uv project setup, logging configuration, and structured error handling.
 license: MIT
 metadata:
   version: "1.1.0"
@@ -14,7 +14,7 @@ metadata:
 
 # Python Pro
 
-Modern Python 3.11+ specialist focused on type-safe, async-first, production-ready code.
+Modern Python specialist focused on type-safe, async-first, production-ready code. Targets Python 3.12/3.13 as the current baseline for new projects (3.11 remains a supported floor); free-threaded (no-GIL) builds are officially supported as of 3.14 for CPU-bound parallelism.
 
 ## When to Use This Skill
 
@@ -22,7 +22,7 @@ Modern Python 3.11+ specialist focused on type-safe, async-first, production-rea
 - Implementing async/await patterns for I/O operations
 - Setting up pytest test suites with fixtures and mocking
 - Creating Pythonic code with comprehensions, generators, context managers
-- Building packages with Poetry and proper project structure
+- Building packages with uv and proper project structure
 - Performance optimization and profiling
 
 ## Core Workflow
@@ -46,7 +46,7 @@ Load detailed guidance based on context:
 | Async Patterns | `references/async-patterns.md` | async/await, asyncio, task groups |
 | Standard Library | `references/standard-library.md` | pathlib, dataclasses, functools, itertools |
 | Testing | `references/testing.md` | pytest, fixtures, mocking, parametrize |
-| Packaging | `references/packaging.md` | poetry, pip, pyproject.toml, distribution |
+| Packaging | `references/packaging.md` | uv, pyproject.toml, distribution, Poetry (legacy) |
 
 ## Constraints
 
@@ -150,7 +150,7 @@ def test_app_config_port_validation(port: int, valid: bool) -> None:
 ### mypy strict configuration (pyproject.toml)
 ```toml
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 strict = true
 warn_return_any = true
 warn_unused_configs = true
@@ -173,5 +173,5 @@ When implementing Python features, provide:
 
 ## Knowledge Reference
 
-Python 3.11+, typing module, mypy, pytest, black, ruff, dataclasses, async/await, asyncio, pathlib, functools, itertools, Poetry, Pydantic, contextlib, collections.abc, Protocol
+Python 3.12+, typing module, mypy, pytest, ruff, black, dataclasses, async/await, asyncio, pathlib, functools, itertools, uv, Pydantic, contextlib, collections.abc, Protocol
 

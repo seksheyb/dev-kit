@@ -1,5 +1,7 @@
 # Background Jobs with Sidekiq
 
+Rails 8.x generates Solid Queue by default (DB-backed, no Redis) — check `Gemfile.lock` before reaching for Sidekiq. The patterns below apply to Sidekiq specifically; on a Rails 8 app already wired to Solid Queue, keep the same `ApplicationJob` design shown here and skip the Sidekiq-specific setup, since `perform_later`/`queue_as`/retry semantics carry over unchanged.
+
 ## Sidekiq Setup
 
 ```ruby

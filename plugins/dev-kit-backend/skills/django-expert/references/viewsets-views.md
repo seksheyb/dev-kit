@@ -3,7 +3,7 @@
 ## ModelViewSet
 
 ```python
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -50,7 +50,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 ```
 
-## Django 5.0 Async Views
+## Django Async Views
 
 ```python
 from django.http import JsonResponse

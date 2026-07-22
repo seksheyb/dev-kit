@@ -40,7 +40,7 @@ myproject/
 
 module github.com/user/myproject
 
-go 1.21
+go 1.24
 
 require (
     github.com/gin-gonic/gin v1.9.1
@@ -190,7 +190,7 @@ monorepo/
         └── user.go
 
 // go.work
-go 1.21
+go 1.24
 
 use (
     ./services/api
@@ -320,7 +320,7 @@ help:
 
 ```dockerfile
 # Build stage
-FROM golang:1.21-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 WORKDIR /app
 
@@ -398,18 +398,12 @@ type UserRepository interface {
     SaveUser(user *User) error
 }
 
-// tools.go - Track tool dependencies
-//go:build tools
+// go.mod - Track tool dependencies (Go 1.24+; replaces the old tools.go blank-import hack)
+// tool github.com/golang/mock/mockgen
+// tool golang.org/x/tools/cmd/stringer
 
-package tools
-
-import (
-    _ "github.com/golang/mock/mockgen"
-    _ "golang.org/x/tools/cmd/stringer"
-)
-
-// Install tools:
-// go install github.com/golang/mock/mockgen@latest
+// Add a tool dependency:
+// go get -tool github.com/golang/mock/mockgen
 
 // Run generate:
 // go generate ./...

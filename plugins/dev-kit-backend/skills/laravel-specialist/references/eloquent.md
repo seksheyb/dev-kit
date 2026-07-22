@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
-class Post extends Model
+final class Post extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -53,7 +53,7 @@ class Post extends Model
 
 ```php
 // One-to-Many
-class User extends Model
+final class User extends Model
 {
     public function posts(): HasMany
     {
@@ -71,7 +71,7 @@ class User extends Model
     }
 }
 
-class Post extends Model
+final class Post extends Model
 {
     public function user(): BelongsTo
     {
@@ -86,7 +86,7 @@ class Post extends Model
 }
 
 // Many-to-Many with Pivot
-class User extends Model
+final class User extends Model
 {
     public function roles(): BelongsToMany
     {
@@ -98,7 +98,7 @@ class User extends Model
 }
 
 // Has Many Through
-class Country extends Model
+final class Country extends Model
 {
     public function posts(): HasManyThrough
     {
@@ -107,7 +107,7 @@ class Country extends Model
 }
 
 // Polymorphic Relations
-class Image extends Model
+final class Image extends Model
 {
     public function imageable(): MorphTo
     {
@@ -115,7 +115,7 @@ class Image extends Model
     }
 }
 
-class Post extends Model
+final class Post extends Model
 {
     public function images(): MorphMany
     {
@@ -124,7 +124,7 @@ class Post extends Model
 }
 
 // Many-to-Many Polymorphic
-class Tag extends Model
+final class Tag extends Model
 {
     public function posts(): MorphToMany
     {
@@ -141,7 +141,7 @@ class Tag extends Model
 ## Query Scopes
 
 ```php
-class Post extends Model
+final class Post extends Model
 {
     // Local scope
     public function scopePublished($query): void
@@ -174,7 +174,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 
-class AncientScope implements Scope
+final class AncientScope implements Scope
 {
     public function apply(Builder $builder, Model $model): void
     {
@@ -196,7 +196,7 @@ namespace App\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
-class Money implements CastsAttributes
+final class Money implements CastsAttributes
 {
     public function get($model, string $key, $value, array $attributes): float
     {
@@ -255,7 +255,7 @@ Post::lazy()->each(function ($post) {
 ## Model Events
 
 ```php
-class Post extends Model
+final class Post extends Model
 {
     protected static function booted(): void
     {
@@ -278,7 +278,7 @@ class Post extends Model
 // Using Observers
 namespace App\Observers;
 
-class PostObserver
+final class PostObserver
 {
     public function creating(Post $post): void
     {

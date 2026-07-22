@@ -8,9 +8,10 @@ description: Use when the task involves Symfony PHP applications — Symfony 6/7
 Knowledge pack for building Symfony 6+/7+/8+ applications with modern PHP — spanning Symfony's component-based architecture, Doctrine ORM, the extensive ecosystem, and enterprise features, with emphasis on applications that are robust in design, maintainable at scale, and powerful in functionality.
 
 IMPORTANT: Be version-aware. Before recommending any pattern, tool, or feature, read composer.lock to determine the Symfony version. Adapt guidance accordingly:
-- Symfony 6.4 (LTS): Webpack Encore, standard UX components, classic security config, `AbstractController`, `#[Route]` attributes, PHP 8.1+
-- Symfony 7.x: `#[MapRequestPayload]`, `#[MapQueryParameter]`, `#[MapUploadedFile]`, AssetMapper as default, Clock component, stricter types, removed 6.x deprecations, PHP 8.2+
-- Symfony 8.0: PHP 8.4 minimum required, ObjectMapper component (`symfony/object-mapper`) for DTO transformations, constructor extractor enabled by default, enhanced Scheduler, `amphp/http-client 5.3.2+`, removal of 7.x deprecations
+- Symfony 6.4 (LTS, aging — security-only until Nov 2027): Webpack Encore, standard UX components, classic security config, `AbstractController`, `#[Route]` attributes, PHP 8.1+
+- Symfony 7.4 (current LTS, released Nov 2025, best pick for long-support projects): `#[MapRequestPayload]`, `#[MapQueryParameter]`, `#[MapUploadedFile]`, AssetMapper as default, Clock component, stricter types, removed 6.x deprecations, PHP 8.2+
+- Symfony 8.0: end of support 2026-07-31 — if a project is pinned here, the actionable advice is to upgrade to 8.1, not stay on 8.0
+- Symfony 8.1 (latest stable): PHP 8.4 minimum required, ObjectMapper component (`symfony/object-mapper`) for DTO transformations, constructor extractor enabled by default, enhanced Scheduler, `amphp/http-client 5.3.2+`, removal of 7.x deprecations
 
 Workflow: FIRST read composer.lock to determine Symfony and Doctrine versions; review application structure, database design, and feature requirements; analyze API needs, Messenger requirements, and deployment strategy; then implement Symfony solutions adapted to the detected version.
 
@@ -27,9 +28,9 @@ Workflow: FIRST read composer.lock to determine Symfony and Doctrine versions; r
 
 ## Version-Specific Features
 
-- Symfony 6.4 (LTS): Webpack Encore, classic security yaml firewall, `AbstractController`, standard UX components, PHP 8.1+
-- Symfony 7.x: AssetMapper replaces Webpack Encore, `#[MapRequestPayload]` / `#[MapQueryParameter]`, Clock component, stricter types, removed 6.x deprecations, PHP 8.2+
-- Symfony 8.0: PHP 8.4 required, `symfony/object-mapper` for DTO/entity mapping, constructor extractor enabled by default, enhanced Scheduler (`messenger:consume scheduler_default`), removal of 7.x deprecations
+- Symfony 6.4 (LTS, security-only until Nov 2027): Webpack Encore, classic security yaml firewall, `AbstractController`, standard UX components, PHP 8.1+
+- Symfony 7.4 (current LTS): AssetMapper replaces Webpack Encore, `#[MapRequestPayload]` / `#[MapQueryParameter]`, Clock component, stricter types, removed 6.x deprecations, PHP 8.2+
+- Symfony 8.0 (EOL 2026-07-31 — advise upgrading to 8.1) / 8.1 (latest stable): PHP 8.4 required, `symfony/object-mapper` for DTO/entity mapping, constructor extractor enabled by default, enhanced Scheduler (`messenger:consume scheduler_default`), removal of 7.x deprecations
 - Doctrine 2.x vs 3.x: PHP 8 attributes preferred over annotations, LifecycleEventArgs changes in Doctrine 3, lazy loading proxy behavior differences
 
 ## Symfony Patterns

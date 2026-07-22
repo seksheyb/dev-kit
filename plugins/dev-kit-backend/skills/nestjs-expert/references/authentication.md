@@ -29,7 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
 ```typescript
 // jwt-auth.guard.ts
-import { Injectable, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { Injectable, ExecutionContext, UnauthorizedException, SetMetadata } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Reflector } from '@nestjs/core';
 
@@ -61,6 +61,8 @@ export const Public = () => SetMetadata('isPublic', true);
 
 ```typescript
 // roles.decorator.ts
+import { SetMetadata } from '@nestjs/common';
+
 export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
 
 // roles.guard.ts

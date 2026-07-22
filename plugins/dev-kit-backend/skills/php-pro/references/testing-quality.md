@@ -205,6 +205,10 @@ final class UserControllerTest extends TestCase
 
 ## Pest Testing (Modern Alternative)
 
+Pest 4 runs on PHPUnit 12 and adds first-class browser testing (Playwright-powered,
+no separate Dusk install), visual regression/snapshot assertions, and smoke testing
+via `assertNoSmoke()` alongside the expectation API below.
+
 ```php
 <?php
 
@@ -250,6 +254,15 @@ test('authenticated user can view profile', function () {
 test('guest cannot access protected routes', function () {
     $this->getJson('/api/users/me')
         ->assertUnauthorized();
+});
+
+// Pest 4 browser test — replaces a Dusk-based E2E test
+it('lets a user sign in', function () {
+    $this->visit('/login')
+        ->fill('email', 'test@example.com')
+        ->fill('password', 'SecurePass123!')
+        ->click('Log in')
+        ->assertSee('Dashboard');
 });
 ```
 

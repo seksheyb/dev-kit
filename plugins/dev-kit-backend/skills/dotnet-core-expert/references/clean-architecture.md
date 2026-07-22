@@ -1,5 +1,11 @@
 # Clean Architecture with CQRS
 
+> MediatR (used below for `IRequest`/`IRequestHandler`) is commercial above $5M
+> annual org revenue (since July 2025). Below that threshold it's free; above it,
+> swap in the free source-generator-based `Mediator` package, `Wolverine`, or a
+> hand-rolled `IRequestHandler<T>` — the handler/pipeline shapes here are identical
+> either way.
+
 ## Project Structure
 
 ```

@@ -803,11 +803,14 @@ openapi-generator-cli generate \
 Validate OpenAPI spec:
 
 ```bash
-# Using Swagger CLI
-swagger-cli validate openapi.yaml
+# Lint and validate (mandated by this skill)
+npx @redocly/cli lint openapi.yaml
+```
 
-# Using Spectral (advanced linting)
-spectral lint openapi.yaml
+Mock the API from the spec to verify contracts before implementation exists:
+
+```bash
+npx @stoplight/prism-cli mock openapi.yaml
 ```
 
 ## Best Practices

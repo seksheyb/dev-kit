@@ -7,7 +7,7 @@ myproject/
 ├── pyproject.toml          # Project metadata and dependencies
 ├── README.md               # Project description
 ├── .gitignore             # Git ignore patterns
-├── .python-version        # Python version for pyenv
+├── .python-version        # Python version pin (read by uv)
 ├── src/
 │   └── myproject/
 │       ├── __init__.py    # Package initialization
@@ -46,6 +46,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Typing :: Typed",
 ]
 
@@ -76,15 +77,18 @@ Documentation = "https://myproject.readthedocs.io"
 Repository = "https://github.com/username/myproject"
 Changelog = "https://github.com/username/myproject/blob/main/CHANGELOG.md"
 
-# Tool configurations
+# Tool configurations (ruff can replace black outright; keep both only if the
+# project wants black's formatting specifically)
 [tool.black]
 line-length = 100
-target-version = ["py311"]
+target-version = ["py312"]
 include = '\.pyi?$'
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py312"
+
+[tool.ruff.lint]
 select = [
     "E",   # pycodestyle errors
     "W",   # pycodestyle warnings
@@ -96,11 +100,15 @@ select = [
 ]
 ignore = []
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]  # Ignore unused imports in __init__.py
 
+[tool.ruff.format]
+# ruff's formatter can replace black entirely; drop the [tool.black] section
+# below if standardizing on ruff alone.
+
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 strict = true
 warn_return_any = true
 warn_unused_configs = true
@@ -138,57 +146,47 @@ exclude_lines = [
 ]
 ```
 
-## Poetry Project Management
+## uv Project Management (primary tool)
 
-```toml
-# pyproject.toml for Poetry
-[tool.poetry]
-name = "myproject"
-version = "0.1.0"
-description = "A Python project"
-authors = ["Your Name <you@example.com>"]
-readme = "README.md"
-license = "MIT"
-packages = [{include = "myproject", from = "src"}]
-
-[tool.poetry.dependencies]
-python = "^3.11"
-requests = "^2.31.0"
-pydantic = "^2.5.0"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.4.0"
-pytest-cov = "^4.1.0"
-mypy = "^1.7.0"
-black = "^23.11.0"
-ruff = "^0.1.6"
-
-[tool.poetry.scripts]
-myproject = "myproject.cli:main"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-```
+uv (Astral) is the standard Python packaging and environment tool — it replaces the
+pip + pyenv + virtualenv + Poetry combination with a single fast, Rust-based binary that
+reads the same `[project]` table already shown above.
 
 ```bash
-# Poetry commands
-poetry init                    # Initialize new project
-poetry add requests            # Add dependency
-poetry add --group dev pytest  # Add dev dependency
-poetry install                 # Install dependencies
-poetry update                  # Update dependencies
-poetry shell                   # Activate virtual environment
-poetry run pytest              # Run command in venv
-poetry build                   # Build package
-poetry publish                 # Publish to PyPI
-poetry export -f requirements.txt --output requirements.txt
+# uv commands
+uv init myproject              # Scaffold a new project with pyproject.toml
+uv add requests                # Add dependency (writes to pyproject.toml + uv.lock)
+uv add --dev pytest mypy ruff  # Add dev dependencies
+uv sync                        # Install/sync the environment from uv.lock
+uv lock --upgrade              # Update the lockfile
+uv run pytest                  # Run a command inside the managed venv
+uv build                       # Build sdist + wheel
+uv publish                     # Publish to PyPI
+uv python install 3.12         # Install and pin a Python version
+uv python pin 3.12             # Write .python-version for this project
 ```
+
+`uv.lock` is the committed lockfile; `.python-version` pins the interpreter. No separate
+`[tool.uv]` section is required for standard projects — uv reads `[project]` and
+`[project.optional-dependencies]` directly. Some ecosystems and CI tooling still expect a
+`requirements.txt`, so keep `uv export` (see Requirements Files below) on hand for those cases.
+
+### Poetry (legacy alternative)
+
+Existing projects already on Poetry don't need to migrate immediately, but new projects
+should default to uv. Poetry equivalents: `poetry add` → `uv add`, `poetry install` → `uv sync`,
+`poetry run` → `uv run`, `poetry build`/`publish` → `uv build`/`uv publish`. Poetry's
+`[tool.poetry]` table and `poetry.lock` are not interchangeable with uv's `[project]` table
+and `uv.lock` — pick one per project, don't mix.
 
 ## Virtual Environments
 
 ```bash
-# Using venv (built-in)
+# uv manages the venv automatically (recommended)
+uv sync                     # Creates/updates .venv from the lockfile
+uv run python script.py     # Runs inside the managed venv, no activation needed
+
+# Using venv (built-in, if not using uv)
 python -m venv .venv
 source .venv/bin/activate  # Linux/Mac
 .venv\Scripts\activate     # Windows
@@ -196,16 +194,6 @@ source .venv/bin/activate  # Linux/Mac
 # Install in editable mode
 pip install -e .
 pip install -e ".[dev]"    # With optional dependencies
-
-# Using virtualenv
-pip install virtualenv
-virtualenv venv
-source venv/bin/activate
-
-# Using pyenv for Python version management
-pyenv install 3.11.6
-pyenv local 3.11.6         # Set for current directory
-echo "3.11.6" > .python-version
 ```
 
 ## Package __init__.py
@@ -276,9 +264,9 @@ mypy>=1.7.0
 black>=23.11.0
 ruff>=0.1.6
 
-# Generate from Poetry
-poetry export -f requirements.txt --output requirements.txt --without-hashes
-poetry export -f requirements.txt --with dev --output requirements-dev.txt
+# Generate from uv (for tools that still require requirements.txt)
+uv export -o requirements.txt --no-hashes
+uv export -o requirements-dev.txt --group dev
 ```
 
 ## Building and Distribution
@@ -375,12 +363,12 @@ requests>=2.31.0,<3.0.0
 pydantic>=2.5.0,<3.0.0
 
 # Lock files
-# Poetry: poetry.lock
+# uv: uv.lock (committed, cross-platform, hash-locked)
 # pip: requirements.txt with exact versions
 pip freeze > requirements-lock.txt
 
 # Update dependencies
-poetry update
+uv lock --upgrade
 pip install --upgrade -r requirements.txt
 ```
 
@@ -397,7 +385,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.11", "3.12"]
+        python-version: ["3.11", "3.12", "3.13"]
 
     steps:
     - uses: actions/checkout@v4

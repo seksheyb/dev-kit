@@ -1,4 +1,4 @@
-# Security - Spring Security 6
+# Security - Spring Security 7
 
 ## Security Configuration
 
@@ -74,7 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
-            @NonNull HttpServletRequest response,
+            @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
@@ -398,6 +398,12 @@ public class OAuth2ResourceServerConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            // Spring Security 7 enables CSRF for API-style requests by default —
+            // disable explicitly for a stateless, token-only resource server.
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/public/**").permitAll()
                 .anyRequest().authenticated()

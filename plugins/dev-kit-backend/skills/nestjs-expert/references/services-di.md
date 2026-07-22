@@ -1,5 +1,7 @@
 # Services & Dependency Injection
 
+> Examples below use `@nestjs/typeorm` for brevity. For new projects, prefer Prisma (with a driver adapter, e.g. `@prisma/adapter-pg`) or Drizzle — TypeORM is a legacy-friendly option, still fine for existing transaction-heavy codebases.
+
 ## Service Pattern
 
 ```typescript

@@ -195,7 +195,7 @@ def query_user(conn: Connection, user_id: int) -> User:
 ```toml
 # pyproject.toml
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 strict = true
 warn_return_any = true
 warn_unused_configs = true

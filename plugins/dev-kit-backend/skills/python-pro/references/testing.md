@@ -36,7 +36,7 @@ class TestUserService:
 ```python
 # conftest.py - shared fixtures
 import pytest
-from typing import Iterator
+from collections.abc import Iterator
 from myapp.database import Database, Session
 
 @pytest.fixture

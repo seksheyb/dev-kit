@@ -176,6 +176,11 @@ void wrapper(T&& arg) {
 
 ## SIMD Optimization
 
+Intrinsics remain the practical near-term choice for portable, tuned SIMD code today.
+C++26 standardizes `std::simd` (the Parallelism TS 2 vector types) as a portable
+alternative — worth adopting once toolchains ship it, but not yet a replacement for the
+patterns below.
+
 ```cpp
 #include <immintrin.h>  // AVX/AVX2
 #include <cstring>

@@ -15,16 +15,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ProductService>();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi(); // Microsoft.AspNetCore.OpenApi — native OpenAPI 3.1 generator, AOT-friendly
 
 var app = builder.Build();
 
 // Middleware pipeline
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference(); // interactive docs UI (Scalar.AspNetCore); swap for Swashbuckle if Swagger UI is required
 }
 
 app.UseHttpsRedirection();

@@ -1,11 +1,11 @@
 ---
 name: dotnet-core-expert
-description: Use when building .NET 8 applications with minimal APIs, clean architecture, or cloud-native microservices. Invoke for Entity Framework Core, CQRS with MediatR, JWT authentication, AOT compilation.
+description: Use when building .NET 10 applications with minimal APIs, clean architecture, or cloud-native microservices. Invoke for Entity Framework Core, CQRS, JWT authentication, AOT compilation.
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   domain: backend
-  triggers: .NET Core, .NET 8, ASP.NET Core, C# 12, minimal API, Entity Framework Core, microservices .NET, CQRS, MediatR
+  triggers: .NET Core, .NET 10, .NET 8, ASP.NET Core, C# 14, C# 12, minimal API, Entity Framework Core, microservices .NET, CQRS, MediatR
   role: specialist
   scope: implementation
   output-format: code
@@ -37,14 +37,15 @@ Load detailed guidance based on context:
 ## Constraints
 
 ### MUST DO
-- Use .NET 8 and C# 12 features
+- Use .NET 10 and C# 14 features (current LTS, supported through Nov 2028; .NET 8 is prior LTS, EOL Nov 2026)
 - Enable nullable reference types: `<Nullable>enable</Nullable>` in the `.csproj`
 - Use async/await for all I/O operations — e.g., `await dbContext.Users.ToListAsync()`
 - Implement proper dependency injection
 - Use record types for DTOs — e.g., `public record UserDto(int Id, string Name);`
 - Follow clean architecture principles
 - Write integration tests with `WebApplicationFactory<Program>`
-- Configure OpenAPI/Swagger documentation
+- Configure OpenAPI documentation with the built-in `Microsoft.AspNetCore.OpenApi` generator
+- Confirm license eligibility before adding MediatR (commercial since July 2025 above $5M annual revenue) — default to the free, source-generator-based `Mediator` package, `Wolverine`, or a hand-rolled `IRequestHandler<T>` for license-sensitive orgs
 
 ### MUST NOT DO
 - Use synchronous I/O operations
@@ -60,13 +61,12 @@ Load detailed guidance based on context:
 ```csharp
 // Program.cs
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 var app = builder.Build();
-app.UseSwagger();
-app.UseSwaggerUI();
+app.MapOpenApi();
+app.MapScalarApiReference(); // interactive UI (Scalar.AspNetCore)
 
 app.MapGet("/users/{id}", async (int id, ISender sender, CancellationToken ct) =>
 {
@@ -80,7 +80,11 @@ app.MapGet("/users/{id}", async (int id, ISender sender, CancellationToken ct) =
 app.Run();
 ```
 
-### MediatR Query Handler
+### CQRS Query Handler
+> MediatR is commercial above $5M annual org revenue (since July 2025). Below that
+> threshold it's free; above it, or for license-sensitive orgs, swap in the free
+> source-generator-based `Mediator` package, `Wolverine`, or a hand-rolled
+> `IRequestHandler<T>` — the pattern below is identical either way.
 ```csharp
 // Application/Users/GetUserQuery.cs
 public record GetUserQuery(int Id) : IRequest<UserDto?>;

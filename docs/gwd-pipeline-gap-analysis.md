@@ -290,7 +290,7 @@ only came up for the GWD-gap capabilities earlier in this doc, not for dev-kit's
 | `cso` | "Launch an independent verification subagent with fresh context" per candidate finding, gate-scored, aggregated | **Workflow** | Parallel-map-then-reduce shape over a variable-N finding list |
 | `dispatching-parallel-agents` | Entire skill content is prose teaching the calling agent to hand-roll N-way parallel dispatch | **Workflow** | Could generate a small Workflow script instead of re-teaching the technique every invocation |
 | `design-consultation` (Shotgun mode) | 3–8 independent variant-mockup subagents, then a merge/comparison board | **Workflow** | Fan-out-then-aggregate, currently hand-orchestrated |
-| `feature-forge` | Multi-domain discovery via Task subagents when a feature spans domains | **Agent** (not full Workflow) | Small/ad-hoc fan-out — needs fresh-context isolation, not worktrees/waves/budget tracking |
+| `specify` (Mode B pre-discovery) | Multi-domain discovery via Task subagents when a feature spans domains | **Agent** (not full Workflow) | Small/ad-hoc fan-out — needs fresh-context isolation, not worktrees/waves/budget tracking |
 | `ship` | 14 sequential gated steps (merge→test→coverage→plan-audit→review→version→changelog→PR) | **Workflow** | Long ordered pipeline where each stage's output gates the next — currently prose trusting one agent to track gate state through 14 steps |
 | `land-and-deploy` | Multiple poll-with-hard-timeout loops (CI wait, merge-queue wait, deploy wait) chained with revert-on-failure branches | **Workflow** | Deterministic loop/exit-condition + `phase()` support beats an agent manually re-polling and tracking elapsed time |
 
@@ -344,7 +344,7 @@ single bounded pass (2–4 pages, 3–7 dimensions), not internal N-item loops.
 ### Tally
 
 - **29 flagged** (generate/invoke a Workflow script): 9 core skills, 12 core agents/commands, 1 backend/web, 7 infra/specialized.
-- **1 flagged as Agent-only** (`feature-forge`) — genuine small fan-out, but doesn't need worktrees/waves/budget tracking.
+- **1 flagged as Agent-only** (`specify`'s Mode B pre-discovery pattern, formerly `feature-forge`) — genuine small fan-out, but doesn't need worktrees/waves/budget tracking.
 - **163 need no change** — single-agent linear methodology, no fan-out/loop/pipeline shape.
 - **0 flagged as needing Hooks or Orchestrator** — those homes are relevant to the GWD-gap
   capabilities earlier in this doc, not to any of dev-kit's own existing assets.

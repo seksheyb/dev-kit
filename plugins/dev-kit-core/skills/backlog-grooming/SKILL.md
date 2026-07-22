@@ -9,7 +9,7 @@ metadata:
   role: product-owner
   scope: process
   output-format: document
-  related-skills: assumption-mapping, feature-forge
+  related-skills: assumption-mapping, specify
 ---
 
 # Backlog Grooming

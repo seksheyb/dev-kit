@@ -10,7 +10,7 @@ metadata:
   role: specialist
   scope: review
   output-format: document
-  related-skills: feature-forge, fullstack-guardian, architecture-designer
+  related-skills: specify, fullstack-guardian, architecture-designer
 ---
 
 # Spec Miner

@@ -9,7 +9,7 @@ metadata:
   role: specialist
   scope: testing
   output-format: report
-  related-skills: fullstack-guardian, playwright-expert, devops-engineer, systematic-debugging, feature-forge
+  related-skills: fullstack-guardian, playwright-expert, devops-engineer, systematic-debugging, specify
 ---
 
 # Test Master

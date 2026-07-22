@@ -7,8 +7,10 @@ step to an *external* library (Spec-Kit / gstack / GSD / fullstack-dev-skills / 
 this document answers the sibling question: **if you were to stand the same pipeline up using only
 dev-kit, which asset fires at each step, and in what order?**
 
-Every one of dev-kit's **97 core assets** (52 skills, 37 agents, 8 commands — including `spec-review-cpo`, added
-alongside this document to close the spec-stage product-review gap) is placed somewhere below,
+Every one of dev-kit's **94 core assets** (49 skills, 37 agents, 8 commands — including `spec-review-cpo`, added
+alongside this document to close the spec-stage product-review gap, and net of `first-principles-thinking`,
+`clarify`, and `feature-forge`, folded into `specify`/`spec-review-cpo` during a Stage 0/1 asset-overlap audit)
+is placed somewhere below,
 and the **96 lane assets** (the 7 stack-reference plugins) are routed in at the stages where they apply.
 "I assume all should be utilised" — they are; see the [coverage appendix](#coverage-appendix--every-asset-placed).
 
@@ -39,7 +41,7 @@ cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it desc
 | # | Stage | Primary dev-kit assets | In → Out |
 |---|-------|------------------------|----------|
 | **0** | Bootstrap & governance | `constitution` · *(legacy)* `spec-miner` → `gate-reverse-engineer` · *(existing docs)* `doc-classifier` → `doc-synthesizer` · `graphify` | repo/PRD → `constitution.md`, recovered SDD/PRD/ADRs, `graph.json` |
-| **1** | Requirements & product framing | `first-principles-thinking` · `brainstorming` · `specify` · `clarify` · `feature-forge` · `assumption-mapping` → `backlog-grooming` · `market-researcher` · `spec-review-cpo` | PRD (or `docs/BACKLOG.md` for milestone 2+) → `spec.md` (+ `US-xxx` story bank) + locked Scope Decision Record + updated `docs/BACKLOG.md` |
+| **1** | Requirements & product framing | `brainstorming` · `specify` (generate + clarify) · `assumption-mapping` → `backlog-grooming` · `market-researcher` · `spec-review-cpo` | PRD (or `docs/BACKLOG.md` for milestone 2+) → `spec.md` (+ `US-xxx` story bank) + locked Scope Decision Record + updated `docs/BACKLOG.md` |
 | **2** | Architecture & tech stack | `architecture-designer` · `diagram` · `cso` · `plan-review-eng` (lens) | requirements → `SDD.md` + ADRs + threat posture |
 | **3** | Research & roadmap | `project-researcher` ×4 → `research-synthesizer` · `roadmapper` | requirements + research → `ROADMAP.md` (vertical slices) + `STATE.md` |
 | **4** | Design system *(if UI)* | `design-consultation` → `design-html` → `design-handoff` · `plan-review-design` (lens) | product → `DESIGN.md` + build prompts |
@@ -95,7 +97,6 @@ dev-kit supplies the assets, not the branch logic.)
 
 | Gate | Runs when (predicate) | If the predicate is false |
 |------|-----------------------|---------------------------|
-| `first-principles-thinking` (S1) | The problem framing itself is suspect / inherited-by-convention | Skip; go straight to `brainstorming` |
 | `market-researcher` (S1) | A product-direction / sizing / competitive decision is open | Skip; requirements proceed on existing evidence |
 | **Design system** (S4) | Project has a UI lane **and** no `DESIGN.md` exists yet | Skip the whole stage — runs **once ever**, never per phase |
 | **AI spec** (S6): `domain-researcher` + `eval-planner`/`eval-auditor` | The phase builds an AI/LLM system needing an eval contract | Skip; no `AI-SPEC.md` for this phase |
@@ -152,23 +153,36 @@ Turn a PRD/idea into a validated, unambiguous, testable spec with a numbered sto
 input is a fresh PRD. **Every milestone after that:** input is `docs/BACKLOG.md`'s Now/Next items — see
 [New milestone = new project](#new-milestone--new-project).
 
-1. **`first-principles-thinking`** *(if the framing itself is suspect)* — strip the problem to irreducible truths
-   before accepting the request's framing.
-2. **`brainstorming`** — the hard gate: no implementation may begin until a design is explored and approved.
-   Includes YC-office-hours and go/no-go idea-validation modes for pre-code product ideas.
-3. **`specify`** — convert the description (the PRD, or `docs/BACKLOG.md`'s top items for milestone 2+) into a
+1. **`brainstorming`** — the hard gate: no implementation may begin until a design is explored and approved.
+   Pure ideation — explores context, interviews one question at a time, proposes 2-3 approaches, gets
+   section-by-section design approval, then hands off to `specify` with that approved design as context.
+   Does not write its own spec file, run its own quality checks, or invoke planning directly — those were
+   folded into `specify` after a Stage 0/1 audit found brainstorming's old steps 5-8 ran a second, competing
+   "idea → spec → plan" path under a different file convention (`docs/specs/YYYY-MM-DD-<topic>-design.md`
+   vs. `specify`'s `docs/specs/NNN-feature-name/spec.md`) that bypassed the Clarification Pass and
+   `spec-review-cpo` entirely. Includes YC-office-hours and go/no-go idea-validation modes for pre-code
+   product ideas. Its mandatory Premise
+   Challenge (is this the right problem / what if we do nothing / what already exists) is a lighter, pre-spec pass
+   of the same checklist `spec-review-cpo` runs formally below — running it here first avoids drafting a full spec
+   for an idea that would fail that gate anyway. If the framing itself looks inherited-by-convention rather than
+   reasoned, either skill escalates to a full first-principles decomposition (strip to assumptions, challenge
+   each, rebuild from fundamental truths; plus the 5D operational-problem method) — the complete methodology now
+   lives in `spec-review-cpo`'s `references/first-principles.md` rather than as a standalone skill.
+2. **`specify`** — convert the description (the PRD, or `docs/BACKLOG.md`'s top items for milestone 2+) into a
    structured `spec.md` (WHAT/WHY only), allocating global, never-renumbered **`US-xxx`** story IDs
    (Theme→Pillar→Story-bank hierarchy) — carrying forward any ID a backlog item already had, never re-minting one.
-4. **`clarify`** — bounded 5-question ambiguity scan, writing answers back into the spec's `## Clarifications`.
-5. **`feature-forge`** *(per feature)* — PM+Dev requirements workshop producing EARS-format functional +
-   non-functional requirements and Given/When/Then acceptance criteria.
-6. **`assumption-mapping`** → **`backlog-grooming`** — surface & rank the riskiest VUBF assumptions, design the
+   Interviews from PM Hat (value/goals) and Dev Hat (feasibility/security/edge cases), requires EARS-format
+   phrasing for conditional functional requirements, and closes with an inline **Clarification Pass** — the
+   bounded 5-question ambiguity scan formerly run by a separate `clarify` skill, writing answers back into the
+   spec's `## Clarifications` section. Both halves remain independently invocable ("clarify the spec" re-enters
+   the Clarification Pass directly on an existing spec).
+3. **`assumption-mapping`** → **`backlog-grooming`** — surface & rank the riskiest VUBF assumptions, design the
    cheapest experiment for the top few; validated assumptions become groomed, sprint-ready backlog items in the
    same `docs/BACKLOG.md` `spec-review-cpo` writes to below — one file, one taxonomy (Now/Next/Later/Icebox/Won't
    Do), fed by two different skills for two different reasons (new candidate ideas vs. descoped existing scope).
-7. **`market-researcher`** *(agent)* — sourced market-sizing / competitive / trends intelligence → `MARKET.md`,
+4. **`market-researcher`** *(agent)* — sourced market-sizing / competitive / trends intelligence → `MARKET.md`,
    consumed by `spec-review-cpo` below rather than re-derived.
-8. **`spec-review-cpo`** *(skill)* — the pipeline's **only** product/strategy gate, and it runs here, once, before
+5. **`spec-review-cpo`** *(skill)* — the pipeline's **only** product/strategy gate, and it runs here, once, before
    any plan exists: challenges the premise, commits to a scope posture (expand/hold/cut), scores prioritization
    (RICE/Kano/JTBD/North Star) against the `US-xxx` Theme→Pillar hierarchy if present, and writes a **Scope
    Decision Record** into `spec.md`'s `## CPO Review` section. **Whatever it descopes gets written to
@@ -458,10 +472,10 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 
 ## Coverage appendix — every asset placed
 
-**All 97 core assets** (52 skills · 37 agents · 8 commands), by the stage that owns them:
+**All 94 core assets** (49 skills · 37 agents · 8 commands), by the stage that owns them:
 
 - **Stage 0:** `constitution`, `spec-miner`, `gate-reverse-engineer`, `doc-classifier`, `doc-synthesizer`, `graphify`
-- **Stage 1:** `first-principles-thinking`, `brainstorming`, `specify`, `clarify`, `feature-forge`, `assumption-mapping`, `backlog-grooming`, `market-researcher`, `spec-review-cpo` (`the-fool` remains available as an optional extra pressure-test, no longer in the default list)
+- **Stage 1:** `brainstorming`, `specify` (generate + clarify in one skill), `assumption-mapping`, `backlog-grooming`, `market-researcher`, `spec-review-cpo` (`the-fool` remains available as an optional extra pressure-test, no longer in the default list; `first-principles-thinking`, `clarify`, and `feature-forge` were folded into `specify`/`spec-review-cpo` — see the note at the top of this document)
 - **Stage 2:** `architecture-designer`, `diagram`, `cso`, `plan-review-eng`
 - **Stage 3:** `project-researcher`, `research-synthesizer`, `roadmapper`
 - **Stage 4:** `design-consultation`, `design-html`, `design-handoff`, `plan-review-design`
@@ -518,10 +532,13 @@ Stage 0/8:
 **Product** (`dev-kit-product`, 5) — Stage 1 assumptions + Stage 13 compliance + Stage 16 analytics:
 `ab-test-analysis`, `cohort-analysis`, `growth-loops`, `gdpr-ccpa-compliance`, `hipaa-compliance`.
 
-**Total: 193 / 193 dev-kit assets placed** (97 core + 96 lane) — verified by diffing every catalog header against
-this document. `spec-review-cpo` is the 97th core asset, added alongside this pipeline doc to close the spec-stage
-product-review gap (see [Conditional gates & branches](#conditional-gates--branches) and its full entry in
-[`core-discovery-and-design.md`](catalog/core-discovery-and-design.md#role-product--requirements-owner)).
+**Total: 190 / 190 dev-kit assets placed** (94 core + 96 lane) — verified by diffing every catalog header against
+this document. `spec-review-cpo` was added alongside this pipeline doc to close the spec-stage product-review gap
+(see [Conditional gates & branches](#conditional-gates--branches) and its full entry in
+[`core-discovery-and-design.md`](catalog/core-discovery-and-design.md#role-product--requirements-owner));
+`first-principles-thinking`, `clarify`, and `feature-forge` were later removed as standalone assets when a
+Stage 0/1 audit found their content duplicated inside `specify` and `spec-review-cpo` with no other functional
+caller — see the note at the top of this document.
 
 ---
 

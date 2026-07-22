@@ -65,15 +65,6 @@
 - **Then what:** Every fixable finding lands as its own atomic, verified commit with a regression guard; unresolved findings are reported with rationale; in structured (`findings.json`) mode, a `fixes.json` summary is emitted for the next pipeline stage.
 - **Notes:** Built directly on `dispatching-parallel-agents` and `using-git-worktrees`; commonly the consumer of `code-review-gate`/`security-auditor` output.
 
-#### `feature-forge` (skill)
-
-- **Why needed:** Feature work that starts from vague requirements ("make it fast", "add search") produces implementations that miss edge cases, security considerations, and error handling because nobody interrogated the requirement first.
-- **What it does:** Runs a structured PM+Dev requirements workshop — discover goal/users/value, interview systematically (using structured question tools), write EARS-format functional requirements plus non-functional requirements, validate acceptance criteria with the stakeholder, and produce an implementation TODO checklist saved as `specs/{feature}.spec.md`.
-- **Why not vanilla Claude Code:** Vanilla Claude Code will start writing code directly from an ambiguous request; it has no EARS-format discipline, no mandatory interview step, and no built-in habit of asking for security/error-handling requirements before generating a spec.
-- **When to use:** "Use when defining new features, gathering requirements, or writing specifications" — new feature definition, PRDs, user stories.
-- **Then what:** A saved specification with EARS-format requirements, Given/When/Then acceptance criteria, an error-handling table, and an implementation checklist ready to hand to execution.
-- **Notes:** Explicitly related to `test-master` (acceptance criteria feed test design) and `fullstack-guardian` (implementation of the spec).
-
 #### `test-master` (skill)
 
 - **Why needed:** Ad hoc testing tends to cover only the happy path, skip flaky-test triage, and leave coverage gaps undocumented — none of which surfaces until production.

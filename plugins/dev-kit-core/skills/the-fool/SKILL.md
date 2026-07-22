@@ -9,7 +9,7 @@ metadata:
   role: expert
   scope: review
   output-format: report
-  related-skills: architecture-designer, feature-forge
+  related-skills: architecture-designer, specify
 ---
 
 # The Fool

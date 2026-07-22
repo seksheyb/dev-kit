@@ -1,6 +1,6 @@
 ---
 name: constitution
-description: Create or update the project constitution — the durable memory of project principles that every later SDD phase (specify, clarify, analyze, converge) checks against. Use when the user says "create a constitution", "project principles", "update the constitution", "set project ground rules", "governance rules", or when starting spec-driven development on a project that has no constitution yet.
+description: Create or update the project constitution — the durable memory of project principles that every later SDD phase (specify, analyze, converge) checks against. Use when the user says "create a constitution", "project principles", "update the constitution", "set project ground rules", "governance rules", or when starting spec-driven development on a project that has no constitution yet.
 ---
 
 # Constitution — Project Principles Memory
@@ -56,7 +56,7 @@ Follow this execution flow:
    - If the project keeps a plan template, ensure any "Constitution Check" or rules align with updated principles.
    - If the project keeps a spec template, check scope/requirements alignment—update if constitution adds/removes mandatory sections or constraints.
    - If the project keeps a tasks template, ensure task categorization reflects new or removed principle-driven task types (e.g., observability, versioning, testing discipline).
-   - Read the sibling SDD skills in this kit (`specify`, `clarify`, `analyze`, `converge`) or any equivalent workflow docs installed in the project to verify no outdated references remain when generic guidance is required.
+   - Read the sibling SDD skills in this kit (`specify` — which includes the clarification pass — `analyze`, `converge`) or any equivalent workflow docs installed in the project to verify no outdated references remain when generic guidance is required.
    - Read any runtime guidance docs (e.g., `README.md`, `docs/quickstart.md`, or agent-specific guidance files if present). Update references to principles changed.
 
 5. Produce a Sync Impact Report (prepend as an HTML comment at top of the constitution file after update):

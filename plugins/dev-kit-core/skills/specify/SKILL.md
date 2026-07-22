@@ -1,6 +1,6 @@
 ---
 name: specify
-description: Create or update a feature specification from a natural language feature description — or interrogate a vague idea round-by-round until it becomes an executable spec. Use when the user says "write a spec", "specify this feature", "create a feature specification", "turn this idea into a spec", "I want to build...", or provides a feature description that needs to become a formal, testable specification before planning.
+description: Create or update a feature specification from a natural language feature description — or interrogate a vague idea round-by-round until it becomes an executable spec. Resolves ambiguity and enforces EARS-format requirements as part of the same pass. Use when the user says "write a spec", "specify this feature", "create a feature specification", "turn this idea into a spec", "I want to build...", "clarify the spec", "resolve ambiguities", "de-risk the spec", or provides a feature description that needs to become a formal, testable specification before planning.
 ---
 
 # Specify — Feature Description to Executable Specification
@@ -9,6 +9,11 @@ Turn what the user wants to build into a written specification that is precise e
 someone unfamiliar with the codebase (or an AI agent) to plan and implement without
 follow-up questions. The spec captures **WHAT** users need and **WHY** — never HOW to
 implement it.
+
+This skill covers the full arc from vague idea to unambiguous, gated spec: generate or
+interrogate (below), then resolve remaining ambiguity as the final phase of the same pass
+(the **Clarification Pass**). Both halves can also be invoked independently — "clarify the
+spec" on an already-written spec re-enters at the Clarification Pass directly.
 
 ## File Locations
 
@@ -21,18 +26,51 @@ If the project has a constitution (see the `constitution` skill; default
 `docs/constitution.md`), load it for project principles and governance constraints —
 the spec must not conflict with it.
 
+## Two Lenses
+
+Run every interview and every requirement pass through both perspectives — don't ask all
+the PM questions, then all the Dev questions; weave them:
+
+- **PM Hat**: user value, business goals, success metrics, priority
+- **Dev Hat**: technical feasibility, security, performance, edge cases, error handling
+
+## Before Drafting: Assess Scope
+
+If the request describes multiple independent subsystems (e.g., "build a platform with chat,
+file storage, billing, and analytics"), don't draft a single oversized spec for it. Flag this
+immediately and help decompose into sub-projects — what are the independent pieces, how do they
+relate, what order should they be built? Then run Mode A/B on the first sub-project only; each
+sub-project gets its own spec (and its own spec → clarification → planning cycle). This check
+belongs here, before step 1, not after a spec is already written — decomposition is far cheaper
+before the interview than after.
+
 ## Choose an Entry Mode
 
 - **Mode A — Direct generation**: The user gave a reasonably concrete feature
-  description. Generate the spec directly (steps 1–7 below), using informed defaults and
+  description. Generate the spec directly (steps 1–8 below), using informed defaults and
   at most 3 targeted clarification questions.
 - **Mode B — Interrogation (vague intent → executable spec)**: The request is a
   one-liner, an idea, or otherwise too vague to draft from ("make the app faster",
-  "we need better onboarding"). Run the five-phase interrogation first (see
-  "Mode B: Interrogation" below), then write the spec through the same steps 1–7.
+  "we need better onboarding"). Load `references/mode-b-interrogation.md` and run the
+  five-phase interrogation first, then write the spec through Mode A steps 1–8.
 
 When unsure, default to Mode A with clarification markers — do not over-interrogate a
 description that is already specific.
+
+Either mode ends by running the **Clarification Pass** — load
+`references/clarification-pass.md` — before the spec is considered done.
+
+## Reference Guide
+
+Load these only when the corresponding path actually applies — don't pre-load them for a
+simple, concrete spec that Mode A handles inline:
+
+| Topic | Reference | Load When |
+|-------|-----------|-----------|
+| Mode B interrogation | `references/mode-b-interrogation.md` | Request is vague/one-line, needs round-by-round interrogation before drafting |
+| Clarification Pass | `references/clarification-pass.md` | Always, once a spec draft exists — this is the final phase of every run, and the standalone entry point for "clarify the spec" |
+| EARS syntax | `references/ears-syntax.md` | Writing a conditional functional requirement (When/While/Where + shall) |
+| Multi-domain pre-discovery | `references/pre-discovery-subagents.md` | Feature spans 3+ system layers in an unfamiliar codebase, before Mode A step 7 or Mode B Phase 3 |
 
 ## Mode A: Direct Generation
 
@@ -43,11 +81,9 @@ Given the feature description, do this:
    - Create a 2-4 word short name that captures the essence of the feature
    - Use action-noun format when possible (e.g., "add-user-auth", "fix-payment-bug")
    - Preserve technical terms and acronyms (OAuth2, API, JWT, etc.)
-   - Keep it concise but descriptive enough to understand the feature at a glance
    - Examples:
      - "I want to add user authentication" → "user-auth"
      - "Implement OAuth2 integration for the API" → "oauth2-api-integration"
-     - "Create a dashboard for analytics" → "analytics-dashboard"
      - "Fix payment processing timeout bug" → "fix-payment-timeout"
 
 2. **Create the spec feature directory**:
@@ -75,11 +111,16 @@ Given the feature description, do this:
 
 5. **IF EXISTS**: Load the project constitution for principles and governance constraints.
 
-6. Follow this execution flow:
+6. **For multi-domain features** (touches 3+ distinct system layers, unfamiliar codebase):
+   consider front-loading technical context with parallel Task subagents before drafting —
+   see `references/pre-discovery-subagents.md`. Skip for single-domain or well-understood
+   features; this is an accelerant, not a requirement.
+
+7. Follow this execution flow:
     1. Parse the user's feature description
        If empty: ERROR "No feature description provided"
-    2. Extract key concepts from description
-       Identify: actors, actions, data, constraints
+    2. Extract key concepts from description (PM Hat + Dev Hat)
+       Identify: actors, actions, data, constraints, security/error-handling implications
     3. For unclear aspects:
        - Make informed guesses based on context and industry standards
        - Only mark with [NEEDS CLARIFICATION: specific question] if:
@@ -88,19 +129,24 @@ Given the feature description, do this:
          - No reasonable default exists
        - **LIMIT: Maximum 3 [NEEDS CLARIFICATION] markers total**
        - Prioritize clarifications by impact: scope > security/privacy > user experience > technical details
-    4. Fill User Scenarios & Testing section
+    4. Fill User Scenarios & Testing section (Given/When/Then acceptance scenarios per story)
        If no clear user flow: ERROR "Cannot determine user scenarios"
     5. Generate Functional Requirements
-       Each requirement must be testable
+       Each requirement must be testable. Use EARS format for anything conditional —
+       see `references/ears-syntax.md`. Plain `MUST` statements are fine for simple,
+       unconditional requirements.
        Use reasonable defaults for unspecified details (document assumptions in Assumptions section)
-    6. Define Success Criteria
+    6. Generate Non-Functional Requirements (if performance/security/reliability targets apply)
+       Each NFR needs a real, testable target — not "should be fast"
+    7. Define Success Criteria
        Create measurable, technology-agnostic outcomes
        Include both quantitative metrics (time, performance, volume) and qualitative measures (user satisfaction, task completion)
        Each criterion must be verifiable without implementation details
-    7. Identify Key Entities (if data involved)
-    8. Return: SUCCESS (spec ready for planning)
+    8. Identify Key Entities (if data involved)
+    9. Fill the Error Handling table (one row per failure mode from Edge Cases)
+    10. Return: SUCCESS (spec ready for the Clarification Pass)
 
-7. Write the specification to `SPEC_FILE` using the template structure, replacing
+8. Write the specification to `SPEC_FILE` using the template structure, replacing
    placeholders with concrete details derived from the feature description while
    preserving section order and headings.
 
@@ -124,15 +170,18 @@ a. **Create Spec Quality Checklist**: Generate a checklist file at
    - [ ] Focused on user value and business needs
    - [ ] Written for non-technical stakeholders
    - [ ] All mandatory sections completed
+   - [ ] Internal consistency: no sections contradict each other; requirements match the user
+         scenarios they're derived from
 
    ## Requirement Completeness
 
    - [ ] No [NEEDS CLARIFICATION] markers remain
    - [ ] Requirements are testable and unambiguous
+   - [ ] Conditional requirements use EARS format (When/While/Where + shall)
    - [ ] Success criteria are measurable
    - [ ] Success criteria are technology-agnostic (no implementation details)
-   - [ ] All acceptance scenarios are defined
-   - [ ] Edge cases are identified
+   - [ ] All acceptance scenarios are defined (Given/When/Then)
+   - [ ] Edge cases are identified with an Error Handling entry
    - [ ] Scope is clearly bounded
    - [ ] Dependencies and assumptions identified
 
@@ -186,191 +235,54 @@ c. **Handle Validation Results**:
         **Your choice**: _[Wait for user response]_
         ```
 
-     4. **CRITICAL - Table Formatting**: Ensure markdown tables are properly formatted:
-        - Use consistent spacing with pipes aligned
-        - Each cell should have spaces around content: `| Content |` not `|Content|`
-        - Header separator must have at least 3 dashes: `|--------|`
-     5. Number questions sequentially (Q1, Q2, Q3 - max 3 total)
-     6. Present all questions together before waiting for responses
-     7. Wait for user to respond with their choices for all questions (e.g., "Q1: A, Q2: Custom - [details], Q3: B")
-     8. Update the spec by replacing each [NEEDS CLARIFICATION] marker with the user's selected or provided answer
-     9. Re-run validation after all clarifications are resolved
+     4. Number questions sequentially (Q1, Q2, Q3 - max 3 total), present all together, wait for responses
+     5. Update the spec by replacing each [NEEDS CLARIFICATION] marker with the user's selected or provided answer
+     6. Re-run validation after all clarifications are resolved
 
 d. **Update Checklist**: After each validation iteration, update the checklist file with
    current pass/fail status
 
-## Mode B: Interrogation (vague intent → executable spec)
+## Constraints
 
-Act as a **principal engineer who refuses to let ambiguous work into the backlog**.
-Interrogate the user's request — round by round — until you could mass-produce the
-solution. You are friendly but relentless. Ambiguity is a bug and you will find it. Push
-back on scope creep ("That's a separate issue — let's finish this one") and premature
-solutions ("Before we talk about *how*, let's lock down *what* and *why*"). Think in
-failure modes: what happens when the input is empty, null, enormous, duplicated, called
-by the wrong role, or called twice? Never guess — if you don't know something about the
-codebase, say so and ask, or go read the code. Quantify everything: "several files" is
-not acceptable — find the exact count; "improves performance" is not acceptable — state
-the metric and target.
+### MUST DO
+- Use structured question tools (e.g. `AskUserQuestion`) for choices with predetermined options; open-ended only when choices cannot be predetermined
+- Conduct a thorough interview/interrogation before writing the spec
+- Use EARS format for conditional functional requirements
+- Include non-functional requirements when performance/security/reliability targets apply
+- Provide testable, Given/When/Then acceptance criteria
+- Ask for clarification on ambiguous requirements rather than guessing silently
 
-**HARD GATE:** Do NOT produce a spec after the first message. Always start with Phase 1.
-Do NOT propose implementation. The user's initial request is the input to Phase 1 —
-begin immediately, do not ask them to repeat themselves.
+### MUST NOT DO
+- Generate a spec without conducting the interview/interrogation
+- Accept vague requirements ("make it fast") without pushing for a metric
+- Skip security considerations or error handling
+- **Produce an implementation TODO checklist or task breakdown.** That's HOW, not
+  WHAT/WHY — it's `writing-plans`/`planner`'s job once this spec is approved. A spec that
+  ships a task list is scope creep into planning territory, and it also means the plan
+  never gets independently reviewed against the spec's actual requirements.
 
-Run the phases STRICTLY in order — do not skip or combine them:
-
-### How to Ask Questions
-
-- **3-5 questions per round, max.** Prioritize highest-ambiguity first.
-- **Number every question.** Don't bury them in paragraphs.
-- **End every message with your questions.** Last thing the user reads.
-- **Call out assumptions explicitly.** "I'm assuming this only affects the admin
-  role — is that right?"
-- **Reference specific code when you can.** Don't ask "does this touch the
-  database?" — look at the code and ask "this needs a new column on `orders` —
-  or is a separate table better?"
-- **Verify current state before proposing changes.** Check the code, cite what
-  you found with file paths. Don't assume from memory.
-
-### Phase 1: Understand the "Why"
-
-Ask until you can crisply answer all five:
-
-1. **Who** is affected? (end user role, automated system, internal team, all three?
-   "Just me, solo dev" is a fine answer; don't dwell on this for solo cases.)
-2. **What** is the current behavior? (what IS happening — verified, not assumed)
-3. **What** should the behavior be instead?
-4. **Why now?** (blocking other work? costing money? correctness bug? compliance risk?)
-5. **How will we know it's done?** (observable, measurable outcome — not vibes)
-
-Do NOT proceed until all five are answered without hand-waving.
-
-### Phase 2: Scope and Boundaries
-
-Ask until you can answer:
-
-1. **What is explicitly out of scope?** Lock this early — it prevents creep later.
-2. **What existing systems does this touch?** Files, tables, services, endpoints.
-3. **Are there ordering constraints?** Must A happen before B?
-4. **What's the smallest version that delivers the value?** Always find the MVP cut.
-5. **What are the failure modes and rollback options?** What breaks if shipped wrong?
-
-Do NOT proceed until scope is locked.
-
-### Phase 3: Technical Interrogation (HARD requirement: read code first)
-
-**Mandatory:** Before asking ANY Phase 3 question, read at least one piece of evidence
-from the codebase via search or file reads. Do NOT skip. Do NOT ask "what file should I
-look at?" first — find it yourself.
-
-Mapping the user's request to evidence:
-
-- **Concrete file/symbol mentioned** (e.g., "the dashboard is slow", "auth.ts fails"):
-  search for the symbol, read the file, cite `path:line` in your first question.
-- **Project-level prompt** (e.g., "rethink our auth strategy", "we need rate limiting"):
-  read the project structure — `package.json`/`go.mod`/`Cargo.toml`, the relevant
-  top-level directory, any existing `docs/<topic>.md`. Cite what you found, then ask
-  your Phase 3 questions against THAT evidence.
-
-If you genuinely cannot find any related evidence (truly novel greenfield), say so
-explicitly: "I searched for X, Y, Z and found nothing. Treating this as a greenfield
-feature." — then proceed.
-
-Then ask about whichever categories apply (skip ones that clearly don't):
-
-- **Data model** — new tables, columns, migrations, indexes
-- **API** — new endpoints, modified responses, backwards compatibility
-- **Background processing** — new jobs, queue changes, idempotency, failure handling
-- **UI** — new pages, modified components, state management
-- **Infrastructure** — deployment changes, secrets, cost impact
-- **Testing** — how to test at each layer, regression risk
-
-Don't ask questions you can answer by reading the code. Read first, then ask the
-questions whose answers aren't in the code.
-
-### Phase 4: Draft Review
-
-Present a full draft of the spec content and ask: **"Does this accurately capture what
-you want? What did I get wrong?"** Iterate until the user confirms.
-
-### Phase 5: Write the Spec
-
-With the interrogation answers locked, write the specification through Mode A steps 1–7
-(short name, feature directory, template fill, quality checklist). The interrogation
-answers become the user scenarios, requirements, success criteria, out-of-scope
-declarations, and assumptions — expressed in the template's user-focused,
-implementation-free language.
-
-## Quick Guidelines
-
-- Focus on **WHAT** users need and **WHY**.
-- Avoid HOW to implement (no tech stack, APIs, code structure).
-- Written for business stakeholders, not developers.
-- DO NOT embed checklists inside the spec itself — the quality checklist is a separate file.
-
-### Section Requirements
-
-- **Mandatory sections**: Must be completed for every feature
-- **Optional sections**: Include only when relevant to the feature
-- When a section doesn't apply, remove it entirely (don't leave as "N/A")
-
-### For AI Generation
-
-When creating this spec from a user prompt:
-
-1. **Make informed guesses**: Use context, industry standards, and common patterns to fill gaps
-2. **Document assumptions**: Record reasonable defaults in the Assumptions section
-3. **Limit clarifications**: Maximum 3 [NEEDS CLARIFICATION] markers - use only for critical decisions that:
-   - Significantly impact feature scope or user experience
-   - Have multiple reasonable interpretations with different implications
-   - Lack any reasonable default
-4. **Prioritize clarifications**: scope > security/privacy > user experience > technical details
-5. **Think like a tester**: Every vague requirement should fail the "testable and unambiguous" checklist item
-6. **Common areas needing clarification** (only if no reasonable default exists):
-   - Feature scope and boundaries (include/exclude specific use cases)
-   - User types and permissions (if multiple conflicting interpretations possible)
-   - Security/compliance requirements (when legally/financially significant)
-
-**Examples of reasonable defaults** (don't ask about these):
-
-- Data retention: Industry-standard practices for the domain
-- Performance targets: Standard web/mobile app expectations unless specified
-- Error handling: User-friendly messages with appropriate fallbacks
-- Authentication method: Standard session-based or OAuth2 for web apps
-- Integration patterns: Use project-appropriate patterns (REST/GraphQL for web services, function calls for libraries, CLI args for tools, etc.)
-
-### Success Criteria Guidelines
-
-Success criteria must be:
-
-1. **Measurable**: Include specific metrics (time, percentage, count, rate)
-2. **Technology-agnostic**: No mention of frameworks, languages, databases, or tools
-3. **User-focused**: Describe outcomes from user/business perspective, not system internals
-4. **Verifiable**: Can be tested/validated without knowing implementation details
-
-**Good examples**:
-
-- "Users can complete checkout in under 3 minutes"
-- "System supports 10,000 concurrent users"
-- "95% of searches return results in under 1 second"
-- "Task completion rate improves by 40%"
-
-**Bad examples** (implementation-focused):
-
-- "API response time is under 200ms" (too technical, use "Users see results instantly")
-- "Database can handle 1000 TPS" (implementation detail, use user-facing metric)
-- "React components render efficiently" (framework-specific)
-- "Redis cache hit rate above 80%" (technology-specific)
-
-## Completion Report
+## Completion Report and User Approval Gate
 
 Report completion to the user with:
-- The feature directory path
-- The spec file path
-- Checklist results summary
-- Readiness for the next phase: run the `clarify` skill to resolve remaining ambiguity,
-  or proceed to planning
+- The feature directory path and spec file path
+- Checklist results summary (structural quality checklist)
+- Clarification Pass summary: questions asked & answered, sections touched, coverage
+  summary (Resolved / Deferred / Clear / Outstanding by taxonomy category)
+
+Then ask the user to review the written spec before proceeding:
+
+> "Spec written to `<path>`. Please review it and let me know if you want any changes before
+> we move on to [`spec-review-cpo`'s scope review / planning]."
+
+**Wait for the user's response.** If they request changes, make them and re-run the relevant
+validation (structural checklist and/or Clarification Pass). Only proceed to `spec-review-cpo`
+or planning once the user approves — do not treat "spec written" as the same thing as "spec
+approved."
 
 ## Done When
 
-- [ ] Specification written to the spec file and validated against quality checklist
-- [ ] Completion reported to user with feature directory, spec file path, and checklist results
+- [ ] Specification written to the spec file and validated against the structural quality checklist
+- [ ] Functional requirements use EARS format where conditional; non-functional requirements have real targets
+- [ ] Clarification Pass run (or explicitly skipped with rework-risk warning) and spec ambiguities integrated into the spec file
+- [ ] Completion reported to user with feature directory, spec file path, checklist results, and clarification coverage summary
+- [ ] User has explicitly approved the spec (not just been notified it was written) before handing off to `spec-review-cpo` or planning

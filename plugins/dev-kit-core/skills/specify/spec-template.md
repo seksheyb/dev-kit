@@ -91,6 +91,18 @@
 - What happens when [boundary condition]?
 - How does system handle [error scenario]?
 
+### Error Handling
+
+<!--
+  ACTION REQUIRED: One row per failure mode identified above. What the user SEES, not
+  backend/implementation behavior.
+-->
+
+| Scenario | System Response |
+|---|---|
+| [e.g., "network request times out"] | [e.g., "show retry option with cached data if available"] |
+| [e.g., "duplicate submission"] | [e.g., "reject silently, show existing result"] |
+
 ## Requirements *(mandatory)*
 
 <!--
@@ -100,16 +112,35 @@
 
 ### Functional Requirements
 
+Plain `MUST` statements are fine for simple, unconditional requirements. For any
+requirement that branches on a trigger or state, use EARS format (see
+`references/ears-syntax.md`) — it's the difference between "System MUST validate input"
+(validate how? when?) and "When the form is submitted, the system shall reject input
+that fails the field-level validation rules" (testable as written).
+
 - **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
 - **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]
 - **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
 - **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
-- **FR-005**: System MUST [behavior, e.g., "log all security events"]
+- **FR-005**: When [trigger], the system shall [action] — EARS form for conditional behavior
 
 *Example of marking unclear requirements:*
 
 - **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
 - **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+
+### Non-Functional Requirements *(include when performance, security, or reliability targets are part of "done")*
+
+<!--
+  ACTION REQUIRED: Only include requirements with a real, testable target. "Should be
+  fast" is not a requirement — "returns results in under 1 second at 100 concurrent
+  users" is. If a target genuinely isn't known yet, mark it [NEEDS CLARIFICATION] rather
+  than inventing a number.
+-->
+
+- **NFR-001**: [Performance, e.g., "95% of searches return results in under 1 second"]
+- **NFR-002**: [Security, e.g., "All write endpoints require an authenticated session"]
+- **NFR-003**: [Reliability, e.g., "Data export survives a mid-request connection drop without corrupting the file"]
 
 ### Key Entities *(include if feature involves data)*
 

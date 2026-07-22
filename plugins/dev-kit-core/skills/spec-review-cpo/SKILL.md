@@ -5,7 +5,8 @@ description: >
   hold, or cut), scores prioritization (RICE, Kano, JTBD, North Star), and locks a Scope
   Decision Record on the spec before any plan is written — so plan-review-ceo inherits it at
   plan-review time instead of re-litigating strategy after architecture exists. Use when
-  reviewing a spec for strategy, scope, and product value — after specify/clarify, before
+  reviewing a spec for strategy, scope, and product value — after `specify` (including its
+  clarification pass), before
   writing-plans/planner — or when asked for a "CPO review", "product review of the spec", "is
   this worth building", "scope call before we plan".
 ---
@@ -135,6 +136,16 @@ wrong? Feed into the Premise Challenge below.
    solving a proxy problem?
 3. What would happen if we did nothing? Real pain point or hypothetical?
 
+**If the framing itself looks inherited-by-convention rather than reasoned** (the spec's
+justification for *why this approach* boils down to "that's how we've always done it," or the
+premise survives questions 1-3 above only weakly) — escalate with a first-principles pass
+before continuing: load `references/first-principles.md` and run the full 5-step method
+(define precisely → list assumptions → challenge each → identify fundamental truths →
+rebuild from scratch). For concrete operational problems (a metric drop, an adoption
+failure) the same reference carries the 5D structured-problem-solving method and a
+common-problem-patterns table. Feed the rebuilt framing into 0C-bis below as an
+additional candidate solution framing.
+
 ### 0B. Existing-Solution Leverage
 1. What existing product surface, feature, or competitor offering already solves each
    sub-problem this spec describes? Map every sub-problem to what already exists.
@@ -217,8 +228,8 @@ whatever didn't fit into `spec.md` this time.
 ## Required Outputs — the Scope Decision Record
 
 Write this as a `## CPO Review` section appended to the spec file (same append-in-place
-pattern `clarify` uses for its `## Clarifications` section — never overwrite existing spec
-content):
+pattern `specify`'s Clarification Pass uses for its `## Clarifications` section — never
+overwrite existing spec content):
 
 ```markdown
 ## CPO Review

@@ -80,8 +80,11 @@ one `code-review-gate` agent since this count was last taken), checked for: para
 fan-out over independent items, an iterative loop with a hard exit condition, or a
 multi-stage pipeline where later stages depend on earlier ones completing.
 
-**29 of 192 flagged.** The other 163 (162 no-change + `feature-forge` as Agent-only) need
-no change — single-agent linear methodology with no fan-out/loop/pipeline shape.
+**29 of 192 flagged.** The other 163 (162 no-change + `specify`'s pre-discovery pattern as
+Agent-only) need no change — single-agent linear methodology with no fan-out/loop/pipeline
+shape. (This baseline predates the Stage 0/1 asset-overlap audit that folded
+`first-principles-thinking`/`clarify`/`feature-forge` into `specify`/`spec-review-cpo`;
+the 192 total hasn't been recomputed against the current 190-asset count.)
 
 ### dev-kit-core skills (9 of 51)
 
@@ -93,7 +96,7 @@ no change — single-agent linear methodology with no fan-out/loop/pipeline shap
 | `cso` | Independent verification subagent per candidate finding, gate-scored, aggregated | **Workflow** | Parallel-map-then-reduce over a variable-N finding list |
 | `dispatching-parallel-agents` | Entire skill content is prose teaching manual N-way parallel dispatch | **Workflow** | Could generate a small Workflow script instead of re-teaching the technique every time |
 | `design-consultation` (Shotgun mode) | 3–8 independent variant-mockup subagents, then a merge/comparison board | **Workflow** | Fan-out-then-aggregate, currently hand-orchestrated |
-| `feature-forge` | Multi-domain discovery via Task subagents when a feature spans domains | **Agent** (not full Workflow) | Small/ad-hoc fan-out — needs fresh-context isolation, not worktrees/waves/budget tracking |
+| `specify` (Mode B pre-discovery) | Multi-domain discovery via Task subagents when a feature spans domains | **Agent** (not full Workflow) | Small/ad-hoc fan-out — needs fresh-context isolation, not worktrees/waves/budget tracking |
 | `ship` | 14 sequential gated steps (merge→test→coverage→plan-audit→review→version→changelog→PR) | **Workflow** | Each stage's output gates the next — currently prose trusting one agent to track 14 steps of gate state |
 | `land-and-deploy` | Multiple poll-with-hard-timeout loops chained with revert-on-failure branches | **Workflow** | Deterministic loop/exit-condition + `phase()` beats manual re-polling and elapsed-time tracking |
 
@@ -144,7 +147,7 @@ parallelizing real work.
 ### Tally
 
 - **29 flagged for Workflow**: 9 core skills, 12 core agents/commands, 1 backend/web, 7 infra/specialized.
-- **1 flagged Agent-only** (`feature-forge`).
+- **1 flagged Agent-only** (`specify`'s Mode B pre-discovery pattern, formerly `feature-forge`).
 - **162 need no change.**
 - **0 flagged Hooks/Orchestrator** — those homes apply to the GWD-gap capabilities in
   section 1, not to any of dev-kit's own existing assets.

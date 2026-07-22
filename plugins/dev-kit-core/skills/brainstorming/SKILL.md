@@ -27,7 +27,7 @@ This skill has three modes. Pick one at the start based on what the user brings:
 | A startup or product idea; "is this worth building?"; pre-code exploration | **YC office-hours diagnostic** |
 | An idea that needs market reality-checking before any commitment | **Idea validation (go/no-go)** |
 
-The diagnostic and validation modes both END by feeding their output into the standard design flow (premises → approaches → design → spec) if the idea survives.
+The diagnostic and validation modes both END by feeding their output into the standard design flow (premises → approaches → design → handoff to `specify`) if the idea survives.
 
 ## Checklist (standard design flow)
 
@@ -37,12 +37,16 @@ You MUST create a task for each of these items and complete them in order:
 2. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
 3. **Propose 2-3 approaches** — with trade-offs and your recommendation
 4. **Present design** — in sections scaled to their complexity, get user approval after each section
-5. **Write design doc** — save to `docs/specs/YYYY-MM-DD-<topic>-design.md` and commit (user preferences for spec location override this default)
-6. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
-7. **User reviews written spec** — ask user to review the spec file before proceeding
-8. **Transition to implementation** — invoke the plan-writing skill to create an implementation plan
+5. **Hand off to `specify`** — once the design is approved, invoke the `specify` skill to produce
+   the actual written, gated spec artifact. Carry the approved design and everything already
+   answered into that invocation so `specify` doesn't re-ask what this conversation already
+   settled.
 
-**The terminal state is a written, approved spec handed to planning.** Do NOT invoke any implementation skill directly from brainstorming.
+**The terminal state is an approved design handed to `specify`.** Brainstorming does not write
+the spec file, run its own quality/consistency checks, or invoke planning directly — `specify`
+owns spec production end to end (including its own quality checklist, Clarification Pass, and
+readiness gate), and `writing-plans`/`planner` owns what comes after that. Do NOT invoke any
+implementation skill directly from brainstorming.
 
 ## The Process
 
@@ -86,32 +90,17 @@ You MUST create a task for each of these items and complete them in order:
 
 ## After the Design
 
-**Documentation:**
+Once every section of the design has been presented and approved (per the checklist above),
+hand off to `specify`:
 
-- Write the validated design (spec) to `docs/specs/YYYY-MM-DD-<topic>-design.md`
-- Commit the design document to git
+> "Design approved. Handing off to `specify` to produce the written spec."
 
-**Spec Self-Review:**
-After writing the spec document, look at it with fresh eyes:
-
-1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
-2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
-3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
-4. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
-
-Fix any issues inline. No need to re-review — just fix and move on.
-
-**User Review Gate:**
-After the spec review loop passes, ask the user to review the written spec before proceeding:
-
-> "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
-
-Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
-
-**Implementation:**
-
-- Invoke the plan-writing skill to create a detailed implementation plan
-- Do NOT invoke any other skill. Planning is the next step.
+Invoke `specify` with the approved design as context — the feature description, the chosen
+approach, the constraints and success criteria already established in this conversation.
+`specify` performs its own quality checklist, EARS-format requirements, Clarification Pass,
+and user-approval gate before the spec is considered done; do not duplicate any of that here,
+and do not invoke `writing-plans`/`planner` directly — that happens after `specify` (and, if
+the project uses it, `spec-review-cpo`) reports the spec ready.
 
 ## Key Principles
 
@@ -196,17 +185,30 @@ Surface the most exciting version of the idea, not the most strategically optimi
 
 ## Premise Challenge (both postures — mandatory)
 
-Before proposing solutions, challenge premises:
+Before proposing solutions, challenge premises. This is the same checklist
+`spec-review-cpo` runs formally once a spec exists (its Step 0A Premise Challenge / 0B
+Existing-Solution Leverage) — running a lighter version here, pre-spec, avoids drafting a
+full spec for an idea that would fail that gate anyway:
 
 1. Is this the right problem? Could a different framing yield a dramatically simpler solution?
 2. What happens if we do nothing? Real pain or hypothetical?
 3. What existing code/tools already partially solve this?
+
+If question 1 exposes a framing that's inherited-by-convention rather than reasoned
+("we've always done it this way"), escalate to a full first-principles decomposition —
+load `spec-review-cpo`'s `references/first-principles.md` (5-step method: define →
+assumptions → challenge → fundamental truths → rebuild; plus the 5D method for
+operational problems). Its rebuilt solution directions become the premises this design
+flow starts from.
+
+Two more, specific to a pre-code idea and not repeated at the spec-review-cpo gate:
+
 4. If the deliverable is a new artifact (CLI, library, app): how will users get it? Code without distribution is code nobody can use.
 5. Startup posture: does the diagnostic evidence support this direction? Where are the gaps?
 
 Output premises as explicit statements the user must agree/disagree with before proceeding. If they disagree, revise understanding and loop back. A user who defends a premise with reasoning (not dismissal) is a good signal; note it.
 
-Then continue into the standard flow: **Alternatives (2-3 approaches, mandatory) → design → spec.**
+Then continue into the standard flow: **Alternatives (2-3 approaches, mandatory) → design → handoff to `specify`.**
 
 ---
 

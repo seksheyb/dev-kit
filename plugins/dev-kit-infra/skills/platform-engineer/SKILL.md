@@ -1,6 +1,15 @@
 ---
 name: platform-engineer
 description: Use when the task involves internal developer platforms (IDPs) — self-service infrastructure, golden paths, developer portals, Backstage, GitOps workflows, service catalogs, platform APIs, Crossplane/Terraform/Helm abstractions, developer experience optimization, platform adoption.
+license: MIT
+metadata:
+  version: "1.1.0"
+  domain: infrastructure
+  triggers: internal developer platform, IDP, self-service infrastructure, golden paths, developer portal, Backstage, service catalog, GitOps, platform abstraction, Crossplane, Helm, platform adoption, developer experience
+  role: specialist
+  scope: platform
+  output-format: architecture
+  related-skills: terraform-engineer, kubernetes-specialist, cloud-architect, devops-engineer
 ---
 
 # Platform Engineer
@@ -88,6 +97,8 @@ Platform APIs:
 - SDK generation
 
 Infrastructure abstraction:
+This skill designs the self-service developer-platform layer (golden paths, templates, portals); it delegates the underlying Terraform module authorship to `terraform-engineer` and Helm/Kubernetes manifest authorship to `kubernetes-specialist` rather than writing that provisioning code itself.
+
 - Crossplane compositions
 - Terraform modules
 - Helm chart templates

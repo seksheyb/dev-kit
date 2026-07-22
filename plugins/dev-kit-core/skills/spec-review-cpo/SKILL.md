@@ -3,8 +3,8 @@ name: spec-review-cpo
 description: >
   CPO/founder-lens spec review. Challenges the premise, commits to a scope posture (expand,
   hold, or cut), scores prioritization (RICE, Kano, JTBD, North Star), and locks a Scope
-  Decision Record on the spec before any plan is written — so plan-review-ceo inherits it at
-  plan-review time instead of re-litigating strategy after architecture exists. Use when
+  Decision Record on the spec before any plan is written. This is the pipeline's single
+  product/strategy gate — nothing downstream re-litigates scope once it has run. Use when
   reviewing a spec for strategy, scope, and product value — after `specify` (including its
   clarification pass), before
   writing-plans/planner — or when asked for a "CPO review", "product review of the spec", "is
@@ -24,21 +24,19 @@ approval. Pick the posture from the context-dependent defaults below, state it i
 and record every genuine judgment call as a finding tagged `DECISION NEEDED` instead of
 asking. Never silently add or remove scope — propose, don't apply.
 
-## Relationship to `plan-review-ceo`
+## The single product/strategy gate
 
-This lens owns strategy/scope **before a plan exists**. Its output — the Scope Decision
-Record below — is a locked artifact that `plan-review-ceo` reads and inherits at plan-review
-time instead of re-deriving posture, premise, and prioritization from scratch once
-architecture/tests/deployment specifics exist. Concretely: if this skill has run and written a
-Scope Decision Record to the spec, `plan-review-ceo` skips its own Step 0 (Nuclear Scope
-Challenge) and instead verifies the plan still honors the locked posture — flagging any drift
-as a finding rather than re-opening the strategic question. If no Scope Decision Record
-exists, `plan-review-ceo` falls back to running its own Step 0, exactly as it does today.
+This lens owns strategy/scope, and it is the **only** place in the pipeline where scope and
+product value are decided. It runs once, before a plan exists, and writes a locked Scope
+Decision Record onto the spec. **Nothing downstream re-litigates that decision.** There is no
+founder-mode plan-stage re-review — the per-phase plan lenses (`plan-review-eng`, `-design`,
+`-devex`, `-goal-backward`) are execution-quality checks, not scope checks, and the plan's job
+is execution, not strategy. Running a second scope review against the plan would only
+re-open a decision that's already made, on an artifact whose architecture is now sunk cost.
 
-This is not a replacement for `plan-review-ceo` — Sections 1–11 of that lens (architecture,
-error/rescue map, security, tests, performance, observability, deployment, long-term
-trajectory, design/UX) genuinely cannot be assessed until a plan exists, and stay entirely
-its job.
+The one exception: if the user explicitly reopens this review (the LOCK line below is
+overridden by hand), re-run against the current spec from scratch. Otherwise the locked
+posture and premise verdict stand for the rest of the milestone.
 
 ## Review Postures
 
@@ -62,10 +60,20 @@ over-ambitious → REDUCTION.
 
 ## Cognitive Patterns
 
-Apply the same founder-mode thinking instincts `plan-review-ceo` uses (classification instinct,
-paranoid scanning, inversion reflex, focus as subtraction, proxy skepticism, narrative
-coherence, willfulness as strategy, leverage obsession) — see that skill for the full list.
-Here they apply to problem/scope selection, not architecture or implementation.
+Apply founder-mode thinking instincts to problem/scope selection (not architecture or
+implementation):
+
+* **Classification instinct** — categorize by reversibility × magnitude (one-way vs two-way
+  doors); most scope calls are two-way, so move fast.
+* **Paranoid scanning** — watch for strategic inflection points, proxy-metric disease, drift.
+* **Inversion reflex** — for every "how does this win?" also ask "what would make it fail?"
+* **Focus as subtraction** — the primary value-add is deciding what *not* to do; default to
+  fewer things, done better.
+* **Proxy skepticism** — are the metrics still serving users, or have they become
+  self-referential?
+* **Narrative coherence** — a hard scope call needs a legible "why."
+* **Willfulness as strategy** — the world yields to sustained push in one direction.
+* **Leverage obsession** — find the inputs where small effort creates outsized output.
 
 ## Product Prioritization Judgment
 
@@ -193,9 +201,9 @@ anything in the spec that's deferrable but currently bundled in.
 **SCOPE REDUCTION:** Ruthless cut — the absolute minimum that ships value to a user; everything
 else deferred, no exceptions. What can be a follow-up spec?
 
-*Unlike `plan-review-ceo`'s Step 0E, this lens does not interrogate implementation-time
-decisions — those are out of scope for a WHAT/WHY spec and belong to `planner`/`plan-review-ceo`
-once real architecture exists.*
+*This lens does not interrogate implementation-time decisions — those are out of scope for a
+WHAT/WHY spec and belong to `planner` and the Stage 7 execution-quality lenses once real
+architecture exists.*
 
 ## Backlog Handoff
 

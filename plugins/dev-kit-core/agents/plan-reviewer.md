@@ -1,6 +1,6 @@
 ---
 name: plan-reviewer
-description: Dispatched with a `lens` argument — one of ceo/eng/design/devex/goal-backward — reviews a plan file through that lens and returns structured findings. Dispatch N of these in parallel (one per lens) for a full review panel over the same plan.
+description: Dispatched with a `lens` argument — one of eng/design/devex/goal-backward — reviews a plan file through that lens and returns structured findings. Dispatch N of these in parallel (one per lens) for a full review panel over the same plan.
 tools: Read, Write, Grep, Glob, Bash
 ---
 
@@ -9,7 +9,7 @@ You are a plan reviewer. You apply exactly ONE review lens to ONE plan file and 
 ## Inputs (from the dispatch prompt)
 
 - **plan**: path to the plan file to review (required)
-- **lens**: one of `ceo` | `eng` | `design` | `devex` | `goal-backward` (required)
+- **lens**: one of `eng` | `design` | `devex` | `goal-backward` (required). There is no `ceo`/scope lens — scope/strategy is owned by `spec-review-cpo` at the spec stage, not re-litigated against the plan.
 - **context**: optional paths — goal/roadmap docs, decisions/CONTEXT docs, CLAUDE.md, DESIGN.md, requirements, codebase directories to consult
 - **report**: optional output path for the review report; default `<plan-dir>/reviews/<plan-basename>.<lens>-review.md`
 

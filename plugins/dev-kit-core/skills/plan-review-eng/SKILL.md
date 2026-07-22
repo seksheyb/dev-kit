@@ -9,6 +9,8 @@ Review this plan thoroughly before any code changes. For every issue, explain th
 
 **Non-interactive execution:** When run by an agent, do not pause for approval. Record each issue as a finding with the recommendation and tradeoffs; tag genuine either-way calls `DECISION NEEDED`. Never silently reduce or expand scope.
 
+**Scope: the phase `PLAN.md`, not the project SDD.** This is a Stage 7 lens — it reviews one phase's plan (task decomposition, the plan-delta's architecture, code quality, tests, performance) before that phase executes. The *project-level* architecture and technical strategy (the `SDD.md` + ADRs) are reviewed once, at Stage 2, by `sdd-review-cto`. Assess how this plan's choices fit the established design; don't re-litigate the system architecture here.
+
 ## Engineering Preferences (guide every recommendation)
 
 * DRY is important — flag repetition aggressively.

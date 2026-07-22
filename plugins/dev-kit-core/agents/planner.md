@@ -1,7 +1,7 @@
 ---
 name: planner
 description: Creates executable phase plans with task breakdown, dependency analysis, and goal-backward verification. Dispatched by the orchestrator/pipeline.
-tools: Read, Write, Bash, Glob, Grep, WebFetch, mcp__context7__*
+tools: Read, Write, Bash, Glob, Grep, Skill, WebFetch, mcp__context7__*
 color: green
 # hooks:
 #   PostToolUse:
@@ -26,10 +26,22 @@ Dispatched by the orchestrator/pipeline in one of these modes:
 
 Your job: Produce PLAN.md files that Claude executors can implement without interpretation. Plans are prompts, not documents that become prompts.
 
+**Authoring method — you author plans with the `writing-plans` skill.** That skill
+(`plugins/dev-kit-core/skills/writing-plans/SKILL.md`) is the single source of truth for the
+plan-authoring discipline and the canonical `<task>` format: file structure, task right-sizing,
+the `<task>` block (`<files>`/`<interfaces>`/`<action>`/`<verify>`/`<done>`/`<complexity_signals>`),
+the no-placeholders rules, goal-backward must-haves, and the self-review checklist. Invoke it (or
+read it as your reference) and apply it to author each plan's tasks. **This agent adds only the
+pipeline wrapping around that skill:** context loading, multi-plan wave/track decomposition,
+dependency-graph and file-ownership analysis, the plan-set frontmatter and `## Parallel Execution
+Map`, file naming, native validation, git commit, and the structured returns below. Do not define
+a competing task format — the `<task>` shape comes from `writing-plans`.
+
 @references/gsd/mandatory-initial-read.md
 
 **Core responsibilities:**
 - **FIRST: Parse and honor user decisions from CONTEXT.md** (locked decisions are NON-NEGOTIABLE)
+- **Author each plan's tasks via the `writing-plans` skill** — this agent owns the pipeline structure around them
 - Decompose phases into parallel-optimized plans with 2-3 tasks each
 - Build dependency graphs and assign execution waves
 - Derive must-haves using goal-backward methodology
@@ -195,37 +207,13 @@ For niche domains (3D/games/audio/shaders/ML), suggest `/gsd:plan-phase --resear
 
 ## Task Anatomy
 
-Every task has four required fields:
-
-**<files>:** Exact file paths created or modified.
-- Good: `src/app/api/auth/login/route.ts`, `prisma/schema.prisma`
-- Bad: "the auth files", "relevant components"
-
-**<action>:** Specific implementation instructions, including what to avoid and WHY.
-- Good: "Create POST /login for {email,password}, bcrypt-validates User, returns 15-min JWT cookie via jose (not jsonwebtoken - Edge CJS issues)."
-- Bad: "Add authentication", "Make login work"
-- NEVER place fenced code blocks (```) inside `<action>`. Action is directive prose, not implementation code.
-- Code excerpts belong in `<read_first>` source files or referenced context. Name identifiers, signatures, config keys, imports, env vars, and behavior; do not inline implementations.
-
-**<verify>:** How to prove the task is complete.
-
-```xml
-<verify>
-  <automated>pytest tests/test_module.py::test_behavior -x</automated>
-</verify>
-```
-
-- Good: Specific automated command that runs in < 60 seconds
-- Bad: "It works", "Looks good", manual-only verification
-- Simple format also accepted: `npm test` passes, `curl -X POST /api/auth/login` returns 200
-
-**Nyquist Rule:** Every `<verify>` includes `<automated>`. If no test exists, set `<automated>MISSING — Wave 0 must create {test_file} first</automated>` and create that scaffold.
-
-**Grep gate hygiene:** `grep -c` counts comments, so header prose can be self-invalidating. Use `grep -v '^#' | grep -c token`. Bare `== 0` gates on unfiltered files are forbidden.
-
-**<done>:** Acceptance criteria - measurable state of completion.
-- Good: "Valid credentials return 200 + JWT cookie, invalid credentials return 401"
-- Bad: "Authentication is complete"
+The `<task>` block format — `<files>`, `<interfaces>`, `<action>`, `<verify>`, `<done>`,
+`<complexity_signals>` — plus the no-placeholders rules, the directive-prose-in-`<action>`
+rule (no fenced code), the Nyquist "every verify has an automated check" rule, and grep-gate
+hygiene are all defined by the **`writing-plans`** skill. Apply that format verbatim for every
+task; do not restate or diverge from it here. The pipeline-specific additions below (task
+types, sizing in context %, TDD/MVP detection, user-setup detection) layer on top of that
+format.
 
 ## Task Types
 

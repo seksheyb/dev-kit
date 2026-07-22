@@ -9,7 +9,9 @@ dev-kit, which asset fires at each step, and in what order?**
 
 Every one of dev-kit's **94 core assets** (49 skills, 37 agents, 8 commands — including `spec-review-cpo`, added
 alongside this document to close the spec-stage product-review gap, and net of `first-principles-thinking`,
-`clarify`, and `feature-forge`, folded into `specify`/`spec-review-cpo` during a Stage 0/1 asset-overlap audit)
+`clarify`, and `feature-forge`, folded into `specify`/`spec-review-cpo` during a Stage 0/1 asset-overlap audit;
+and net of a Stage 2/7 audit that removed `plan-review-ceo` and added `sdd-review-cto` in its place — a net-zero
+skill swap that gives Stage 2 a real architecture-review gate)
 is placed somewhere below,
 and the **96 lane assets** (the 7 stack-reference plugins) are routed in at the stages where they apply.
 "I assume all should be utilised" — they are; see the [coverage appendix](#coverage-appendix--every-asset-placed).
@@ -42,7 +44,7 @@ cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it desc
 |---|-------|------------------------|----------|
 | **0** | Bootstrap & governance | `constitution` · *(legacy)* `spec-miner` → `gate-reverse-engineer` · *(existing docs)* `doc-classifier` → `doc-synthesizer` · `graphify` | repo/PRD → `constitution.md`, recovered SDD/PRD/ADRs, `graph.json` |
 | **1** | Requirements & product framing | `brainstorming` · `specify` (generate + clarify) · `assumption-mapping` → `backlog-grooming` · `market-researcher` · `spec-review-cpo` | PRD (or `docs/BACKLOG.md` for milestone 2+) → `spec.md` (+ `US-xxx` story bank) + locked Scope Decision Record + updated `docs/BACKLOG.md` |
-| **2** | Architecture & tech stack | `architecture-designer` · `diagram` · `cso` · `plan-review-eng` (lens) | requirements → `SDD.md` + ADRs + threat posture |
+| **2** | Architecture & tech stack | `architecture-designer` · `diagram` · `cso` · `sdd-review-cto` | requirements → `SDD.md` + ADRs + threat posture |
 | **3** | Research & roadmap | `project-researcher` ×4 → `research-synthesizer` · `roadmapper` | requirements + research → `ROADMAP.md` (vertical slices) + `STATE.md` |
 | **4** | Design system *(if UI)* | `design-consultation` → `design-html`[^plan-review-design] | product → `DESIGN.md` |
 | **5** | Phase discovery | `codebase-mapper` ×4 · `pattern-mapper` · `assumptions-analyzer` · `advisor-researcher` · `phase-researcher` · `graphify` (query) | phase → `CONTEXT.md`, `PATTERNS.md`, `RESEARCH.md`, codebase maps |
@@ -194,7 +196,7 @@ input is a fresh PRD. **Every milestone after that:** input is `docs/BACKLOG.md`
    `docs/BACKLOG.md`** (created if missing), not just noted in prose — every descoped item is an ID-tracked entry
    carrying its `US-xxx`/Pillar forward, ready to seed the *next* milestone's Stage 1. Nothing downstream
    re-litigates strategy once this has run — Stage 7's lenses (`eng`/`design`/`devex`/`goal-backward`) are
-   execution-quality checks, not scope checks; the pipeline deliberately does not run `plan-review-ceo` at any
+   execution-quality checks, not scope checks; the pipeline deliberately runs no founder-mode plan-stage scope re-review (there is no `plan-review-ceo`) at any
    stage (see the note at the top of Stage 7). `the-fool`'s adversarial modes (pre-mortem, red-team) remain
    available as an optional extra pressure-test for unusually high-stakes specs, but are no longer required by
    default now that CPO's own posture
@@ -208,8 +210,14 @@ input is a fresh PRD. **Every milestone after that:** input is `docs/BACKLOG.md`
    every architecture/flow diagram the reviews will demand.
 3. **`cso`** — 15-phase Chief-Security-Officer audit at design time: attack-surface census, secrets archaeology,
    supply chain, STRIDE threat model → a threat posture the later `security-auditor` will verify mitigations against.
-4. **`plan-review-eng`** *(engineering-review lens)* — architectural soundness / built-in-vs-custom / test-coverage
-   pass over the SDD & ADRs before roadmapping.
+4. **`sdd-review-cto`** *(skill)* — the pipeline's **only** architecture/technical-strategy gate, and it runs here,
+   once, before the roadmap exists: pressure-tests the `SDD.md` + ADRs for technical soundness, ADR quality
+   (alternatives + trade-offs actually recorded), innovation-token spend, scalability posture, technical-debt
+   trajectory, and evolution path, then writes a locked **Architecture Decision Record** into the SDD's
+   `## CTO Review` section. The Stage 2 counterpart to Stage 1's `spec-review-cpo`: CPO settles *what* to build,
+   CTO settles *whether the chosen architecture is sound to build on*. It defers security depth to `cso` (running
+   alongside) and does **not** review any phase's `PLAN.md` — that's `plan-review-eng`'s job at Stage 7, against a
+   different artifact. Nothing downstream re-litigates the architecture once this locks it.
 
 ### Stage 3 — Research & roadmap *(GWD step 7)*
 
@@ -302,14 +310,18 @@ Build the context a planner needs, cheaply, before writing tasks.
 ### Stage 7 — Plan the phase *(GWD step 11)*
 
 **No scope/strategy lens here, by design.** That question was already settled at Stage 1 by `spec-review-cpo` and
-locked into the spec's Scope Decision Record. `plan-review-ceo` is deliberately **not** part of this pipeline at
-any stage — running a second founder-mode scope review after the spec has already committed to a posture would
-re-litigate a decision that's already made, on an artifact (the plan) whose job is execution, not strategy. The 4
-lenses below are all execution-quality checks.
+locked into the spec's Scope Decision Record; architecture strategy was settled at Stage 2 by `sdd-review-cto`. A
+founder-mode scope review is not part of this pipeline at any stage (there is no `plan-review-ceo`) — running a
+second scope review after the spec has already committed to a posture would re-litigate a decision that's already
+made, on an artifact (the plan) whose job is execution, not strategy. The 4 lenses below are all execution-quality
+checks.
 
-1. **`writing-plans`** *(skill)* / **`planner`** *(agent)* — decompose the phase into 2–3-task plans grouped into
-   dependency-ordered **waves + tracks**, derive goal-backward must-haves, forbid scope-reduction language, emit
-   per-task `complexity_signals`. Output: `PLAN.md`.
+1. **`writing-plans`** *(skill)* + **`planner`** *(agent)* — a skill+agent pair, not two competing authors.
+   `writing-plans` is the canonical authoring methodology and `<task>` format (used standalone for interactive
+   planning); `planner` is the pipeline agent that **invokes `writing-plans`** to author each plan, then adds the
+   pipeline wrapping — multi-plan wave/track decomposition, dependency graph, frontmatter, the `## Parallel
+   Execution Map`, file naming, and git. Both emit the same `PLAN.md` task format (with `complexity_signals` +
+   goal-backward must-haves), so both flow through the review + gate chain below. Output: `PLAN.md`.
 2. **`plan-review`** *(command)* → **`plan-reviewer`** *(agent)*, dispatched once per lens **in parallel**:
    **`plan-review-eng`** (architectural soundness / code quality / test coverage / performance),
    **`plan-review-design`** (UI), **`plan-review-devex`** (developer-facing surface),
@@ -318,8 +330,10 @@ lenses below are all execution-quality checks.
 3. **`gate-plan-review`** *(agent)* — independent, deterministic complexity-score gate on every track's declared
    Model/Effort, plus a **non-Claude** review engine (Gemini → Codex → Claude fallback, per
    `references/independent-review.md`). `gate_passed: true` unlocks Wave 1.
-4. **`analyze`** — read-only cross-artifact audit (spec ↔ plan ↔ tasks ↔ constitution) with a requirement-to-task
-   coverage table before any code is written.
+4. **`analyze`** — read-only cross-artifact audit (spec ↔ `PLAN.md` ↔ constitution) with a requirement-to-task
+   coverage table before any code is written. Reads the phase's `PLAN.md` with its tasks embedded as `<task>`
+   blocks — this pipeline's single-file plan convention — not a separate `plan.md`/`tasks.md` pair (that Spec-Kit
+   triad is what Stage 11's `converge` operates on, a different lineage).
 
 **Default review tier (cost vs. rigor):** running every applicable lens plus `gate-plan-review` is the maximum-rigor
 setting; the conditional-gates table already auto-prunes `plan-review-design`/`-devex` for phases with no UI/dev-facing
@@ -520,14 +534,14 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 
 - **Stage 0:** `constitution`, `spec-miner`, `gate-reverse-engineer`, `doc-classifier`, `doc-synthesizer`, `graphify`
 - **Stage 1:** `brainstorming`, `specify` (generate + clarify in one skill), `assumption-mapping`, `backlog-grooming`, `market-researcher`, `spec-review-cpo` (`the-fool` remains available as an optional extra pressure-test, no longer in the default list; `first-principles-thinking`, `clarify`, and `feature-forge` were folded into `specify`/`spec-review-cpo` — see the note at the top of this document)
-- **Stage 2:** `architecture-designer`, `diagram`, `cso`, `plan-review-eng`
+- **Stage 2:** `architecture-designer`, `diagram`, `cso`, `sdd-review-cto`
 - **Stage 3:** `project-researcher`, `research-synthesizer`, `roadmapper`
 - **Stage 4:** `design-consultation`, `design-html` (`plan-review-design` is introduced here conceptually but
   only executes — and is counted — under Stage 7; `design-handoff` is counted under Stage 8, where it actually
   fires — see both stages' notes)
 - **Stage 5:** `codebase-mapper`, `pattern-mapper`, `assumptions-analyzer`, `advisor-researcher`, `phase-researcher`
 - **Stage 6:** `domain-researcher`, `ui-researcher`, `ui-checker`
-- **Stage 7:** `writing-plans`, `planner`, `plan-review` (cmd), `plan-reviewer`, `plan-review-design`, `plan-review-devex`, `plan-review-goal-backward`, `gate-plan-review`, `analyze` (`plan-review-eng` already counted under Stage 2; `plan-review-ceo` intentionally excluded from this pipeline — see Stage 7's opening note)
+- **Stage 7:** `writing-plans`, `planner`, `plan-review` (cmd), `plan-reviewer`, `plan-review-eng`, `plan-review-design`, `plan-review-devex`, `plan-review-goal-backward`, `gate-plan-review`, `analyze` (`plan-review-eng` is a Stage 7 lens reviewing `PLAN.md`; the Stage 2 SDD/ADR review is now `sdd-review-cto`'s job. There is no `plan-review-ceo` — a founder-mode scope re-review is intentionally not part of this pipeline; scope is owned by `spec-review-cpo` at Stage 1)
 - **Stage 8:** `using-git-worktrees`, `sprint-execution`, `test-driven-development`, `dispatching-parallel-agents`, `fullstack-guardian`, `secure-code-guardian`, `refactoring-specialist`, `guard`, `design-handoff`, `verification-before-completion`
 - **Stage 9:** `debug` (cmd), `debugger`, `systematic-debugging`
 - **Stage 10:** `review` (cmd), `code-review-gate`, `bugfix-wave`, `code-review-protocol`, `qa` (cmd), `qa` (agent), `design-reviewer`, `ui-auditor`, `accessibility-tester`, `devex-review`
@@ -584,7 +598,11 @@ this document. `spec-review-cpo` was added alongside this pipeline doc to close 
 [`core-discovery-and-design.md`](catalog/core-discovery-and-design.md#role-product--requirements-owner));
 `first-principles-thinking`, `clarify`, and `feature-forge` were later removed as standalone assets when a
 Stage 0/1 audit found their content duplicated inside `specify` and `spec-review-cpo` with no other functional
-caller — see the note at the top of this document.
+caller — see the note at the top of this document. A subsequent Stage 2/7 audit made a net-zero skill swap:
+`plan-review-ceo` was removed (a founder-mode scope re-review of the plan re-litigated a decision `spec-review-cpo`
+already locks at Stage 1) and `sdd-review-cto` was added as Stage 2's architecture-strategy gate; `plan-review-eng`,
+formerly claimed to also review the SDD at Stage 2, is now a Stage 7-only lens over `PLAN.md`, and `analyze` was
+retargeted from the Spec-Kit `spec.md`/`plan.md`/`tasks.md` triad to this pipeline's single embedded-task `PLAN.md`.
 
 ---
 

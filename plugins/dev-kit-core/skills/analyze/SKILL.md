@@ -1,22 +1,34 @@
 ---
 name: analyze
-description: Perform a non-destructive cross-artifact consistency and quality analysis across spec.md, plan.md, and tasks.md after task generation. Use when the user says "analyze the spec", "check consistency", "audit the artifacts", "find gaps between spec and tasks", or before implementation begins on a feature that has spec, plan, and tasks written.
+description: Perform a non-destructive cross-artifact consistency and quality analysis across the spec and the phase PLAN.md (tasks embedded as <task> blocks), validated against the constitution, before implementation begins. Use when the user says "analyze the spec", "analyze the plan", "check consistency", "audit the artifacts", "find gaps between spec and plan", or before a phase's plan is executed.
 ---
 
 # Analyze — Cross-Artifact Consistency & Quality Audit
 
 ## Goal
 
-Identify inconsistencies, duplications, ambiguities, and underspecified items across the
-three core artifacts (`spec.md`, `plan.md`, `tasks.md`) before implementation. This
-analysis should run only after task generation has produced a complete `tasks.md`.
+Identify inconsistencies, duplications, ambiguities, and underspecified items between the
+governing **spec** and the phase **`PLAN.md`** — which carries its tasks inline as `<task>`
+blocks — validated against the project **constitution**, before any code is written. This is
+a static, read-only audit; run it once the phase's `PLAN.md` exists (after `planner` /
+`writing-plans` has produced it) and before execution begins.
+
+> **Artifact convention.** This pipeline produces a single `PLAN.md` per plan with its tasks
+> embedded (`<task>…</task>`), not the Spec-Kit `plan.md` + separate `tasks.md` split. `analyze`
+> reads the plan and its tasks from that one file. (The Spec-Kit `spec.md`/`plan.md`/`tasks.md`
+> triad is what `converge` operates on — a different lineage; do not conflate the two.)
 
 ## File Locations
 
-Feature artifacts live in the project's docs/requirements directory (configurable;
-default `docs/specs/<NNN-feature-name>/`). If the project keeps requirements elsewhere,
-follow the existing convention. The project constitution (see the `constitution` skill)
-lives at `docs/constitution.md` by default.
+- **SPEC** — the governing spec: `docs/specs/<NNN-feature-name>/spec.md` (configurable; if the
+  project keeps requirements in `ROADMAP.md`/`REQUIREMENTS.md` instead, use whichever the plan's
+  `requirements` frontmatter references).
+- **PLAN** — the phase plan file(s): by default `.planning/phases/<phase>/*-PLAN.md`. A phase may
+  have several plans across waves; load **all** of them and treat their `<task>` blocks as the
+  combined task set. If the user points at one plan file directly, analyze that file.
+- **CONSTITUTION** — `docs/constitution.md` by default (see the `constitution` skill).
+
+Follow any project-specific path convention (CLAUDE.md) over these defaults.
 
 ## Operating Constraints
 
@@ -34,16 +46,18 @@ constitution update via the `constitution` skill, not here.
 
 ### 1. Initialize Analysis Context
 
-Identify the active feature directory (`FEATURE_DIR`) — from the user's context, the
-most recently modified feature directory, or by asking. Derive paths:
+Identify the phase under review — from the user's context, the most recently modified phase
+directory, or by asking. Resolve:
 
-- SPEC = FEATURE_DIR/spec.md
-- PLAN = FEATURE_DIR/plan.md
-- TASKS = FEATURE_DIR/tasks.md
+- SPEC = the governing spec (`docs/specs/<NNN-feature-name>/spec.md`, or the requirements doc
+  the plan's `requirements` frontmatter points at)
+- PLAN = the phase's `PLAN.md` file(s) (`.planning/phases/<phase>/*-PLAN.md`) — tasks live
+  inline as `<task>` blocks
+- CONSTITUTION = `docs/constitution.md`
 
-Abort with an error message if any required file is missing (instruct the user to run
-the missing prerequisite step: `specify` for a missing spec, planning for a missing
-plan, task generation for missing tasks).
+Abort with an actionable message if a required input is missing (instruct the user to run the
+missing prerequisite: `specify` for a missing spec, `planner`/`writing-plans` for a missing
+`PLAN.md`). A missing constitution is not fatal — note it and skip the constitution passes.
 
 ### 2. Load Artifacts (Progressive Disclosure)
 
@@ -57,20 +71,15 @@ Load only the minimal necessary context from each artifact:
 - User Stories
 - Edge Cases (if present)
 
-**From plan.md:**
+**From PLAN.md (each plan file):**
 
-- Architecture/stack choices
-- Data Model references
-- Phases
-- Technical constraints
-
-**From tasks.md:**
-
-- Task IDs
-- Descriptions
-- Phase grouping
-- Parallel markers [P]
-- Referenced file paths
+- Frontmatter: `requirements` (requirement IDs this plan claims), `must_haves`
+  (truths/artifacts/key_links), `wave`, `depends_on`, `files_modified`
+- `<objective>` — what the plan builds and why
+- `<context>` — architecture/stack choices and referenced source files
+- Each `<task>` block — its `<name>`, `<files>`, `<action>`, `<verify>`, `<done>`, and
+  `<complexity_signals>`. Treat the task's `<name>` (and any REQ-/US-xxx ID it cites) as its
+  stable key; the tasks are the unit that requirements map onto.
 
 **From constitution:**
 
@@ -168,7 +177,7 @@ At end of report, output a concise Next Actions block:
 
 - If CRITICAL issues exist: Recommend resolving before implementation
 - If only LOW/MEDIUM: User may proceed, but provide improvement suggestions
-- Provide explicit suggestions: e.g., "Run the `specify` skill with refinement", "Adjust the architecture in plan.md", "Manually edit tasks.md to add coverage for 'performance-metrics'"
+- Provide explicit suggestions: e.g., "Run the `specify` skill with refinement", "Re-run `planner`/`writing-plans` to adjust the plan's architecture in `PLAN.md`", "Add a `<task>` to `PLAN.md` to cover 'performance-metrics'"
 
 ### 8. Offer Remediation
 

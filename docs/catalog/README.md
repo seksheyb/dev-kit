@@ -72,7 +72,7 @@ duplicated:
   UX/Design.
 - `writing-plans` (Architect/Planner) is authored by that role but consumed daily by
   Engineer.
-- The plan-review lens skills (`plan-review-ceo/eng/devex/goal-backward/design`) are
+- The plan-review lens skills (`plan-review-eng/devex/goal-backward/design`) are
   dispatched together in parallel by the single `plan-reviewer` agent — they're
   co-located in the same plugin specifically so this fan-out never breaks across a
   plugin boundary.

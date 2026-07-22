@@ -85,7 +85,7 @@ MCP is built on JSON-RPC 2.0 and enables bidirectional communication between cli
   "id": 1,
   "method": "initialize",
   "params": {
-    "protocolVersion": "2024-11-05",
+    "protocolVersion": "2025-06-18",
     "capabilities": {
       "roots": { "listChanged": true },
       "sampling": {}
@@ -102,7 +102,7 @@ MCP is built on JSON-RPC 2.0 and enables bidirectional communication between cli
   "jsonrpc": "2.0",
   "id": 1,
   "result": {
-    "protocolVersion": "2024-11-05",
+    "protocolVersion": "2025-06-18",
     "capabilities": {
       "resources": { "subscribe": true, "listChanged": true },
       "tools": { "listChanged": true },
@@ -121,6 +121,10 @@ MCP is built on JSON-RPC 2.0 and enables bidirectional communication between cli
   "method": "notifications/initialized"
 }
 ```
+
+**Heads up:** a stateless-transport revision of the spec is in its final validation
+window and supersedes this handshake once clients migrate — see Protocol Versions
+below before assuming `initialize`/`initialized` is permanent.
 
 ## Core Methods
 
@@ -228,9 +232,17 @@ data: {"jsonrpc":"2.0","id":1,"result":{...}}
 
 ## Protocol Versions
 
-Current version: `2024-11-05`
+MCP is versioned by date-stamped spec revisions, not semver — `2025-06-18` is the
+revision in wide deployment today. Treat any hardcoded version string as a snapshot,
+not a permanent fact: a major revision is in its final SDK-validation window and
+supersedes the `initialize`/`initialized` handshake with a stateless model (version
+and capabilities travel in `_meta` on every request instead of a one-time handshake),
+adds an MCP Apps extension (tools returning interactive UI in sandboxed iframes),
+a Tasks extension for long-running work, and an OAuth 2.1/OIDC-aligned authorization
+model. Check the negotiated `protocolVersion` before relying on handshake-era
+assumptions, and confirm which revision your SDK and client actually speak.
 
-Servers must declare supported version in initialize response. Clients should verify compatibility.
+Servers must declare supported version in the initialize response. Clients should verify compatibility.
 
 ## Best Practices
 

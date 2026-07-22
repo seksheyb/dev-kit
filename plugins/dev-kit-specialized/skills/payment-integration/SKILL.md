@@ -1,6 +1,6 @@
 ---
 name: payment-integration
-description: "Use when the task involves payment integration — payment gateways, transaction processing, subscription billing, PCI DSS compliance, tokenization, fraud prevention, webhooks, refunds/chargebacks, or multi-currency support."
+description: "Use when the task involves payment integration — payment gateways, transaction processing, subscription billing, PCI DSS v4.0.1 compliance, tokenization, fraud prevention, webhooks, refunds/chargebacks, or multi-currency support."
 ---
 
 # Payment Integration
@@ -16,7 +16,7 @@ Knowledge pack for implementing secure, compliant payment systems: gateway integ
 
 ## Payment Integration Checklist
 
-- PCI DSS compliant verified
+- PCI DSS v4.0.1 compliance verified (all requirements are mandatory as of 2026, including the formerly future-dated ones — do not assess against v3.2.1 or unversioned "v4")
 - Transaction success > 99.9% maintained
 - Processing time < 3s achieved
 - Zero payment data storage ensured
@@ -41,6 +41,7 @@ Knowledge pack for implementing secure, compliant payment systems: gateway integ
 - Credit/debit cards
 - Digital wallets
 - Bank transfers
+- Instant payment rails (SEPA Instant, FedNow, RTP — check regional mandate vs. opt-in status)
 - Cryptocurrencies
 - Buy now pay later
 - Mobile payments
@@ -49,8 +50,9 @@ Knowledge pack for implementing secure, compliant payment systems: gateway integ
 
 ## PCI Compliance
 
+- PCI DSS v4.0.1 scope assessment (SAQ type, all requirements mandatory as of 2026)
 - Data encryption
-- Tokenization
+- Tokenization (including network tokenization, not just PCI-scoped vaulting)
 - Secure transmission
 - Access control
 - Network security
@@ -87,6 +89,7 @@ Knowledge pack for implementing secure, compliant payment systems: gateway integ
 - Address verification
 - CVV verification
 - 3D Secure
+- Passkey/FIDO2 checkout authentication (reduces CNP fraud, complements or replaces OTP-based SCA)
 - Machine learning
 - Blacklist management
 - Manual review
@@ -115,9 +118,13 @@ Knowledge pack for implementing secure, compliant payment systems: gateway integ
 
 ## Compliance and Security
 
-- PCI DSS requirements
+- PCI DSS v4.0.1 requirements (all mandatory as of 2026; do not assess against v3.2.1 or an unversioned "v4")
+- EU PSD3/PSR readiness (final compromise texts published 2026; PSR/PSD3 repeal PSD2 and EMD2, applying EU-wide roughly 21 months after the PSR enters into force — track the transposition timeline for any EU-facing flow)
+- Instant payment rails (SEPA Instant is now mandatory for EU PSPs to receive and, on a phased basis, send; FedNow remains adoption-optional per US institution — do not assume parity across regions)
 - 3D Secure implementation
 - Strong Customer Authentication
+- Passkey-based checkout authentication (FIDO2/WebAuthn passwordless flows increasingly offered alongside or instead of OTP-based SCA)
+- Network tokenization (card-network tokens, distinct from and often layered with PCI-scoped token vaulting; pairs with passkeys for click-to-pay)
 - Token vault setup
 - Encryption standards
 - Fraud detection

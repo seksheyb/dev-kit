@@ -8,65 +8,32 @@ npm install @modelcontextprotocol/sdk zod
 
 ## Basic Server Setup
 
+The high-level `McpServer` API (not the low-level `Server` class) is the recommended
+entry point — it handles capability negotiation, request routing, and schema
+conversion for you.
+
 ```typescript
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-  ListResourcesRequestSchema,
-  ReadResourceRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 
 // Create server instance
-const server = new Server(
-  {
-    name: "example-server",
-    version: "1.0.0",
-  },
-  {
-    capabilities: {
-      resources: {},
-      tools: {},
-      prompts: {},
-    },
-  }
-);
-
-// Handle tools/list request
-server.setRequestHandler(ListToolsRequestSchema, async () => {
-  return {
-    tools: [
-      {
-        name: "get_weather",
-        description: "Get current weather for a location",
-        inputSchema: {
-          type: "object",
-          properties: {
-            location: {
-              type: "string",
-              description: "City name or zip code",
-            },
-            units: {
-              type: "string",
-              enum: ["celsius", "fahrenheit"],
-              default: "celsius",
-            },
-          },
-          required: ["location"],
-        },
-      },
-    ],
-  };
+const server = new McpServer({
+  name: "example-server",
+  version: "1.0.0",
 });
 
-// Handle tools/call request
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  if (request.params.name === "get_weather") {
-    const location = String(request.params.arguments?.location);
-    const units = String(request.params.arguments?.units ?? "celsius");
-
+// Register a tool
+server.registerTool(
+  "get_weather",
+  {
+    description: "Get current weather for a location",
+    inputSchema: {
+      location: z.string().min(1).describe("City name or zip code"),
+      units: z.enum(["celsius", "fahrenheit"]).default("celsius"),
+    },
+  },
+  async ({ location, units }) => {
     // Your tool logic here
     const weatherData = await fetchWeather(location, units);
 
@@ -79,9 +46,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       ],
     };
   }
-
-  throw new Error(`Unknown tool: ${request.params.name}`);
-});
+);
 
 // Start server with stdio transport
 async function main() {
@@ -96,148 +61,109 @@ main().catch(console.error);
 ## Resource Provider
 
 ```typescript
-import {
-  ListResourcesRequestSchema,
-  ReadResourceRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
+import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-// List resources
-server.setRequestHandler(ListResourcesRequestSchema, async () => {
-  return {
-    resources: [
-      {
-        uri: "file:///config/settings.json",
-        name: "Application Settings",
-        description: "Current application configuration",
-        mimeType: "application/json",
-      },
-      {
-        uri: "db://users/schema",
-        name: "User Schema",
-        description: "Database schema for users table",
-        mimeType: "text/plain",
-      },
-    ],
-  };
-});
-
-// Read resource content
-server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-  const uri = request.params.uri;
-
-  if (uri === "file:///config/settings.json") {
+// Static resource
+server.registerResource(
+  "app-settings",
+  "file:///config/settings.json",
+  {
+    name: "Application Settings",
+    description: "Current application configuration",
+    mimeType: "application/json",
+  },
+  async (uri) => {
     const settings = await loadSettings();
     return {
       contents: [
         {
-          uri,
+          uri: uri.href,
           mimeType: "application/json",
           text: JSON.stringify(settings, null, 2),
         },
       ],
     };
   }
+);
 
-  if (uri.startsWith("db://users/")) {
-    const schema = await getDatabaseSchema("users");
+// Dynamic resource with a URI template
+server.registerResource(
+  "user-schema",
+  new ResourceTemplate("db://users/{table}/schema", { list: undefined }),
+  {
+    name: "Database Schema",
+    description: "Schema for a database table",
+    mimeType: "text/plain",
+  },
+  async (uri, { table }) => {
+    const schema = await getDatabaseSchema(table as string);
     return {
-      contents: [
-        {
-          uri,
-          mimeType: "text/plain",
-          text: schema,
-        },
-      ],
+      contents: [{ uri: uri.href, mimeType: "text/plain", text: schema }],
     };
   }
-
-  throw new Error(`Resource not found: ${uri}`);
-});
+);
 ```
 
 ## Prompt Templates
 
 ```typescript
-import {
-  ListPromptsRequestSchema,
-  GetPromptRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
-
-server.setRequestHandler(ListPromptsRequestSchema, async () => {
-  return {
-    prompts: [
+server.registerPrompt(
+  "code_review",
+  {
+    description: "Generate code review comments",
+    argsSchema: {
+      language: z.string().describe("Programming language"),
+      code: z.string().describe("Code to review"),
+    },
+  },
+  ({ language, code }) => ({
+    messages: [
       {
-        name: "code_review",
-        description: "Generate code review comments",
-        arguments: [
-          {
-            name: "language",
-            description: "Programming language",
-            required: true,
-          },
-          {
-            name: "code",
-            description: "Code to review",
-            required: true,
-          },
-        ],
+        role: "user",
+        content: {
+          type: "text",
+          text: `Review this ${language} code and provide feedback:\n\n${code}`,
+        },
       },
     ],
-  };
-});
-
-server.setRequestHandler(GetPromptRequestSchema, async (request) => {
-  if (request.params.name === "code_review") {
-    const language = String(request.params.arguments?.language);
-    const code = String(request.params.arguments?.code);
-
-    return {
-      messages: [
-        {
-          role: "user",
-          content: {
-            type: "text",
-            text: `Review this ${language} code and provide feedback:\n\n${code}`,
-          },
-        },
-      ],
-    };
-  }
-
-  throw new Error(`Unknown prompt: ${request.params.name}`);
-});
+  })
+);
 ```
 
 ## Input Validation with Zod
 
-```typescript
-import { z } from "zod";
+`registerTool`'s `inputSchema` accepts a plain object of Zod schemas — the SDK
+converts it to JSON Schema and validates incoming arguments before your handler
+runs, so parsed, typed values arrive directly in the handler's destructured
+argument (as in the `get_weather` example above). For validation beyond what
+the schema shape expresses, refine within the handler:
 
-// Define schemas for validation
+```typescript
 const WeatherArgsSchema = z.object({
   location: z.string().min(1),
   units: z.enum(["celsius", "fahrenheit"]).default("celsius"),
 });
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  if (request.params.name === "get_weather") {
-    // Validate and parse arguments
-    const args = WeatherArgsSchema.parse(request.params.arguments);
-
-    const weatherData = await fetchWeather(args.location, args.units);
+server.registerTool(
+  "get_weather_strict",
+  {
+    description: "Get current weather (with extra validation)",
+    inputSchema: WeatherArgsSchema.shape,
+  },
+  async (args) => {
+    const { location, units } = WeatherArgsSchema.parse(args);
+    const weatherData = await fetchWeather(location, units);
 
     return {
       content: [
         {
           type: "text",
-          text: `Temperature: ${weatherData.temp}°${args.units === "celsius" ? "C" : "F"}`,
+          text: `Temperature: ${weatherData.temp}°${units === "celsius" ? "C" : "F"}`,
         },
       ],
     };
   }
-
-  throw new Error(`Unknown tool: ${request.params.name}`);
-});
+);
 ```
 
 ## Error Handling
@@ -245,31 +171,33 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 ```typescript
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  try {
-    // Validate input
-    if (!request.params.arguments?.location) {
+server.registerTool(
+  "get_weather_safe",
+  {
+    description: "Get current weather with explicit error handling",
+    inputSchema: { location: z.string().min(1) },
+  },
+  async ({ location }) => {
+    try {
+      if (!location) {
+        throw new McpError(ErrorCode.InvalidParams, "location parameter is required");
+      }
+
+      const result = await fetchWeather(location, "celsius");
+      return { content: [{ type: "text", text: JSON.stringify(result) }] };
+    } catch (error) {
+      if (error instanceof McpError) {
+        throw error; // Re-throw MCP errors
+      }
+
+      // Wrap other errors
       throw new McpError(
-        ErrorCode.InvalidParams,
-        "location parameter is required"
+        ErrorCode.InternalError,
+        `Tool execution failed: ${error.message}`
       );
     }
-
-    const result = await executeTool(request.params.name, request.params.arguments);
-    return { content: [{ type: "text", text: result }] };
-
-  } catch (error) {
-    if (error instanceof McpError) {
-      throw error; // Re-throw MCP errors
-    }
-
-    // Wrap other errors
-    throw new McpError(
-      ErrorCode.InternalError,
-      `Tool execution failed: ${error.message}`
-    );
   }
-});
+);
 ```
 
 ## Basic Client Setup
@@ -297,24 +225,14 @@ const transport = new StdioClientTransport({
 await client.connect(transport);
 
 // List available tools
-const toolsResponse = await client.request(
-  { method: "tools/list" },
-  ListToolsResultSchema
-);
-
+const toolsResponse = await client.listTools();
 console.log("Available tools:", toolsResponse.tools);
 
 // Call a tool
-const result = await client.request(
-  {
-    method: "tools/call",
-    params: {
-      name: "get_weather",
-      arguments: { location: "San Francisco" },
-    },
-  },
-  CallToolResultSchema
-);
+const result = await client.callTool({
+  name: "get_weather",
+  arguments: { location: "San Francisco" },
+});
 
 console.log("Result:", result.content);
 ```
@@ -322,8 +240,8 @@ console.log("Result:", result.content);
 ## Notifications
 
 ```typescript
-// Server sends notification
-server.notification({
+// Server notifies clients that a resource changed
+await server.server.notification({
   method: "notifications/resources/updated",
   params: {
     uri: "file:///config/settings.json",
@@ -331,12 +249,21 @@ server.notification({
 });
 
 // Client handles notifications
-client.setNotificationHandler((notification) => {
-  if (notification.method === "notifications/resources/updated") {
+client.setNotificationHandler(
+  { method: "notifications/resources/updated" },
+  (notification) => {
     console.log("Resource updated:", notification.params.uri);
   }
-});
+);
 ```
+
+## When to Use the Low-Level `Server` Class
+
+`McpServer` covers the vast majority of servers. Drop to the low-level `Server`
+class (`@modelcontextprotocol/sdk/server/index.js`, with `setRequestHandler` for
+schemas like `CallToolRequestSchema`/`ListToolsRequestSchema`) only when you need
+full control over the request/response cycle — for example, custom capability
+negotiation or protocol behavior `McpServer` doesn't expose.
 
 ## Best Practices
 

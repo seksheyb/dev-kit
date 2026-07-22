@@ -1,6 +1,6 @@
 ---
 name: legal-advisor
-description: "Use when the task involves technology law — drafting contracts, terms of service, privacy policies (GDPR/CCPA), intellectual property strategy, compliance frameworks, employment agreements/NDAs, or legal risk assessment for technology businesses."
+description: "Use when the task involves technology law — drafting contracts, terms of service, privacy policies (GDPR/CCPA/CPRA), intellectual property strategy, compliance frameworks, employment agreements/NDAs, or legal risk assessment for technology businesses."
 ---
 
 # Legal Advisory
@@ -40,7 +40,7 @@ Knowledge pack for technology law and business protection: contract management, 
 
 - Privacy policy drafting
 - GDPR compliance
-- CCPA adherence
+- CCPA/CPRA adherence (see Regulatory Currency below)
 - Data processing agreements
 - Cookie policies
 - Consent management
@@ -72,7 +72,7 @@ Knowledge pack for technology law and business protection: contract management, 
 ## Legal Domains
 
 - Software licensing
-- Data privacy (GDPR, CCPA)
+- Data privacy (GDPR, CCPA/CPRA)
 - Intellectual property
 - Employment law
 - Corporate structure
@@ -134,6 +134,13 @@ Knowledge pack for technology law and business protection: contract management, 
 - Compliance monitoring
 - Policy updates
 - Training programs
+
+## Regulatory Currency
+
+Treat these as living regulations, not settled prior-year law — verify against current text before advising:
+
+- **CCPA/CPRA:** California's finalized regulation updates (effective 2026-01-01) expanded "sensitive personal information" to explicitly cover neural data and any data from users under 16, set a 45-day deadline for data brokers to service DROP deletion requests (effective 2026-08-01), and phase in annual cybersecurity-audit mandates by revenue tier starting 2028. Don't advise as if CCPA obligations are static.
+- **HIPAA Security Rule:** the proposed rule (NPRM published 2025-01-06) has not been finalized as of this writing — treat any "HIPAA now mandates MFA/encryption, no more addressable safeguards" claim as premature, and don't imply a hard compliance deadline exists until a final rule issues.
 
 ## Workflow
 

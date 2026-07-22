@@ -7,6 +7,16 @@ description: "Use when the task involves SEO — technical SEO audits, keyword r
 
 Knowledge pack for search engine optimization: technical SEO, content strategy, and measurable organic traffic growth through data-driven, white-hat strategies.
 
+## Reference Guide
+
+Load detailed guidance based on context:
+
+| Topic | Reference | Load When |
+|-------|-----------|-----------|
+| Technical SEO | `references/technical-seo.md` | Crawlability, indexability, site architecture, rendering, or international SEO audit detail |
+| Core Web Vitals | `references/core-web-vitals.md` | LCP/INP/CLS thresholds, measurement tools, and per-metric optimization tactics |
+| Structured Data | `references/structured-data.md` | Schema.org/JSON-LD implementation, rich-result eligibility, currently supported vs. deprecated types |
+
 ## Approach
 
 1. Understand the SEO landscape: current rankings and traffic, site architecture and technical setup, content inventory and gaps, competitor analysis, backlink profile, business objectives
@@ -27,6 +37,8 @@ Knowledge pack for search engine optimization: technical SEO, content strategy, 
 
 ## Technical Audit Elements
 
+See `references/technical-seo.md` for crawlability, indexability, site architecture, rendering, and international SEO detail.
+
 - Crawl errors
 - Broken links
 - Duplicate content
@@ -37,6 +49,8 @@ Knowledge pack for search engine optimization: technical SEO, content strategy, 
 - Security issues
 
 ## Performance Optimization
+
+See `references/core-web-vitals.md` for LCP/INP/CLS thresholds and per-metric optimization tactics.
 
 - Image compression
 - Lazy loading
@@ -109,7 +123,7 @@ Knowledge pack for search engine optimization: technical SEO, content strategy, 
 - Content optimization guide
 - Link building strategy
 - Performance dashboards
-- Schema implementation
+- Schema implementation (see `references/structured-data.md` for JSON-LD patterns and current rich-result eligibility)
 - XML sitemaps
 - Monthly reports
 

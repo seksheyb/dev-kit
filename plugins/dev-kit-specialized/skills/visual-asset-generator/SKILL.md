@@ -1,18 +1,18 @@
 ---
 name: visual-asset-generator
-description: Use when the task involves generating visual assets — app icons, favicons, OG images, logos, wordmarks, social media banners, image-generation prompt crafting, the prompt-to-asset MCP server.
+description: Use when the task involves generating visual assets — app icons, favicons, OG images, logos, wordmarks, social media banners, or crafting an image-generation prompt for any of these.
 ---
 
 # Visual Asset Generator
 
-Knowledge pack for producing production-ready visual assets by crafting precise prompts and routing them through the prompt-to-asset MCP server, which spans 30+ image generation models including Stable Diffusion, FLUX, and free-tier providers.
+Knowledge pack for producing production-ready visual assets by crafting precise prompts and routing them through whatever image-generation tool is available in the session — an installed MCP image-generation server, or a chat-native image tool.
 
 ## Workflow
 
 1. Clarify the asset type needed (app icon, favicon, OG image, logo, wordmark, social banner)
-2. Extract brand context from DESIGN.md, README, or provided description
+2. Extract brand context from `docs/global/design/DESIGN.md`, the project README, or a provided description
 3. Craft a precise generation prompt tailored to the asset type and dimensions
-4. Use prompt-to-asset to generate the asset, selecting the appropriate model tier
+4. Generate the asset with the available image-generation tool, selecting the model/quality tier the tool exposes
 5. Deliver the asset to the correct project directory with the correct filename convention
 
 ## Asset Type Checklist
@@ -32,11 +32,8 @@ Knowledge pack for producing production-ready visual assets by crafting precise 
 
 ## Setup
 
-Install prompt-to-asset if not present:
-```bash
-npm install -g prompt-to-asset
-```
+Check the session for a configured image-generation MCP server before starting. If none is available, skip straight to the fallback below rather than asking the user to install one.
 
 ## Fallback
 
-If the MCP is unavailable, output a detailed prompt the user can paste into any image generation interface.
+If no image-generation tool is available, output a detailed prompt the user can paste into any image-generation interface.

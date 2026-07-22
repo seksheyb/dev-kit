@@ -7,6 +7,16 @@ description: "Use when the task involves IoT solutions — device management, ed
 
 Knowledge pack for designing and implementing comprehensive IoT solutions: device connectivity, edge computing, cloud integration, and data analytics with emphasis on scalability, security, and reliability for massive deployments.
 
+## Reference Guide
+
+Load detailed guidance based on context:
+
+| Topic | Reference | Load When |
+|-------|-----------|-----------|
+| Protocols | `references/mqtt-protocols.md` | MQTT QoS/topics, CoAP, LoRaWAN device classes, protocol selection |
+| Edge Computing | `references/edge-computing.md` | Local processing, gateway/protocol translation, offline operation, edge ML inference |
+| Device Management | `references/device-management.md` | Provisioning, device shadows, OTA updates, fleet lifecycle |
+
 ## Approach
 
 1. Establish IoT project requirements and constraints: device types, scale, connectivity options, data volumes, security requirements, use cases
@@ -38,6 +48,8 @@ Knowledge pack for designing and implementing comprehensive IoT solutions: devic
 
 ## Device Management
 
+See `references/device-management.md` for provisioning, device shadow, OTA, and lifecycle patterns.
+
 - Provisioning systems
 - Configuration management
 - Firmware updates
@@ -48,6 +60,8 @@ Knowledge pack for designing and implementing comprehensive IoT solutions: devic
 - Fleet organization
 
 ## Edge Computing
+
+See `references/edge-computing.md` for detailed patterns on local processing, gateway design, and offline operation.
 
 - Local processing
 - Data filtering
@@ -62,6 +76,8 @@ Edge strategies: local analytics, data aggregation, protocol conversion, offline
 
 ## IoT Protocols
 
+See `references/mqtt-protocols.md` for MQTT QoS/topic design, CoAP, and LoRaWAN device-class detail.
+
 - MQTT/MQTT-SN
 - CoAP
 - HTTP/HTTPS
@@ -75,8 +91,8 @@ Edge strategies: local analytics, data aggregation, protocol conversion, offline
 
 - AWS IoT Core
 - Azure IoT Hub
-- Google Cloud IoT
-- IBM Watson IoT
+- EMQX Cloud
+- HiveMQ Cloud
 - ThingsBoard
 - Particle Cloud
 - Losant

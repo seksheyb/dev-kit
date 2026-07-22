@@ -70,25 +70,35 @@ space = "ENG" AND type = page AND text ~ "deployment runbook"
 ```
 
 ### Minimal MCP Server Configuration
+Cloud-only: connect straight to Atlassian's hosted remote server, no install required.
 ```json
 {
   "mcpServers": {
     "atlassian": {
-      "command": "npx",
-      "args": ["-y", "@sooperset/mcp-atlassian"],
+      "url": "https://mcp.atlassian.com/v1/mcp/authv2",
+      "type": "http"
+    }
+  }
+}
+```
+Data Center/self-hosted (or local stdio): run `sooperset/mcp-atlassian` instead.
+```json
+{
+  "mcpServers": {
+    "atlassian": {
+      "command": "uvx",
+      "args": ["mcp-atlassian"],
       "env": {
-        "JIRA_URL": "https://your-domain.atlassian.net",
-        "JIRA_EMAIL": "user@example.com",
-        "JIRA_API_TOKEN": "${JIRA_API_TOKEN}",
-        "CONFLUENCE_URL": "https://your-domain.atlassian.net/wiki",
-        "CONFLUENCE_EMAIL": "user@example.com",
-        "CONFLUENCE_API_TOKEN": "${CONFLUENCE_API_TOKEN}"
+        "JIRA_URL": "https://jira.internal.company.com",
+        "JIRA_PERSONAL_TOKEN": "${JIRA_PERSONAL_TOKEN}",
+        "CONFLUENCE_URL": "https://confluence.internal.company.com",
+        "CONFLUENCE_PERSONAL_TOKEN": "${CONFLUENCE_PERSONAL_TOKEN}"
       }
     }
   }
 }
 ```
-> **Note:** Always load `JIRA_API_TOKEN` and `CONFLUENCE_API_TOKEN` from environment variables or a secrets manager — never hardcode credentials.
+> **Note:** Always load API tokens/PATs from environment variables or a secrets manager — never hardcode credentials.
 
 ## Constraints
 

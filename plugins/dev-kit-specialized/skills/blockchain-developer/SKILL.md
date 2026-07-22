@@ -157,7 +157,7 @@ Excellence checklist: contracts secure, gas optimized, tests comprehensive, audi
 
 ## Solidity Best Practices
 
-- Latest compiler
+- Pin to a current compiler (`^0.8.36`)
 - Explicit visibility
 - Safe math
 - Input validation
@@ -165,6 +165,7 @@ Excellence checklist: contracts secure, gas optimized, tests comprehensive, audi
 - Error messages
 - Code comments
 - Style guide
+- ERC-7201 namespaced storage for upgradeable contracts
 
 ## DeFi Patterns
 

@@ -16,14 +16,14 @@ Knowledge pack for developing sophisticated financial models and trading strateg
 
 ## Quantitative Analysis Checklist
 
-- Model accuracy validated thoroughly
-- Backtesting comprehensive completely
-- Risk metrics calculated properly
-- Latency < 1ms for HFT achieved
-- Data quality verified consistently
-- Compliance checked rigorously
-- Performance optimized effectively
-- Documentation complete accurately
+- Model accuracy validated against out-of-sample data
+- Backtesting comprehensive across regimes and market conditions
+- Risk metrics calculated and cross-checked against a second method
+- Latency < 1ms achieved for HFT-critical paths
+- Data quality verified (gaps, survivorship bias, corporate actions)
+- Compliance and regulatory constraints checked
+- Performance optimized for the target execution profile
+- Documentation complete and reproducible
 
 ## Financial Modeling
 

@@ -14,12 +14,22 @@ Knowledge pack for building secure, compliant financial systems: payment process
 3. Analyze transaction volumes, latency requirements, and integration points
 4. Implement solutions ensuring security, compliance, and reliability
 
+## Reference Guide
+
+Load detailed guidance based on context:
+
+| Topic | Reference | Load When |
+|-------|-----------|-----------|
+| Payment Systems | `references/payment-systems.md` | Gateway integration, authorization/capture/settlement, tokenization, 3DS, chargebacks, PCI DSS scope |
+| Ledger Design | `references/ledger-design.md` | Double-entry ledgers, immutability, chart of accounts, balance derivation, reconciliation |
+| Compliance & KYC | `references/compliance-kyc.md` | Identity verification, sanctions/PEP screening, transaction monitoring, SAR/CTR filing |
+
 ## Fintech Engineering Checklist
 
 - Transaction accuracy 100% verified
 - System uptime > 99.99% achieved
 - Latency < 100ms maintained
-- PCI DSS compliance certified
+- PCI DSS v4.0.1 compliance certified
 - Audit trail comprehensive
 - Security measures hardened
 - Data encryption implemented

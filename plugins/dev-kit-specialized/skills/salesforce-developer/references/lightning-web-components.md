@@ -186,7 +186,7 @@ export default class AccountCard extends NavigationMixin(LightningElement) {
 <!-- accountCard.js-meta.xml -->
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>59.0</apiVersion>
+    <apiVersion>65.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>Account Card</masterLabel>
     <description>Displays account information in a card format</description>

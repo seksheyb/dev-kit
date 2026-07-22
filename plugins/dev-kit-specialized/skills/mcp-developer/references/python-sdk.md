@@ -8,244 +8,112 @@ pip install mcp pydantic
 
 ## Basic Server Setup
 
+`FastMCP` (`mcp.server.fastmcp`) is the recommended high-level API — it derives
+tool/resource/prompt schemas from type hints and docstrings instead of requiring
+manual schema wiring.
+
 ```python
-from mcp.server import Server
-from mcp.server.stdio import stdio_server
-from mcp.types import (
-    Tool,
-    TextContent,
-    CallToolRequest,
-    ListToolsRequest,
-)
-from pydantic import BaseModel, Field
-import asyncio
+from mcp.server.fastmcp import FastMCP
+from pydantic import Field
+from typing import Literal
 
 # Create server instance
-app = Server("example-server")
+mcp = FastMCP("example-server")
 
-# Define tool input schema
-class WeatherArgs(BaseModel):
-    location: str = Field(..., description="City name or zip code")
-    units: str = Field(default="celsius", pattern="^(celsius|fahrenheit)$")
+# Register a tool — schema is inferred from the type hints
+@mcp.tool()
+async def get_weather(
+    location: str = Field(..., description="City name or zip code"),
+    units: Literal["celsius", "fahrenheit"] = "celsius",
+) -> str:
+    """Get current weather for a location."""
+    weather_data = await fetch_weather(location, units)
+    unit_symbol = "C" if units == "celsius" else "F"
+    return f"Weather in {location}: {weather_data['temp']}°{unit_symbol}"
 
-# List available tools
-@app.list_tools()
-async def list_tools() -> list[Tool]:
-    return [
-        Tool(
-            name="get_weather",
-            description="Get current weather for a location",
-            inputSchema=WeatherArgs.model_json_schema(),
-        )
-    ]
-
-# Handle tool execution
-@app.call_tool()
-async def call_tool(name: str, arguments: dict) -> list[TextContent]:
-    if name == "get_weather":
-        # Validate arguments
-        args = WeatherArgs(**arguments)
-
-        # Execute tool logic
-        weather_data = await fetch_weather(args.location, args.units)
-
-        return [
-            TextContent(
-                type="text",
-                text=f"Weather in {args.location}: {weather_data['temp']}°{
-                    'C' if args.units == 'celsius' else 'F'
-                }",
-            )
-        ]
-
-    raise ValueError(f"Unknown tool: {name}")
-
-# Run server
-async def main():
-    async with stdio_server() as (read_stream, write_stream):
-        await app.run(
-            read_stream,
-            write_stream,
-            app.create_initialization_options(),
-        )
-
+# Run server (defaults to stdio transport)
 if __name__ == "__main__":
-    asyncio.run(main())
+    mcp.run()
 ```
 
 ## Resource Provider
 
 ```python
-from mcp.types import (
-    Resource,
-    ResourceTemplate,
-    TextResourceContents,
-    ListResourcesRequest,
-    ReadResourceRequest,
-)
 import json
 
-@app.list_resources()
-async def list_resources() -> list[Resource]:
-    return [
-        Resource(
-            uri="file:///config/settings.json",
-            name="Application Settings",
-            description="Current application configuration",
-            mimeType="application/json",
-        ),
-        Resource(
-            uri="db://users/schema",
-            name="User Schema",
-            description="Database schema for users table",
-            mimeType="text/plain",
-        ),
-    ]
+@mcp.resource("file:///config/settings.json")
+async def app_settings() -> str:
+    """Current application configuration."""
+    settings = await load_settings()
+    return json.dumps(settings, indent=2)
 
-@app.read_resource()
-async def read_resource(uri: str) -> str:
-    if uri == "file:///config/settings.json":
-        settings = await load_settings()
-        return json.dumps(settings, indent=2)
-
-    if uri.startswith("db://users/"):
-        schema = await get_database_schema("users")
-        return schema
-
-    raise ValueError(f"Resource not found: {uri}")
-```
-
-## Resource Templates (Dynamic URIs)
-
-```python
-@app.list_resource_templates()
-async def list_resource_templates() -> list[ResourceTemplate]:
-    return [
-        ResourceTemplate(
-            uriTemplate="user://{user_id}/profile",
-            name="User Profile",
-            description="Get user profile by ID",
-            mimeType="application/json",
-        )
-    ]
-
-@app.read_resource()
-async def read_resource(uri: str) -> str:
-    # Parse template URI
-    if uri.startswith("user://"):
-        user_id = uri.split("/")[2]
-        profile = await get_user_profile(user_id)
-        return json.dumps(profile, indent=2)
-
-    raise ValueError(f"Unknown resource: {uri}")
+# Dynamic resource with a URI template
+@mcp.resource("db://users/{table}/schema")
+async def database_schema(table: str) -> str:
+    """Database schema for a given table."""
+    return await get_database_schema(table)
 ```
 
 ## Prompt Templates
 
 ```python
-from mcp.types import (
-    Prompt,
-    PromptArgument,
-    PromptMessage,
-    GetPromptRequest,
-)
-
-@app.list_prompts()
-async def list_prompts() -> list[Prompt]:
-    return [
-        Prompt(
-            name="code_review",
-            description="Generate code review comments",
-            arguments=[
-                PromptArgument(
-                    name="language",
-                    description="Programming language",
-                    required=True,
-                ),
-                PromptArgument(
-                    name="code",
-                    description="Code to review",
-                    required=True,
-                ),
-            ],
-        )
-    ]
-
-@app.get_prompt()
-async def get_prompt(name: str, arguments: dict) -> list[PromptMessage]:
-    if name == "code_review":
-        language = arguments["language"]
-        code = arguments["code"]
-
-        return [
-            PromptMessage(
-                role="user",
-                content=TextContent(
-                    type="text",
-                    text=f"Review this {language} code and provide feedback:\n\n{code}",
-                ),
-            )
-        ]
-
-    raise ValueError(f"Unknown prompt: {name}")
+@mcp.prompt()
+def code_review(language: str, code: str) -> str:
+    """Generate code review comments."""
+    return f"Review this {language} code and provide feedback:\n\n{code}"
 ```
 
 ## Input Validation with Pydantic
 
+FastMCP validates tool arguments against the function's type hints automatically.
+For validation rules beyond a plain type (patterns, ranges, custom checks),
+declare a Pydantic model and accept it as the tool's argument:
+
 ```python
 from pydantic import BaseModel, Field, field_validator
-from typing import Literal
-
-class WeatherArgs(BaseModel):
-    location: str = Field(..., min_length=1, description="City name")
-    units: Literal["celsius", "fahrenheit"] = Field(default="celsius")
-
-    @field_validator("location")
-    @classmethod
-    def validate_location(cls, v: str) -> str:
-        if not v.strip():
-            raise ValueError("Location cannot be empty")
-        return v.strip()
 
 class DatabaseQueryArgs(BaseModel):
     table: str = Field(..., pattern="^[a-zA-Z_][a-zA-Z0-9_]*$")
     limit: int = Field(default=100, ge=1, le=1000)
     offset: int = Field(default=0, ge=0)
 
-@app.call_tool()
-async def call_tool(name: str, arguments: dict) -> list[TextContent]:
-    if name == "query_database":
-        # Pydantic validation happens here
-        args = DatabaseQueryArgs(**arguments)
+    @field_validator("table")
+    @classmethod
+    def validate_table(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("Table name cannot be empty")
+        return v.strip()
 
-        results = await execute_query(args.table, args.limit, args.offset)
-        return [TextContent(type="text", text=json.dumps(results))]
-
-    raise ValueError(f"Unknown tool: {name}")
+@mcp.tool()
+async def query_database(args: DatabaseQueryArgs) -> str:
+    """Query a database table with pagination."""
+    results = await execute_query(args.table, args.limit, args.offset)
+    return json.dumps(results)
 ```
 
 ## Error Handling
 
 ```python
-from mcp.types import McpError, INTERNAL_ERROR, INVALID_PARAMS
+from mcp.shared.exceptions import McpError
+from mcp.types import ErrorData, INTERNAL_ERROR, INVALID_PARAMS
 
-@app.call_tool()
-async def call_tool(name: str, arguments: dict) -> list[TextContent]:
+@mcp.tool()
+async def get_weather_safe(location: str, units: str = "celsius") -> str:
+    """Get current weather, with explicit error handling."""
     try:
-        if name == "get_weather":
-            args = WeatherArgs(**arguments)
-            result = await fetch_weather(args.location, args.units)
-            return [TextContent(type="text", text=str(result))]
+        if not location:
+            raise ValueError("location parameter is required")
 
-        raise ValueError(f"Unknown tool: {name}")
+        result = await fetch_weather(location, units)
+        return str(result)
 
     except ValueError as e:
-        # Validation or tool not found
-        raise McpError(INVALID_PARAMS, str(e))
+        # Validation or bad input
+        raise McpError(ErrorData(code=INVALID_PARAMS, message=str(e)))
 
     except Exception as e:
         # Unexpected errors
-        raise McpError(INTERNAL_ERROR, f"Tool execution failed: {e}")
+        raise McpError(ErrorData(code=INTERNAL_ERROR, message=f"Tool execution failed: {e}"))
 ```
 
 ## Logging
@@ -263,41 +131,47 @@ logging.basicConfig(
 
 logger = logging.getLogger("mcp-server")
 
-@app.call_tool()
-async def call_tool(name: str, arguments: dict) -> list[TextContent]:
+@mcp.tool()
+async def logged_tool(name: str, arguments: dict) -> str:
+    """Example tool that logs its own execution."""
     logger.info(f"Tool called: {name} with args: {arguments}")
 
     try:
         result = await execute_tool(name, arguments)
         logger.info(f"Tool {name} completed successfully")
-        return result
+        return str(result)
     except Exception as e:
         logger.error(f"Tool {name} failed: {e}", exc_info=True)
         raise
 ```
 
-## Context Managers and Cleanup
+## Context, Progress, and Cleanup
+
+FastMCP tools can accept a `Context` parameter to access the session — for
+logging, progress reporting, LLM sampling, or reading other resources — without
+any extra wiring:
 
 ```python
+from mcp.server.fastmcp import Context
 from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def database_connection():
-    """Manage database connection lifecycle"""
+    """Manage database connection lifecycle."""
     db = await connect_to_database()
     try:
         yield db
     finally:
         await db.close()
 
-@app.call_tool()
-async def call_tool(name: str, arguments: dict) -> list[TextContent]:
-    if name == "query_database":
-        async with database_connection() as db:
-            result = await db.execute(arguments["query"])
-            return [TextContent(type="text", text=str(result))]
-
-    raise ValueError(f"Unknown tool: {name}")
+@mcp.tool()
+async def query_database(query: str, ctx: Context) -> str:
+    """Run a query against the database, reporting progress to the client."""
+    async with database_connection() as db:
+        await ctx.report_progress(progress=0, total=1)
+        result = await db.execute(query)
+        await ctx.report_progress(progress=1, total=1)
+        return str(result)
 ```
 
 ## Basic Client Setup
@@ -329,35 +203,38 @@ async def run_client():
             print(f"Result: {result.content}")
 
 if __name__ == "__main__":
+    import asyncio
     asyncio.run(run_client())
 ```
 
 ## Notifications
 
 ```python
-from mcp.types import ResourceUpdatedNotification
+@mcp.tool()
+async def update_config(config: dict, ctx: Context) -> str:
+    """Update configuration and notify clients that a resource changed."""
+    await save_config(config)
 
-@app.call_tool()
-async def call_tool(name: str, arguments: dict) -> list[TextContent]:
-    if name == "update_config":
-        # Update configuration
-        await save_config(arguments["config"])
+    # Notify clients of resource update
+    await ctx.session.send_resource_updated(
+        uri="file:///config/settings.json"
+    )
 
-        # Notify clients of resource update
-        await app.request_context.session.send_resource_updated(
-            uri="file:///config/settings.json"
-        )
-
-        return [TextContent(type="text", text="Configuration updated")]
-
-    raise ValueError(f"Unknown tool: {name}")
+    return "Configuration updated"
 ```
+
+## When to Use the Low-Level `Server` Class
+
+`FastMCP` covers the vast majority of servers. Drop to the low-level `mcp.server.Server`
+class (with `@app.list_tools()`/`@app.call_tool()` handlers and `app.run(...)`
+against raw streams) only when you need full control over the request/response
+cycle or initialization options that `FastMCP` doesn't expose.
 
 ## Best Practices
 
-1. **Type Safety**: Use Pydantic for all schemas
+1. **Type Safety**: Use type hints (and Pydantic models where extra validation is needed)
 2. **Async/Await**: All handlers must be async
-3. **Validation**: Validate inputs early with Pydantic
+3. **Validation**: Validate inputs early
 4. **Logging**: Log to stderr, never stdout
 5. **Error Handling**: Wrap errors in McpError
 6. **Resource Cleanup**: Use context managers

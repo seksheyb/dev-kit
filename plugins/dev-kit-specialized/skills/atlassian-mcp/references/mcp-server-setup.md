@@ -4,27 +4,33 @@
 
 ## Server Options Overview
 
-### Official Atlassian MCP Server
+### Official Atlassian Remote MCP Server
 
-Atlassian provides an official MCP server for cloud products:
+Atlassian runs a hosted, remote MCP server (`atlassian/atlassian-mcp-server`, GA
+since 2026-02-04) covering Jira, Confluence, Jira Service Management, Bitbucket
+Cloud, and Compass. There is nothing to install — clients connect directly to
+Atlassian's endpoint over streamable HTTP:
 
-```bash
-# Install via npm
-npm install -g @anthropic/mcp-atlassian
-
-# Or use npx directly
-npx @anthropic/mcp-atlassian
+```
+https://mcp.atlassian.com/v1/mcp/authv2   # OAuth 2.1 (interactive)
+https://mcp.atlassian.com/v1/mcp          # API token (headless/service)
 ```
 
+The legacy `/v1/sse` endpoint is deprecated and unsupported after 2026-06-30 —
+point any client still configured for SSE at `/mcp` or `/mcp/authv2` instead.
+
 **Capabilities:**
-- Jira Cloud and Confluence Cloud integration
-- OAuth 2.1 authentication flow
+- Jira Cloud, Confluence Cloud, JSM, Bitbucket Cloud, and Compass — Cloud only,
+  no Data Center timeline
+- OAuth 2.1 authentication flow, or API tokens for headless setups
 - Read/write operations for issues and pages
 - JQL and CQL query support
 
-### Open-Source Alternatives
+### Open-Source Alternative for Server/Data Center
 
-**mcp-atlassian (sooperset)** - Most feature-rich community option:
+**mcp-atlassian (sooperset)** - the right choice when you need Jira/Confluence
+Server or Data Center (8.14+) support, PAT auth, or a local stdio server instead
+of a hosted one:
 ```bash
 # Install with uv (recommended)
 uv tool install mcp-atlassian
@@ -33,23 +39,20 @@ uv tool install mcp-atlassian
 pip install mcp-atlassian
 ```
 
-**atlassian-mcp (xuanxt)** - TypeScript-based alternative:
-```bash
-npm install atlassian-mcp
-```
-
 ### Comparison Matrix
 
-| Feature | Official | sooperset | xuanxt |
-|---------|----------|-----------|--------|
-| Jira Cloud | Yes | Yes | Yes |
-| Jira Server/DC | No | Yes | Limited |
-| Confluence Cloud | Yes | Yes | Yes |
-| Confluence Server/DC | No | Yes | No |
-| OAuth 2.1 | Yes | Yes | No |
-| API Token Auth | Yes | Yes | Yes |
-| PAT (Server) | No | Yes | No |
-| Rate Limiting | Built-in | Configurable | Manual |
+| Feature | Official (remote) | sooperset (local) |
+|---------|----------|-----------|
+| Jira Cloud | Yes | Yes |
+| Jira Server/DC | No | Yes |
+| Confluence Cloud | Yes | Yes |
+| Confluence Server/DC | No | Yes |
+| Bitbucket Cloud / Compass | Yes | No |
+| OAuth 2.1 | Yes | Yes |
+| API Token Auth | Yes | Yes |
+| PAT (Server) | No | Yes |
+| Deployment | Hosted, no install | Local process (stdio) |
+| Rate Limiting | Built-in | Configurable |
 
 ## Claude Desktop Configuration
 
@@ -63,17 +66,13 @@ Edit your Claude Desktop config file:
 
 ### Configuration Examples
 
-**Official Server with OAuth:**
+**Official Remote Server with OAuth:**
 ```json
 {
   "mcpServers": {
     "atlassian": {
-      "command": "npx",
-      "args": ["@anthropic/mcp-atlassian"],
-      "env": {
-        "ATLASSIAN_SITE_URL": "https://your-company.atlassian.net",
-        "ATLASSIAN_AUTH_TYPE": "oauth"
-      }
+      "url": "https://mcp.atlassian.com/v1/mcp/authv2",
+      "type": "http"
     }
   }
 }
@@ -152,13 +151,13 @@ Edit your Claude Desktop config file:
 ### Check Server Status
 
 ```bash
-# Test official server
-npx @anthropic/mcp-atlassian --version
+# Test the official remote server is reachable
+curl -I https://mcp.atlassian.com/v1/mcp/authv2
 
 # Test sooperset server
 uvx mcp-atlassian --help
 
-# Verify environment variables
+# Verify environment variables (sooperset / self-hosted only)
 env | grep -E "(JIRA|CONFLUENCE)_"
 ```
 
@@ -204,22 +203,17 @@ testConnection().catch(console.error);
 
 ## When to Use Each Server
 
-**Choose Official Server when:**
+**Choose the official remote server when:**
 - Using only Atlassian Cloud products
-- Need OAuth 2.1 compliance
-- Require official support
+- Want zero local install/maintenance (hosted endpoint)
+- Need OAuth 2.1 compliance or official support
 - Building for enterprise deployment
 
 **Choose sooperset when:**
 - Need Server/Data Center support
 - Want PAT authentication
-- Require advanced filtering
-- Need both Jira and Confluence
-
-**Choose xuanxt when:**
-- Want TypeScript-native implementation
-- Building custom extensions
-- Need minimal dependencies
+- Running locally over stdio
+- Need both Jira and Confluence in one self-hosted process
 
 ## Troubleshooting
 

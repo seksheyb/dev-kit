@@ -16,6 +16,14 @@ generate or invoke a real Workflow script (§2). Only items needing a change are
 > description states it "supersedes" both); the surviving `skills/code-review-protocol/code-reviewer.md`
 > is a prompt-template reference inside that skill, not the retired agent. `feature-forge`,
 > `first-principles-thinking`, and `clarify` were folded into `specify`/`spec-review-cpo`.
+>
+> **Refresh (2026-07-26).** Three Workflow routes are now built and wired
+> (`bugfix-wave`, `sprint-execution`, `plan-review`); §1 was re-verified against them.
+> `ship` was examined in full and **reclassified out** of the Workflow bucket (reasoning
+> recorded in §2); `graphify` is **excluded by owner decision** — externally sourced, not
+> modified in dev-kit. The former "Agent-only" bucket is **dropped**: it recorded assets
+> that were correct as written, which is what `no-change` already means, so it carried no
+> action. §2's flagged set is therefore Workflow-only and, as of this refresh, closed.
 
 **Homes used below:** **Workflow** (bounded, deterministic, single-invocation multi-agent
 script — `agent()`/`parallel()`/`pipeline()`/`phase()`, worktree isolation, token budgets;
@@ -36,7 +44,7 @@ lifecycle layer dev-kit could add) · **Skip**.
 | 3 | Upstream source/version pinning ledger | **Orchestration** | Tracks the pipeline's own dependency versions; dev-kit's `dependency-manager` agent already covers code deps, not skill-library versions |
 | 4 | Multi-level requirement hierarchy (Theme→Pillar→Story-bank, global US-xxx) | **Agent/Skill** ✅ DONE | `specify` allocates global, never-renumbered `US-xxx` IDs with an optional Pillar field; `roadmapper` parses Theme→Pillar→US-xxx and keys coverage/traceability on it when present |
 | 5 | Vertical-slice enforcement (never horizontal-layer phases) | **Agent/Skill** ✅ DONE | `references/vertical-slice.md` is the canonical definition + acceptance test; `roadmapper.md`'s prose is now a hard gate alongside the coverage gate |
-| 6 | Wave/track parallel dispatch + worktree isolation (GWD step 12) | **Workflow** | `pipeline()`/`parallel()` + `isolation:'worktree'` almost verbatim — `sprint-execution`/`bugfix-wave` already hand-roll this in prose today (confirmed still true in §2) |
+| 6 | Wave/track parallel dispatch + worktree isolation (GWD step 12) | **Workflow** ✅ DONE | Built 2026-07-26: `references/workflows/{bugfix-wave,sprint-execution}.workflow.mjs` — `parallel()` + `isolation:'worktree'` per track, `phase()` as the wave gate. Both skills now *invoke* the script instead of hand-rolling the dispatch in prose. Constraints discovered while building are recorded in §2 "Known limits" |
 | 7 | Adversarial review ↔ fix loop, ≤6 iterations (GWD step 13) | **Workflow** | Textbook loop-until-count/dry pattern — a plain `while` calling `agent()`. The per-round reviewer (`code-review-gate` round mode) is a single-round leaf; the ≤6 loop that dispatches it belongs to this Workflow/orchestrator, not the agent — see §2 note on leaf workers |
 | 8 | Deterministic model/effort scoring — the band/floor math | **Workflow** | Arithmetic on bounded factors — real JS computes it deterministically, no external `.mjs` CLI needed |
 | 9 | Deterministic model/effort scoring — what signals to extract | **Agent/Skill** ✅ DONE | `references/complexity-signals.md` is the canonical vocabulary; `planner` emits per-task `complexity_signals`, `writing-plans` has a mandatory Signals: block — both feed the still-open Workflow half (row 8) |
@@ -58,19 +66,45 @@ lifecycle layer dev-kit could add) · **Skip**.
 
 **Tally:** 6 Orchestration-only, 6 Agent/Skill, 5 Workflow, 6 Hooks, 1 Skip (some
 capabilities split across two homes, so this sums to more than 24). All "✅ DONE" rows
-re-verified 2026-07-22 against the live repo — every cited reference file exists and the
-named assets wire to it.
+re-verified **2026-07-26** against the live repo — every cited reference file exists
+(`references/vertical-slice.md`, `references/complexity-signals.md`,
+`references/independent-review.md` + 5 engine adapters under `references/review-engines/`)
+and the named assets wire to it.
+
+**Workflow rows after the 2026-07-26 recheck: 1 built (row 6), 4 open (rows 7, 8, 10, 22).**
+Re-verified seams for the four that remain, since each depends on a producer that must exist
+before the Workflow consuming it can be written:
+
+- **Row 7** — `code-review-gate` is confirmed a correct **single-round leaf** (it emits
+  `next_action`/`stop_loop`). The ≤6-round loop that re-invokes it is unbuilt and belongs to
+  a new Workflow script, not to the agent.
+- **Row 8** — `planner` does emit per-task `complexity_signals`, so the producer half is
+  live; the deterministic band/floor arithmetic that consumes it is unbuilt.
+- **Row 10** — no dedicated telemetry/defect-attribution asset exists yet. The scattered
+  "calibration" mentions across 10 assets are vocabulary, not a producer — this row needs
+  its Orchestration half (row 11) before the computation half is worth writing.
+- **Row 22** — `gate-plan-review` now selects an engine from the registry (row 23, done); the
+  dispatch/retry loop around that selection is still prose, not a Workflow stage.
+
+**One built route has no table-1 row:** `plan-review` (lens fan-out, one `plan-reviewer` per
+lens) originates in §2, not in the GWD gap analysis. It is worth recording here anyway
+because it independently exercises the same `parallel()` mechanism row 6 depends on — and it
+does so *without* worktrees, since its reviewers only read. That is the cheaper half of the
+row-6 pattern, and it validated the fan-out/consolidate contract before the worktree variant
+was trusted with it.
 
 ### Recommended skill changes this implies (concrete, buildable today)
 
-1. ✅ **DONE (2026-07-26)** — **`sprint-execution` / `bugfix-wave`** now invoke real Workflow
-   scripts (`@references/workflows/{sprint-execution,bugfix-wave}.workflow.mjs`) for
-   wave/track dispatch instead of prose "make these calls yourself" instructions.
-   **The routing rule is mandatory, not opt-in:** ≥2 tracks in a wave → Workflow, always;
-   1 track → plain inline `Agent` call, since a Workflow for one agent is pure overhead.
-   Invoking these skills *is* the request for parallel execution, so no second confirmation
-   is asked for. There is deliberately **no shared Workflow contract file** — each asset
-   carries the Workflow instructions it needs inline. See "Known limits" below.
+1. ✅ **DONE (2026-07-26)** — **`sprint-execution` / `bugfix-wave` / `plan-review`** now invoke
+   real Workflow scripts
+   (`@references/workflows/{sprint-execution,bugfix-wave,plan-review}.workflow.mjs`) instead
+   of prose "make these calls yourself" instructions.
+   **The routing rule is mandatory, not opt-in:** ≥2 units of work → Workflow, always
+   (≥2 tracks in a wave for the first two, ≥2 lenses for `plan-review`); exactly 1 → plain
+   inline `Agent` call, since a Workflow for one agent is pure overhead. Invoking these
+   assets *is* the request for parallel execution, so no second confirmation is asked for.
+   There is deliberately **no shared Workflow contract file** — each asset carries the
+   Workflow instructions it needs inline. See "Known limits" below.
 2. **The ≤6-round adversarial loop** (GWD step 13 / row 7) — express the loop as a Workflow
    `while` calling `code-review-gate` (round mode) once per round and checking `stop_loop`.
    Note the seam: `code-review-gate` itself is now a correct **single-round leaf** (it
@@ -110,27 +144,66 @@ dev-kit that caller is almost always the not-yet-built pipeline (§1), so leaf a
 
 ### Result
 
-**11 of 190 flagged — 5 Workflow, 6 Agent-only. 179 need no change.**
+**3 of 190 flagged and built. 1 excluded by owner decision. 186 need no change.**
 
-- **All 11 flagged assets are in `dev-kit-core`.** Every one of the 96 lane assets
-  (backend, web, mobile, data-ai, infra, specialized, product) is now `no-change`: the
+- **All flagged assets are in `dev-kit-core`.** Every one of the 96 lane assets
+  (backend, web, mobile, data-ai, infra, specialized, product) is `no-change`: the
   native rewrites turned them into single-agent linear methodologies with no fan-out/loop/
   pipeline shape. The lanes are, as a body, not Workflow surface.
-- No **new** Workflow candidates emerged from the rewrites; the only newly-surfaced flag is
-  `design-html` (agent-only). The rewrites only *removed* shapes.
+- No **new** Workflow candidates emerged from the rewrites — they only *removed* shapes.
+- **The Workflow bucket is closed.** Five candidates were carried into the build pass; three
+  became scripts, two were resolved out (below). Nothing in dev-kit's current 190 assets is
+  awaiting a Workflow script. Remaining Workflow work lives entirely in §1 rows 7, 8, 10,
+  and 22 — new scripts with no existing asset to convert.
 
-### Flagged **Workflow** (5) — hand-rolled orchestration that a Workflow script should own
-
-**3 of 5 built (2026-07-26): `bugfix-wave`, `sprint-execution`, `plan-review`.** `graphify`
-and `ship` remain open.
+### Flagged **Workflow** (3) — built 2026-07-26
 
 | Asset | Kind | Shape | Mechanism | Current-text evidence |
 |---|---|---|---|---|
 | `bugfix-wave` ✅ | skill | fan-out + pipeline | `parallel()` per-wave track dispatch w/ `isolation:'worktree'`; `phase()` wave-N-before-N+1 gate | "Group into tracks… Wave 1: tracks with no dependencies… Wave N: tracks depending on Wave N-1", "single message with multiple Agent tool" calls |
 | `sprint-execution` ✅ | skill | fan-out + pipeline | `parallel()`/`pipeline()` per-wave fan-out in worktrees; `phase()` wave gate | "Dispatch one subagent per track within a wave, each with worktree isolation" + "must not start Wave N+1 until all Wave N subagents have returned and their worktrees are merged" |
-| `graphify` | skill | fan-out + pipeline | `parallel()` chunked subagent fan-out; `phase()` Detect→Extract→Merge→Cluster | Step 3B: "Call the Agent tool multiple times IN THE SAME RESPONSE — one call per chunk… the only way they run in parallel"; chunk count is data-driven |
-| `ship` | skill | dependent-pipeline + bounded-loop | `phase()`/`pipeline()` for Steps 0–13; a bounded `while` for the coverage-gate + verification-gate retries | Ordered Steps 0–13 that must not begin before the prior completes ("Merge base BEFORE tests", "Run tests on merged code", Step 11 Verification Gate looping failures back) |
-| `plan-review` ✅ | command | fan-out | `parallel()` one `plan-reviewer` per lens, then consolidate | "Dispatch `agents/plan-reviewer` once per selected lens, in parallel… consolidated into a single set of findings" (default all 4 lenses) |
+| `plan-review` ✅ | command | fan-out | `parallel()` one `plan-reviewer` per lens, then consolidate | "2 or more lenses → run the Workflow. Mandatory, not an option… fans out one `plan-reviewer` per lens in parallel and consolidates" (default all 4 lenses) |
+
+### Resolved out of the Workflow bucket (2) — decision record
+
+Kept because both were flagged by a defensible reading of their text, and the reasons they
+still don't warrant a script are reusable criteria, not one-off calls:
+
+| Asset | Original flag | Resolution |
+|---|---|---|
+| `graphify` | fan-out + pipeline (chunked subagent extraction, `phase()` Detect→Extract→Merge→Cluster) | **Out of scope, not disputed.** Externally sourced; dev-kit does not modify it. The shape reading stands — it simply isn't ours to convert |
+| `ship` | dependent-pipeline + bounded-loop (Steps 0–13, coverage/verification gate retries) | **Not a Workflow.** Reasoning below |
+
+**Why `ship` is not a Workflow**, against the three limits recorded in the next section:
+
+1. **It is almost entirely git and filesystem work** — merge base (Step 2), commit triage
+   fixes (3), write and commit tests (4), write VERSION + manifest (7), CHANGELOG (8),
+   TODOS.md (9), split bisectable commits (10), push (12), create/update the PR (13).
+   Scripts cannot touch either. Pushing each action into a leaf agent would leave the script
+   a prompt relay while the orchestrator still needs every step's *result* — coverage
+   diagram, review findings, plan checklist, scope-check line — to assemble the Step 13 PR
+   body.
+2. **It has ~9 user checkpoints, none of them trivial** — missing release workflow (1.5),
+   complex merge conflicts (2), in-branch failures and the 4-way pre-existing-failure triage
+   (3), absent test framework (3), coverage gate (4.7), plan items NOT DONE (5.5),
+   judgment-call review findings (6), MINOR/MAJOR bump (7.2), TODOS reorg (9). `ship` is
+   non-interactive about *trivial* confirmations precisely so it can spend its stops on
+   judgment calls; a script cannot host any of them.
+3. **There is no fan-out at all** — 14 strictly serial steps, one actor. `phase()`/`pipeline()`
+   earn their keep by holding wave N+1 back until N lands; with zero concurrency they reduce
+   to progress-display grouping. The bounded-loop half of the flag is weaker than it looks:
+   the coverage gate's max-2-passes and Step 11's loop back to Step 3 both continue or abort
+   on a *user* choice, making them human-in-loop rather than deterministic exits.
+
+The two steps that do benefit from a fresh context — Step 4's coverage audit and Step 6's
+review — already say "dispatch as a subagent if available." That is the correct home: a plain
+`Agent` call inside a serial skill.
+
+**Generalized criteria this yields** (applicable to future candidates): a dependent-pipeline
+flag is *not* sufficient on its own. A Workflow needs concurrency for the gate to mean
+anything, deterministic loop exits rather than user-choice ones, and its durable side effects
+to be tolerable outside the script. Serial + interactive + side-effect-heavy is a skill, however
+many ordered steps it has.
 
 ### Known limits of the 3 built Workflow routes (2026-07-26)
 
@@ -156,21 +229,26 @@ Recorded because each is a real constraint discovered while building, not a to-d
 - **None of the three has been executed end-to-end.** They are syntax- and contract-verified
   only. First real invocation is the first real test.
 
-### Flagged **Agent-only** (6) — real fan-out, but small/ad-hoc or human-in-loop; a plain Agent/Task dispatch fits better than a full Workflow
+### Why there is no "Agent-only" bucket
 
-| Asset | Kind | Shape | Why agent-only, not Workflow |
-|---|---|---|---|
-| `cso` | skill | fan-out | Verification subagent per candidate finding with a confidence-gate discard — genuine data-driven fan-out, but no worktree/wave/budget machinery needed |
-| `design-consultation` | skill | fan-out | Shotgun mode: one subagent per variant (3–8) writing independent files, then a comparison board — small fan-out + simple aggregation |
-| `dispatching-parallel-agents` | skill | fan-out | Explicitly the **no-worktree, no-ceremony** variant for ad-hoc mid-session parallel Task dispatch; self-scopes heavier machinery to other skills |
-| `plan-reviewer` | agent | fan-out | Says "Dispatch N of these in parallel (one per lens)" — but over a fixed 4-lens set; the operational fan-out really belongs to the `plan-review` command (which *is* flagged Workflow). Leaf-ish |
-| `specify` | skill | fan-out | Optional pre-discovery via a couple of parallel Task subagents for multi-domain features — framed as an accelerant, not core methodology |
-| `design-html` | skill | (human-loop) | Single subagent dispatch + a "Maximum 10 iterations" refinement loop whose exit condition is the **user saying "done"** — live mid-run Q&A a Workflow cannot host. Agent-only for the dispatch's context isolation only |
+An earlier revision carried a third bucket of 6 assets — `cso`, `design-consultation`,
+`dispatching-parallel-agents`, `specify`, `design-html`, `plan-reviewer` — flagged as having
+real fan-out that should stay a plain `Agent`/`Task` dispatch rather than become a Workflow.
+**That bucket is dropped**, because "keep dispatching subagents exactly as the text already
+says" is indistinguishable from `no-change`: it named no edit, no owner, and no
+done-condition, so it read as outstanding work while being a list of assets that were already
+correct. Those 6 are folded into the 186 `no-change` count.
 
-### What changed vs. the prior sweep (30 flagged → 11) and why
+The observation underneath it survives as a **criterion**, not a backlog: fan-out alone does
+not justify a Workflow. Fixed-size or ad-hoc fan-out with simple aggregation and no
+worktree/wave/budget need is an inline `Agent` call — and where the loop's exit condition is
+the user (`design-html`: "Maximum 10 iterations", exits when the user says "done"), a script
+is disqualified outright. Same conclusion `ship` reached above, from the other direction.
 
-The original sweep flagged **29 Workflow + 1 Agent-only**. The reduction is real and has
-three distinct, legitimate causes — not a defect in either analysis:
+### What changed vs. the prior sweep (30 flagged → 3) and why
+
+The original sweep flagged **29 Workflow + 1 Agent-only**; this refresh lands at **3**. The
+reduction is real and has four distinct, legitimate causes — not a defect in any analysis:
 
 - **A. Content rewrites (8 drops).** The lane skills the prior sweep flagged were natively
   rewritten into single-agent linear methodologies; their old fan-out/gated-pipeline prose
@@ -182,8 +260,8 @@ three distinct, legitimate causes — not a defect in either analysis:
   own text, and these are leaf workers whose fan-out/loop lives in the caller (the future
   pipeline, i.e. §1): `doc-classifier`, `doc-synthesizer`, `research-synthesizer`,
   `codebase-mapper` → `no-change`; `code-review-gate` (round mode) → `no-change` (its ≤6
-  loop is §1 row 7); `plan-reviewer` → `agent-only` (its fan-out owner, `plan-review`, is
-  the flagged Workflow).
+  loop is §1 row 7); `plan-reviewer` → `no-change` (its fan-out owner is the `plan-review`
+  command, which is where the built Workflow lives).
 - **C. Single-agent bounded loops (4 drops).** These have a genuine hard-capped loop but the
   **same agent iterates in its own context** rather than dispatching `agent()` per item, so
   under a strict multi-agent-shape reading they are `no-change`: `qa` (hard cap 50 fixes,
@@ -191,13 +269,20 @@ three distinct, legitimate causes — not a defect in either analysis:
   debug), `gate-automation` (per-flow authoring). **Future note:** each *could* be
   restructured into a `bugfix-wave`-style parallel Workflow — that is a design opportunity,
   not a property of the current text.
+- **D. Bucket and scope resolution this refresh (8 drops).** The 6 former `agent-only` assets
+  fold into `no-change` (the bucket named no action); `ship` is `no-change` on the criteria
+  above; `graphify` is excluded as externally sourced.
 
 ### Tally
 
-- **11 flagged** — all in `dev-kit-core`. Workflow (5): `bugfix-wave` ✅, `sprint-execution` ✅, `graphify`, `ship` (skills) + `plan-review` ✅ (command) — **3 built 2026-07-26, 2 open**. Agent-only (6): `cso`, `design-consultation`, `dispatching-parallel-agents`, `design-html`, `specify` (skills) + `plan-reviewer` (agent).
-- **179 need no change** — 83 of 94 core assets + all 96 lane assets.
+- **3 flagged, 3 built** — all in `dev-kit-core`: `bugfix-wave` ✅, `sprint-execution` ✅
+  (skills) + `plan-review` ✅ (command), all built 2026-07-26. **0 open.**
+- **1 excluded** — `graphify`, externally sourced; dev-kit does not modify it.
+- **186 need no change** — 90 of 94 core assets + all 96 lane assets.
 - **0 flagged Hooks/Orchestrator** — those homes apply to the GWD-gap capabilities in §1,
   not to any of dev-kit's own existing assets.
+- **Next Workflow work is §1-only** — rows 7, 8, 10, 22. These are new scripts, not
+  conversions of existing assets, so §2 has nothing left to hand them.
 
 _Sweep method: 21 parallel classifier agents (Sonnet — high effort on core, medium on
 lanes) each read the full current prose of an asset batch and returned a structured verdict

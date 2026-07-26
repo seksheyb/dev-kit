@@ -4,9 +4,11 @@ description: >
   Parallel bug-fix executor. Takes a list of bugs/findings (from code review, adversarial audit,
   security scan, lint report, etc.), classifies each by model and effort, groups them into
   independent tracks with no file conflicts, organizes tracks into dependency-ordered waves,
-  then dispatches parallel subagents — one per track — each working in its own git worktree
-  and branch. The orchestrator merges completed tracks, resolves any conflicts, cleans up
-  worktrees/branches, and moves to the next wave.
+  then dispatches every wave through a single Workflow run — one subagent per track, each
+  working in its own git worktree and branch, merging itself back into the source branch when
+  done. The orchestrator reconciles whatever failed to merge, cleans up worktrees and
+  branches, and emits the summary. Runs whole rounds unattended, so it composes with an
+  adversarial review loop inside one workflow.
 
   Trigger this skill whenever the user provides a prioritized bug list and wants them fixed
   in parallel. Also trigger when the user says "fix these", "execute these findings",
@@ -24,6 +26,45 @@ markdown output. Just execute.
 **No bug list yet, just a couple of independent tasks?** This skill's classify/track/wave/worktree
 ceremony is overkill for that — use `dispatching-parallel-agents` instead for lightweight,
 no-ceremony parallel dispatch.
+
+## Branch model (read before Phase 2)
+
+Bugfix-wave is **self-merging and multi-wave**: all waves run in one Workflow, and each track
+lands its own work. That is what lets a whole fix round run unattended inside a larger
+workflow alongside adversarial review.
+
+This deliberately **differs from `sprint-execution`**, which is orchestrator-merged and
+one-wave-per-run. Do not port one skill's branch model onto the other; the rationale for the
+split: bugfix-wave writes no state
+file, roadmap or ledger — its only durable artifact, `fixes.json`, is emitted after the final
+wave anyway — so it has nothing per-wave to defer to an orchestrator turn.
+
+- **Source branch** — the branch the round starts from. Always named explicitly in the
+  Workflow args. **Never hardcoded to `main`**; if the round runs on a working branch, that
+  branch is the source and the merge target.
+- Every track gets **its own worktree and its own branch cut from the source branch**.
+- A track **commits, merges itself into the source branch, and returns.** It does not delete
+  its branch (it cannot — the branch is checked out in its own worktree).
+- Wave N+1's tracks open with `git reset --hard <source-branch>`, so they inherit wave N's
+  merged fixes. This is what makes all-waves-in-one-run correct rather than merely faster.
+- **The orchestrator reconciles**, after the run: merge whatever failed to land, remove
+  worktrees, delete branches (Phase 3).
+
+### The two git preconditions
+
+Self-merge works, but only under conditions the old version of this skill did not meet — which
+is why it used to half-fail and need a straggler pass. Both are verified:
+
+1. **The orchestrator must not hold the source branch checked out.** Git allows one checkout
+   per branch, so a track pushing into a checked-out branch is rejected with
+   `! [remote rejected] (branch is currently checked out)`. That is git declining, not agent
+   flakiness. Phase 2 has the orchestrator `git checkout --detach` before dispatching, which
+   frees the ref.
+2. **Concurrent tracks race on the ref.** The first push fast-forwards; the second is rejected
+   as non-fast-forward. The §2.3 merge protocol makes each track fetch, merge, and retry.
+
+A track that loses every retry leaves its branch unmerged and says so. **That is an expected
+outcome, not a failure** — Phase 3 exists to catch it.
 
 ## Input modes
 
@@ -230,13 +271,74 @@ track-progress (B11-B12, sonnet/high), track-ui (B14-B15,B19-B23, sonnet/medium)
 track-cosmetic (B26-B28, haiku/low)
 ```
 
-### 2.2 — Dispatch all tracks in a wave simultaneously
+### 2.2 — Dispatch the wave
 
-Use a **single message** with multiple `Agent` tool invocations — one per track. Each agent gets:
+The route is decided by track count. It is not a preference, and it is not a question for
+the user:
 
-- `isolation: "worktree"` — so it works on an isolated copy
-- `model`: set to the track's model (`haiku`, `sonnet`, or `opus`)
-- A self-contained prompt (the subagent has zero context from this conversation)
+| Tracks in the wave | Route |
+|---|---|
+| **2 or more** | **Workflow script — mandatory.** `@references/workflows/bugfix-wave.workflow.mjs` |
+| Exactly 1 | Plain inline `Agent` call — a Workflow for one agent is pure overhead |
+
+Invoking bugfix-wave with a bug list **is** the request for parallel execution. Never ask
+for a second confirmation before taking the Workflow route, and never offer the inline route
+as an alternative when the wave has 2+ tracks.
+
+**Free the source branch first.** Before dispatching, run `git checkout --detach` in the main
+working tree. Tracks cannot push into a branch that is checked out, and this is the whole
+reason the old version of this skill needed a straggler pass. Re-check-out the source branch
+in Phase 3, after the run.
+
+**Workflow route.** Phase 1 completes in your turn first — the script carries zero judgment.
+You classify (§1.2), group (§1.3), wave-order (§1.4), and render each track's §2.3 prompt in
+full, then hand **every wave** over in one call:
+
+```
+Workflow({
+  scriptPath: "plugins/dev-kit-core/references/workflows/bugfix-wave.workflow.mjs",
+  args: {
+    context: "round 3 findings",
+    sourceBranch: "main",          // required — branch tracks cut from AND merge back into
+    waves: [
+      { wave: 1, tracks: [
+          { name: "track-schema", branch: "bugfix/w1-track-schema",
+            model: "opus", effort: "high",
+            prompt: "<the fully-rendered §2.3 prompt for this track>" },
+          { name: "track-rls", branch: "bugfix/w1-track-rls",
+            model: "sonnet", effort: "high", prompt: "..." }
+      ]},
+      { wave: 2, tracks: [ /* ... */ ]}
+    ]
+  }
+})
+```
+
+- **All waves go in one run.** Tracks self-merge, so by the time wave N+1 runs its opening
+  `git reset --hard <source-branch>`, wave N's fixes are already there. This is the property
+  that makes multi-wave-in-one-run correct — and it is why this skill can sit inside a larger
+  workflow next to an adversarial review loop without an orchestrator turn between rounds.
+- One `waves[]` entry per wave in dependency order, one `tracks[]` entry per track.
+  `sourceBranch`, `name`, `branch`, `model`, `effort` and `prompt` are required; `context`,
+  `wave` and `agentType` are not.
+- `prompt` is the §2.3 template rendered in full — base-sync opener, boundaries, merge
+  protocol, close handover block. The script passes it through untouched and writes no prompt
+  text of its own, so anything missing from your rendering is missing from the dispatch.
+- The script sets `isolation: "worktree"` on every track agent, runs each wave in one
+  `parallel()`, and does not start wave N+1 until every wave-N track has returned.
+- It returns immediately with a runId, runs in the background, and notifies you on
+  completion. The result is `{ sourceBranch, waves, handovers, dropped, unmerged, branches }`
+  — `handovers` are the §2.3 close handovers as structured objects, `dropped` is every track
+  that returned nothing, **`unmerged` is every track that returned but did not land**, and
+  `branches` is every branch dispatched.
+
+**The Workflow cannot clean up after itself.** It has no filesystem or git access. Reconciling
+`unmerged`, worktree removal, branch deletion (Phase 3) and `fixes.json` (Phase 4) all run in
+your turn after it returns. Run Phase 3 even when the workflow fails — and note you are still
+on a detached HEAD until you re-check-out the source branch there.
+
+**Inline route (1 track only).** A single `Agent` call with `isolation: "worktree"`, `model`
+set to the track's model, and the same §2.3 prompt. Phase 3 still applies.
 
 ### 2.3 — Subagent prompt template
 
@@ -258,9 +360,34 @@ Effort level meaning:
 
 ## Branch
 
-Create branch `{prefix}/w{wave}-track-{name}` from `main`.
+FIRST, before anything else, run `git reset --hard {source-branch}` in your worktree, then
+`git checkout -b {branch}`. A fresh worktree branch has no commits of its own, so the reset
+is non-destructive — it is there because the harness pins a worktree's base commit at process
+launch, so without it you cannot see earlier waves' merged fixes.
+
 Commit frequently with conventional commit messages.
-Merge back to `main` when done. Delete the branch after merge.
+
+## Merge protocol (run after your last commit, before you return)
+
+You cannot `git checkout {source-branch}` — it may be checked out elsewhere, and git allows
+one checkout per branch. Push into it from your worktree instead, and expect to race with
+other tracks merging at the same time:
+
+1. `git push . HEAD:{source-branch}`
+2. **Success** → you are done. Report `Merged: yes`.
+3. **Rejected, non-fast-forward** → another track landed while you worked. Run
+   `git fetch . {source-branch}` then `git merge --no-edit FETCH_HEAD`, re-run your
+   verification (their changes are now in your tree), and go back to step 1. Retry up to
+   **5 times**.
+4. **Rejected with "branch is currently checked out"** → stop immediately. Do not try to work
+   around it. Report `Merged: no` with that exact reason; the orchestrator reconciles you.
+5. **A conflict lands in a file you do NOT own** (see Boundaries) → `git merge --abort`,
+   leave your branch unmerged, report `Merged: no` and list the file under "Conflicts handed
+   off". Never resolve another track's file.
+
+Do NOT delete your branch — you cannot (it is checked out in your worktree), and the
+orchestrator needs it to reconcile. Leaving a branch unmerged with an honest reason is always
+better than forcing a merge you are not sure about.
 
 ## Specific issues to fix
 
@@ -291,7 +418,7 @@ Merge back to `main` when done. Delete the branch after merge.
    `fix: {id} {short description}`, body listing every file touched; class fixes end with
    `structural fix — applied to N call sites`. For logic-error findings (wrong condition,
    off-by-one, state handling), report `fixed: requires human verification` in the handover.
-8. Merge to main, delete branch.
+8. Run the merge protocol above, then return the close handover below.
 
 ## Boundaries
 
@@ -306,6 +433,7 @@ Report (used by Phase 4 fixes.json output if applicable):
 Track: {name}
 Branch: {branch}
 Merged: yes | no
+Merge note: {rejection text or abort cause — required when Merged is no, omit when yes}
 Classes fixed:
   - class: {verbatim class name}
     instances_touched: {N}
@@ -328,32 +456,45 @@ Conflicts handed off: {file — description} | none
 
 ## Phase 3: Merge and Clean Up
 
-### 3.1 — After each wave completes
+Tracks merge themselves, so most work is already on the source branch when the Workflow
+returns. This phase reconciles what did not land. It runs **once, after the whole run** — not
+between waves.
 
-Subagents using `isolation: "worktree"` sometimes merge to their worktree's tracking branch
-instead of actual `main`. This is expected. The orchestrator must:
+### 3.1 — After the Workflow returns
 
-1. **Check main**: `git log --oneline -N main` to see which merges landed
-2. **Find stragglers**: `git worktree list` to find remaining agent worktrees, then
-   `git log main..<branch> --oneline` to see unmerged commits
-3. **Clean main's working tree**: if dirty files exist on main (from worktree cross-talk),
-   `git checkout -- <files>` to restore clean state before merging
-4. **Merge each straggler**: `git merge <branch> --no-edit -m "Merge {branch}: {summary}"`
-5. **Resolve conflicts**: if a merge conflicts, read both sides, pick the correct resolution
-   using your knowledge of what each track was supposed to do
-6. **Clean up worktrees**: for each agent worktree:
+You are still on a **detached HEAD** from Phase 2. Stay there until step 4.
+
+1. **Reconcile `unmerged`.** Every entry returned but did not land — a lost retry race, a
+   checked-out-branch rejection, or an aborted merge on someone else's file. For each:
+   `git log <source-branch>..<branch> --oneline` to see what is missing, then merge it. If it
+   conflicts, resolve centrally: you hold the bug list, the track partition and the
+   cross-track context that no single track has. Two tracks making genuinely contradictory
+   choices is a partition defect — surface it rather than picking a side.
+2. **Check `dropped`.** A track that returned no handover is not a completed track, and a
+   missing handover is never an empty one. Its branch may hold commits that are merged,
+   partly merged, or not merged at all — per §1.6 every per-fix commit is self-contained, so
+   inspect with `git log <source-branch>..<branch>` and merge what landed. Treat its
+   remaining bugs as unfixed: re-dispatch or report them.
+3. **Verify every branch is in.** For all of `branches`, `git log <source-branch>..<branch>
+   --oneline` must come back **empty**. A track's `Merged:` field is a self-report; this
+   check is the evidence. Do not clean up until it passes.
+4. **Re-attach**: `git checkout <source-branch>`. If dirty files linger from worktree
+   cross-talk, `git checkout -- <files>` first.
+5. **Clean up worktrees**: for each agent worktree:
    ```
    git worktree unlock .claude/worktrees/<id> 2>/dev/null
    git worktree remove .claude/worktrees/<id> --force 2>/dev/null
    ```
-7. **Delete branches**: `git branch -d <branch>` (or `-D` if needed)
-8. **Verify**: `git worktree list | grep -c agent` should return 0
+6. **Delete branches**: `git branch -d <branch>` (`-D` only after step 3 passed).
+7. **Confirm none remain**: `git worktree list | grep -c agent` should return 0.
 
-### 3.2 — Between waves
+### 3.2 — When an unmerged branch poisoned a later wave
 
-After Wave N is fully merged and cleaned up:
-- Verify main has all expected commits
-- Dispatch Wave N+1
+Waves run back to back inside the run, so if a Wave-1 track failed to merge, any Wave-2 track
+deferred **for a file conflict with it** built its fix on a stale version of that file. The
+script logs this at the wave boundary. Check those tracks specifically after step 1: their
+fixes may be correct but applied to the wrong base, and merging both can produce a silently
+wrong result rather than a conflict. Re-dispatch rather than hand-patch when in doubt.
 
 ### 3.3 — After final wave
 
@@ -415,11 +556,47 @@ Worktrees don't share `node_modules`. If the subagent's code changes are logical
 the error is just missing dependencies, accept the merge. The real typecheck runs in the main
 worktree.
 
-**Subagent can't delete its branch because worktree is checked out**: Expected. The orchestrator
-handles branch deletion after removing the worktree.
+**Subagent reports `Merged: no` with "branch is currently checked out"**: you skipped the
+`git checkout --detach` in Phase 2, so every track in that wave hit the same wall. Their work
+is intact on their branches. Detach, reconcile all of them via Phase 3.1 step 1, and check
+whether later waves built on the stale base (§3.2).
+
+**Subagent can't delete its branch**: expected — it is checked out in the track's own
+worktree. The orchestrator deletes it in Phase 3.1 step 6, after the worktree is removed.
 
 **Bug turns out to be a non-issue or unfixable**: The subagent should report this in its handover
 rather than making a wrong fix. The orchestrator relays this to the user.
 
 **Circular dependency between bugs**: Put them in the same track. If they're in different
 subsystems, pick the one with fewer file touches to go first.
+
+**A track returns `null` (appears in the Workflow's `dropped`)**: The agent died, was
+skipped, or its handover failed schema validation. It is not a clean track, and a missing
+handover is never an empty one. Its branch may still hold real commits — per §1.6 every
+per-fix commit is self-contained, so partial work is safe to inspect and merge. Check
+`git log <source-branch>..<branch>`, then re-dispatch the track (Phase 3.1 step 0) before
+merging the wave, and treat any bugs the re-dispatch doesn't cover as unfixed. Never let a
+`dropped` track be counted as coverage.
+
+**Workflow dies, is killed, or errors mid-wave**: Worktrees and branches from tracks that
+already started survive it — the script never had the filesystem access to clean them up. Run
+Phase 3 over whatever `git worktree list` and `git branch` actually show before deciding
+anything else.
+
+**Every track in a wave came back `Merged: no` with non-fast-forward rejections**: they
+starved each other out of the retry loop. Reconcile them in Phase 3 and, if the same wave has
+to run again, split it into two smaller waves — the ref is a serialization point, so a very
+wide wave of tracks all finishing at once contends hard on it.
+
+**Resuming a failed Workflow run**: `Workflow({ scriptPath, resumeFromRunId: "<runId>" })`.
+The unchanged prefix of track dispatches returns cached, so completed tracks are not re-run —
+this holds even if you edited the script in between. Fix the args or the script first if
+either caused the failure; resuming the same broken input fails the same way. Do **not**
+resume after you have already merged and deleted the first attempt's branches — the cached
+handovers will point at branches that no longer exist. Re-dispatch instead.
+
+**A wave with many tracks**: Concurrency is capped at `min(16, cores-2)` per workflow; extra
+tracks queue and still complete. Never trim a wave to "fit". Whether concurrent worktree
+creation can contend on git's own lock files at high fan-out is unverified here — if a wave
+fails with a git lock error rather than a task error, re-dispatch the affected tracks as a
+smaller wave.

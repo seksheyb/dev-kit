@@ -63,10 +63,14 @@ named assets wire to it.
 
 ### Recommended skill changes this implies (concrete, buildable today)
 
-1. **`sprint-execution` / `bugfix-wave`** — generate/invoke an actual Workflow script
-   (`pipeline()`/`parallel()` with `isolation:'worktree'`) for wave/track dispatch instead
-   of prose "make these calls yourself" instructions. **Still the two prime targets** — the
-   §2 re-sweep confirms both remain hand-rolled orchestrator prose today.
+1. ✅ **DONE (2026-07-26)** — **`sprint-execution` / `bugfix-wave`** now invoke real Workflow
+   scripts (`@references/workflows/{sprint-execution,bugfix-wave}.workflow.mjs`) for
+   wave/track dispatch instead of prose "make these calls yourself" instructions.
+   **The routing rule is mandatory, not opt-in:** ≥2 tracks in a wave → Workflow, always;
+   1 track → plain inline `Agent` call, since a Workflow for one agent is pure overhead.
+   Invoking these skills *is* the request for parallel execution, so no second confirmation
+   is asked for. There is deliberately **no shared Workflow contract file** — each asset
+   carries the Workflow instructions it needs inline. See "Known limits" below.
 2. **The ≤6-round adversarial loop** (GWD step 13 / row 7) — express the loop as a Workflow
    `while` calling `code-review-gate` (round mode) once per round and checking `stop_loop`.
    Note the seam: `code-review-gate` itself is now a correct **single-round leaf** (it
@@ -117,13 +121,40 @@ dev-kit that caller is almost always the not-yet-built pipeline (§1), so leaf a
 
 ### Flagged **Workflow** (5) — hand-rolled orchestration that a Workflow script should own
 
+**3 of 5 built (2026-07-26): `bugfix-wave`, `sprint-execution`, `plan-review`.** `graphify`
+and `ship` remain open.
+
 | Asset | Kind | Shape | Mechanism | Current-text evidence |
 |---|---|---|---|---|
-| `bugfix-wave` | skill | fan-out + pipeline | `parallel()` per-wave track dispatch w/ `isolation:'worktree'`; `phase()` wave-N-before-N+1 gate | "Group into tracks… Wave 1: tracks with no dependencies… Wave N: tracks depending on Wave N-1", "single message with multiple Agent tool" calls |
-| `sprint-execution` | skill | fan-out + pipeline | `parallel()`/`pipeline()` per-wave fan-out in worktrees; `phase()` wave gate | "Dispatch one subagent per track within a wave, each with worktree isolation" + "must not start Wave N+1 until all Wave N subagents have returned and their worktrees are merged" |
+| `bugfix-wave` ✅ | skill | fan-out + pipeline | `parallel()` per-wave track dispatch w/ `isolation:'worktree'`; `phase()` wave-N-before-N+1 gate | "Group into tracks… Wave 1: tracks with no dependencies… Wave N: tracks depending on Wave N-1", "single message with multiple Agent tool" calls |
+| `sprint-execution` ✅ | skill | fan-out + pipeline | `parallel()`/`pipeline()` per-wave fan-out in worktrees; `phase()` wave gate | "Dispatch one subagent per track within a wave, each with worktree isolation" + "must not start Wave N+1 until all Wave N subagents have returned and their worktrees are merged" |
 | `graphify` | skill | fan-out + pipeline | `parallel()` chunked subagent fan-out; `phase()` Detect→Extract→Merge→Cluster | Step 3B: "Call the Agent tool multiple times IN THE SAME RESPONSE — one call per chunk… the only way they run in parallel"; chunk count is data-driven |
 | `ship` | skill | dependent-pipeline + bounded-loop | `phase()`/`pipeline()` for Steps 0–13; a bounded `while` for the coverage-gate + verification-gate retries | Ordered Steps 0–13 that must not begin before the prior completes ("Merge base BEFORE tests", "Run tests on merged code", Step 11 Verification Gate looping failures back) |
-| `plan-review` | command | fan-out | `parallel()` one `plan-reviewer` per lens, then consolidate | "Dispatch `agents/plan-reviewer` once per selected lens, in parallel… consolidated into a single set of findings" (default all 4 lenses) |
+| `plan-review` ✅ | command | fan-out | `parallel()` one `plan-reviewer` per lens, then consolidate | "Dispatch `agents/plan-reviewer` once per selected lens, in parallel… consolidated into a single set of findings" (default all 4 lenses) |
+
+### Known limits of the 3 built Workflow routes (2026-07-26)
+
+Recorded because each is a real constraint discovered while building, not a to-do:
+
+- **Scripts cannot touch the filesystem or git.** Merging worktrees, cleanup, and all durable
+  state writes (state file, roadmap, ledger, `fixes.json`) stay in the orchestrator's turn
+  after the workflow returns — including after a failed run.
+- **`sprint-execution` is one wave per run.** Its own gate is "Wave N returned *and merged*",
+  but merge is orchestrator-owned, and every track base-syncs to the integration branch — so
+  a later wave in the *same* run would reset to a branch missing the earlier wave's work.
+  The script warns when handed more than one wave.
+- **No mid-run interactivity.** A `BLOCKED`/`NEEDS_CONTEXT` track is logged and returned, not
+  acted on; the orchestrator handles it after the run. Review gates needing a user checkpoint
+  cannot live inside a script.
+- **The `.git/config.lock` race is unverified on this path.** `parallel()` + `isolation:'worktree'`
+  provisions worktrees concurrently, which is what the inline route forbids. It *may* not apply
+  since the runtime owns provisioning — that is a hypothesis, not a measurement.
+  `sprint-execution` exposes a `stagger` arg as a partial, expensive mitigation.
+- **`node --check` is the wrong validator.** The runtime strips `export const meta` and wraps
+  the body in an async function, so a correct script (top-level `await` + `return`) fails
+  `node --check` with "Illegal return statement". Check the wrapped-body form instead.
+- **None of the three has been executed end-to-end.** They are syntax- and contract-verified
+  only. First real invocation is the first real test.
 
 ### Flagged **Agent-only** (6) — real fan-out, but small/ad-hoc or human-in-loop; a plain Agent/Task dispatch fits better than a full Workflow
 
@@ -163,7 +194,7 @@ three distinct, legitimate causes — not a defect in either analysis:
 
 ### Tally
 
-- **11 flagged** — all in `dev-kit-core`. Workflow (5): `bugfix-wave`, `sprint-execution`, `graphify`, `ship` (skills) + `plan-review` (command). Agent-only (6): `cso`, `design-consultation`, `dispatching-parallel-agents`, `design-html`, `specify` (skills) + `plan-reviewer` (agent).
+- **11 flagged** — all in `dev-kit-core`. Workflow (5): `bugfix-wave` ✅, `sprint-execution` ✅, `graphify`, `ship` (skills) + `plan-review` ✅ (command) — **3 built 2026-07-26, 2 open**. Agent-only (6): `cso`, `design-consultation`, `dispatching-parallel-agents`, `design-html`, `specify` (skills) + `plan-reviewer` (agent).
 - **179 need no change** — 83 of 94 core assets + all 96 lane assets.
 - **0 flagged Hooks/Orchestrator** — those homes apply to the GWD-gap capabilities in §1,
   not to any of dev-kit's own existing assets.

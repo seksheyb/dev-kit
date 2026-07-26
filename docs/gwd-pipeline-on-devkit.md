@@ -261,9 +261,11 @@ Design *project* (one deliverable, e.g. a demo preview or a single screen). Proj
 `design_system_id`; no MCP tool creates a design system — that's a Claude Design UI-only action. When
 `design-consultation` runs and no existing system fits, it composes a **paste-ready prompt** from the approved
 design decisions (aesthetic, typography, colors, spacing, motion, seed templates), saves it to
-`.claude/design/claude-design-system-prompt.md`, and has the user paste it into Claude Design directly to create the
-system — then reports the resulting id back to store as `claude_design_system_id`. This run's own delivery still
-proceeds without blocking on that manual step.
+`docs/state/tmp/claude-design-system-prompt.md`, and has the user paste it into Claude Design directly to create the
+system — then reports the resulting id back to store as `claude_design_system_id`. `design-consultation`'s own run
+still delivers without blocking on that manual step — but the binding is **not** optional downstream. `design-html`
+reads `claude_design_system_id` and never resolves one itself, so until the user pastes that prompt and reports the
+id back, it **stops** and points back to `design-consultation` rather than proceeding unbound.
 
 **Model selection for Claude Design work:** whenever `design-consultation` or `design-html` is about to make its
 first `mcp__claude-design__*` call, it asks once (per invocation) which model should perform that generation work —

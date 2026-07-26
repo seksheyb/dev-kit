@@ -44,9 +44,11 @@ both gated on real code already being present:
 - **Stage 0, no flags (full audit)** — on an entry path where the repo already has code: the Legacy/inherited
   path, or a Continuing-milestone entry (milestone 2+, where prior milestones already shipped). Skipped on a
   first-milestone Greenfield entry. Establishes the baseline `docs/milestones/<M>/reports/security/` entry.
-- **Stage 12, `--diff` (per phase)** — after that phase's own Stage 8 (Execute) has run, so code always exists by
-  construction even in a Greenfield milestone's first phase. Scans just this phase's branch changes and
-  trend-tracks against the prior `docs/milestones/<M>/reports/security/` entry by fingerprint.
+- **Stage 12, `--diff` (once per milestone)** — after every phase in the milestone has cleared Stage 8 (Execute),
+  so code always exists by construction even in a Greenfield milestone. Stage 12 is a milestone gate, not a
+  per-phase step — this is **one** run over this milestone's accumulated branch changes, not one run per phase.
+  Trend-tracks against the prior `docs/milestones/<M>/reports/security/` entry by fingerprint, so
+  Resolved/Persistent/New findings are visible milestone over milestone.
 
 Both invocations write the same `docs/milestones/<M>/reports/security/<date>-<HHMMSS>.json` format (Phase 14) —
 `planner`'s Stage 7 threat-modeling step and `sdd-review-cto`'s Stage 2 review both consult the latest entry when

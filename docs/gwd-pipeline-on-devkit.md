@@ -42,13 +42,13 @@ cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it desc
 | **2** | Architecture & tech stack | `architecture-designer` · `diagram` · `sdd-review-cto` | requirements → `docs/global/architecture/SDD.md` + ADRs |
 | **3** | Research & roadmap | `project-researcher` ×4 → `research-synthesizer` · `roadmapper` | requirements + research → `docs/milestones/<M>/ROADMAP.md` (vertical slices) + `docs/state/STATE.md` |
 | **4** | Design system *(if UI)* | `design-consultation` → `design-html`[^plan-review-design] | product → `docs/global/design/DESIGN.md` |
-| **5** | Phase discovery | `codebase-mapper` ×4 · `pattern-mapper` · `assumptions-analyzer` · `advisor-researcher` · `phase-researcher` · `graphify` (query) | phase → `PHASE/CONTEXT.md`, `PHASE/PATTERNS.md`, `PHASE/RESEARCH.md`, codebase maps |
-| **6** | AI / UI phase specs *(conditional)* | *(AI)* `domain-researcher` → `eval-planner`/`eval-auditor` (data-ai lane) · *(UI)* `ui-researcher` → `ui-checker` | phase → `SPEC/AI-SPEC.md` / `PHASE/UI-SPEC.md` |
+| **5** | Phase discovery | `codebase-mapper` ×4 · `assumptions-analyzer` · `advisor-researcher` · `phase-researcher` · `pattern-mapper` · `graphify` (query) | phase → `PHASE/CONTEXT.md`, `PHASE/PATTERNS.md`, `PHASE/RESEARCH.md`, codebase maps |
+| **6** | AI / UI phase specs *(conditional)* | *(AI)* `domain-researcher` → `eval-planner` (data-ai lane) · *(UI)* `ui-researcher` → `ui-checker` | phase → `SPEC/AI-SPEC.md` / `PHASE/UI-SPEC.md` |
 | **7** | Plan the phase | `writing-plans` · `planner` · `plan-review` (cmd) → `plan-reviewer` → 4 lenses (incl. `plan-review-design`) · `gate-plan-review` · `analyze` | context → `PHASE/<NN>-<MM>-PLAN.md` (waves + tracks), reviewed & complexity-gated |
 | **8** | Execute the phase | `using-git-worktrees` · `sprint-execution` · `test-driven-development` · `dispatching-parallel-agents` · `fullstack-guardian`/`secure-code-guardian` · `refactoring-specialist` · `guard` · `design-handoff` (Claude Design → codebase bridge, when UI in scope) · `verification-before-completion` · **lane skills** | plan → code + tests, per-track parallel |
 | **9** | Debug *(as needed)* | `debug` (cmd) → `debugger` ← `systematic-debugging` · `learn` | failure → root-cause fix + regression test |
 | **10** | Adversarial review ↔ fix loop | `review` (cmd) → `code-review-gate` (round) ↔ `bugfix-wave` · `code-review-protocol` · `qa` (cmd/agent) · `ui-auditor` | code → fixes (loop ≤6) |
-| **11** | Verify the goal | `verify` (cmd) → `verifier` · `converge` · `integration-checker` · `nyquist-auditor` · `gate-automation` ← `test-master`/`playwright-expert` | code → `PHASE/VERIFICATION.md`, gaps closed, Playwright/Maestro flows |
+| **11** | Verify the goal | `verify` (cmd) → `verifier` · `converge` · `integration-checker` · `nyquist-auditor` · `gate-automation` ← `test-master`/`playwright-expert` · *(AI)* `eval-auditor` (data-ai lane) | code → `PHASE/VERIFICATION.md`, gaps closed, Playwright/Maestro flows, `PHASE/reviews/EVAL-REVIEW.md` |
 | **12** | Final Review *(milestone gate)* | **a. Functional:** `design-reviewer` (full/deep) · `devex-review` · `accessibility-tester` — **b. Security:** `security-audit` (cmd) → `security-auditor` · `cso` (`--diff`, whole-milestone) · `penetration-tester` · `compliance-auditor` · `security-reviewer` · `dependency-manager` | the milestone's whole shipped surface → design/DX/a11y scorecards + `PHASE/reviews/SECURITY.md`, `docs/milestones/<M>/reports/security/`, dependency/license report — open threats block the milestone from shipping |
 | **13** | Ship & deploy | `finishing-a-development-branch` *(manual)* **or** `ship` → `land-and-deploy` · **infra lane** | branch → PR → merged & deployed |
 | **14** | Document | `document-generate`/`code-documenter` → `document-release` → `content-qa` → `doc-verifier` | shipped surface → synced docs, CHANGELOG |
@@ -106,7 +106,7 @@ dev-kit supplies the assets, not the branch logic.)
 |------|-----------------------|---------------------------|
 | `market-researcher` (S1) | A product-direction / sizing / competitive decision is open | Skip; requirements proceed on existing evidence |
 | **Design system** (S4) | Project has a UI lane **and** no `docs/global/design/DESIGN.md` exists yet | Skip the whole stage — runs **once ever**, never per phase |
-| **AI spec** (S6): `domain-researcher` + `eval-planner`/`eval-auditor` | The phase builds an AI/LLM system needing an eval contract | Skip; no `SPEC/AI-SPEC.md` for this phase |
+| **AI spec** (S6): `domain-researcher` + `eval-planner` | The phase builds an AI/LLM system needing an eval contract | Skip; no `SPEC/AI-SPEC.md` for this phase |
 | **UI spec** (S6): `ui-researcher` → `ui-checker` | The phase has UI work | Skip; no `PHASE/UI-SPEC.md`. If run, `ui-checker` **BLOCKED** halts planning until fixed |
 | `plan-review-design` (S7) | The plan has any UI scope | Auto-reports "not applicable", verdict APPROVE, completeness N/A |
 | `plan-review-devex` (S7) | The plan has a developer-facing surface (API/CLI/SDK) | Auto-reports "not applicable", auto-approve N/A |
@@ -122,8 +122,10 @@ dev-kit supplies the assets, not the branch logic.)
 | `ui-auditor` (S10) | Phase shipped UI | Skip; `code-review-gate` + `qa` still run |
 | `nyquist-auditor` (S11) | `verifier` Step 6d found requirements with no automated test coverage (`validation_gaps` non-empty) | Skip; nothing to fill |
 | `gate-automation` (S11) | Sprint diff added/changed **primary** user flows | No new flows required (internal-only changes excluded) |
+| `eval-auditor` (S11) | The phase built an AI system with an AI-SPEC eval contract | Skip |
 | `cso` (S0) | Entry path has existing code — Legacy or Continuing-milestone | Skip on a first-milestone Greenfield entry; nothing to scan yet |
-| `design-reviewer` (full/deep) / `devex-review` / `accessibility-tester` (S12a) | Milestone shipped UI or a developer-facing surface anywhere across its phases | Skip; Stage 12b (security) still runs |
+| `design-reviewer` (full/deep) + `accessibility-tester` (S12a) | Milestone shipped **UI** anywhere across its phases | Skip both; a CLI/API-only milestone has no rendered surface to audit |
+| `devex-review` (S12a) | Milestone shipped a **developer-facing surface** (API/CLI/SDK) anywhere across its phases | Skip; a UI-only end-user product has no getting-started flow to dogfood |
 | `dependency-manager` (S12b) | Always runs | — |
 | `compliance-auditor` + product compliance skills (S12b) | Regulated data/industry in scope (GDPR/HIPAA/PCI/SOC2…) | Skip |
 | `penetration-tester` (S12b) | Active exploitation is **authorized and in scope** | Skip — agent refuses without written authorization |
@@ -134,15 +136,15 @@ dev-kit supplies the assets, not the branch logic.)
 | `incident-responder` (S15) | An active production incident is underway | Skip |
 | **Lane skills** (S8 mostly) | The project's actual stack matches the lane | Unmatched lanes never fire — a Python+React app invokes `python-pro`/`react-expert`, not `golang-pro`/`swift-expert` |
 
-**Rule of thumb:** the *unconditional* backbone every project runs is Stages 1 → 2 → 3 → 5 → 7 → 8 → 10 → 11 → 13 →
-14 → 15. Everything else keys off a predicate above. This is exactly why "190 assets placed" ≠ "190 assets fire for
+**Rule of thumb:** the *unconditional* backbone every project runs is Stages 0 → 1 → 2 → 3 → 5 → 7 → 8 → 10 → 11 →
+12 → 13 → 14 → 15. Everything else keys off a predicate above. This is exactly why "190 assets placed" ≠ "190 assets fire for
 any one project" — most runs exercise a minority of the catalog, selected by these gates.
 
 ---
 
 ## Stage-by-stage
 
-### Stage 0 — Bootstrap & governance *(once per project)*
+### Stage 0 — Bootstrap & governance *(once per milestone)*
 
 Establish the rules of the game before any spec exists, and recover ground truth if the project isn't greenfield.
 
@@ -292,24 +294,29 @@ Build the context a planner needs, cheaply, before writing tasks.
   directly onto ARCHITECTURE.md's Layers/Key Abstractions and CONCERNS.md's Fragile Areas, so a pre-built graph is
   a starting point, not something to silently re-derive from scratch. The `tech`/`quality` focuses have no graphify
   equivalent (package manifests, lint config) and always explore fresh.
-- **`pattern-mapper`** — map each new/changed file to its closest existing analog with line-numbered excerpts → `PHASE/PATTERNS.md`.
 - **`assumptions-analyzer`** — deep-read 5–15 source files, return evidence-cited, confidence-labeled assumptions.
 - **`advisor-researcher`** *(per gray-area decision)* — one 5-column options comparison table per open question.
 - **`phase-researcher`** — investigate the phase's technical domain (don't-hand-roll list, pitfalls, package-legitimacy gate) → `PHASE/RESEARCH.md`.
+- **`pattern-mapper`** — map each new/changed file to its closest existing analog with line-numbered excerpts → `PHASE/PATTERNS.md`.
+  **Runs last in this stage, not in the fan-out above:** it derives its file list by reading `PHASE/CONTEXT.md` and
+  `PHASE/RESEARCH.md`, so it belongs "between research and planning steps" — dispatching it alongside the mappers
+  hands it two files that don't exist yet and it silently maps a guessed file list.
 - **`graphify`** *(query)* — answer phase-relevant dependency questions from the existing graph instead of re-reading.
 
 ### Stage 6 — AI / UI phase specs *(conditional)*
 
 - **AI work:** **`domain-researcher`** *(agent)* researches practitioner evaluation criteria and
   failure modes into `SPEC/AI-SPEC.md` §1b; the **data-ai lane** then owns the eval contract — **`eval-planner`** designs
-  the strategy/rubrics, **`eval-auditor`** later audits coverage; **`framework-selector`** / **`ai-researcher`** /
+  the strategy/rubrics. Its retroactive pair, **`eval-auditor`**, does **not** run here: it is an audit of an
+  *implemented* phase and its `<input>` takes the phase's `PHASE/<NN>-<MM>-SUMMARY.md` files, which don't exist until
+  Stage 8 — it fires at Stage 11 instead. **`framework-selector`** / **`ai-researcher`** /
   **`rag-architect`** / **`prompt-engineer`** / **`ml-pipeline`** etc. supply the build methodology. All four of
   `framework-selector`/`ai-researcher`/`domain-researcher`/`eval-planner` check Stage 5's `PHASE/RESEARCH.md` (if it
   exists) before researching, so this lane never duplicates Stage 5's research or picks an un-reconciled stack for
   the same phase.
 - **UI work:** **`ui-researcher`** *(agent)* produces the `PHASE/UI-SPEC.md` design contract (hard
   constraints: ≤4 font sizes, spacing multiples of 4, registry-safety vetting); **`ui-checker`** *(agent)* validates
-  it BLOCK/FLAG/PASS before planning may proceed. Both read Stage 4's `docs/global/design/DESIGN.md` (repo root) when it exists — the
+  it BLOCK/FLAG/PASS before planning may proceed. Both read Stage 4's `docs/global/design/DESIGN.md` when it exists — the
   project-wide authority for spacing/typography/color: `ui-researcher` maps DESIGN.md's declared tokens onto the
   phase-level contract instead of re-asking, and `ui-checker` BLOCKs on undeclared drift from it.
 
@@ -439,6 +446,13 @@ the lighter tier, with the full set still available as an explicit escalation.
    on-demand E2E CI job → `PHASE/reports/automation/authoring-report.json`. Invokes **`test-master`** / **`playwright-expert`** (web lane)
    for test-design guidance. Answers the same question as `verifier`/`converge` above ("is the goal actually
    covered?") at the E2E-user-flow layer.
+6. **`eval-auditor`** *(agent, data-ai lane — only if the phase built an AI system with a Stage 6 eval contract)* —
+   the retroactive pair to Stage 6's `eval-planner`: audits what `SPEC/AI-SPEC.md` planned against what the code
+   actually does, scoring every planned eval dimension COVERED / PARTIAL / MISSING → `PHASE/reviews/EVAL-REVIEW.md`.
+   A MISSING dimension or unimplemented guardrail is a BLOCKER. It runs here rather than at Stage 6 because its
+   inputs are the phase's `PHASE/<NN>-<MM>-SUMMARY.md` files and the implementation itself — neither exists before
+   Stage 8. Distinct from `nyquist-auditor`: that fills missing *test* coverage for requirements, this scores
+   *eval* coverage against an AI-SPEC rubric.
 
 ---
 
@@ -451,15 +465,21 @@ and security — both gate the milestone before Stage 13 (Ship & deploy).
 
 #### 12a. Functional
 
-*(if the milestone shipped UI or a developer-facing surface, across any of its phases)*
+Two independent predicates, not one — a CLI-only milestone runs `devex-review` and neither of the other two; a
+UI-only end-user product runs the two UI audits and not `devex-review`. A milestone that shipped both runs all three.
+
+*(only if the milestone shipped UI, across any of its phases)*
 
 - **`design-reviewer`** in full/deep mode *(cross-page consistency, whole-site AI-slop sweep, design-score delta
   vs. the last milestone's `docs/state/baselines/design-baseline.json` via regression mode)*.
-- **`devex-review`** *(the real, now-stable getting-started flow — TTHW, CLI `--help`, real errors — measuring a
-  whole-product journey that isn't meaningful mid-phase)*.
 - **`accessibility-tester`** *(site-wide WCAG 2.1 AA conformance)*.
 
-These three checks are inherently whole-surface, not diff-scoped, which is why they run once at milestone close
+*(only if the milestone shipped a developer-facing surface — API/CLI/SDK — across any of its phases)*
+
+- **`devex-review`** *(the real, now-stable getting-started flow — TTHW, CLI `--help`, real errors — measuring a
+  whole-product journey that isn't meaningful mid-phase)*.
+
+Whichever of these fire are inherently whole-surface, not diff-scoped, which is why they run once at milestone close
 rather than per phase — see Stage 10's note.
 
 #### 12b. Security
@@ -576,7 +596,7 @@ These aren't a stage — they run *throughout* the pipeline:
 | `learn` | Durable cross-session knowledge ledger | Whenever a gotcha/convention surfaces (esp. Stages 8–11) |
 | `guard` | Destructive-command + edit-scope safety | Any prod/shared-surface work (esp. Stage 8, 13) |
 | `graphify` | Persistent queryable knowledge graph | Built in Stage 0, queried in Stages 5, 7 |
-| `diagram` | Editable Mermaid → SVG/PNG artifacts | Any architecture/plan/design step (2, 4, 7) |
+| `diagram` | Editable Mermaid → SVG/PNG artifacts | Any architecture/plan/design step (2, 7) |
 | `writing-skills` | Codify a repeated workflow into a new dev-kit skill | Post-`retro`, when Stage 15 surfaces a reusable pattern |
 
 ---
@@ -591,10 +611,10 @@ pipeline at the stages where their expertise is needed (overwhelmingly Stage 8 e
 | **Backend** (`dev-kit-backend`, 26) | Stage 8 execution; `legacy-modernizer` at Stage 0/8 | `python-pro`, `golang-pro`, `rust-engineer`, `fastapi-expert`, `spring-boot-engineer`, `postgres-pro`, `api-designer`, `microservices-architect` |
 | **Web** (`dev-kit-web`, 11) | Stage 8; `playwright-expert` at Stage 11 | `react-expert`, `nextjs-developer`, `vue-expert`, `typescript-pro`, `electron-pro` |
 | **Mobile** (`dev-kit-mobile`, 4) | Stage 8; Maestro flows at Stage 11 | `swift-expert`, `kotlin-specialist`, `flutter-expert`, `react-native-expert` |
-| **Data/AI** (`dev-kit-data-ai`, 17) | Stage 6 (eval contract) + Stage 8 | `eval-planner`, `eval-auditor`, `framework-selector`, `ai-researcher`, `rag-architect`, `prompt-engineer`, `ml-pipeline`, `llm-architect` |
+| **Data/AI** (`dev-kit-data-ai`, 17) | Stage 6 (eval contract) + Stage 8; `eval-auditor` at Stage 11 | `eval-planner`, `eval-auditor`, `framework-selector`, `ai-researcher`, `rag-architect`, `prompt-engineer`, `ml-pipeline`, `llm-architect` |
 | **Infra** (`dev-kit-infra`, 14) | Stage 13 deploy + Stage 15 operate | `devops-engineer`, `terraform-engineer`, `cloud-architect`, `kubernetes-specialist`, `sre-engineer`, `chaos-engineer`, `monitoring-expert` |
 | **Specialized** (`dev-kit-specialized`, 19) | Stage 8 (domain build); `license-engineer` at Stage 12 | `payment-integration`, `fintech-engineer`, `healthcare-admin`, `mcp-developer`, `blockchain-developer`, `game-developer`, `seo-specialist` |
-| **Product** (`dev-kit-product`, 5) | Stage 1 (assumptions) + Stage 12/15 (compliance, analytics) | `ab-test-analysis`, `cohort-analysis`, `growth-loops`, `gdpr-ccpa-compliance`, `hipaa-compliance` |
+| **Product** (`dev-kit-product`, 5) | Stage 12 compliance + Stage 15 analytics | `ab-test-analysis`, `cohort-analysis`, `growth-loops`, `gdpr-ccpa-compliance`, `hipaa-compliance` |
 
 ---
 
@@ -626,7 +646,7 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 - **Stage 4:** `design-consultation`, `design-html` (`plan-review-design` is introduced here conceptually but
   only executes — and is counted — under Stage 7; `design-handoff` is counted under Stage 8, where it actually
   fires — see both stages' notes)
-- **Stage 5:** `codebase-mapper`, `pattern-mapper`, `assumptions-analyzer`, `advisor-researcher`, `phase-researcher`
+- **Stage 5:** `codebase-mapper`, `assumptions-analyzer`, `advisor-researcher`, `phase-researcher`, `pattern-mapper`
 - **Stage 6:** `domain-researcher`, `ui-researcher`, `ui-checker`
 - **Stage 7:** `writing-plans`, `planner`, `plan-review` (cmd), `plan-reviewer`, `plan-review-eng`, `plan-review-design`, `plan-review-devex`, `plan-review-goal-backward`, `gate-plan-review`, `analyze`
 - **Stage 8:** `using-git-worktrees`, `sprint-execution`, `test-driven-development`, `dispatching-parallel-agents`, `fullstack-guardian`, `secure-code-guardian`, `refactoring-specialist`, `guard`, `design-handoff`, `verification-before-completion`
@@ -640,8 +660,8 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 - **Cross-cutting:** `context-save`, `context-restore`, `learn`, `writing-skills` (+ `guard`, `graphify`, `diagram` listed above)
 
 **All 96 lane assets** route in via [Lane routing](#lane-routing) — predominantly at Stage 8, with the Data/AI eval
-pair at Stage 6, infra at Stages 13/15, and product analytics/compliance at Stages 1/12/15. The full roster, every
-one named against the stage it plugs into:
+planner at Stage 6 and its auditor at Stage 11, infra at Stages 13/15, and product analytics/compliance at
+Stages 12/15. The full roster, every one named against the stage it plugs into:
 
 **Backend** (`dev-kit-backend`, 26) — Stage 8 execution *(languages/frameworks/data/API)*; `legacy-modernizer` at
 Stage 0/8:
@@ -658,7 +678,8 @@ Stage 0/8:
 **Mobile** (`dev-kit-mobile`, 4) — Stage 8; Maestro flows at Stage 11:
 `flutter-expert`, `kotlin-specialist`, `react-native-expert`, `swift-expert`.
 
-**Data/AI** (`dev-kit-data-ai`, 17) — Stage 6 eval contract (`domain-researcher` → the eval pair) + Stage 8 build:
+**Data/AI** (`dev-kit-data-ai`, 17) — Stage 6 eval contract (`domain-researcher` → `eval-planner`) + Stage 8 build;
+`eval-auditor` at Stage 11:
 `data-analyst`, `data-engineer`, `data-scientist`, `pandas-pro`, `spark-engineer`, `ml-engineer`, `ml-pipeline`,
 `fine-tuning-expert`, `nlp-engineer`, `reinforcement-learning-engineer`, `llm-architect`, `rag-architect`,
 `prompt-engineer`, `framework-selector`, `ai-researcher`, `eval-planner`, `eval-auditor`.
@@ -668,14 +689,14 @@ Stage 0/8:
 `platform-engineer`, `devops-engineer`, `sre-engineer`, `monitoring-expert`, `chaos-engineer`,
 `database-administrator`, `network-engineer`, `microsoft-ops`, `powershell-pro`.
 
-**Specialized** (`dev-kit-specialized`, 19) — Stage 8 domain build; `license-engineer` at Stage 12; MCP/tooling at
-Stage 0/8:
+**Specialized** (`dev-kit-specialized`, 19) — Stage 8 domain build (MCP/tooling included); `license-engineer` at
+Stage 12:
 `cli-developer`, `devtools-engineer`, `mcp-developer`, `atlassian-mcp`, `slack-expert`, `license-engineer`,
 `fintech-engineer`, `healthcare-admin`, `legal-advisor`, `risk-manager`, `quant-analyst`, `payment-integration`,
 `embedded-systems`, `game-developer`, `iot-engineer`, `salesforce-developer`, `seo-specialist`,
 `blockchain-developer`, `visual-asset-generator`.
 
-**Product** (`dev-kit-product`, 5) — Stage 1 assumptions + Stage 12 compliance + Stage 15 analytics:
+**Product** (`dev-kit-product`, 5) — Stage 12 compliance + Stage 15 analytics:
 `ab-test-analysis`, `cohort-analysis`, `growth-loops`, `gdpr-ccpa-compliance`, `hipaa-compliance`.
 
 **Total: 190 / 190 dev-kit assets placed** (94 core + 96 lane) — verified by diffing every catalog header against

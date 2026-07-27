@@ -53,6 +53,12 @@ success_criteria:
 
 ## Hypothesis Formulation
 
+**Source real hypotheses first.** Before inventing a hypothesis from the architecture, check
+`docs/global/ops/postmortems/` and `docs/global/ops/runbooks/` for failure modes this system
+has already hit — a recurring root cause there outranks a speculative one below, since it's
+proven rather than guessed. Missing or empty directories are not an error; just fall through
+to architecture-derived hypotheses.
+
 ```python
 def create_hypothesis(component: str, failure: str, expected_behavior: str) -> dict:
     """

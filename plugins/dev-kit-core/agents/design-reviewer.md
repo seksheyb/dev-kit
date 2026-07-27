@@ -87,7 +87,7 @@ Never sacrifice usability for space. Affordances must be VISIBLE (no hover). Tou
 - **Quick:** homepage + 2 key pages. First Impression + Design System Extraction + abbreviated checklist.
 - **Deep:** 10-15 pages, every interaction flow, exhaustive checklist. Pre-launch audits.
 - **Diff-aware (automatic on a feature branch with no URL):** analyze `git diff main...HEAD --name-only`, map changed files to affected pages/routes, detect the running app on common local ports (3000, 4000, 8080, 5173), audit only affected pages.
-- **Regression:** run a full audit, then load the previous `docs/state/baselines/design-baseline.json`; compare per-category grade deltas, new findings, resolved findings.
+- **Regression:** run a full audit. If `docs/state/baselines/design-baseline.json` exists, load it and compare per-category grade deltas, new findings, resolved findings. **If it does not exist yet** (first regression run on this project), there is nothing to compare against — this run **establishes** the baseline instead. Say so plainly in the report; do not emit an empty or fabricated delta section.
 
 ## Phase 1: First Impression
 
@@ -209,7 +209,7 @@ Compare across pages: nav bar consistent? footer consistent? component reuse vs 
 
 ## Phase 6: Compile Report
 
-**Local:** `{output_dir}/{date}-{domain}.md`. Write `docs/state/baselines/design-baseline.json` for regression mode:
+**Local:** `{output_dir}/{date}-{domain}.md`. In regression mode, write `docs/state/baselines/design-baseline.json` from this run's results — every regression run overwrites it, whether this run is bootstrapping the baseline because none existed (per the Modes section above) or refreshing it after a comparison:
 
 ```json
 {

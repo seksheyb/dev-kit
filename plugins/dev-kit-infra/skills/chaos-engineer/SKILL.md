@@ -25,8 +25,8 @@ metadata:
 
 ## Core Workflow
 
-1. **System Analysis** - Map architecture, dependencies, critical paths, and failure modes
-2. **Experiment Design** - Define hypothesis, steady state, blast radius, and safety controls
+1. **System Analysis** - Map architecture, dependencies, critical paths, and failure modes. Also check `docs/global/ops/postmortems/` and `docs/global/ops/runbooks/` (written by `incident-responder`) for what has actually broken in this system — pull the recurring failure modes and root causes, not the full postmortem methodology. A missing or empty directory is not fatal — note it and fall back to architecture-derived failure modes alone.
+2. **Experiment Design** - Define hypothesis, steady state, blast radius, and safety controls. Rank hypotheses seeded from real postmortem/runbook failure modes (Step 1) ahead of architecture-derived ones — they have already happened, so they carry more evidence.
 3. **Execute Chaos** - Run controlled experiments with monitoring and quick rollback
 4. **Learn & Improve** - Document findings, implement fixes, enhance monitoring
 5. **Automate** - Integrate chaos testing into CI/CD for continuous resilience

@@ -59,10 +59,10 @@ hostage. Sources: REPORT.md §1 (D-findings that are skill-side) + §4b HIGH tab
 | 1.10 | D3 `agents/codebase-mapper` | Either drop the hard `Today's date:` requirement or make the date self-derivable; stop requiring an input no dispatch convention supplies. | ✅ **Done** — Bash `date` fallback |
 | 1.11 | D8/§3.2 `agents/qa.md`, `agents/ui-auditor.md` | qa: none (guide text was wrong, rewrite already fixes it). ui-auditor: kill the "Top 3" template ceiling; wire `needs_human_review` beyond the browser branch. **Blocks the §3.2 cut.** | ✅ **Done** — §3.2 cut now unblocked |
 | 1.12 | D9 `commands/verify.md` chain | No asset change needed — KICKOFF's stale mechanism claim dies in Milestone 4. | ✅ **Resolved, no action** — confirmed against live files |
-| 1.13 | `agents/{ai-researcher,eval-planner,framework-selector}.md` (dev-kit-data-ai), `agents/domain-researcher.md` (dev-kit-core) | **New — same damage class as 1.3, different root cause.** All four "update `AI-SPEC.md` at `ai_spec_path`", but their `tools:` frontmatter grants `Write` only, not `Edit`. Write is a whole-file overwrite, so each clobbers its siblings' sections **even on the documented sequential chain**. Fix is a tool grant + an explicit read-modify-write contract; spans two plugins including frontmatter. | ⬜ **Open — new, HIGH** |
+| 1.13 | `agents/{ai-researcher,eval-planner,framework-selector}.md` (dev-kit-data-ai), `agents/domain-researcher.md` (dev-kit-core) | **New — same damage class as 1.3, different root cause.** All four "update `AI-SPEC.md` at `ai_spec_path`", but their `tools:` frontmatter grants `Write` only, not `Edit`. Write is a whole-file overwrite, so each clobbers its siblings' sections **even on the documented sequential chain**. Fix is a tool grant + an explicit read-modify-write contract; spans two plugins including frontmatter. | ✅ **Done** — `Edit` granted on all four; categorical Write mandate replaced with a heading-scoped read-modify-write contract. Guard: `aispec-coauthor-guards.sh` |
 | 1.14 | `skills/graphify/SKILL.md:295-301,369-372` | **New — scoping token exists but is never wired to the write.** N chunk subagents are dispatched in one message with byte-identical prompts; `CHUNK_NUM` is substituted only into a human-readable header, never into an output path, and the prompt never tells the subagent to Write at all — yet the collector treats the missing `.graphify_chunk_NN.json` as a read-only-agent-type failure. Same shape as 1.3/1.13. | ⬜ **Open — new** |
 | | | **Fix delivery note:** `graphify` is a personal skill (`~/.claude/skills/graphify/SKILL.md`), not a tracked file in this repo — there is no dev-kit commit that closes this item. The fix is a prompt-level addition, applied at kickoff time rather than as a repo change: the per-chunk subagent prompt must add an explicit output-path instruction — `Write your JSON output to graphify-out/.graphify_chunk_CHUNK_NUM.json using the Write tool. Do not print it as your final response.` — with `CHUNK_NUM` substituted into the path, not just the header. Also correct Step B3's failure warning: a missing chunk file means "the subagent didn't write to disk," not specifically "read-only agent type" (that cause is already ruled out since dispatch mandates `subagent_type="general-purpose"`). | |
-| 1.15 | `agents/ui-auditor.md:38-40` | **Declared severity taxonomy never reaches the output template.** The BLOCKER/WARNING taxonomy declared at `:38-40` does not appear anywhere in the `<output_format>` template (`:303-359`), so findings carry no severity label. Carried over from 1.11's notes, where it was flagged as "worth doing alongside" but was out of that item's scope. Wire severity labels into the findings sections. | ⬜ **Open** |
+| 1.15 | `agents/ui-auditor.md:38-40` | **Declared severity taxonomy never reaches the output template.** The BLOCKER/WARNING taxonomy declared at `:38-40` does not appear anywhere in the `<output_format>` template (`:303-359`), so findings carry no severity label. Carried over from 1.11's notes, where it was flagged as "worth doing alongside" but was out of that item's scope. Wire severity labels into the findings sections. | ✅ **Done** — `[BLOCKER]`/`[WARNING]`/`[BELOW BAR]` wired through every Detailed Findings placeholder. The structural sweep found the same defect in **three more agents** (`doc-verifier`, `nyquist-auditor`, `integration-checker`) — all fixed. Guard: `ui-audit-severity-guards.sh` |
 
 **Provenance of 1.13/1.14/1.15:** all three were surfaced by structural sweeps during the fix
 waves, not by the original audit. They are live asset bugs but hold **no KICKOFF text hostage**,
@@ -76,7 +76,7 @@ the 1.1 map-placement review gate and the 1.12 deletion-site gap, both now in Mi
 ## Milestone 2 — Fix the MEDIUM gap defects (repo: dev-kit)
 
 The §4b MEDIUM entries, as corrected by RE-VERIFICATION.md (one refuted, four narrowed).
-**11 of 13 actionable entries shipped**; 2 remain open, 1 stays blocked.
+**All 13 actionable entries shipped.**
 
 | # | Asset | Fix | Status |
 |---|---|---|---|
@@ -91,16 +91,16 @@ The §4b MEDIUM entries, as corrected by RE-VERIFICATION.md (one refuted, four n
 | 2.9 | `skills/diagram` | Re-sync duty for embedded fences (the `.mmd` and the embedded copy silently diverge). | ✅ **Done** |
 | 2.10 | `commands/plan-review` | Config-sourced default lens set instead of a hardcoded all-4. | ✅ **Done** |
 | 2.11 | `skills/sre-engineer` | **Downgraded to optional** — the blocking calibration gate already exists (`SKILL.md:21`); only the reference checklist's one-sidedness remained. | ✅ **Done** |
-| 2.12 | `skills/brainstorming` | Premise-gate in the **standard** design flow. | ⬜ **Open — missed by the M2 fix wave** |
-| 2.13 | `skills/chaos-engineer` | Incident-derived experiment seeding. | ⬜ **Open — missed by the M2 fix wave** |
-| 2.14 | `skills/rag-architect` | Defer to an upstream AI-SPEC decision instead of re-opening the stack. | ⛔ **Blocked on 1.13** |
+| 2.12 | `skills/brainstorming` | Premise-gate in the **standard** design flow. | ✅ **Done** — premise step added to the standard checklist ahead of "propose approaches", referencing (not restating) the existing `## Premise Challenge` block. Guard: `brainstorming-premise-guards.sh` |
+| 2.13 | `skills/chaos-engineer` | Incident-derived experiment seeding. | ✅ **Done** — Core Workflow steps 1–2 now read `docs/global/ops/{postmortems,runbooks}/` non-fatally and rank real failure modes ahead of architecture-derived ones. Guard: `chaos-incident-seeding-guards.sh` |
+| 2.14 | `skills/rag-architect` | Defer to an upstream AI-SPEC decision instead of re-opening the stack. | ✅ **Done** — unblocked by 1.13, then shipped: step 2 adopts `AI-SPEC.md` Section 2 when present and validates rather than re-decides; Constraints and Output Templates updated to match. Guard: `rag-aispec-deference-guards.sh` |
 
 ~~`skills/learn` autonomous append path~~ — **REFUTED, dropped**: `SKILL.md:26` already
 authorizes unattended workflow appends and `debugger.md:276` implements it.
 
-**2.12 / 2.13 — why these are open.** Both were in the original §4b list but were omitted when
-the actionable set was enumerated for the fix wave, so they were never dispatched. Both
-re-verified as real afterwards:
+**2.12 / 2.13 — why they were open, and what shipped.** Both were in the original §4b list but
+were omitted when the actionable set was enumerated for the M2 fix wave, so they were never
+dispatched. Both re-verified as real afterwards, and both shipped in the shortlist fix wave:
 - **2.12** — the Premise Challenge block (`brainstorming/SKILL.md:186`, "both postures —
   mandatory") sits inside the **startup/office-hours mode**, not the standard flow. The standard
   flow has its own `## Checklist (standard design flow)` (`:32`) and `## The Process` (`:51`),
@@ -114,31 +114,46 @@ re-verified as real afterwards:
   broken in this system, not designed from scratch — the producer exists and the consumer
   ignores it.
 
-**2.14 — blocked, do not start.** The fix creates a read of `AI-SPEC.md`, which **1.13** must
-first make trustworthy: four agents currently whole-file-`Write` that document and clobber each
-other's sections. Deferring to a stack decision that may have been silently overwritten converts
-a duplicated-decision problem into a silently-wrong-decision problem — strictly worse than the
-status quo. Ship 1.13 first.
+**2.14 — was blocked; the block is cleared.** The fix creates a read of `AI-SPEC.md`, which
+**1.13** had to make trustworthy first: four agents whole-file-`Write` that document and clobbered
+each other's sections. Deferring to a stack decision that may have been silently overwritten would
+have converted a duplicated-decision problem into a silently-wrong-decision problem — strictly
+worse than the status quo. 1.13 shipped first, and 2.14 shipped behind it in the next wave, with
+`aispec-coauthor-guards.sh` passing as the precondition check.
 
 ### Found during Milestone 2 execution (new — not in the original §4b list)
 
 The fix wave's structural sweeps surfaced these. None blocks the M2 exit criterion; all are
 live asset defects worth scheduling.
 
-| # | Asset | Finding |
-|---|---|---|
-| 2.15 | `skills/ship:124` | **Single-cause diagnosis of a multi-cause symptom** — asserts a VERSION/manifest mismatch is "a manual edit". Same class as the bugfix-wave edge case fixed in 2.2; a merge, a failed release script, or a revert produce the identical symptom. |
-| 2.16 | `agents/design-reviewer:14,237` | **Self-reported field consumed as proof** — trusts `ui-auditor`'s `needs_human_review` flagging with no re-check. Note the provenance: this is the flag **1.11 introduced**, so the class we created there already has a known instance. Same class as 2.5. |
-| 2.17 | `skills/writing-plans/plan-document-reviewer-prompt.md:38-49` | **Orphaned asset** — nothing anywhere in `plugins/` references this file. Carries a Class-B defect, but there is no consumer to fix it against; decide whether the file should exist at all before fixing its contents. |
-| 2.18 | 7 skills naming a diagram deliverable | `api-designer:22,205`, `cloud-architect:211`, `microservices-architect:3,155`, `rag-architect:190`, `growth-loops:93`, `network-engineer:143` name "diagram" as a required output but never invoke `skills/diagram`. Weaker than 2.8 (bare deliverable mention, not restated mechanics) — **needs sizing before it is scheduled**, and may be correct as-is. |
-| 2.19 | Ambiguous instances of the 2.2 / 2.5 classes | `react-native-expert:30,32` and `flutter-expert:125` (single-cause, but remedy-shaped and hedged "Likely Cause"); `cso:263`, `design-consultation:352-355`, `document-release:380-390` (self-report, but each already partly mitigated by a pre-emit quote gate or an explicit "best-effort" caveat). Flagged rather than guessed at — **confirm before touching**. |
+| # | Asset | Finding | Status |
+|---|---|---|---|
+| 2.15 | `skills/ship:124` | **Single-cause diagnosis of a multi-cause symptom** — asserts a VERSION/manifest mismatch is "a manual edit". Same class as the bugfix-wave edge case fixed in 2.2; a merge, a failed release script, or a revert produce the identical symptom. | ✅ **Done** — now names four candidate causes and points at `git log` for the evidence. Guard: `single-cause-diagnosis-guards.sh` |
+| 2.16 | `agents/design-reviewer:16,235-237` | **Self-reported field consumed as proof** — trusts `ui-auditor`'s `needs_human_review` flagging with no re-check. Note the provenance: this is the flag **1.11 introduced**, so the class we created there already has a known instance. Same class as 2.5. | ✅ **Done** — carry-forward duty kept, re-check added; report now separates "Flagged by ui-auditor" from "Added by this pass". Guard: `ui-audit-severity-guards.sh` |
+| 2.17 | `skills/writing-plans/plan-document-reviewer-prompt.md:38-49` | **Orphaned asset** — nothing anywhere in `plugins/` references this file. Carries a Class-B defect, but there is no consumer to fix it against; decide whether the file should exist at all before fixing its contents. | ✅ **Done — deleted.** `writing-plans/SKILL.md:152` had already chosen the opposite design ("a checklist you run yourself — not a subagent dispatch"), so the template was the discarded alternative, not a missing integration. Guard: `orphan-asset-guards.sh`, generalized to catch any newly-orphaned skill companion file |
+| 2.18 | 6 skills naming a diagram deliverable | `api-designer:22,205`, `cloud-architect:211`, `microservices-architect:3,155`, `rag-architect:190`, `growth-loops:93`, `network-engineer:143` name "diagram" as a required output but never invoke `skills/diagram`. Weaker than 2.8 (bare deliverable mention, not restated mechanics) — **needs sizing before it is scheduled**, and may be correct as-is. | ✅ **Done — 4 fixed, 4 correct-as-is.** Fixed (required deliverables, now delegate to `diagram`): `cloud-architect:211`, `microservices-architect:155`, `rag-architect:190`, `growth-loops:93`. Correct-as-is: `api-designer:22` (internal sketch, not a deliverable), `api-designer:205` ("diagram **or** table"), `microservices-architect:3` (discovery frontmatter), `network-engineer:143` (consumes a diagram, does not produce one). Guard: `diagram-delegation-guards.sh` extended |
+| 2.19 | Ambiguous instances of the 2.2 / 2.5 classes | `react-native-expert:30,32` and `flutter-expert:125` (single-cause, but remedy-shaped and hedged "Likely Cause"); `cso:263`, `design-consultation:352-355`, `document-release:380-390` (self-report, but each already partly mitigated by a pre-emit quote gate or an explicit "best-effort" caveat). Flagged rather than guessed at — **confirm before touching**. | ✅ **Done — 1 fixed, 5 correct-as-is.** Only `cso:263` was real, and for an unanticipated reason: the skill told the agent to write a "Self-verified" note but Phase 13's Status enum offered only `VERIFIED\|UNVERIFIED\|TENTATIVE`, so the note had **no field to land in** — a same-context self-read was indistinguishable from an independently-confirmed finding. `SELF-VERIFIED` added to the enum. The other five were left alone with recorded reasons. Guard: `single-cause-diagnosis-guards.sh` |
 
-**Regression guards added during M2:** `scripts/checks/` now holds 9 run-by-hand scripts
+**Regression guards:** `scripts/checks/` now holds **16** run-by-hand scripts. Nine from M2
 (`constitution-slot`, `diagram-delegation`, `disclosure-clock`, `orchestration-evidence`,
 `planning-agent`, `review-track`, `skill-pr-promise`, `skill-precondition`,
-`skill-routing-capability`). Each was verified in **both** directions — failing against the
-pre-fix file via `git show`, passing against the fix. Milestone 6 item 5 covers wiring them
-into a runner.
+`skill-routing-capability`) and seven from the shortlist fix wave (`aispec-coauthor`,
+`brainstorming-premise`, `chaos-incident-seeding`, `orphan-asset`, `rag-aispec-deference`,
+`single-cause-diagnosis`, `ui-audit-severity`; `diagram-delegation` was also extended). Each was
+verified in **both** directions — failing against the pre-fix file via `git show`, passing against
+the fix. All 16 pass against `main`. Milestone 6 item 5 covers wiring them into a runner.
+
+**Carried forward from the shortlist fix wave — one new finding, not yet an item.** Two tracks
+independently hit the same undocumented defect shape: *a declared classification tier that has no
+field to land in anywhere in the asset's own output schema*, so the weaker/lower tier silently
+reads as the stronger one. Confirmed instances: `cso:263` (`SELF-VERIFIED` had no Status value),
+`doc-verifier` (an UNVERIFIABLE tier against a PASS/FAIL-only schema — unverifiable claims
+vanished entirely), `nyquist-auditor` (a "caveated pass" indistinguishable from a bare
+`status: "green"`), `integration-checker` (WARNING declared, resolution logic handled only
+WIRED/BROKEN), plus `ui-auditor` itself (1.15). Five instances across two unrelated sweeps is a
+class, not a coincidence. All five are fixed, but only `ui-auditor`/`design-reviewer` and `cso`
+are guarded — **the other three fixes are unguarded**, and no sweep has asked the question
+repo-wide. Worth scheduling as its own item.
 
 **Sweeps that came back clean** (recorded so they are not re-run): the only genuine dangling
 skill route in the repo was `gate-automation`→`test-master`; `qa.md` and `health-reporter.md`
@@ -148,7 +163,8 @@ were **already** correctly discovery-anchored; `constitution` was the only asset
 "replace every placeholder" elicitation gap.
 
 **Exit criterion:** the corrected §4b list is empty; zero KICKOFF lines exist to compensate for
-an asset. **Currently blocked by 2.12, 2.13, and 2.14.**
+an asset. **Met** — 2.12, 2.13, and 2.14 all shipped in the shortlist fix wave; the §4b list is
+empty. The M2-execution findings table above (2.15–2.19) is also fully closed.
 
 ## Milestone 3 — Path-ownership flip: ids in, paths out (repo: dev-kit)
 

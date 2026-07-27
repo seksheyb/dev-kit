@@ -3,259 +3,135 @@
 Items pulled out of `ROADMAP.md` Milestone 1 to be worked next. Source of truth for
 scope stays `ROADMAP.md`; this file is the working shortlist.
 
-Shortlisted: **1.1**, **1.3**, **1.5**, **1.6**, **1.8**, **1.9**, **1.10**, **1.11**, **1.12**.
+Shortlisted: **1.13**, **1.15**, **2.17**.
+
+*(1.1, 1.3, 1.5, 1.6, 1.8, 1.9, 1.10, 1.11, 1.12 — the previous shortlist — have all
+shipped or resolved with no action; see `ROADMAP.md` Milestone 1 for status and the
+git history for implementation detail. Cleared from this file so it only tracks live
+work.)*
 
 ---
 
-## 1.1 — `agents/planner.md`
+## 1.13 — `agents/{ai-researcher,eval-planner,framework-selector}.md` (dev-kit-data-ai), `agents/domain-researcher.md` (dev-kit-core)
 
-**Fix:** Phase-context loader must ingest `PHASE/PATTERNS.md`, `PHASE/UI-SPEC.md`, and
-`SPEC/AI-SPEC.md` (when present). Also close the `## Parallel Execution Map` template gap
-(REPORT §3.5 risk 2).
+**Fix:** grant `Edit` alongside `Write` on all four agents, and replace each one's
+"ALWAYS use the Write tool" mandate with an explicit read-modify-write contract for
+updating `AI-SPEC.md`.
 
-**Why it matters beyond the asset:** this is a live bug today — the planner plans without
-inputs that exist on disk. It also holds KICKOFF text hostage: the step-7 planner-handoff
-rewrite carries planner-gap warnings that become deletable only once this ships
-(`ROADMAP.md` Milestone 4, item 2).
+**Bug (surfaced by structural sweep during the M1 fix wave, same damage class as
+1.3):** all four agents co-author `AI-SPEC.md` in a documented sequential chain
+(`framework-selector` → `domain-researcher` → `ai-researcher` → `eval-planner`), each
+owning disjoint sections. But every one of them is granted `Write` only, never `Edit`:
 
-**Downstream link:** `ROADMAP.md` item 1.2 adds planner to `pattern-mapper.md`'s consumer
-claim *once 1.1 ships* — so 1.1 lands first.
+| Agent | `tools:` frontmatter | Sections owned |
+|---|---|---|
+| `framework-selector.md:4` | `Read, Write, Bash, Grep, Glob, WebSearch, AskUserQuestion` | 2 (also creates the full section skeleton) |
+| `domain-researcher.md:4` | `Read, Write, Bash, Grep, Glob, WebSearch, WebFetch, mcp__context7__*` | 1, 1b |
+| `ai-researcher.md:4` | `Read, Write, Bash, Grep, Glob, WebFetch, WebSearch, mcp__context7__*` | 3, 4, 4b |
+| `eval-planner.md:4` | `Read, Write, Bash, Grep, Glob, AskUserQuestion` | 5, 6, 7 |
 
----
+`Write` is a whole-file overwrite. Each agent's own write step compounds the gap by
+explicitly forbidding the natural workaround too — "**ALWAYS use the Write tool to
+create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation"
+appears verbatim in all four (`framework-selector.md:129`, `domain-researcher.md:102`,
+`ai-researcher.md:91`, `eval-planner.md:121`). So the only path to "update" the file is
+a full `Write`, and the only thing stopping one agent from clobbering a sibling's
+already-written section is a self-reported checklist line ("No section other than N
+written or modified" — e.g. `framework-selector.md:240`, `domain-researcher.md:176`)
+with no mechanism behind it. This happens **even on the documented sequential chain** —
+it isn't a parallelism bug like 1.3, it's that every "update" in the chain is secretly
+a "regenerate the whole file and hope nothing downstream-authored got lost or
+mis-spliced."
 
-## 1.3 — `agents/project-researcher.md` assigned-axis dispatch
+`domain-researcher.md:108` already shows awareness of a related symptom (heading drift
+against the skeleton `framework-selector` creates) without addressing the deeper
+overwrite risk — a sign the agents know they're on thin ice here but have no tool-level
+guardrail.
 
-**Fix:** Add an assigned-file dispatch input so four parallel researchers stop overwriting
-each other.
+**Why it matters beyond the four assets:** `ROADMAP.md` item **2.14**
+(`skills/rag-architect`) is blocked on this — deferring to `AI-SPEC.md` as a trusted
+upstream decision is worse than not deferring at all if its sections can silently
+disappear underneath whoever writes it last.
 
-**Bug (REPORT §4b-H3, confirmed in RE-VERIFICATION `:19`):** Step 5 of the agent
-(`project-researcher.md:537-545`) writes STACK.md and FEATURES.md and PITFALLS.md
-unconditionally ("Always"), plus ARCHITECTURE.md "if patterns discovered" — with no axis
-argument gating any of it. When the orchestrator fans out four parallel researchers for
-Phase 6 (one per research domain), every one of them runs the full `<execution_flow>` and
-writes to the same four paths under `docs/milestones/<M>/research/`. Last-writer-wins; three
-of the four dispatches' work is silently discarded, and there is no per-axis assignment
-mechanism anywhere in the agent or in `dev-kit-core/references/` to prevent it.
+**Fix — two parts:**
+1. **Tool grant:** add `Edit` to all four `tools:` frontmatter lines (three files in
+   `dev-kit-data-ai`, one in `dev-kit-core`).
+2. **Explicit read-modify-write contract:** replace the categorical "ALWAYS use Write"
+   instruction in each write step with: read the file first if it exists, locate your
+   owned section(s) by heading, and either `Edit` the section boundaries in place or
+   reconstruct the section deliberately — never regenerate the whole file from scratch
+   once it already exists. Keep `Write` for the one legitimate case
+   (`framework-selector` creating the skeleton when the file does not yet exist).
 
-**Fix — copy the mechanism its siblings already use.** Two agents in the same directory
-solve this exact problem today:
-- `market-researcher.md` takes a `focus` argument (`market-sizing | competitive | trends`)
-  that scopes both which section it researches and what it hands back.
-- `advisor-researcher.md` is dispatched with exactly one gray area and returns exactly one
-  comparison table — never a bundle of outputs.
+**Acceptance:** running the four-agent chain in documented order leaves all of Sections
+1, 1b, 2, 3, 4, 4b, 5, 6, 7 populated and non-empty at the end — no agent's section is
+overwritten, truncated, or reverted to a placeholder by a later agent in the chain.
 
-Apply the same shape to `project-researcher.md`:
-
-1. **Frontmatter `description`:** state that the agent accepts an `assigned_axis` argument
-   (`stack | features | architecture | pitfalls`) that scopes both research and output; note
-   that omitting it (solo/non-parallel dispatch, e.g. `new-project` running one researcher)
-   falls back to today's all-axes behavior.
-2. **New `<input>` block** (this agent has none today — unlike `market-researcher.md:21-25`):
-   document `assigned_axis`, the required project context inputs, and any orchestrator-supplied
-   scope hints, mirroring `market-researcher.md`'s `<input>` section.
-3. **Step 2 (Identify Research Domains):** when `assigned_axis` is set, research only that one
-   domain — stop treating Technology/Features/Architecture/Pitfalls as a bundle to always run
-   together.
-4. **Step 5 (Write Output Files):** replace the unconditional "STACK.md — Always / FEATURES.md
-   — Always / PITFALLS.md — Always" list with a single rule: write only the file matching
-   `assigned_axis` (STACK.md for `stack`, FEATURES.md for `features`, ARCHITECTURE.md for
-   `architecture`, PITFALLS.md for `pitfalls`). No `assigned_axis` → keep current all-four
-   behavior for callers that still dispatch a single researcher solo.
-5. **Structured return (`## RESEARCH COMPLETE`):** the "Files Created" table and "Confidence
-   Assessment" table should list only the one file/area actually produced when `assigned_axis`
-   is set, not all four placeholders unconditionally.
-6. **Comparison/feasibility modes are unaffected** — `assigned_axis` only governs the
-   ecosystem-mode four-way fan-out; `COMPARISON.md`/`FEASIBILITY.md` already map 1:1 to a
-   single dispatch and need no change.
-7. **Downstream check:** `research-synthesizer` (the agent that reads all four files into
-   `SUMMARY.md`) needs no change — it already expects four separate files at fixed paths; this
-   fix just makes sure four *different* dispatches each write to a *different* one of those
-   paths instead of all four racing to write all of them.
-
-**Acceptance:** dispatching four `project-researcher` calls in parallel, one per
-`assigned_axis` value, produces four distinct files with no overwritten content, and a solo
-dispatch with no `assigned_axis` still produces all four files as it does today.
+**Downstream link:** unblocks `ROADMAP.md` item **2.14** once shipped.
 
 ---
 
-## 1.5 — `skills/finishing-a-development-branch` PR option must create the PR
+## 1.15 — `agents/ui-auditor.md` — severity taxonomy doesn't reach the Detailed Findings section
 
-**Fix:** "Push and Create PR" must actually run `gh pr create`.
+**Fix:** wire the declared BLOCKER/WARNING severity labels into the `## Detailed
+Findings` section of the `<output_format>` template, not just the `## Priority Fixes`
+rollup.
 
-**Bug (REPORT §4b-H5, confirmed and aggravated in RE-VERIFICATION `:22`):** Option 2 is
-titled "Push and Create PR" (`:74`, `:86`) but its body (`:121-126`) is
-`git push -u origin <feature-branch>` and nothing else. There is **zero `gh`** anywhere in
-the file — the option does not do what its name says.
+**Bug (surfaced by structural sweep during the M1 fix wave; carried over from 1.11's
+notes, flagged there as "worth doing alongside" but out of that item's scope):**
+`ui-auditor.md:38-40` declares the classification every finding must carry:
 
-**Why it's aggravated:** the path is reachable *unattended* via `sprint-execution:198`, so
-nobody is present to notice the PR was never opened.
+> - **BLOCKER** — pillar score 1 or a specific defect that breaks user task
+>   completion; must fix before shipping
+> - **WARNING** — pillar score 2-3 or a defect that degrades quality but doesn't
+>   break flows; fix recommended
 
-**Fix — crib the working code that already exists.** `skills/ship/SKILL.md:176` has a
-functioning `gh pr create` invocation; port it into Option 2's body. Alternative (worse)
-resolution is renaming the option to "Push" — reject that: the callers want a PR.
+1.11 (`2c4b253`) already wired this into `## Priority Fixes` — the template shows
+`1. **[BLOCKER] {specific issue}** — ...` (`ui-auditor.md:351-354`) — and gave
+`needs_human_review` a real consumer. But the taxonomy stops there. `## Detailed
+Findings` (`ui-auditor.md:361-380`), organized per pillar, is the section that actually
+carries the evidence — file:line references, class-usage counts, spacing analysis —
+and its placeholders are bare:
 
-**Acceptance:** running Option 2 unattended leaves an open PR, not just a pushed branch.
+```
+### Pillar 1: Copywriting ({score}/4)
+{findings with file:line references}
+```
 
----
+No `{findings}` placeholder in this section instructs the agent to tag each finding
+`[BLOCKER]`/`[WARNING]`. A reader working from the evidence section — the one with the
+actual file:line citations, i.e. the one someone would open to go fix something — has
+no severity signal without cross-referencing back to the separate Priority Fixes list
+by matching issue text. The taxonomy exists, is enforced in the aggregated rollup, and
+still doesn't reach the section where the findings are actually documented.
 
-## 1.6 — `skills/devex-review` gate semantics + read-only restraint
+**Fix:** add the same `[BLOCKER]`/`[WARNING]` (or "below bar" for findings that don't
+clear either) prefix convention to each per-pillar findings placeholder in `##
+Detailed Findings`, so severity is legible at the point of evidence, not only in the
+summary rollup.
 
-**Fix:** Define a pass/fail threshold, emit a verdict, and add a read-only/no-commit
-restraint. (The restraint half is also carried in §4b MEDIUM.)
-
-**Bug A — no gate semantics (REPORT §4b-H6, confirmed in RE-VERIFICATION `:23`):** KICKOFF
-treats the DX scorecard as a ship-blocking gate. The skill has a 1–10 rubric (`:74-86`) and
-**no threshold, no verdict, no blocking semantics** anywhere. The guide asks for a gate the
-skill cannot produce.
-- **Model to copy:** sibling `plan-review-devex:240` already has the exact threshold/verdict
-  vocabulary — reuse it rather than inventing a second dialect.
-
-**Bug B — the skill may commit (REPORT §4b MEDIUM, confirmed but softer in
-RE-VERIFICATION `:24`):** the guide bills this as a non-destructive pass, but Step 9 says
-"measure baseline → fix" and `:208` ("fix the biggest bottleneck") is imperative. `:239-242`
-leans advisory, so the file contradicts itself rather than being uniformly destructive.
-- **Fix is one line**, model: `retro.md:39` — "Read-only — this reports, it does not change
-  code."
-
-**Acceptance:** a devex-review run emits an explicit pass/fail verdict against a stated
-threshold, and produces no commits or source edits.
-
----
-
-## 1.8 — `skills/design-consultation` must gate its design-html closer (D4)
-
-**Fix:** Gate the Phase 6 "run design-html" closer on `claude_design_system_id` being bound.
-
-**Bug (REPORT §1 D4, confirmed in RE-VERIFICATION `:29`):** `SKILL.md:463` closes with an
-**unconditional** suggestion — "Want to see this design system as a working page? Run
-design-html." — placed straight after the two branch blocks at `:436` and `:441`. The skill
-therefore already knows which path it took, and suggests design-html anyway. Meanwhile
-`skills/design-html/SKILL.md:77-80` hard-refuses unbound users ("Stop and tell the user to
-run `design-consultation` first … do not proceed unbound").
-
-**Net effect:** an operator who follows the skill's own closing suggestion hits a dead end.
-Note the direction of the fix — **the KICKOFF text (`:310-313`) is correct and stays**; the
-skill is the defective side.
-
-**Acceptance:** the Phase 6 closer fires only on the bound branch; the unbound branch ends
-without pointing at design-html.
+**Acceptance:** every finding listed under `## Detailed Findings` carries an explicit
+`[BLOCKER]`/`[WARNING]`/below-bar label, consistent with its corresponding entry (if
+any) in `## Priority Fixes`.
 
 ---
 
-## 1.9 — `skills/code-documenter` must infer docstring format unattended (D6)
+## 2.17 — `skills/writing-plans/plan-document-reviewer-prompt.md:38-49` — orphaned asset, decide before fixing
 
-**Fix:** Permit convention-based docstring-format inference when running unattended.
+**This is a decision item, not a direct fix.** `plan-document-reviewer-prompt.md`
+carries a Class-B defect (same family as the other M2 findings), but nothing in
+`plugins/` references or dispatches it — confirmed via
+`grep -rn "plan-document-reviewer-prompt" plugins/`, zero hits outside the file
+itself. There is no consumer to fix the content against, so the first step is
+choosing one of:
 
-**Bug (REPORT §1 D6, confirmed in RE-VERIFICATION `:27`):** `SKILL.md:120` requires "Ask for
-format preference before starting", restated as both a **MUST DO** (`:120`) and a **MUST NOT
-DO** (`:129`), with no unattended branch anywhere in the file. Step 14 of the pipeline is
-unattended — there is no human turn to ask into, so the skill either stalls or violates its
-own MUST NOT.
+1. **Wire it in** — if `writing-plans` was meant to dispatch a plan-document-reviewer
+   subagent using this template and the integration was simply never added, add the
+   reference/dispatch call, then fix the Class-B content defect at lines 38-49 as a
+   follow-up.
+2. **Delete it** — if the template was superseded or abandoned, remove the file
+   instead of polishing content nothing will ever read.
 
-**Fix direction:** as with 1.8, **the guide text cannot be dropped** (KICKOFF:1200-1202
-correctly names the per-language conventions: Google/NumPy/Sphinx for Python, JSDoc/TSDoc
-for JS/TS). Amend the skill to add an unattended branch that infers the format from the
-project's existing docstrings, keeping the ask-first rule for interactive runs.
-
-**Acceptance:** an unattended code-documenter run completes without a question turn and
-matches the repo's existing docstring convention.
-
----
-
-## 1.10 — `agents/codebase-mapper` requires a date no dispatch supplies (D3)
-
-**Fix:** Either drop the hard `Today's date:` requirement or make the date self-derivable;
-stop requiring an input no dispatch convention supplies.
-
-**Bug (REPORT §1 D3, confirmed in RE-VERIFICATION `:28`):** `codebase-mapper.md:191` says
-"Replace `[YYYY-MM-DD]` with the date provided in your prompt (the `Today's date:` line).
-NEVER guess or infer the date — always use the exact date from the prompt." Meanwhile
-KICKOFF:364 tells the operator the focus area "is the only input they take". A repo-wide
-grep for `Today's date` returns `:191` as the **only hit anywhere** — no dispatch convention
-compensates. Every codebase-mapper dispatch built from this guide is missing a required
-input, and the agent's own rule leaves it nowhere to go. **15 placeholders depend on it.**
-
-**Cheapest fix (per RE-VERIFICATION):** the agent already has Bash (`:5`), so allow a `date`
-fallback — keep the prompt-supplied date as the preferred source, permit self-derivation
-when absent. Dropping the requirement entirely is the alternative but loses the dated
-placeholders.
-
-**Acceptance:** a codebase-mapper dispatch carrying only a focus area fills all 15 date
-placeholders without stalling or guessing.
-
----
-
-## 1.11 — `agents/qa.md` and `agents/ui-auditor.md` (D8 / §3.2)
-
-Two assets, asymmetric verdicts.
-
-### qa.md — no asset change needed
-
-**Verdict (REPORT §1 D8, confirmed in RE-VERIFICATION `:36`):** the skip-conditions are
-**real and correct** — `qa.md:251` ("Skip if: not 'verified', OR purely visual/CSS with no
-JS behavior, OR no test framework exists") verbatim, plus the 2-minute cap at `:262` and the
-upstream skip at `:121`; unattended operation confirmed at `:122`. It was the **guide** that
-was wrong, promising "a regression test per fix" unqualified (KICKOFF:787-788). The step-10
-rewrite already deletes that promise (§3.4). Nothing to do in the agent.
-
-### ui-auditor.md — two real fixes
-
-**Bug A — the "Top 3" template ceiling (confirmed, partially mitigated in
-RE-VERIFICATION `:31`):** three-slot templates persist at `:327` ("## Top 3 Priority
-Fixes"), `:426` ("### Top 3 Fixes"), `:20`, and a checkbox at `:451` — all pushing toward
-exactly three findings even though `:36` forbids the ceiling. Mitigation noted: detailed
-findings are unbounded, so the bias is **confined to the priority-fix section**. Kill the
-three-slot templates.
-
-**Bug B — `needs_human_review` is an orphaned flag:** it exists only at `:117`, inside the
-browser branch, and has **no consumer anywhere** in the repo. Wire it beyond the browser
-branch and give it a reader.
-
-**Why this one is load-bearing for the trim: it blocks the §3.2 cut.** KICKOFF's "do not
-stop at three issues" is counter-pressure against ui-auditor's *own* template. Cutting that
-line is correct — the operator should not patch a skill defect from the guide — but REPORT
-§3.2 is explicit that it must be **paired** with tightening the template, or expect
-regression toward three-item reports. REPORT §6 ranks this "the one item not to ship blind."
-
-**Acceptance:** ui-auditor emits an unbounded priority-fix list, and `needs_human_review` is
-set outside the browser branch and consumed by something.
-
----
-
-## 1.12 — `commands/verify.md` chain (D9) — no asset change
-
-**Verdict (REPORT §1 D9, confirmed in RE-VERIFICATION `:37`):** KICKOFF:823-825 claims bare
-`verify` "grades the working diff". That mechanism **exists nowhere** — zero diff-grading in
-`verify.md` (all 9 lines of it) or `verifier.md`. The chain is phase-directory-oriented end
-to end: canonical PHASE dir at `verifier.md:16`, PLAN/SUMMARY/roadmap loaded at `:84`,
-Step 0 keyed off `PHASE_DIR/VERIFICATION.md` at `:67`.
-
-The operator instruction that follows in KICKOFF (pass the goal explicitly) is still
-correct — only the stated *reason* is fiction. REPORT calls this the exact shape of drift
-that survives edits because the conclusion still looks right.
-
-**Action:** none here. The stale claim dies with the Milestone 4 rewrite. Listed only so
-it is not mistaken for unfinished asset work.
-
----
-
-## Sequencing
-
-Seven of the nine are independent asset edits across seven different files — no shared
-inputs, no ordering constraints among them, so they can run fully in parallel. The
-remaining two (**1.12**, and the qa.md half of **1.11**) require no asset change at all.
-
-Downstream links worth knowing:
-- **1.11 (ui-auditor half) blocks a Milestone 4 cut** — the §3.2 ui-auditor rewrite must not
-  ship until the "Top 3" template is tightened. This is the only item here with a hard
-  ordering dependency on the trim work.
-- **1.1** gates `ROADMAP.md` item 1.2 (pattern-mapper's consumer claim adds planner only
-  once 1.1 ships) and part of Milestone 4 item 2.
-- **1.5** has ready-made source to copy (`ship:176`); **1.6** has ready-made vocabulary to
-  copy (`plan-review-devex:240`) and a one-line restraint model (`retro.md:39`); **1.10** has
-  a one-line fallback fix (Bash `date`, agent already has the tool).
-- **1.8** and **1.9** are asset-side fixes whose corresponding KICKOFF text is correct and
-  must **not** be trimmed — neither one converts a keep-line into a cut-line.
-- **1.3** gates nothing else in Milestone 1.
-- **1.12** and **qa.md** are the inverse case: the asset is correct and the *guide* is wrong,
-  so both resolve inside Milestone 4's rewrites with zero dev-kit edits.
+**Acceptance:** either (a) `writing-plans` (or another skill) demonstrably dispatches
+this template and its content defect is fixed, or (b) the file is deleted and no
+reference to it remains.

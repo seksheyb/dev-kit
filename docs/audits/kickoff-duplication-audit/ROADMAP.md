@@ -176,8 +176,9 @@ paths itself and accepts an explicit path only as an override.*
 
 ## Milestone 4 — Ship the seven drafted rewrites (repo: devkit-pipeline)
 
-> **Superseded in shape by `roadmap-shortlisted-workflow.md` item 5, which merges this
-> milestone with Milestone 5.** Two findings drive that: (a) rewriting is **per-step**, not
+> **Superseded in shape by `roadmap-shortlisted-workflow.md` item 5** (Milestone 5 is
+> unaffected and stays a separate milestone). Two findings drive it: (a) rewriting is
+> **per-step**, not
 > per-asset — step 08 pulls 37 assets while `context-save` spans 6 steps — so it cannot ride
 > the item-4 sweep and must be a second pass that consumes it; (b) **five of the seven drafts
 > still carry path strings** in their trimmed replacement text, and `step07-planner-handoff`

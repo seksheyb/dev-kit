@@ -257,7 +257,7 @@ worded, which describes the sweep but not its per-asset shape or its overlap wit
 
 ---
 
-## 5. Milestone 4/5 as a per-step assembly — and why the drafted rewrites must be re-derived
+## 5. Milestone 4 as a per-step assembly — and why the drafted rewrites must be re-derived
 
 **Where:** `../devkit-pipeline/KICKOFF.md` (separate sibling repo), the 16 step prompts,
 and the seven drafts in `rewrites/`.
@@ -299,15 +299,19 @@ longer exists; shipping it as drafted would put a false statement into KICKOFF.
 1. Item 4 emits, per asset, the KICKOFF lines its fix made cuttable, tagged with the
    `steps` array `MANIFEST.json` already carries.
 2. **Regroup those candidates by step** — mechanical, no judgement.
-3. Write each step's prompt against the *post-flip* assets, to the six-category end-state
-   contract in `ROADMAP.md`. Because every step is being rewritten against changed assets
-   anyway, **Milestones 4 and 5 collapse into this single activity** — the seven drafts stop
-   being deliverables and become prior art on what is cuttable for their steps.
+3. **Re-derive the five stale drafts** against the *post-flip* assets before shipping them.
+   They stop being ready-to-ship deliverables and become prior art on what is cuttable for
+   their steps — the cut list is still good, the replacement text is not.
 4. **`step11-converge-sweep` and `step15-closeout-methodology` can still ship early** — no
    paths, no stale premises. They are the down payment; the other five wait for item 4.
 5. Preserve the C4 lesson: where one asset is invoked N times, the *timing* sentence differs
    per site and stays; only the description collapses to the invocation line. This is
    precisely why the regroup is per-step and not per-asset.
+
+**Scope boundary:** this item covers **Milestone 4 only** — the seven drafted rewrites.
+`ROADMAP.md` Milestone 5 (the full 16-step rewrite to the six-category end-state contract)
+is untouched and remains its own milestone. Item 4's per-asset cut candidates will also feed
+M5 when it runs, but M5 is not folded in here.
 
 **Broader implication:** the ordering is forced, not stylistic. You cannot know how thin a
 step's prompt can get until you know what its assets resolve for themselves — and the five
@@ -315,4 +319,5 @@ path-carrying drafts plus one false premise are what that ordering being reverse
 produced.
 
 **Status:** ready to scope as a workflow, but **strictly after item 4**, and in the
-`devkit-pipeline` repo. Supersedes `ROADMAP.md` Milestones 4 and 5 as separate milestones.
+`devkit-pipeline` repo. Supersedes `ROADMAP.md` Milestone 4 as currently worded (which
+assumes the seven drafts are ready to ship as-is). Milestone 5 is unaffected.

@@ -121,7 +121,7 @@ Auto-fix mechanical findings (dead code, stale comments, imports) and commit the
 
 If the project keeps a VERSION file and/or a version field in its manifest (package.json etc.):
 
-1. **Classify state:** compare the branch's VERSION against `<base>`'s (`git show origin/<base>:VERSION`). Already bumped → skip the bump but verify VERSION and manifest agree; a mismatch means a manual edit — reconcile before continuing.
+1. **Classify state:** compare the branch's VERSION against `<base>`'s (`git show origin/<base>:VERSION`). Already bumped → skip the bump but verify VERSION and manifest agree; a mismatch means the two drifted (a partial merge, a failed release script, a revert, or a manual edit) — check `git log` for the last write to each and reconcile before continuing.
 2. **Decide the bump level from the diff:** MICRO/PATCH — bug fixes, small additive changes (auto-pick). MINOR — new capability, migration, new module, or a large diff (**ASK**). MAJOR — breaking changes or milestones (**ASK**). The level communicates what kind of release this is; don't undersell a big diff as a PATCH.
 3. **Write the bump** to VERSION and the manifest together — never just one of them.
 

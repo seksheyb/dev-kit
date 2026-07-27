@@ -17,6 +17,13 @@ Your job: dispatch an independent review engine (selected per `@references/indep
 - `graphify_path` — absolute path to the graphify report or wiki index used (or `"none"`; typically `docs/state/graphs/GRAPH_REPORT.md`)
 - (optional) `obsidian_path` — absolute path to any Obsidian context the planner used
 
+**Inputs you resolve yourself when the orchestrator is silent.** Two of the review checks below name artifacts that are not in the list above but exist on disk by the time this gate runs — pass their paths to the engine too, and skip any that is absent:
+
+- `requirements_path` / `roadmap_path` — `docs/milestones/<M>/REQUIREMENTS.md` and `docs/milestones/<M>/ROADMAP.md`, resolved from the plan's own milestone directory. The **Scope Coverage** check (step 2) asks whether the plan addresses the requirement scopes; without these the engine can only check the plan against itself.
+- `PHASE/CONTEXT.md` and `PHASE/PATTERNS.md`, where `PHASE` is the plan's own directory. The **Signal Honesty** check (step 2) asks whether each track's `files` list is complete; PATTERNS.md enumerates the files the phase creates or modifies, and CONTEXT.md carries the locked decisions a plan is not a finding for honoring.
+
+Paths only, per the hard rules — never inline their content.
+
 ## Output paths (you create them)
 
 Let `PHASE` be the plan's own directory and `<plan-basename>` be the plan file's name (e.g. `<NN>-<MM>-PLAN.md`):

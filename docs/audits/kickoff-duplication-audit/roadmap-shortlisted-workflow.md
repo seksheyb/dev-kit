@@ -233,11 +233,17 @@ one.
    bar, drop the named-consumer table.
 3. **Constitution axis (item 3):** for `scope: implementation` lane skills, does its own
    workflow author tests in an order that conflicts with a Test-First constitution?
-4. **Known open defects:** `ROADMAP.md` 1.2, 1.4, 1.7, 1.13–1.15 and 2.12–2.19 are all
-   single-asset items — resolve them on the same visit rather than in separate waves.
-5. **Where the sitemap is silent** (e.g. `PHASE/reviews/round-<n>/`), extend the sitemap.
+4. **QA findings-contract axis (item 6):** for the ~26 assets that declare a verdict,
+   severity, or confidence vocabulary, do all four clauses hold — every declared tier has a
+   field to land in, the tier reaches the evidence section and not just the rollup, "could not
+   determine" is representable, and no upstream self-report is consumed as proof? See item 6
+   for the clause definitions and the instances that proved each one live.
+5. **Known open defects:** `ROADMAP.md` 1.2, 1.4 and 1.14 are the single-asset items still
+   open — resolve them on the same visit rather than in separate waves. (1.7 is superseded by
+   item 3; 1.13, 1.15 and 2.12–2.19 all shipped in the shortlist fix wave and need no visit.)
+6. **Where the sitemap is silent** (e.g. `PHASE/reviews/round-<n>/`), extend the sitemap.
    The contract grows; the guide does not.
-6. **Emit, per asset, the KICKOFF lines the fix makes cuttable** — see item 5 for why this
+7. **Emit, per asset, the KICKOFF lines the fix makes cuttable** — see item 5 for why this
    output is the point.
 
 **The existing machinery is already the right shape.** `workflow.js` in this folder is
@@ -321,3 +327,80 @@ produced.
 **Status:** ready to scope as a workflow, but **strictly after item 4**, and in the
 `devkit-pipeline` repo. Supersedes `ROADMAP.md` Milestone 4 as currently worded (which
 assumes the seven drafts are ready to ship as-is). Milestone 5 is unaffected.
+
+---
+
+## 6. One uniform findings contract for every QA-class asset — and the sweep that enforces it
+
+**Where:** the **23 agents** that declare a verdict, severity, or confidence vocabulary —
+`accessibility-tester`, `code-review-gate`, `debugger`, `dependency-manager`,
+`design-reviewer`, `doc-synthesizer`, `doc-verifier`, `domain-researcher`, `eval-auditor`,
+`gate-plan-review`, `health-reporter`, `incident-responder`, `integration-checker`,
+`nyquist-auditor`, `penetration-tester`, `phase-researcher`, `plan-reviewer`,
+`project-researcher`, `qa`, `security-auditor`, `ui-auditor`, `ui-checker`, `verifier` —
+plus `skills/cso` and the `scope: review` skills (`security-reviewer`, `spec-miner`,
+`the-fool`). Roster measured, not assumed: `grep -rlE "BLOCKER|WARNING|PASS/FAIL|VERIFIED|
+CONFIRMED|needs_human_review|verdict|[Ss]everity" plugins/*/agents/*.md`.
+
+**Problem:** the shortlist fix wave closed four separate items — 1.15, 2.16, 2.19, and an
+unnumbered finding — that turned out to be **the same question asked at four different
+assets**. Each was filed as a one-off defect in one asset. None was; each is a clause of a
+contract no QA asset was ever held to.
+
+The four clauses, with the instances that proved each one is live:
+
+| # | Clause | Violated by |
+|---|---|---|
+| 1 | A declared tier must have a **field to land in** — an enum value, schema field, or template slot in the asset's *own* output | `cso` (`SELF-VERIFIED` absent from a `VERIFIED\|UNVERIFIED\|TENTATIVE` enum), `doc-verifier` (UNVERIFIABLE against a PASS/FAIL-only schema), `nyquist-auditor` ("caveated pass" vs bare `status: "green"`), `integration-checker` (WARNING declared, logic handled only WIRED/BROKEN), `ui-auditor` |
+| 2 | The tier must reach the **evidence** section, not only the summary rollup | `ui-auditor` (1.15) — labels were in `## Priority Fixes` but `## Detailed Findings`, the section carrying the file:line citations, had bare placeholders |
+| 3 | **"Could not determine" must be representable.** A schema encoding only determinate outcomes makes indeterminate findings *vanish*, which is strictly worse than mislabelling them | `doc-verifier` — `git`/uncovered-command claims disappeared from the report entirely |
+| 4 | An **upstream self-report is a floor, not a ceiling.** Consuming another asset's flag without a re-check makes under-flagging upstream invisible downstream | `design-reviewer` (2.16), and the same class as the already-fixed 2.5 |
+
+Clause 1 is the one with no item number and no sweep behind it. It surfaced **incidentally, from
+two unrelated tracks** looking for two different things — which is the whole argument for asking
+it deliberately. Five instances found by accident is a floor on the true count, not an estimate.
+
+**Why "uniform" is the right frame.** These assets are read by the same operator, in the same
+review loop, often in the same sitting. When `ui-auditor` says WARNING and `doc-verifier` has no
+way to say it at all, the operator cannot calibrate across reports — and worse, cannot tell a
+clean result from an unrepresentable one. The failure is not that the vocabularies differ; it is
+that the *guarantees* differ, silently.
+
+**Proposed fix — two parts, different urgency.**
+
+1. **Immediate, outside any sweep: guard the three unguarded fixes.** Clause-1 instances in
+   `doc-verifier`, `nyquist-auditor`, and `integration-checker` are **fixed but unguarded** —
+   only `ui-auditor`/`design-reviewer` (`ui-audit-severity-guards.sh`) and `cso`
+   (`single-cause-diagnosis-guards.sh` Check 2) have regression cover. Three live fixes with
+   nothing stopping a revert is the most fragile state in the repo right now. Extend
+   `ui-audit-severity-guards.sh` or add `tier-schema-guards.sh`; verify both directions per the
+   repo convention.
+2. **The sweep: fold clause-checking into item 4's per-asset pass as a fourth axis** rather
+   than running a separate visit. Item 4 already visits every asset asking the path, consumer,
+   and constitution questions; the QA contract applies to ~26 of them and costs almost nothing
+   on a visit already happening. At each asset that declares a tier vocabulary, ask all four
+   clauses above, fix true instances, and add a guard check per fix.
+
+**Uniform treatment, not uniform text** — the same principle item 3 established for the lane
+skills. The *vocabularies* need not converge: BLOCKER/WARNING, PASS/FLAG/BLOCK, and
+VERIFIED/TENTATIVE are all fine, and forcing one ladder across 26 assets would be a large,
+risky edit with no defect behind it. What must be uniform is that **every declared tier can be
+emitted, reaches the evidence, admits "unknown", and is not taken on trust from upstream.** An
+asset that already satisfies all four is recorded as checked-and-correct and left alone — that
+is the correct outcome for it, not a gap.
+
+**Explicitly out of scope:** restructuring any asset's output format wholesale to accommodate a
+tier; and unifying the tier vocabularies themselves. Both are bigger, more speculative changes
+with no confirmed defect behind them. Add the missing enum value or template slot and wire the
+instruction that populates it — nothing more.
+
+**Broader implication:** this is the same shape as items 1 and 3 — a contract that each asset
+must satisfy *standalone*, not a rule the pipeline enforces from outside. Most of these assets
+are invoked directly by users with no pipeline in the loop, so a KICKOFF-side or orchestrator-side
+check would leave that path unreconciled. It is also further evidence for item 4's core claim:
+these were four hand-filed one-off items that a single per-asset pass would have caught as one
+class.
+
+**Status:** part 1 (guard the three) is **ready now and unblocked** — it is a small, self-contained
+change and should not wait for a sweep. Part 2 folds into item 4; see item 4's checklist, where
+this is recorded as the fourth axis. Nothing gates either part.

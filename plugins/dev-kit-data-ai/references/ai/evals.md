@@ -1,3 +1,5 @@
+<!-- Shipped copy of the AI evals reference. Source of truth: plugins/dev-kit-data-ai/references/ai/evals.md — the other plugin's copy must stay byte-identical; verify: find plugins/*/references -type f -exec md5sum {} \; | sort | uniq -Dw32 -->
+
 # AI Evaluation Reference
 
 > Reference used by `eval-planner` and `eval-auditor`.

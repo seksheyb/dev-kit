@@ -1,4 +1,4 @@
-<!-- Shipped copy of the dev-kit doc-path contract. Source of truth: references/doc-sitemap.md in the dev-kit repo — keep in sync. -->
+<!-- Shipped copy of the dev-kit doc-path contract. Source of truth: plugins/dev-kit-core/references/doc-sitemap.md — the other plugin's copy must stay byte-identical; verify: find plugins/*/references -type f -exec md5sum {} \; | sort | uniq -Dw32 -->
 # Documentation Sitemap — Canonical Doc-Path Contract
 
 **Status:** Approved 2026-07-22. Every dev-kit asset that creates or reads a document in an

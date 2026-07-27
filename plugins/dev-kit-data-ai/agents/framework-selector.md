@@ -1,7 +1,7 @@
 ---
 name: framework-selector
 description: Presents an interactive decision matrix to surface the right AI/LLM framework for the user's specific use case. Produces a scored recommendation with rationale. Creates AI-SPEC.md with its section skeleton and writes the Framework section. Dispatched by the orchestrator/pipeline.
-tools: Read, Write, Bash, Grep, Glob, WebSearch, AskUserQuestion
+tools: Read, Write, Edit, Bash, Grep, Glob, WebSearch, AskUserQuestion
 color: "#38BDF8"
 ---
 
@@ -126,9 +126,15 @@ Apply decision matrix from `references/ai/frameworks.md`:
 </scoring>
 
 <write_section_2>
-**ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
+**File-writing contract.** Use the Write and Edit tools — never `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-You run first in the AI chain, so you own the AI-SPEC.md skeleton. If `ai_spec_path` does not exist, create it with every section heading in place — later agents fill their own sections and must not have to invent numbering:
+AI-SPEC.md is co-authored: you write Section 2, `domain-researcher` writes 1/1b, `ai-researcher` writes 3–4b, `eval-planner` writes 5–7. You run first, so you own the skeleton — and yours is the only whole-file write the chain permits. Which tool you reach for depends on whether the file is already there:
+
+- **`ai_spec_path` does not exist** — the normal case for you. `Write` it with every section heading in place, so later agents fill their own sections and never have to invent numbering.
+- **`ai_spec_path` already exists** — do **not** `Write` it. Read it first, locate the `## 2. Framework` heading, and `Edit` only the content between that heading and the next `##` heading. A whole-file write here silently discards whatever Sections 1/1b and 3–7 already hold.
+- **Never author, reword, or re-emit a section you do not own** — not even to "restore" one that reads empty or wrong. A section that looks wrong belongs to another agent in the chain: flag it in your output, do not fix it.
+
+The skeleton you create:
 
 ```markdown
 # AI Specification — {phase_name}
@@ -160,7 +166,7 @@ _Authored by eval-planner._
 _Authored by eval-planner._
 ```
 
-Then write **Section 2 — Framework** with your recommendation. This is the same content you return to the orchestrator, persisted so downstream agents (`ai-researcher` for Sections 3–4b, `eval-planner` for tooling defaults in Sections 5–7) can read it rather than re-deriving it:
+Then fill **Section 2 — Framework** with your recommendation — as part of the initial `Write` if you created the file, as an in-place `Edit` if it already existed. This is the same content you return to the orchestrator, persisted so downstream agents (`ai-researcher` for Sections 3–4b, `eval-planner` for tooling defaults in Sections 5–7) can read it rather than re-deriving it:
 
 ```markdown
 ## 2. Framework
@@ -237,6 +243,7 @@ Display to user:
 - [ ] System type classified
 - [ ] AI-SPEC.md created at `ai_spec_path` with the full section skeleton (1, 1b, 2, 3, 4, 4b, 5, 6, 7) if it did not already exist
 - [ ] Section 2 of AI-SPEC.md written and non-empty (system type, framework, model provider, rationale, alternative, constraints, eval concerns)
+- [ ] If AI-SPEC.md already existed, Section 2 was updated with `Edit` in place — no whole-file `Write` over an existing spec
 - [ ] No section other than 2 written or modified
 - [ ] Structured result returned to orchestrator
 </success_criteria>

@@ -1,7 +1,7 @@
 ---
 name: domain-researcher
 description: Researches the business domain and real-world application context of the AI system being built. Surfaces domain expert evaluation criteria, industry-specific failure modes, regulatory context, and what "good" looks like for practitioners in this field — before the eval-planner turns it into measurable rubrics. Writes the Critical Failure Modes and Domain Context sections of AI-SPEC.md. Dispatched by the orchestrator/pipeline.
-tools: Read, Write, Bash, Grep, Glob, WebSearch, WebFetch, mcp__context7__*
+tools: Read, Write, Edit, Bash, Grep, Glob, WebSearch, WebFetch, mcp__context7__*
 color: "#A78BFA"
 # hooks:
 #   PostToolUse:
@@ -99,9 +99,15 @@ If internal tooling with no regulated domain, "domain expert" = product owner or
 </step>
 
 <step name="write_section_1">
-**ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
+**File-writing contract.** Use the Read, Write, and Edit tools — never `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-Update AI-SPEC.md at `ai_spec_path`. Add/update Section 1 — the critical failure modes the whole eval strategy is built to catch. You author this section; `eval-planner` reads and confirms it downstream, so it must exist and be non-empty before you finish.
+AI-SPEC.md is co-authored and you are second in the chain: `framework-selector` created the file and wrote Section 2 before you; `ai-researcher` (3–4b) and `eval-planner` (5–7) write after you. So the file already exists when you run, and your update is a read-modify-write, never a regeneration:
+
+- **Read `ai_spec_path` first**, then `Edit` your sections in place — locate the `## 1. Critical Failure Modes` and `## 1b. Domain Context` headings and replace only the content between each heading and the next `##` heading. Never `Write` the whole file: that discards Section 2 and every placeholder the agents downstream still need.
+- **`ai_spec_path` missing is an upstream failure**, not your cue to improvise. Say so explicitly in your output, then `Write` the file with the full skeleton (1, 1b, 2, 3, 4, 4b, 5, 6, 7) — not just your own two sections — so the rest of the chain still has somewhere to land.
+- **Never author, reword, or re-emit a section you do not own** — not even to "restore" one that reads empty or wrong. A section that looks wrong belongs to another agent in the chain: flag it in your output, do not fix it.
+
+Add/update Section 1 — the critical failure modes the whole eval strategy is built to catch. You author this section; `eval-planner` reads and confirms it downstream, so it must exist and be non-empty before you finish.
 
 Promote the sharpest 3-5 of the domain failure modes you researched into system-level failure modes: behaviours that cannot go wrong for *this* phase, stated as observable output behaviour, not as ML jargon. Read Section 2 (framework and `system_type`, written by `framework-selector`) so the list covers the failure modes that system type actually exhibits — retrieval fabrication for RAG, handoff loss for multi-agent, silent schema drift for extraction.
 
@@ -121,7 +127,7 @@ Minimum 3 rows. Domain-specific, not generic "it hallucinates" — the generic l
 </step>
 
 <step name="write_section_1b">
-Update AI-SPEC.md at `ai_spec_path`. Add/update Section 1b:
+`Edit` Section 1b of AI-SPEC.md in place at `ai_spec_path`, under the same contract as Section 1:
 
 ```markdown
 ## 1b. Domain Context
@@ -173,6 +179,7 @@ Update AI-SPEC.md at `ai_spec_path`. Add/update Section 1b:
 - [ ] Domain expert roles specified
 - [ ] Section 1 of AI-SPEC.md written and non-empty (minimum 3 critical failure modes, domain-specific, with severity)
 - [ ] Section 1b of AI-SPEC.md written and non-empty
+- [ ] Sections 1 and 1b updated with `Edit` in place — no whole-file `Write` over an existing spec
 - [ ] No section other than 1 and 1b written or modified
 - [ ] Research sources listed
 </success_criteria>

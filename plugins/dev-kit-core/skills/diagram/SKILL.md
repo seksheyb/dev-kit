@@ -35,7 +35,7 @@ Use whichever renderer is available, in this order:
    npx -y @mermaid-js/mermaid-cli -i <outdir>/<slug>.mmd -o <outdir>/<slug>.png --scale 3
    ```
    (`--scale 3` gives a print-quality raster of a ~6.5in placement.)
-2. **A rendering surface that supports mermaid natively** (e.g. an artifact/preview pane that renders ` ```mermaid ` fences) — deliver the fence there and still keep the `.mmd` on disk.
+2. **A rendering surface that supports mermaid natively** (e.g. an artifact/preview pane that renders ` ```mermaid ` fences) — deliver the fence there and still keep the `.mmd` on disk, marked per "Keeping `.mmd` and embedded fences in sync" below.
 3. Neither available → show the mermaid source in a fenced block so the user can paste it into mermaid.live, and say exactly what to install (`npm i -g @mermaid-js/mermaid-cli`). Do not pretend a render happened.
 
 If the mermaid render returns a parse error, show it, fix the mermaid, and retry — never hand the user a broken source file.
@@ -50,10 +50,30 @@ If the mermaid render returns a parse error, show it, fix the mermaid, and retry
 4. **Iteration loop:** when the user wants changes to the diagram's content or structure, edit the `.mmd` source and re-run Step 2. Never edit the SVG/PNG directly — they are derived artifacts.
 5. **Excalidraw round-trip:** if the user instead edited the `.excalidraw` scene directly (moved boxes, restyled in excalidraw.com) and wants that reflected, re-export SVG/PNG from the edited scene file itself — do not regenerate from the `.mmd` and clobber their layout edits. Only fall back to regenerating from `.mmd` if the user's change was to the diagram's content/wording rather than its layout.
 
+## Keeping `.mmd` and embedded fences in sync
+
+Two delivery routes leave a **second copy** of the mermaid source living inside a document: embedding a ` ```mermaid ` fence in a markdown/PDF doc (below), and delivering a fence on a native-mermaid rendering surface while keeping the `.mmd` on disk (Step 2, route 2). Nothing about a `.mmd` file and an embedded fence keeps them identical on its own — the first time either side is edited without touching the other, they silently diverge, and both copies look fine in isolation.
+
+**Marking convention:** every embedded fence derived from an `.mmd` carries an HTML comment immediately above it naming the source path, so the pairing is mechanical instead of implicit:
+
+````
+<!-- diagram:source=<path/to/slug.mmd> -->
+```mermaid
+...
+```
+````
+
+This is greppable: `grep -rn "diagram:source=" <doc-or-repo-root>` finds every embedded copy of any `.mmd` in scope.
+
+**The duty, both directions:**
+1. **`.mmd` edited** (the Step 3 iteration loop, or any other edit to the source file): before calling the diagram done, grep for `diagram:source=<that .mmd's path>`. For every match, overwrite the fence's contents with the updated `.mmd` source verbatim, and re-render the SVG/PNG if that same `.mmd` also feeds a rendered artifact.
+2. **Fence edited in place** (a human or another skill changed the mermaid inside the markdown doc directly, not via the `.mmd`): read the `diagram:source=` comment above it, open that `.mmd`, and overwrite it with the fence's content verbatim. Then re-run Step 2 so the SVG/PNG stay current.
+3. **No marker above an edited fence:** treat it as an orphan — find or create the `.mmd` it corresponds to, write the fence's content there, and add the `diagram:source=` comment above the fence so the pairing is discoverable next time, rather than leaving a second, untracked copy of the source.
+
 ## Rules
 
 - **Never ship without rendering** (or, if rendering is impossible, without saying so and surfacing the install command). A `.mmd` file alone is not a diagram.
-- For diagrams destined for a markdown doc or PDF pipeline that renders ` ```mermaid ` fences natively, embed the mermaid source rather than the PNG — it stays diffable and editable.
+- For diagrams destined for a markdown doc or PDF pipeline that renders ` ```mermaid ` fences natively, embed the mermaid source rather than the PNG — it stays diffable and editable. Mark it per "Keeping `.mmd` and embedded fences in sync" above and honor that re-sync duty for the life of the doc.
 
 ## Completion status
 

@@ -233,7 +233,7 @@ one.
    bar, drop the named-consumer table.
 3. **Constitution axis (item 3):** for `scope: implementation` lane skills, does its own
    workflow author tests in an order that conflicts with a Test-First constitution?
-4. **Known open defects:** `ROADMAP.md` 1.2, 1.4, 1.7, 1.13–1.15 and 2.12–2.20 are all
+4. **Known open defects:** `ROADMAP.md` 1.2, 1.4, 1.7, 1.13–1.15 and 2.12–2.19 are all
    single-asset items — resolve them on the same visit rather than in separate waves.
 5. **Where the sitemap is silent** (e.g. `PHASE/reviews/round-<n>/`), extend the sitemap.
    The contract grows; the guide does not.

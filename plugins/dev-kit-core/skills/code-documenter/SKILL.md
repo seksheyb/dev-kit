@@ -22,7 +22,11 @@ Applies to any task involving code documentation, API specs, or developer-facing
 
 ## Core Workflow
 
-1. **Discover** - Ask for format preference and exclusions
+1. **Discover** - Determine docstring format and exclusions. **Interactive** (a human is
+   available): ask for format preference and exclusions, per the MUST DO below. **Unattended**
+   (dispatched as a pipeline/sprint-execution/bugfix-wave step, with no human turn to ask into):
+   don't stall waiting for an answer — infer the format instead, per "Interactive vs. Unattended"
+   below.
 2. **Detect** - Identify language and framework
 3. **Analyze** - Find undocumented code
 4. **Document** - Apply consistent format
@@ -32,6 +36,29 @@ Applies to any task involving code documentation, API specs, or developer-facing
    - OpenAPI: validate spec with `npx @redocly/cli lint openapi.yaml`
    - If validation fails: fix examples and re-validate before proceeding to the Report step
 6. **Report** - Generate coverage summary
+
+### Interactive vs. Unattended
+
+- **Interactive** (a human is available to answer): ask for format preference before starting,
+  per the MUST DO below. Don't guess when you can ask.
+- **Unattended** (no human turn available — e.g. dispatched as a domain skill for a
+  sprint-execution or bugfix-wave track): asking would stall the run forever, so **infer** the
+  project's existing docstring convention instead:
+  1. Sample up to 20 already-documented functions/classes/modules across the target language's
+     source tree. Prefer real source files over vendored, generated, or test-fixture code, and
+     spread the sample across directories rather than reading one file repeatedly.
+  2. Classify each sampled docstring by its style markers: `Args:`/`Returns:`/`Raises:` → Google;
+     `Parameters\n----------` → NumPy; `:param:`/`:returns:` → Sphinx; `@param`/`@returns` in a
+     `/** */` block → JSDoc; TSDoc-specific tags (`@remarks`, `@defaultValue`, etc.) in `.ts`/
+     `.tsx` → TSDoc.
+  3. Use whichever style holds a clear majority of the sample.
+  4. **Tie** (no majority, or two styles equally represented): fall back to the per-language
+     default in the next step rather than picking arbitrarily.
+  5. **No existing docstrings found at all:** use the per-language default — Google style for
+     Python, JSDoc for JavaScript/TypeScript.
+  6. Record the inferred (or defaulted) format and the sample size in the coverage report (the
+     Report step) so the choice is auditable — this stands in for the human answer that step 1
+     would otherwise require.
 
 ## Quick-Reference Examples
 
@@ -117,7 +144,8 @@ Load detailed guidance based on context:
 ## Constraints
 
 ### MUST DO
-- Ask for format preference before starting
+- Ask for format preference before starting **when interactive**; **when unattended**, infer it
+  by sampling the project's existing docstrings instead (see "Interactive vs. Unattended" above)
 - Detect framework for correct API doc strategy
 - Document all public functions/classes
 - Include parameter types and descriptions
@@ -126,7 +154,8 @@ Load detailed guidance based on context:
 - Generate coverage report
 
 ### MUST NOT DO
-- Assume docstring format without asking
+- Assume a docstring format without asking (interactive) **or** without first sampling the
+  project's existing convention (unattended) — picking one out of thin air is not allowed either way
 - Apply wrong API doc strategy for framework
 - Write inaccurate or untested documentation
 - Skip error documentation

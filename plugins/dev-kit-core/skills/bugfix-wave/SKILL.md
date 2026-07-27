@@ -64,7 +64,10 @@ is why it used to half-fail and need a straggler pass. Both are verified:
    directory, or a leftover agent worktree), no detach you can run frees it, self-merge is off
    the table for that whole run, and Phase 3 reconciles every track centrally instead. That is
    a supported outcome, not a broken one; the Edge Cases entry on
-   `"branch is currently checked out"` tells the causes apart.
+   `"branch is currently checked out"` tells the causes apart. **And it stays off the table:**
+   the plumbing bypass (`git update-ref` and friends) is *forbidden*, not merely discouraged —
+   it succeeds where the push was refused and desynchronizes the holder's index. The Merge
+   protocol step 4 in §2.3 spells out the damage; the orchestrator's repair is Phase 3.1 step 4.
 2. **Concurrent tracks race on the ref.** The first push fast-forwards; the second is rejected
    as non-fast-forward. The §2.3 merge protocol makes each track fetch, merge, and retry.
 
@@ -468,10 +471,25 @@ other tracks merging at the same time:
    `git fetch . {source-branch}` then `git merge --no-edit FETCH_HEAD`, re-run your
    verification (their changes are now in your tree), and go back to step 1. Retry up to
    **5 times**.
-4. **Rejected with "branch is currently checked out"** → stop immediately. Do not try to work
-   around it. Report `Merged: no` and quote the rejection **verbatim** in `Merge note`; the
-   orchestrator reconciles you. This is a normal outcome with several possible causes, none of
-   them yours to diagnose or fix from inside a worktree — it is not a failure on your part.
+4. **Rejected with "branch is currently checked out"** → stop immediately. Report `Merged: no`
+   and quote the rejection **verbatim** in `Merge note`; the orchestrator reconciles you. This
+   is a normal outcome with several possible causes, none of them yours to diagnose or fix from
+   inside a worktree — it is not a failure on your part.
+
+   **Never route around this rejection with plumbing.** `git update-ref refs/heads/{source-branch}
+   <sha>`, `git symbolic-ref`, and hand-editing `.git/refs/` all **succeed** where the push was
+   refused — plumbing does not run porcelain's checked-out-branch check. That is precisely the
+   trap: it reports success, `git log` looks right, and the damage is invisible from your
+   worktree. What it actually does is move the branch ref out from under a working tree whose
+   index still holds the **old** commit. That tree is now staged to *undo your commit* — files
+   you added read as deletions, files you deleted read as additions — and the next `git commit`
+   there silently reverts your work with no conflict to warn anyone. Verifying with
+   `git show <source-branch>:<path>` will not catch it, because the ref is fine; it is the
+   holder's index that is wrong.
+
+   `git push .`, `git fetch .`, and `git merge` are the only merge routes you may use. If all
+   are refused, you are finished — report `Merged: no` and return. An unmerged branch costs the
+   orchestrator one command; a bypassed ref costs a debugging session and can lose a commit.
 5. **A conflict lands in a file you do NOT own** (see Boundaries) → `git merge --abort`,
    leave your branch unmerged, report `Merged: no` and list the file under "Conflicts handed
    off". Never resolve another track's file.
@@ -569,8 +587,21 @@ You are still on a **detached HEAD** from Phase 2. Stay there until step 4.
 3. **Verify every branch is in.** For all of `branches`, `git log <source-branch>..<branch>
    --oneline` must come back **empty**. A track's `Merged:` field is a self-report; this
    check is the evidence. Do not clean up until it passes.
-4. **Re-attach**: `git checkout <source-branch>`. If dirty files linger from worktree
-   cross-talk, `git checkout -- <files>` first.
+4. **Re-attach and repair the index**: `git checkout <source-branch>`, then run
+   `git status --porcelain` and read it carefully. Two different problems show up here and they
+   need different fixes:
+   - **Unstaged dirt** (` M` — space then M) from worktree cross-talk: `git checkout -- <files>`.
+   - **Staged changes** (`A `, `D `, `M ` — letter in the *first* column) against a ref that
+     already advanced: this is the signature of a track that bypassed the push rejection with
+     plumbing (see §2.3 merge protocol step 4). The index is a commit behind the ref, so it is
+     staged to **undo** the very commit that just landed. `git checkout -- <files>` does **not**
+     fix this — it only touches the working tree, leaving the index still poisoned. Use
+     `git restore --staged --worktree <files>` to reset both, and if a file was deleted by the
+     landed commit, remove the resurrected copy explicitly. Then re-run
+     `git log <source-branch>..<branch>` for that track to confirm its work is genuinely in.
+
+   Never `git commit` on the source branch while staged reverts are sitting in the index —
+   that is the step that turns an invisible desync into lost work.
 5. **Clean up worktrees**: for each agent worktree:
    ```
    git worktree unlock .claude/worktrees/<id> 2>/dev/null
@@ -678,6 +709,26 @@ In every case the work is on the branches and the reconciliation is the same (Ph
 step 1). In every case you must also check whether later waves built on a stale base (§3.2):
 a wave that could not self-merge is invisible to the next wave's `git reset --hard
 <source-branch>`.
+
+**A track reports `Merged: yes` but the source branch's working tree is staged to undo it**:
+the track bypassed a push rejection with plumbing — `git update-ref refs/heads/<source-branch>`
+is the usual one. Unlike `git push .`, plumbing does not run the checked-out-branch check, so it
+succeeds and the track honestly believes it merged. The commit really is on the ref; what is
+broken is the **index** of whichever working tree holds that branch, which still has the parent
+commit staged. `git status` there shows the track's added files as `A ` (staged additions) and
+its deleted files as `D ` — i.e. staged to revert it. Nothing warns you, and the track's own
+verification (`git show <source-branch>:<path>`) passes, because the ref is correct.
+
+Tell it apart from ordinary cross-talk by the **column**: unstaged dirt is ` M` (space first),
+a poisoned index is `A `/`D `/`M ` (letter first). Repair with
+`git restore --staged --worktree <files>`, not `git checkout -- <files>` — the latter leaves the
+index untouched, which is the half that matters. Full procedure in Phase 3.1 step 4.
+
+Two consequences for the run: the work is **not** lost (it is on the ref and on the branch), and
+the row in the `"branch is currently checked out"` table below that says *"Nothing to repair"*
+does not apply — a bypass turns that benign case into one that needs the index repair above.
+Check `git status --porcelain` on the source branch before believing any `Merged: yes` that
+followed a rejection.
 
 **Subagent can't delete its branch**: expected — it is checked out in the track's own
 worktree. The orchestrator deletes it in Phase 3.1 step 6, after the worktree is removed.

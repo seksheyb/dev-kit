@@ -43,14 +43,18 @@ signal. Never ask a human, and never pick a format out of thin air — every run
 unattended, resolves the same way.
 
 **Tier 1 — Project constitution.** Load `docs/global/project/constitution.md` by default (see
-the `constitution` skill). If it names a documentation or docstring standard — naturally under
-an "Additional Constraints" or "Development Workflow" section — that standard **governs**, and
-the remaining tiers are not consulted. The constitution is non-negotiable where it speaks.
+the `constitution` skill). Look first for the named `### Documentation Standard` slot that the
+constitution template defines — that heading is the machine-readable home for this, wherever in
+the file it sits. If that heading is absent, fall back to prose-matching a documentation or
+docstring standard anywhere in the file (commonly under an "Additional Constraints" or
+"Development Workflow" section). Either way, a standard found here **governs**, and the
+remaining tiers are not consulted. The constitution is non-negotiable where it speaks.
 
 Treat the constitution as silent, and fall through to Tier 2, when: the file is absent, it is
-an unfilled template, or it says nothing about documentation style. A missing or unfilled
-constitution is **not fatal** — this mirrors how `analyze`, `converge`, and `specify` handle
-the same file.
+an unfilled template, the `### Documentation Standard` slot is present but still holds its
+unreplaced `[DOCUMENTATION_STANDARD]` token, or it says nothing about documentation style. A
+missing or unfilled constitution is **not fatal** — this mirrors how `analyze`, `converge`, and
+`specify` handle the same file.
 
 **Tier 2 — Existing codebase convention.** If Tier 1 is silent, match what the project already
 does:

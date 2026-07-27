@@ -330,9 +330,11 @@ assumes the seven drafts are ready to ship as-is). Milestone 5 is unaffected.
 
 ---
 
-## 6. One uniform findings contract for every QA-class asset — and the sweep that enforces it
+## 6. One uniform findings contract for every QA, code-review, and adversarial-review asset
 
-**Where:** the **23 agents** that declare a verdict, severity, or confidence vocabulary —
+**Where:** three overlapping asset classes — QA, code-review, and adversarial-review.
+
+The **23 agents** that declare a verdict, severity, or confidence vocabulary —
 `accessibility-tester`, `code-review-gate`, `debugger`, `dependency-manager`,
 `design-reviewer`, `doc-synthesizer`, `doc-verifier`, `domain-researcher`, `eval-auditor`,
 `gate-plan-review`, `health-reporter`, `incident-responder`, `integration-checker`,
@@ -341,6 +343,19 @@ assumes the seven drafts are ready to ship as-is). Milestone 5 is unaffected.
 plus `skills/cso` and the `scope: review` skills (`security-reviewer`, `spec-miner`,
 `the-fool`). Roster measured, not assumed: `grep -rlE "BLOCKER|WARNING|PASS/FAIL|VERIFIED|
 CONFIRMED|needs_human_review|verdict|[Ss]everity" plugins/*/agents/*.md`.
+
+**The roster extends to two more classes, on the same contract:**
+
+- **Code-review class** — `skills/code-review-protocol`, `agents/code-review-gate`,
+  `agents/plan-reviewer`, `commands/{plan-review,review}`, the five `plan-review-*` skills
+  (`design`, `devex`, `eng`, `goal-backward`, plus `agents/gate-plan-review`),
+  `skills/{sdd-review-cto,spec-review-cpo,devex-review,security-reviewer}`.
+- **Adversarial-review class** — every asset whose value is an attempted refutation:
+  `skills/the-fool`, `skills/plan-review-goal-backward`, the adversarial passes inside
+  `skills/{bugfix-wave,sprint-execution,ship,code-review-protocol}`, and
+  `agents/{security-auditor,penetration-tester,eval-auditor,verifier,nyquist-auditor,
+  doc-verifier,integration-checker,code-review-gate}`. Measured via `grep -rln -i
+  "adversarial|try to break|refute|red.team|devil's advocate"`.
 
 **Problem:** the shortlist fix wave closed four separate items — 1.15, 2.16, 2.19, and an
 unnumbered finding — that turned out to be **the same question asked at four different
@@ -388,6 +403,29 @@ risky edit with no defect behind it. What must be uniform is that **every declar
 emitted, reaches the evidence, admits "unknown", and is not taken on trust from upstream.** An
 asset that already satisfies all four is recorded as checked-and-correct and left alone — that
 is the correct outcome for it, not a gap.
+
+**Why the two extra classes strain the contract hardest — read this before sweeping them.**
+
+- **Adversarial review breaks on clause 3 by construction.** An adversarial pass has *three*
+  honest outcomes — refuted, survived-the-attempt, and **could-not-attempt** (the claim was
+  unreachable, the repro needed an environment that wasn't there, the evidence was out of
+  scope). Most schemas encode only the first two. When "could not attempt" has nowhere to go it
+  collapses into "survived", and an adversarial reviewer that cannot say *"I failed to test
+  this"* silently degrades into a rubber stamp — the exact opposite of why it was dispatched. A
+  refutation that never ran must never read as a refutation that failed. This is clause 3 with
+  the highest stakes in the repo, and it is the clause most likely to be violated, because
+  survived/refuted feels like a complete binary until you look for the third case.
+- **Code review breaks on clause 4, because its inputs are other reviewers' verdicts.**
+  `code-review-gate`, `gate-plan-review`, and the `plan-review-*` family aggregate findings
+  produced elsewhere. Every aggregation point is a place an upstream self-report can be
+  promoted to fact without a re-check — the 2.16 defect, one tier up. The gate that consumes N
+  reviewers must record, per finding, *which* reviewer claimed it and whether the gate itself
+  re-verified — otherwise a confident wrong finding and an independently confirmed one are
+  indistinguishable in the merged report.
+- **Both classes must also satisfy clauses 1 and 2 unchanged.** `code-review-gate`,
+  `security-auditor`, `verifier`, `doc-verifier`, `nyquist-auditor` and `integration-checker`
+  appear on *both* the QA roster and the adversarial roster — visit each once and ask all four
+  clauses, rather than sweeping the classes separately and double-visiting the overlap.
 
 **Explicitly out of scope:** restructuring any asset's output format wholesale to accommodate a
 tier; and unifying the tier vocabularies themselves. Both are bigger, more speculative changes

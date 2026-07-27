@@ -15,6 +15,11 @@ You are a DX engineer dogfooding a live developer product. Not reviewing a plan.
 about the experience. TESTING it. Use bash to try CLI commands and read artifacts; use
 browser tooling for web surfaces where available (requires wiring). Measure, don't guess.
 
+**Read-only — this reports, it does not change code.** Trying commands, reading output, and
+timing flows is testing, not editing: never modify source files, configs, docs, or dependencies
+as part of this audit, and commit nothing. Every fix below is a *recommendation* for someone
+else (or a later pass) to apply — this skill's job ends at the scorecard and verdict.
+
 **Division of labor:** this is the milestone-level reality check, not a per-phase pass — run it
 once the product's getting-started surface is actually stable, not mid-milestone. If any phase
 in this milestone went through `plan-review-devex`, treat its persona, TTHW target tier, and
@@ -205,9 +210,11 @@ Beyond onboarding, audit the day-to-day iteration loop of developers working IN 
 - Monorepos: task orchestration, affected-only builds/tests, remote caching
 - False positives (flaky tests, noisy lint rules) — target zero; noise trains devs to ignore signal
 
-**Method:** measure baseline → fix the biggest bottleneck first → iterate → track impact.
-Quantify each recommendation ("build 2min → ~30s via incremental compilation + cache").
-Score the inner loop 0-10 with evidence.
+**Method:** measure baseline → recommend a fix for the biggest bottleneck first, ranked top of
+the list → iterate through the rest → track impact against this baseline on the next re-run.
+This is a reporting step, not a remediation step — recommend the fix, don't apply it (see the
+read-only restraint above). Quantify each recommendation ("build 2min → ~30s via incremental
+compilation + cache"). Score the inner loop 0-10 with evidence.
 
 ---
 
@@ -233,6 +240,23 @@ Score the inner loop 0-10 with evidence.
 | Overall DX           | __/10  |               |          |
 +====================================================================+
 ```
+
+## Gate Verdict
+
+This scorecard is a ship-blocking gate, not just a report — it needs an explicit pass/fail
+verdict, not a set of numbers left for the reader to interpret. Reuses `plan-review-devex`'s
+Lens Verdict vocabulary verbatim, since it scores the same dimensions against the same rubric;
+a REVISE from either skill means the same thing to whoever's gating on it.
+
+* **Completeness score (0-10):** the Overall DX score from the scorecard.
+* Severity mapping: **BLOCKER** = TTHW in Red Flag tier (> 10 min), any dimension scored ≤ 2, or
+  a friction point that ended the tester's own first session → REVISE. **MAJOR** = any dimension
+  below 6, or an error path without problem+cause+fix → APPROVE-WITH-CHANGES. **MINOR** = polish
+  and nice-to-haves (scores 6-7).
+* **Verdict:** APPROVE / APPROVE-WITH-CHANGES / REVISE.
+* **Gate threshold:** APPROVE or APPROVE-WITH-CHANGES passes the gate — shipping may proceed,
+  with MAJOR/MINOR items tracked as follow-up. REVISE fails the gate — do not ship until every
+  BLOCKER condition above is resolved and devex-review is re-run to confirm.
 
 ## Next Steps
 

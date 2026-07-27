@@ -35,9 +35,17 @@ You MUST create a task for each of these items and complete them in order:
 
 1. **Explore project context** — check files, docs, recent commits
 2. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
-3. **Propose 2-3 approaches** — with trade-offs and your recommendation
-4. **Present design** — in sections scaled to their complexity, get user approval after each section
-5. **Hand off to `specify`** — once the design is approved, invoke the `specify` skill to produce
+3. **Premise check (mandatory gate)** — if this conversation arrived here fresh (no prior
+   diagnostic/validation mode), run the `## Premise Challenge` questions below before proposing
+   any approach. If premises were already produced and agreed upstream (diagnostic or validation
+   mode fed into this flow, per the mode table above), confirm they still hold and carry them
+   forward instead of re-deriving them. Either way, the premises must exist as explicit
+   statements the user has agreed to — output them per the Premise Challenge section's contract
+   — before step 4 starts. Do not skip this step and do not restate the Premise Challenge
+   methodology here; follow the one copy of it below.
+4. **Propose 2-3 approaches** — with trade-offs and your recommendation
+5. **Present design** — in sections scaled to their complexity, get user approval after each section
+6. **Hand off to `specify`** — once the design is approved, invoke the `specify` skill to produce
    the actual written, gated spec artifact. Carry the approved design and everything already
    answered into that invocation so `specify` doesn't re-ask what this conversation already
    settled.
@@ -59,6 +67,11 @@ implementation skill directly from brainstorming.
 - Prefer multiple choice questions when possible, but open-ended is fine too
 - Only one question per message - if a topic needs more exploration, break it into multiple questions
 - Focus on understanding: purpose, constraints, success criteria
+
+**Confirming premises:**
+
+- Before proposing approaches, run the `## Premise Challenge` gate (below): if this is a fresh conversation, work through its questions now; if premises already exist from an upstream mode, confirm they still hold instead of re-deriving them
+- Either way, the premises must land as explicit statements the user agrees to before approaches are proposed — see that section for the exact output contract
 
 **Exploring approaches:**
 
@@ -183,12 +196,20 @@ Enthusiastic, opinionated collaborator — delight is the currency; ship somethi
 
 Surface the most exciting version of the idea, not the most strategically optimized one. Riff: "what if you also..." suggestions, each a small unlock that turns "a tool I used" into "a thing I showed a friend." End with concrete build steps, not business validation tasks.
 
-## Premise Challenge (both postures — mandatory)
+## Premise Challenge (mandatory gate — every path)
 
-Before proposing solutions, challenge premises. This is the same checklist
-`spec-review-cpo` runs formally once a spec exists (its Step 0A Premise Challenge / 0B
-Existing-Solution Leverage) — running a lighter version here, pre-spec, avoids drafting a
-full spec for an idea that would fail that gate anyway:
+Before proposing solutions, challenge premises. This gate is mandatory regardless of how
+you got here: the standard design flow's checklist (step 3, above) invokes it directly for
+users who bring a feature/change with no prior mode; both startup postures in this
+office-hours mode invoke it before their own Alternatives step; and validation mode's GO
+path invokes it once it hands off into office-hours or the standard flow. "Both postures"
+in earlier drafts of this heading meant the two *startup* postures (founder/builder) below —
+not "office-hours mode vs. standard flow" — it was never meant to exempt the standard flow,
+and now says so explicitly.
+
+This is the same checklist `spec-review-cpo` runs formally once a spec exists (its Step 0A
+Premise Challenge / 0B Existing-Solution Leverage) — running a lighter version here, pre-spec,
+avoids drafting a full spec for an idea that would fail that gate anyway:
 
 1. Is this the right problem? Could a different framing yield a dramatically simpler solution?
 2. What happens if we do nothing? Real pain or hypothetical?
@@ -204,11 +225,11 @@ flow starts from.
 Two more, specific to a pre-code idea and not repeated at the spec-review-cpo gate:
 
 4. If the deliverable is a new artifact (CLI, library, app): how will users get it? Code without distribution is code nobody can use.
-5. Startup posture: does the diagnostic evidence support this direction? Where are the gaps?
+5. Startup posture only (skip if you arrived via the standard flow with no diagnostic history): does the diagnostic evidence support this direction? Where are the gaps?
 
-Output premises as explicit statements the user must agree/disagree with before proceeding. If they disagree, revise understanding and loop back. A user who defends a premise with reasoning (not dismissal) is a good signal; note it.
+Output premises as explicit statements the user must agree/disagree with before proceeding. If they disagree, revise understanding and loop back. A user who defends a premise with reasoning (not dismissal) is a good signal; note it. If premises were already produced and agreed in an upstream mode, restate them and confirm they still hold rather than re-deriving from scratch — the output contract (explicit statements, agree/disagree, loop back on disagreement) is the same either way.
 
-Then continue into the standard flow: **Alternatives (2-3 approaches, mandatory) → design → handoff to `specify`.**
+Then continue: **Alternatives (2-3 approaches, mandatory) → design → handoff to `specify`.** For office-hours/validation mode, that means handing off into the standard flow now; for the standard flow itself, it means proceeding to its own next checklist step.
 
 ---
 

@@ -502,7 +502,7 @@ Verified patterns from official sources:
 
 ## Validation Architecture
 
-> Skip this section entirely if workflow.nyquist_validation is explicitly set to false in `docs/state/config.json`. If the key is absent, treat as enabled.
+> Skip this section entirely if workflow.nyquist_validation is explicitly set to false in the orchestrator's dispatch prompt. If the setting is absent, treat as enabled.
 
 ### Test Framework
 | Property | Value |
@@ -588,9 +588,9 @@ Orchestrator provides: phase number/name, description/goal, requirements, constr
 Load phase context natively (no init call — see `references/native-equivalents.md`):
 1. `Glob` `docs/milestones/*/phases/*<PHASE>*/` (or use the orchestrator-provided output path directly) to resolve `PHASE_DIR`. The `<NN>` prefix of the matched directory name gives `phase_number`/`padded_phase`; its parent segment gives the active milestone `<M>`.
 2. `Read` `docs/milestones/<M>/ROADMAP.md` and `docs/milestones/<M>/REQUIREMENTS.md` if present — treat missing files as "not yet produced," not an error.
-3. `Read` `docs/state/config.json` for `commit_docs` (default `true` if the key is absent).
+3. `commit_docs` comes from the orchestrator's dispatch prompt, not a file (default `true` if not supplied).
 
-Also from `docs/state/config.json` — include Validation Architecture section in RESEARCH.md unless `workflow.nyquist_validation` is explicitly `false`. If the key is absent or `true`, include the section.
+Likewise from the dispatch prompt — include Validation Architecture section in RESEARCH.md unless `workflow.nyquist_validation` is explicitly `false`. If the setting is absent or `true`, include the section.
 
 Then `Read` `PHASE_DIR/CONTEXT.md` if it exists (treat absence as empty — no locked decisions yet).
 

@@ -9,7 +9,7 @@ metadata:
   role: expert
   scope: design
   output-format: document
-  related-skills: fullstack-guardian, devops-engineer, secure-code-guardian, microservices-architect
+  related-skills: fullstack-guardian, devops-engineer, secure-code-guardian, microservices-architect, diagram
 ---
 
 # Architecture Designer
@@ -33,7 +33,7 @@ You are a principal architect with 15+ years of experience designing scalable, d
 
 1. **Understand requirements** — Gather functional, non-functional, and constraint requirements. _Verify full requirements coverage before proceeding._
 2. **Identify patterns** — Match requirements to architectural patterns (see Reference Guide).
-3. **Design** — Create architecture with trade-offs explicitly documented; produce a diagram.
+3. **Design** — Create architecture with trade-offs explicitly documented; invoke the `diagram` skill via the Skill tool and follow its guidance to produce the diagram.
 4. **Document** — Write ADRs for all key decisions.
 5. **Review** — Validate with stakeholders. _If review fails, return to step 3 with recorded feedback._
 
@@ -70,7 +70,7 @@ Load detailed guidance based on context:
 
 When designing architecture, provide:
 1. Requirements summary (functional + non-functional)
-2. High-level architecture diagram (Mermaid preferred — see example below)
+2. High-level architecture diagram — invoke the `diagram` skill via the Skill tool and follow its guidance for authoring, rendering, and file placement; see "What the Diagram Must Show" below for the content this skill is responsible for
 3. Key decisions with trade-offs (ADR format — see example below)
 4. Technology recommendations with rationale
 5. Risks and mitigation strategies
@@ -79,17 +79,17 @@ Canonical save locations: the system design doc is `docs/global/architecture/SDD
 public-facing overview is `docs/global/architecture/ARCHITECTURE.md`; each ADR is
 `docs/global/architecture/adr/NNNN-<slug>.md` (see `references/adr-template.md`).
 
-### Architecture Diagram (Mermaid)
+### What the Diagram Must Show
 
-```mermaid
-graph TD
-    Client["Client (Web/Mobile)"] --> Gateway["API Gateway"]
-    Gateway --> AuthSvc["Auth Service"]
-    Gateway --> OrderSvc["Order Service"]
-    OrderSvc --> DB[("Orders DB\n(PostgreSQL)")]
-    OrderSvc --> Queue["Message Queue\n(RabbitMQ)"]
-    Queue --> NotifySvc["Notification Service"]
-```
+The mermaid mechanics — authoring, rendering to SVG/PNG, where the `.mmd` lives, when to embed a fence vs. ship a PNG — belong to the `diagram` skill; invoke it rather than hand-rolling any of that here. What the diagram must contain is this skill's call:
+
+- Every major component/service, named for what it does (not for its file/folder)
+- Trust and deployment boundaries (client vs. server, service vs. service, this system vs. third-party)
+- Data stores and queues, called out distinctly from application services
+- The primary request/data flow, traceable start to finish by following the arrows
+- External dependencies and integration points
+
+A reader should be able to answer "what talks to what, and across which boundary" from the diagram alone. A minimal shape for a typical service-oriented design: client → gateway → auth/domain services → datastore, with a queue and downstream consumer where async work exists.
 
 ### ADR Example
 

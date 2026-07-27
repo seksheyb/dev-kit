@@ -258,15 +258,86 @@ landed.
 
 ## Phase 2: Dispatch
 
+### 2.0 — Preflight: clear residue from previous sessions
+
+Run this **once, before you announce the plan** — and it belongs here rather than in Phase 1
+because it needs the track branch names Phase 1 just assigned (§1.3), and because everything
+it guards against blocks *dispatch*, not classification. Phase 3.1 steps 5-7 clean up after
+*this* run; nothing in the skill has ever covered what a **previous** run left behind. A
+session that crashed, was killed, or was abandoned mid-wave leaves residue that survives into
+yours, because the Workflow script has no filesystem or git access and could not clean up even
+in principle.
+
+Two kinds of residue matter, and the second one hard-fails a dispatch rather than degrading it.
+
+**1. Leftover worktrees.**
+
+```
+git worktree list
+git worktree prune          # drops entries whose directory is already gone
+```
+
+Any `.claude/worktrees/agent-*` entry no live run owns is residue. On its own it is not fatal —
+the harness provisions a fresh worktree per track — but a stale one that still holds a branch
+checked out **is** fatal to self-merge, and is one of the causes in the
+`"branch is currently checked out"` edge case. Read the bracketed branch on each line: a stale
+worktree holding the source branch, or holding a branch name this run intends to reuse, must
+go before you dispatch.
+
+```
+git worktree unlock .claude/worktrees/<id> 2>/dev/null
+git worktree remove .claude/worktrees/<id> --force
+```
+
+`--force` discards uncommitted work inside that worktree. Never force-remove one you cannot
+account for while another run may be live — if you cannot establish that a worktree is dead,
+surface it to the user and let them decide rather than guessing.
+
+**2. Leftover branches carrying this run's track names.**
+
+This is the one that hard-fails. §2.3 has every track run `git checkout -b {branch}`, which
+**errors outright** if a branch of that name already exists — and a run that crashed before
+Phase 3.1 step 6 leaves exactly those names behind. Check the names Phase 1 assigned, plus the
+harness's own per-worktree branches:
+
+```
+git branch --list 'bugfix/w*-track-*'    # or the exact branch names from §1.3
+git branch --list 'worktree-agent-*'     # harness-created, one per isolated worktree
+```
+
+**A leftover branch is not automatically safe to delete.** It may hold unmerged fixes from the
+session that crashed, and per §1.6 every commit on it is self-contained and recoverable.
+Classify each one before touching it:
+
+```
+git log <source-branch>..<branch> --oneline
+```
+
+| Result | Meaning | What to do |
+|---|---|---|
+| **Empty** | Already merged into the source branch — residue only | Safe to remove: `git branch -d <branch>` (plain `-d`, so git refuses if you classified it wrong) |
+| **Non-empty** | Carries unmerged commits from a previous session | **Do not delete and do not reuse the name.** Surface it to the user with the commit list, then either merge it first (Phase 3.1 step 1's procedure) or rename this run's track branch to a name that does not collide |
+
+`git branch --merged <source-branch>` is a faster first pass over many branches and agrees with
+the range check above, but always name the source branch explicitly: bare `--merged` is
+relative to `HEAD`, and on the detached HEAD of §2.2 that is not the branch you mean.
+
+**Report what you found**, clean or not, in the §2.1 announcement — one line, e.g.
+`preflight: 2 stale worktrees pruned, no branch-name collisions`. A silent preflight is
+indistinguishable from a skipped one.
+
 ### 2.1 — Announce the plan
 
 Before dispatching, tell the user (brief, not markdown):
+- The §2.0 preflight result — residue found and cleared, or none
 - How many tracks and waves
 - Track names with bug IDs and model/effort
 - Any dependency reasoning
 
 Example:
 ```
+Preflight: 1 stale worktree removed, no branch-name collisions.
+
 Wave 1 (5 tracks): track-schema (B1-B3, opus/high), track-resolvers (B4,B16, sonnet/high),
 track-rls (B5, sonnet/high), track-buzzsprout (B9-B10,B24-B25, sonnet/medium),
 track-pushfanout (B17-B18, sonnet/medium)
@@ -294,6 +365,11 @@ as an alternative when the wave has 2+ tracks.
 working tree. Tracks cannot push into a branch that is checked out, and this is the whole
 reason the old version of this skill needed a straggler pass. Re-check-out the source branch
 in Phase 3, after the run.
+
+If §2.0's `git worktree list` showed the source branch held by a working tree that is **not**
+yours, your detach does not free it and nothing else will. Dispatch anyway — expect every
+track to return `Merged: no`, and reconcile them centrally in Phase 3.1 step 1. Say so in the
+§2.1 announcement so the wave-wide `Merged: no` is read as predicted, not as breakage.
 
 **Workflow route.** Phase 1 completes in your turn first — the script carries zero judgment.
 You classify (§1.2), group (§1.3), wave-order (§1.4), and render each track's §2.3 prompt in
@@ -615,7 +691,8 @@ merging the wave, and treat any bugs the re-dispatch doesn't cover as unfixed. N
 **Workflow dies, is killed, or errors mid-wave**: Worktrees and branches from tracks that
 already started survive it — the script never had the filesystem access to clean them up. Run
 Phase 3 over whatever `git worktree list` and `git branch` actually show before deciding
-anything else.
+anything else. If the session itself ends before you get there, that residue survives into the
+*next* run — which is what §2.0's preflight exists to catch.
 
 **Every track in a wave came back `Merged: no` with non-fast-forward rejections**: they
 starved each other out of the retry loop. Reconcile them in Phase 3 and, if the same wave has

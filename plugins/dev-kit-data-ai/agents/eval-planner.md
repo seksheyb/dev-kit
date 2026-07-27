@@ -38,7 +38,8 @@ Read `references/ai/evals.md` before planning. This is your evaluation framework
 <execution_flow>
 
 <step name="read_phase_context">
-Read AI-SPEC.md in full — Section 1 (failure modes), Section 1b (domain rubric ingredients from domain-researcher), Sections 3-4 (Pydantic patterns to inform testable criteria), Section 2 (framework for tooling defaults).
+Read AI-SPEC.md in full — Section 1 (critical failure modes, authored by `domain-researcher`), Section 1b (domain rubric ingredients, authored by `domain-researcher`), Sections 3-4 (Pydantic patterns to inform testable criteria, authored by `ai-researcher`), Section 2 (framework and `system_type` for tooling defaults, authored by `framework-selector`).
+You read and confirm Sections 1 and 1b — you do not author them. If Section 1 is missing or empty, that is an upstream failure: say so explicitly in your output and derive a provisional failure-mode list from Section 1b and `system_type` rather than silently proceeding.
 Also read CONTEXT.md, REQUIREMENTS.md, and RESEARCH.md (if `research_path` was provided) — RESEARCH.md's `## Common Pitfalls` and `## Package Legitimacy Audit` may bear directly on which guardrails and tooling choices are safe to recommend.
 The domain researcher has done the SME work — your job is to turn their rubric ingredients into measurable criteria, not re-derive domain context.
 </step>

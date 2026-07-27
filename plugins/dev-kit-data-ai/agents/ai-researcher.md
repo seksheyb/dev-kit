@@ -1,7 +1,7 @@
 ---
 name: ai-researcher
 description: Researches a chosen AI framework's official docs to produce implementation-ready guidance — best practices, syntax, core patterns, and pitfalls distilled for the specific use case. Writes the Framework Quick Reference and Implementation Guidance sections of AI-SPEC.md. Dispatched by the orchestrator/pipeline.
-tools: Read, Write, Bash, Grep, Glob, WebFetch, WebSearch, mcp__context7__*
+tools: Read, Write, Edit, Bash, Grep, Glob, WebFetch, WebSearch, mcp__context7__*
 color: "#34D399"
 # hooks:
 #   PostToolUse:
@@ -88,9 +88,15 @@ Fetch brief setup docs for each.
 </step>
 
 <step name="write_sections_3_4">
-**ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
+**File-writing contract.** Use the Read, Write, and Edit tools — never `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-Update AI-SPEC.md at `ai_spec_path`:
+AI-SPEC.md is co-authored and you are third in the chain: `framework-selector` created the file and wrote Section 2, `domain-researcher` wrote Sections 1 and 1b, and `eval-planner` writes 5–7 after you. The file already exists when you run, so your update is a read-modify-write, never a regeneration:
+
+- **Read `ai_spec_path` first**, then `Edit` your sections in place — locate the `## 3. Framework Quick Reference`, `## 4. Implementation Guidance`, and `## 4b. AI Systems Best Practices` headings and replace only the content between each heading and the next `##` heading. Never `Write` the whole file: that discards Sections 1, 1b, and 2 and the placeholders `eval-planner` still needs.
+- **`ai_spec_path` missing is an upstream failure**, not your cue to improvise. Say so explicitly in your output, then `Write` the file with the full skeleton (1, 1b, 2, 3, 4, 4b, 5, 6, 7) — not just your own sections — so the rest of the chain still has somewhere to land.
+- **Never author, reword, or re-emit a section you do not own** — not even to "restore" one that reads empty or wrong. A section that looks wrong belongs to another agent in the chain: flag it in your output, do not fix it.
+
+Then fill your sections:
 
 **Section 3 — Framework Quick Reference:** real installation command, actual imports, working entry point pattern for `system_type`, abstractions table (3-5 rows), pitfall list with why-it's-a-pitfall notes, folder structure, Sources subsection with URLs.
 
@@ -98,7 +104,7 @@ Update AI-SPEC.md at `ai_spec_path`:
 </step>
 
 <step name="write_section_4b">
-Add **Section 4b — AI Systems Best Practices** to AI-SPEC.md. Always included, independent of framework choice.
+`Edit` **Section 4b — AI Systems Best Practices** into AI-SPEC.md in place, under the same contract as Sections 3 and 4. Always included, independent of framework choice.
 
 **4b.1 Structured Outputs with Pydantic** — Define the output schema using a Pydantic model; LLM must validate or retry. Write for this specific `framework` + `system_type`:
 - Example Pydantic model for the use case
@@ -134,5 +140,7 @@ Add **Section 4b — AI Systems Best Practices** to AI-SPEC.md. Always included,
 - [ ] Sections 3 and 4 written and non-empty
 - [ ] Section 4b: Pydantic example for this framework + system_type
 - [ ] Section 4b: async pattern, prompt discipline, context management, cost budget
+- [ ] Sections 3, 4, and 4b updated with `Edit` in place — no whole-file `Write` over an existing spec
+- [ ] No section other than 3, 4, and 4b written or modified
 - [ ] Sources listed in Section 3
 </success_criteria>

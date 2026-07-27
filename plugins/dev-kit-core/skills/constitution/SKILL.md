@@ -32,8 +32,8 @@ If it exists but is still an unfilled template (its `[ALL_CAPS_IDENTIFIER]` toke
 unreplaced), treat it as not existing and continue to Step B.
 
 **Step B — measure how much signal the project offers.**
-Initialize the file from `constitution-template.md`, then survey the repo for material a
-principle can honestly be inferred from. Count a source only when it carries substantive
+Initialize the file from `constitution-template.md` if it does not already exist, then survey
+the repo for material a principle can honestly be inferred from. Count a source only when it carries substantive
 content, not a stub:
 
 - `README.md` — goals, non-goals, or stated engineering values beyond a title line
@@ -173,7 +173,10 @@ Follow this execution flow:
    - Follow-up TODOs if any placeholders intentionally deferred.
 
 6. Validation before final output:
-   - No remaining unexplained bracket tokens.
+   - No remaining **unexplained** bracket tokens. A token deliberately deferred by the
+     "When no human is available to answer" path is explained — it carries a `TODO(...)` line
+     in the Sync Impact Report — and so passes this check. Only tokens left behind with no
+     recorded justification are failures.
    - Version line matches report.
    - Dates ISO format YYYY-MM-DD.
    - Principles are declarative, testable, and free of vague language ("should" → replace with MUST/SHOULD rationale where appropriate).

@@ -1078,7 +1078,17 @@ cat "$ai_spec_path" 2>/dev/null            # From the AI-integration chain (AI-l
 
 `ai_spec_path` is supplied by the orchestrator when this is an AI-lane phase; canonically it is `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`. If the dispatch prompt is silent on it, resolve it yourself with `ls docs/milestones/<M>/specs/*/AI-SPEC.md 2>/dev/null` and take the spec directory matching this phase. If that lists nothing, the phase is not AI-lane.
 
-**Every artifact in this step is conditional.** CONTEXT.md, RESEARCH.md and DISCOVERY.md depend on which upstream stages ran; PATTERNS.md exists only for phases that ran pattern-mapping; UI-SPEC.md only for phases that ran UI design; AI-SPEC.md only for AI-lane phases. An empty result means the producing agent did not run for this phase — skip that artifact and continue planning with the rest. A missing conditional artifact is never an error and never a reason to stop or to ask the orchestrator for it.
+**Every artifact in this step is conditional.** CONTEXT.md, RESEARCH.md and DISCOVERY.md depend on which upstream stages ran; PATTERNS.md exists only for phases that ran pattern-mapping; UI-SPEC.md only for phases that ran UI design; AI-SPEC.md only for AI-lane phases. So an empty result **usually** means the producing agent did not run for this phase — skip that artifact and continue planning with the rest, because a missing conditional artifact is never an error and never a reason to stop or to ask the orchestrator for it.
+
+`2>/dev/null` hides the difference between "no such file" and "no such directory", though, so confirm the usual reading before you act on it:
+
+```bash
+ls -la "$phase_dir"    # does the phase directory itself exist, and what is actually in it?
+```
+
+- **`$phase_dir` missing or unset** → every `cat` above reads empty for one reason: a bad or unsubstituted path. That is a dispatch defect, not un-run stages. Stop and report it; planning off zero context produces a confidently wrong plan.
+- **Directory exists, every artifact empty** → possible, but re-read `ls -la` before believing it. A phase that ran no upstream stage at all is rare enough to be worth one extra check.
+- **File present but zero-length or truncated** → the producing agent ran and died mid-write. Do not treat it as absent and do not plan off a partial file; report it as an unreliable input.
 
 **If CONTEXT.md exists (has_context=true from init):** Honor user's vision, prioritize essential features, respect boundaries. Locked decisions — do not revisit.
 

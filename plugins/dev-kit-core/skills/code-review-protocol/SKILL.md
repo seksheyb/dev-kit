@@ -47,7 +47,15 @@ Dispatch a `general-purpose` subagent, filling the template at [code-reviewer.md
 - `{BASE_SHA}` - Starting commit
 - `{HEAD_SHA}` - Ending commit
 
-**3. Act on feedback:**
+**3. Verify the review before acting on it:**
+
+Everything the reviewer returns — `Issues`, `Assessment`, `Ready to merge?` — is a self-report about work you can check yourself. The template's own DON'T list names the failure mode ("Give feedback on code you didn't actually read"); these are the checks that catch it. Run all three before step 4.
+
+- **Coverage.** `git diff --name-only $BASE_SHA..$HEAD_SHA` lists what was actually reviewable. A review whose Strengths and Issues cite none of those files did not read the diff — re-dispatch it, don't act on it. Files in the diff that the review never mentions are un-reviewed, not clean.
+- **Citations.** Spot-check one file:line from the Issues list and confirm the code is there and says what the reviewer claims. A citation that does not resolve invalidates the review, not just that one issue.
+- **`Ready to merge? Yes`.** A verdict, not evidence. Run the project's test/typecheck command yourself before you treat it as merge-readiness. Where the project has no such command, say so — record the verdict as un-corroborated rather than as verified.
+
+**4. Act on feedback:**
 - Fix Critical issues immediately
 - Fix Important issues before proceeding
 - Note Minor issues for later

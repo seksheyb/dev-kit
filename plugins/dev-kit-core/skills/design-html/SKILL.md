@@ -175,11 +175,27 @@ not redundant.
 
 ## Step 4: Verify + Refinement Loop
 
-Verification is Claude Design's own render → gate → `design-verifier` → act loop (already run
-once at the end of Step 3's dispatch) — don't layer a separate dev-kit screenshot-verification
-pass on top. The refinement loop below stays under this skill's control — the user is talking to
-*this* conversation, not inside the dispatched subagent — so each round re-dispatches a fresh
-Agent call at the same chosen model:
+**First, confirm the dispatch's report before you forward it.** The subagent reports back
+`project_id`, path(s) written, `open_url` and model used — all four are self-reports about a
+project you can query directly, and the "already run" verify loop below ran *inside* the
+subagent, so its completion is self-reported too. Two cheap checks, before Step 4's loop:
+
+- **`list_files` on the reported `project_id`** — every path the subagent claims to have written
+  must actually be there. A missing path means the dispatch failed partway; re-dispatch rather
+  than hand the user an `open_url` to nothing.
+- **Only `open_url` goes to the user.** If what came back is a `serve_url`, the subagent ignored
+  its instructions — the link is short-lived and will break. Fetch the correct one via
+  `get_project` instead of forwarding what you were given.
+
+The `model used` field is the one claim you cannot verify from outside. It exists to police the
+always-dispatch rule; treat a wrong or missing value as a reason to re-dispatch, not as
+something to reconcile.
+
+Verification proper is Claude Design's own render → gate → `design-verifier` → act loop (already
+run once at the end of Step 3's dispatch) — don't layer a separate dev-kit
+screenshot-verification pass on top. The refinement loop below stays under this skill's
+control — the user is talking to *this* conversation, not inside the dispatched subagent — so
+each round re-dispatches a fresh Agent call at the same chosen model:
 
 ```
 LOOP:

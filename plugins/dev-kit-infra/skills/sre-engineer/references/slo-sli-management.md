@@ -219,6 +219,7 @@ Before finalizing SLOs:
 4. **Meaningful**: Does violating it require action?
 5. **Documented**: Is the calculation clear and agreed upon?
 6. **Budgeted**: Is there an error budget policy?
+7. **Not over-provisioned**: Would users notice if the target were a notch lower? "Achievable" guards against a target you can't hit — this guards the opposite direction: a target you *can* hit but only by burning engineering effort (toil, re-architecture, frozen releases) on reliability beyond what the user-facing impact in #1 justifies. If nobody would notice the difference, the target is stricter than it needs to be — lower it and spend the freed error budget and effort on feature velocity instead.
 
 ## Common SLO Targets
 

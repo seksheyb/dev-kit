@@ -204,7 +204,7 @@ Check for an existing open PR/MR (`gh pr view` / `glab mr view`). If one exists,
 
 If neither `gh` nor `glab` is available: print the branch name and remote URL and tell the user to open the PR via the web UI — the code is pushed and ready.
 
-**Output the PR/MR URL.**
+**Output the PR/MR URL.** Use `/land-and-deploy` next to merge the PR, deploy the changes, and verify production health.
 
 ## Important Rules
 

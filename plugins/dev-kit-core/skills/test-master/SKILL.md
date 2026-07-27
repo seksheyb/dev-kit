@@ -5,7 +5,7 @@ license: MIT
 metadata:
   version: "1.1.1"
   domain: quality
-  triggers: test, testing, QA, unit test, integration test, E2E, coverage, performance test, security test, regression, test strategy, test automation, test framework, quality metrics, defect, exploratory, usability, accessibility, localization, manual testing, shift-left, quality gate, flaky test, test maintenance
+  triggers: test, testing, QA, unit test, integration test, E2E, coverage, performance test, security test, regression, test strategy, test automation, test framework, quality metrics, defect, exploratory, usability, accessibility, localization, manual testing, shift-left, quality gate, flaky test, test maintenance, Maestro, mobile E2E, mobile testing
   role: specialist
   scope: testing
   output-format: report
@@ -57,6 +57,7 @@ Load detailed guidance based on context:
 | Unit Testing | `references/unit-testing.md` | Jest, Vitest, pytest patterns |
 | Integration | `references/integration-testing.md` | API testing, Supertest |
 | E2E | `references/e2e-testing.md` | E2E strategy, user flows |
+| Maestro Flows | `references/maestro-flows.md` | Mobile E2E, Maestro YAML flows, golden-path/edge-case design |
 | Performance | `references/performance-testing.md` | k6, load testing |
 | Security | `references/security-testing.md` | Security test checklist |
 | Reports | `references/test-reports.md` | Report templates, findings |

@@ -50,7 +50,7 @@ Privacy compliance methodology covering GDPR (EU) and CCPA/CPRA (California). Un
 - [ ] Data Subject Request (DSR) process exists and is tested
 - [ ] Data retention policies documented and enforced
 - [ ] Data Processing Agreements (DPAs) with all processors
-- [ ] Data breach notification process ready (72-hour window to supervisory authority)
+- [ ] Data breach notification process ready (72-hour window to supervisory authority, measured from becoming aware of the breach — not from containment or confirmation)
 - [ ] Data Protection Officer (DPO) appointed if required
 - [ ] Privacy by Design built into new features
 
@@ -112,7 +112,7 @@ alone.
 | Data sales | N/A as a category | Specific opt-out right |
 | Penalties (regulatory) | Up to 4% of global annual revenue | Administrative fines via CPPA/AG action: up to $2,663 per violation (unintentional) / $7,988 per violation (intentional or involving a minor's data); CPI-adjusted every odd year, next in Jan 2027 |
 | Penalties (private right of action) | N/A — GDPR has no private right of action | Statutory damages for qualifying data breaches only: $107-$799 per consumer per incident (or actual damages if greater), separate from and not capped by the regulatory fine track |
-| Breach notification | 72 hours to supervisory authority | ASAP; state law separate |
+| Breach notification | 72 hours to supervisory authority, from becoming aware | ASAP; state law separate |
 
 ## Output Format
 

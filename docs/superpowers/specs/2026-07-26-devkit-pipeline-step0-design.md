@@ -1,6 +1,12 @@
 # devkit-pipeline — Step 0 (Bootstrap & governance)
 
-**Status:** Approved 2026-07-26. Scope: `devkit-pipeline` v0.1 — the initiator repo and Step 0
+> **Superseded** (2026-07-26, devkit-pipeline `ab5deff`): the Step 0 sequencer this spec
+> designs was removed as over-engineered the same day it was approved. PIPELINE.md, the
+> auto/manual/sleep mode table, per-step contract files, position state in
+> `docs/state/config.json`, the Workflow script, and `/devkit:` dispatcher commands no
+> longer exist and must not be reintroduced. Kept for history.
+
+**Status:** Superseded 2026-07-26 (approved and superseded the same day). Scope: `devkit-pipeline` v0.1 — the initiator repo and Step 0
 only. Steps 1–15 are transcribed later, one at a time.
 
 ## What this is

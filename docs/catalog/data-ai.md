@@ -127,7 +127,7 @@
 
 - **Why needed:** Choosing among LangChain, LangGraph, CrewAI, LlamaIndex, OpenAI Agents SDK, and others up front avoids costly rework; the right choice depends on interacting factors (system type, model provider, team stage, language, constraints).
 - **What it does:** Scans the codebase for existing framework signals first, runs a ≤6-question interview via `AskUserQuestion`, eliminates frameworks that fail hard constraints, scores the remainder against a maintained decision matrix, and returns a ranked primary and alternative recommendation with rationale.
-- **Why not vanilla Claude Code:** Replaces an ungrounded single-shot opinion with a structured elimination-and-scoring process against a maintained framework-tradeoffs reference (`references/gsd/ai-frameworks.md`), rather than whichever framework happens to be top-of-mind.
+- **Why not vanilla Claude Code:** Replaces an ungrounded single-shot opinion with a structured elimination-and-scoring process against a maintained framework-tradeoffs reference (`references/ai/frameworks.md`), rather than whichever framework happens to be top-of-mind.
 - **When to use:** "Presents an interactive decision matrix to surface the right AI/LLM framework for the user's specific use case" — before committing to an AI/LLM stack.
 - **Then what:** Its recommendation feeds `ai-researcher` (to research the chosen framework's docs) and `eval-planner` (system type informs eval dimensions).
 - **Notes:** The entry point of a three-agent AI-integration pipeline — used before `ai-researcher` and `eval-planner`, not after.

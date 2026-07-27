@@ -118,7 +118,7 @@ AskUserQuestion([
 </interview>
 
 <scoring>
-Apply decision matrix from `ai-frameworks.md`:
+Apply decision matrix from `references/ai/frameworks.md`:
 1. Eliminate frameworks failing any hard constraint
 2. Score remaining 1-5 on each answered dimension
 3. Weight by user's stated priority

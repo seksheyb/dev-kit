@@ -45,7 +45,7 @@ The domain researcher has done the SME work — your job is to turn their rubric
 </step>
 
 <step name="select_eval_dimensions">
-Map `system_type` to required dimensions from `ai-evals.md`:
+Map `system_type` to required dimensions from `references/ai/evals.md`:
 - **RAG**: context faithfulness, hallucination, answer relevance, retrieval precision, source citation
 - **Multi-Agent**: task decomposition, inter-agent handoff, goal completion, loop detection
 - **Conversational**: tone/style, safety, instruction following, escalation accuracy
@@ -58,7 +58,7 @@ Always include: **safety** (user-facing) and **task completion** (agentic).
 </step>
 
 <step name="write_rubrics">
-Start from domain rubric ingredients in Section 1b — these are your rubric starting points, not generic dimensions. Fall back to generic `ai-evals.md` dimensions only if Section 1b is sparse.
+Start from domain rubric ingredients in Section 1b — these are your rubric starting points, not generic dimensions. Fall back to generic `references/ai/evals.md` dimensions only if Section 1b is sparse.
 
 Format each rubric as:
 > PASS: {specific acceptable behavior in domain language}

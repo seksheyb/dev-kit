@@ -88,7 +88,7 @@ fi
 
 echo
 echo "== Check 5: a track that self-merged after a rejection is not trusted on its word =="
-if grep -qiE "before believing any .?Merged: yes|status --porcelain on the source branch" "$BW"; then
+if grep -qiE "before believing any .?Merged: yes|status --porcelain on the source branch|do not trust a .?Merged: yes" "$BW"; then
   echo "PASS: the skill tells the orchestrator to verify a post-rejection 'Merged: yes'"
 else
   echo "FAIL: $BW does not tell the orchestrator to re-check a 'Merged: yes' that followed a"

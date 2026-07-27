@@ -38,7 +38,8 @@ If the prompt contains a `<required_reading>` block, use the `Read` tool to load
 **Required finding classification:**
 - **BLOCKER** — pillar score 1 or a specific defect that breaks user task completion; must fix before shipping
 - **WARNING** — pillar score 2-3 or a defect that degrades quality but doesn't break flows; fix recommended
-Every scored pillar must have at least one specific finding justifying the score.
+- **BELOW BAR** — a real finding that clears neither the BLOCKER nor the WARNING bar; demoted to "Minor recommendations" but still recorded
+Every scored pillar must have at least one specific finding justifying the score. Every finding you write — in Priority Fixes, in Detailed Findings, or in Minor Recommendations — carries one of these three labels explicitly; there is no unlabelled finding.
 
 **Severity bar and ranking — no ceiling:**
 Every BLOCKER and every WARNING becomes an entry in the Priority Fixes list. The list has **no maximum length**: if eleven findings clear the bar, it has eleven entries. Truncating to a round number is a scoring failure, not brevity.
@@ -354,29 +355,39 @@ Write to: `$PHASE_DIR/reviews/UI-REVIEW.md` (i.e. `docs/milestones/<M>/phases/<N
    {...continue for every remaining BLOCKER and WARNING — do not stop here}
 
 ## Minor Recommendations
-- {finding that does not clear the severity bar} — {suggested change}
+- **[BELOW BAR]** {finding that does not clear the severity bar} — {suggested change}
 
 ---
 
 ## Detailed Findings
 
+<!-- Every finding below MUST start with an explicit severity label — [BLOCKER], [WARNING],
+     or [BELOW BAR] — using the same three-tier ladder declared in <adversarial_stance>:
+     BLOCKER (pillar score 1, or breaks task completion), WARNING (pillar score 2-3, or
+     degrades quality without breaking flow), BELOW BAR (clears neither bar — the finding
+     that would otherwise live only in "Minor recommendations"). An unlabelled finding is
+     an incomplete finding — do not write one. A finding labelled [BLOCKER] or [WARNING]
+     here must appear with the SAME label in the Priority Fixes list above if it appears
+     there at all; the two sections describe the same findings from two angles (rollup vs.
+     evidence) and must never disagree on severity. -->
+
 ### Pillar 1: Copywriting ({score}/4)
-{findings with file:line references}
+- **[BLOCKER|WARNING|BELOW BAR]** {finding with file:line reference}
 
 ### Pillar 2: Visuals ({score}/4)
-{findings}
+- **[BLOCKER|WARNING|BELOW BAR]** {finding}
 
 ### Pillar 3: Color ({score}/4)
-{findings with class usage counts}
+- **[BLOCKER|WARNING|BELOW BAR]** {finding with class usage counts}
 
 ### Pillar 4: Typography ({score}/4)
-{findings with size/weight distribution}
+- **[BLOCKER|WARNING|BELOW BAR]** {finding with size/weight distribution}
 
 ### Pillar 5: Spacing ({score}/4)
-{findings with spacing class analysis}
+- **[BLOCKER|WARNING|BELOW BAR]** {finding with spacing class analysis}
 
 ### Pillar 6: Experience Design ({score}/4)
-{findings with state coverage analysis}
+- **[BLOCKER|WARNING|BELOW BAR]** {finding with state coverage analysis}
 
 ---
 
@@ -431,7 +442,7 @@ For each of the 6 pillars:
 2. Compare against UI-SPEC.md (if exists) or abstract standards
 3. Score 1-4 with evidence
 4. Record findings with file:line references
-5. Classify each finding BLOCKER / WARNING / minor, and mark `needs_human_review: true` on any finding that turns on subjective judgment — whichever capture method this run used
+5. Classify each finding **[BLOCKER]** / **[WARNING]** / **[BELOW BAR]** — label it explicitly, in both Priority Fixes (if it clears the bar) and Detailed Findings, consistently — and mark `needs_human_review: true` on any finding that turns on subjective judgment — whichever capture method this run used
 
 ## Step 6: Registry Safety Audit
 
@@ -499,6 +510,7 @@ UI audit is complete when:
 - [ ] All 6 pillars scored with evidence
 - [ ] Registry safety audit executed (if shadcn + third-party registries present)
 - [ ] Every BLOCKER and WARNING listed as a priority fix with a concrete solution — ranked per `<adversarial_stance>`, not truncated to a fixed count
+- [ ] Every finding under `## Detailed Findings` carries an explicit `[BLOCKER]` / `[WARNING]` / `[BELOW BAR]` label, and that label matches the corresponding `## Priority Fixes` entry wherever the same finding appears there
 - [ ] `## Needs Human Review` section present, listing every `needs_human_review: true` finding (or explicitly "None")
 - [ ] UI-REVIEW.md written to the correct path
 - [ ] Structured return provided to the orchestrator

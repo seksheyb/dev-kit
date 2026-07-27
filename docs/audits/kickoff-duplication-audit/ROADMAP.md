@@ -45,20 +45,59 @@ Target size: **≤400 lines total** (from 1,396), typical prompt block 2–5 lin
 These are live bugs today regardless of any trimming, and each one holds KICKOFF lines
 hostage. Sources: REPORT.md §1 (D-findings that are skill-side) + §4b HIGH table.
 
-| # | Asset | Fix |
-|---|---|---|
-| 1.1 | `agents/planner.md` | Phase-context loader must ingest `PHASE/PATTERNS.md`, `PHASE/UI-SPEC.md`, `SPEC/AI-SPEC.md` (when present). Also close the `## Parallel Execution Map` template gap (§3.5 risk 2). |
-| 1.2 | `agents/pattern-mapper.md` | Fix the mis-named consumer claim (`:67`) — the real consumer today is `plan-review-goal-backward`; add planner once 1.1 ships. Add a non-empty-input precondition guard. |
-| 1.3 | `agents/project-researcher.md` | Add an assigned-file dispatch input so four parallel researchers stop overwriting each other. |
-| 1.4 | `agents/roadmapper.md` | Must *create* `REQUIREMENTS.md` (traceability section included), not just update it. Remove the Setup→…→Polish worked example under "Good Phase Patterns" (D5). |
-| 1.5 | `skills/finishing-a-development-branch` | "Push and Create PR" must actually run `gh pr create`. |
-| 1.6 | `skills/devex-review` | Define pass/fail threshold, emit a verdict; add read-only/no-commit restraint (also §4b MEDIUM). |
-| 1.7 | D2 — 4 lane skills (`python-pro`, `flutter-expert`, `django-expert`, +grep for others) | Reconcile code-first internal workflows with TDD: one line deferring test ordering to `test-driven-development` when co-loaded. |
-| 1.8 | D4 `skills/design-consultation` | Gate the Phase 6 "run design-html" closer on `claude_design_system_id` being bound. |
-| 1.9 | D6 `skills/code-documenter` | Remove the interactive "ask for format preference" requirement (`SKILL.md:25,120,129`); resolve docstring format from `docs/global/project/constitution.md` (same default path/fallback pattern as `analyze`/`converge`/`specify` — missing/unfilled constitution is not fatal), then existing codebase convention, then language default. No human turn required. |
-| 1.10 | D3 `agents/codebase-mapper` | Either drop the hard `Today's date:` requirement or make the date self-derivable; stop requiring an input no dispatch convention supplies. |
-| 1.11 | D8/§3.2 `agents/qa.md`, `agents/ui-auditor.md` | qa: none (guide text was wrong, rewrite already fixes it). ui-auditor: kill the "Top 3" template ceiling; wire `needs_human_review` beyond the browser branch. **Blocks the §3.2 cut.** |
-| 1.12 | D9 `commands/verify.md` chain | No asset change needed — KICKOFF's stale mechanism claim dies in Milestone 4. |
+| # | Asset | Fix | Status |
+|---|---|---|---|
+| 1.1 | `agents/planner.md` | Phase-context loader must ingest `PHASE/PATTERNS.md`, `PHASE/UI-SPEC.md`, `SPEC/AI-SPEC.md` (when present). Also close the `## Parallel Execution Map` template gap (§3.5 risk 2). | ✅ **Done** — see 1.1 note |
+| 1.2 | `agents/pattern-mapper.md` | Fix the mis-named consumer claim (`:67`) — the real consumer today is `plan-review-goal-backward`; add planner once 1.1 ships. Add a non-empty-input precondition guard. | ⬜ Open — unblocked now that 1.1 has shipped |
+| 1.3 | `agents/project-researcher.md` | Add an assigned-file dispatch input so four parallel researchers stop overwriting each other. | ✅ **Done** — `assigned_axis` |
+| 1.4 | `agents/roadmapper.md` | Must *create* `REQUIREMENTS.md` (traceability section included), not just update it. Remove the Setup→…→Polish worked example under "Good Phase Patterns" (D5). | ⬜ Open |
+| 1.5 | `skills/finishing-a-development-branch` | "Push and Create PR" must actually run `gh pr create`. | ✅ **Done** — ported from `ship:176` |
+| 1.6 | `skills/devex-review` | Define pass/fail threshold, emit a verdict; add read-only/no-commit restraint (also §4b MEDIUM). | ✅ **Done** |
+| 1.7 | D2 — 4 lane skills (`python-pro`, `flutter-expert`, `django-expert`, +grep for others) | Reconcile code-first internal workflows with TDD: one line deferring test ordering to `test-driven-development` when co-loaded. | ⬜ Open — superseded in scope by `roadmap-shortlisted-workflow.md` item 3 |
+| 1.8 | D4 `skills/design-consultation` | Gate the Phase 6 "run design-html" closer on `claude_design_system_id` being bound. | ✅ **Done** |
+| 1.9 | D6 `skills/code-documenter` | Remove the interactive "ask for format preference" requirement (`SKILL.md:25,120,129`); resolve docstring format from `docs/global/project/constitution.md` (same default path/fallback pattern as `analyze`/`converge`/`specify` — missing/unfilled constitution is not fatal), then existing codebase convention, then language default. No human turn required. | ✅ **Done** — full 3-tier, ask removed |
+| 1.10 | D3 `agents/codebase-mapper` | Either drop the hard `Today's date:` requirement or make the date self-derivable; stop requiring an input no dispatch convention supplies. | ✅ **Done** — Bash `date` fallback |
+| 1.11 | D8/§3.2 `agents/qa.md`, `agents/ui-auditor.md` | qa: none (guide text was wrong, rewrite already fixes it). ui-auditor: kill the "Top 3" template ceiling; wire `needs_human_review` beyond the browser branch. **Blocks the §3.2 cut.** | ✅ **Done** — §3.2 cut now unblocked |
+| 1.12 | D9 `commands/verify.md` chain | No asset change needed — KICKOFF's stale mechanism claim dies in Milestone 4. | ✅ **Resolved, no action** — confirmed against live files |
+| 1.13 | `agents/{ai-researcher,eval-planner,framework-selector}.md` (dev-kit-data-ai), `agents/domain-researcher.md` (dev-kit-core) | **New — same damage class as 1.3, different root cause.** All four "update `AI-SPEC.md` at `ai_spec_path`", but their `tools:` frontmatter grants `Write` only, not `Edit`. Write is a whole-file overwrite, so each clobbers its siblings' sections **even on the documented sequential chain**. Fix is a tool grant + an explicit read-modify-write contract; spans two plugins including frontmatter. | ⬜ **Open — new, HIGH** |
+| 1.14 | `skills/graphify/SKILL.md:295-301,369-372` | **New — scoping token exists but is never wired to the write.** N chunk subagents are dispatched in one message with byte-identical prompts; `CHUNK_NUM` is substituted only into a human-readable header, never into an output path, and the prompt never tells the subagent to Write at all — yet the collector treats the missing `.graphify_chunk_NN.json` as a read-only-agent-type failure. Same shape as 1.3/1.13. | ⬜ **Open — new** |
+
+**Provenance of 1.13/1.14:** both were surfaced by the structural sweeps during the 1.1/1.3
+fix wave, not by the original audit. They are live asset bugs but they hold **no KICKOFF text
+hostage**, so they do **not** gate this milestone's exit criterion below — they are filed here
+because this is the "fix live asset defects" milestone, not because the trim depends on them.
+
+**1.1 note — one contract decision made during the fix, flagged for review.** The
+`## Parallel Execution Map` gap could not be closed without reconciling a granularity
+mismatch: the planner emits **one plan file per track**, but the map's consumers
+(`gate-plan-review`, `sprint-execution`) assume **one plan file carrying many tracks**. The
+shipped resolution puts the map **once per phase, in the lowest-numbered plan**, with a
+one-line pointer in every other plan — duplicating the table into every plan would have
+recreated exactly the duplication this audit exists to remove. This is a contract decision
+rather than a bug fix, so it must be reviewed before the Milestone 4 step-7 planner-handoff
+rewrite ships against it (see Milestone 4 item 2).
+
+**1.9 note — shipped in two passes; the second closed the gap.** The fix wave first landed the
+narrower variant described in `roadmap-shortlisted.md` (a 2-tier unattended branch with the
+interactive ask retained), which did not satisfy this row. A follow-up pass replaced it with
+the 3-tier order specified above. As shipped now:
+- **Tier 1 constitution lookup added** — `docs/global/project/constitution.md` at its canonical
+  default path; when it names a documentation standard, that governs and later tiers are not
+  consulted. Absent / unfilled-template / silent all fall through and are explicitly not fatal,
+  matching how `analyze`, `converge`, and `specify` treat the same file.
+- **The ask is gone, not rescoped.** There is no interactive-vs-unattended split any more —
+  resolution is deterministic, so the skill behaves identically either way and cannot stall.
+  The `### MUST DO` bullet now states the resolution order; `### MUST NOT DO` forbids stalling
+  on a human choice and forbids overriding an explicit constitution standard.
+- **Tier 2 gained explicit style-config detection** (`numpydoc`/`sphinx` settings,
+  `.jsdoc.json`, `typedoc.json`) ahead of docstring sampling; ties fall through to tier 3
+  rather than resolving arbitrarily. Exclusions resolve the same way, so the whole Discover
+  step is unattended-safe rather than just the format half.
+- **Guarded:** `scripts/checks/skill-precondition-guards.sh` Check 2 asserts all three tiers,
+  the fallthrough clause, and that no "ask for format" bullet returns. Verified to fail against
+  both the pre-wave file and the interim 2-tier version.
+- **Still open (unchanged):** the constitution template has no dedicated docstring-format slot
+  (freeform prose only), so tier 1 is human-readable but not machine-checkable. Tracked below.
 
 **1.9 detail — `code-documenter/SKILL.md` resolution order (unattended-safe, no ask):**
 1. **Constitution** — load `docs/global/project/constitution.md` (default path per the `constitution` skill). If it names a documentation/docstring standard (naturally under an "Additional Constraints" or "Development Workflow" section), that governs.
@@ -144,7 +183,13 @@ The ~100-line down payment, already drafted in `rewrites/`. Order per REPORT §6
 1. step 2 `sdd-review-cto` + step 11 `converge` — zero-risk total deletions.
 2. step 15 close-out, step 7 planner handoff, step 10 qa — after Milestone 1 lands (the
    planner-gap warnings in the step-7 rewrite become deletable too once 1.1 ships).
-3. step 10 `ui-auditor` — only after 1.11.
+   **Added gate — review the 1.1 Parallel Execution Map contract decision before this ships.**
+   1.1 resolved a granularity mismatch by placing the map once per phase in the lowest-numbered
+   plan (pointer in the rest) rather than in every plan. The step-7 planner-handoff rewrite is
+   drafted against the *old* assumption that a plan file carries many tracks. Confirm the
+   shipped placement is the one you want, then write the rewrite against it — do not let the
+   draft and the asset disagree silently. See the 1.1 note in Milestone 1.
+3. step 10 `ui-auditor` — only after 1.11. **Unblocked: 1.11 has shipped.**
 4. step 10 `bugfix-wave` merge loop last, restoring the two cheap insurances the draft names
    (the detached-HEAD consequence clause; the re-attach bullet).
 
@@ -180,6 +225,20 @@ gap-compensation and path text all come out.
    roadmap creation before this closes.
 3. Record the six-category contract in `CROSSCHECK-BACKLOG.md`'s successor as the standing
    review rule for all future KICKOFF edits.
+4. **Correct the audit's own drifted counts before re-running.** The Milestone 1 fix wave
+   verified several cited figures against the live files and found them overstated or stale.
+   Known corrections: D3/1.10 claims "15 placeholders depend on it" — the real figure is
+   **9 `[YYYY-MM-DD]` occurrences + 7 `[date]` footer slots = 16 date-dependent slots**;
+   `codebase-mapper.md` frontmatter `tools:` is at `:4`, not `:5`; the Option 2 body in
+   `finishing-a-development-branch` spans `:121-128`, not `:121-126`. All ui-auditor refs
+   (`:20,:36,:117,:327,:426,:451`) and the design-consultation / code-documenter refs were
+   confirmed exact. Sweep REPORT.md and RE-VERIFICATION.md for the same class of arithmetic
+   drift — a re-run that grades against stale counts will mis-report closure.
+5. **Wire the three guard scripts into whatever runner Milestone 6 establishes.**
+   `scripts/checks/{planning-agent-guards,skill-precondition-guards,skill-pr-promise-guards}.sh`
+   were added by the Milestone 1 fix wave and each was verified to fail against the pre-fix
+   tree at `04c5cbf` and pass against the fix. They are run-by-hand today because this repo has
+   no CI; they are the only mechanical regression guards the audit has produced.
 
 **Exit criterion:** audit-clean + at least stages 0–3 executed successfully from the thin prompts.
 

@@ -12,6 +12,8 @@ You are a senior product designer doing a live design audit AND the engineer who
 **Artifact paths are configurable.** Defaults below use `docs/milestones/<M>/reports/design/` — use whatever output directory the dispatch prompt provides.
 
 **Division of labor:** this is the milestone-level, whole-surface pass — dispatched once at milestone close-out, not per phase. Before Phase 1, read each phase's `docs/milestones/<M>/phases/<NN>-<slug>/reviews/UI-REVIEW.md` (from `ui-auditor`) produced during this milestone; treat contract-conformance findings already scored there as settled and don't re-litigate them — spend the audit on what only a live, cross-page pass can see: consistency across pages, AI-slop, interaction feel, and the fix loop. If any phase plan went through `plan-review-design`, also check its recorded design decisions against what actually shipped.
+
+**Carry forward `## Needs Human Review`.** Each UI-REVIEW.md ends with a `## Needs Human Review` section listing the findings `ui-auditor` marked `needs_human_review: true` — items it could not settle from static evidence because they turn on taste, brand fit, or how something feels in use. These are the one exception to "already scored there is settled": they were deferred to *this* pass. Collect them across all phases into a working list before Phase 1, resolve each one against the live site, and give every one an explicit verdict in your report — confirmed defect (with a fix), or judged acceptable (with the reason). Leaving a carried-forward item unaddressed is an incomplete audit. Phases whose audit ran code-only (no dev server) typically contribute the most of these.
 </role>
 
 <flow_driven_defect_lens>
@@ -229,6 +231,10 @@ Per-category grades: A intentional/polished/delightful; B solid fundamentals, mi
 Grade computation: each category starts at A; each High finding drops one letter; each Medium drops half; Polish findings noted but don't affect grade; floor F.
 
 Weights: Visual Hierarchy 15%, Typography 15%, Spacing & Layout 15%, Color & Contrast 10%, Interaction States 10%, Responsive 10%, Content Quality 10%, AI Slop 5%, Motion 5%, Performance Feel 5%.
+
+### Carried-Forward Human-Review Items
+
+The report MUST include a **Carried-Forward Human-Review Items** section listing every item collected from the phases' `## Needs Human Review` sections (see `<role>`), each with its source phase and your verdict: **confirmed** (becomes a normal finding, triaged and fixed like any other), or **acceptable** (with the reason it reads fine live). If no phase flagged anything, write "None carried forward." Do not silently drop an item — `ui-auditor` flagged it precisely because only this pass can answer it.
 
 ### Design Critique Format
 

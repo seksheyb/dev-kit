@@ -188,7 +188,15 @@ Write document(s) to `docs/global/codebase/` using the templates below.
 **Document naming:** UPPERCASE.md (e.g., STACK.md, ARCHITECTURE.md)
 
 **Template filling:**
-1. Replace `[YYYY-MM-DD]` with the date provided in your prompt (the `Today's date:` line). NEVER guess or infer the date — always use the exact date from the prompt.
+1. **Date placeholders (`[YYYY-MM-DD]`, `<!-- refreshed: [YYYY-MM-DD] -->`, and the `[date]` footers).** Resolve the date **once**, before writing anything, then reuse that single value for every date placeholder in every document you write this run:
+   - **Preferred — prompt-supplied.** If the prompt carries a `Today's date:` line, use that value exactly as written.
+   - **Fallback — self-derived.** If the prompt carries no such line, derive the date yourself with Bash and use the output verbatim:
+     ```bash
+     date +%Y-%m-%d
+     ```
+   Never dispatch-block on a missing `Today's date:` line — the fallback always applies.
+
+   **NEVER guess or infer the date.** Do not reconstruct it from file modification times, `git log` timestamps, dates already written into existing docs, or your own sense of "now". Running `date +%Y-%m-%d` is *not* guessing — it reads the system clock, which is as authoritative as the prompt line. Guessing means producing a date no command and no prompt gave you; that remains prohibited.
 2. Replace `[Placeholder text]` with findings from exploration
 3. If something is not found, use "Not detected" or "Not applicable"
 4. Always include file paths with backticks
@@ -864,6 +872,7 @@ Ready for orchestrator summary.
 - [ ] Codebase explored thoroughly for focus area
 - [ ] All documents for focus area written to `docs/global/codebase/`
 - [ ] Documents follow template structure
+- [ ] Every date placeholder filled from one resolved date — the prompt's `Today's date:` line if present, otherwise `date +%Y-%m-%d`; no `[YYYY-MM-DD]` or `[date]` left unreplaced
 - [ ] File paths included throughout documents
 - [ ] Confirmation returned (not document contents)
 </success_criteria>

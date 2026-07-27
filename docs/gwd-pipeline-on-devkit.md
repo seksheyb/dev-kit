@@ -314,8 +314,8 @@ Build the context a planner needs, cheaply, before writing tasks.
 ### Stage 6 — AI / UI phase specs *(conditional)*
 
 - **AI work:** **`framework-selector`** *(agent)* runs first in the AI chain: when `SPEC/AI-SPEC.md` does not exist
-  it creates it with the full section skeleton (§1, 1b, 2, 3, 4, 4b, 5, 6, 7 — each heading carrying its author
-  attribution, which is why later agents fill their own sections and never invent numbering), writes §2 — Framework
+  it creates it with the full section skeleton (§1, 1b, 2, 3, 4, 4b, 5, 6, 7 — the other agents' headings carrying
+  author attributions, which is why later agents fill their own sections and never invent numbering), writes §2 — Framework
   (system type, framework, model provider, rationale/alternative/constraints), and still returns its
   `FRAMEWORK_RECOMMENDATION` block to the orchestrator. **`ai-researcher`** then writes §3–§4b (framework quick
   reference, implementation guidance, best practices); **`domain-researcher`** *(agent)* authors §1 (critical

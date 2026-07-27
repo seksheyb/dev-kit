@@ -88,9 +88,11 @@ Per gap: Write test file. One focused test per requirement behavior. Arrange/Act
 </step>
 
 <step name="run_and_verify">
-Execute each test. If passes: record success, next gap. If fails: enter debug loop.
+Execute each test. If fails: enter debug loop. If passes, classify per `<adversarial_stance>` before recording:
+- **Clean pass** — the test is deterministic, environment-independent, and exercises full coverage of the requirement's behavioral edge. Record as FILLED, no caveat.
+- **Caveated pass (WARNING)** — the test passes but only with partial coverage, an environment-specific dependency, or non-deterministic behavior (flaky, timing-sensitive, requires a specific external state). Record as FILLED **with a caveat string** describing exactly what's incomplete — never record this identically to a clean pass.
 
-Run every test. Never mark untested tests as passing.
+Run every test. Never mark untested tests as passing. Never silently drop a caveat to make a gap look cleanly resolved.
 </step>
 
 <step name="debug_loop">
@@ -109,10 +111,10 @@ After 3 failed iterations: ESCALATE with requirement, expected vs actual behavio
 </step>
 
 <step name="report">
-Resolved gaps: `{ task_id, requirement, test_type, automated_command, file_path, status: "green" }`
+Resolved gaps: `{ task_id, requirement, test_type, automated_command, file_path, status: "green", caveat: null | "{what's incomplete}" }` — `caveat` is non-null exactly when `<step name="run_and_verify">` classified the pass as caveated (WARNING tier).
 Escalated gaps: `{ task_id, requirement, reason, debug_iterations, last_error }`
 
-Return one of the three formats below.
+Return one of the three formats below. **Every resolved gap with a non-null `caveat` MUST also appear in the report's Caveats section (see `<structured_returns>`) — a caveated pass reported only as plain "green" is the WARNING tier going unwired, exactly the failure this classification exists to prevent.**
 </step>
 
 </execution_flow>
@@ -137,6 +139,14 @@ Return one of the three formats below.
 |---------|-------------|---------|--------|
 | {id} | {req} | `{cmd}` | green |
 
+### Caveats ({N} — WARNING tier, omit section only if zero)
+<!-- Every resolved gap whose `caveat` is non-null goes here — a caveated pass is a
+     WARNING per <adversarial_stance>, not a clean green. Never fold it silently
+     into the table above with no trace of the caveat. -->
+| Task ID | Requirement | Caveat |
+|---------|-------------|--------|
+| {id} | {req} | {partial coverage / environment-specific / non-deterministic — specifics} |
+
 ### Files for Commit
 {test file paths}
 ```
@@ -153,6 +163,11 @@ Return one of the three formats below.
 | Task ID | Requirement | File | Command | Status |
 |---------|-------------|------|---------|--------|
 | {id} | {req} | {file} | `{cmd}` | green |
+
+### Caveats ({N} — WARNING tier, omit section only if zero)
+| Task ID | Requirement | Caveat |
+|---------|-------------|--------|
+| {id} | {req} | {partial coverage / environment-specific / non-deterministic — specifics} |
 
 ### Escalated
 | Task ID | Requirement | Reason | Iterations |
@@ -188,6 +203,7 @@ Return one of the three formats below.
 - [ ] Tests follow project conventions
 - [ ] Tests verify behavior, not structure
 - [ ] Every test executed — none marked passing without running
+- [ ] Every passing test classified clean vs. caveated (partial coverage / environment-specific / non-deterministic); every caveat surfaced in the report's Caveats section, never folded silently into a plain green
 - [ ] Implementation files never modified
 - [ ] Max 3 debug iterations per gap
 - [ ] Implementation bugs escalated, not fixed

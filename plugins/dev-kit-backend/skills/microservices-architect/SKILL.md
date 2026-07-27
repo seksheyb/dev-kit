@@ -9,7 +9,7 @@ metadata:
   role: architect
   scope: system-design
   output-format: architecture
-  related-skills: devops-engineer, kubernetes-specialist, graphql-architect, architecture-designer, monitoring-expert
+  related-skills: devops-engineer, kubernetes-specialist, graphql-architect, architecture-designer, monitoring-expert, diagram
 ---
 
 # Microservices Architect
@@ -152,7 +152,7 @@ readinessProbe:
 ## Output Templates
 
 When designing microservices architecture, provide:
-1. Service boundary diagram with bounded contexts
+1. Service boundary diagram with bounded contexts — invoke the `diagram` skill via the Skill tool and follow its guidance for authoring, rendering, and file placement; this skill is responsible for which services, bounded contexts, and integration points the diagram must show
 2. Communication patterns (sync/async, protocols)
 3. Data ownership and consistency model
 4. Resilience patterns for each integration point

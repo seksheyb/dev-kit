@@ -9,7 +9,7 @@ metadata:
   role: architect
   scope: system-design
   output-format: architecture
-  related-skills: python-pro, database-optimizer, monitoring-expert, api-designer
+  related-skills: python-pro, database-optimizer, monitoring-expert, api-designer, diagram
 ---
 
 # RAG Architect
@@ -187,7 +187,7 @@ print(results)
 ## Output Templates
 
 When designing RAG architecture, deliver:
-1. System architecture diagram (ingestion + retrieval pipelines)
+1. System architecture diagram (ingestion + retrieval pipelines) — invoke the `diagram` skill via the Skill tool and follow its guidance for authoring, rendering, and file placement; this skill is responsible for which components and data flows the diagram must show
 2. Vector database selection with trade-off analysis — or, when `AI-SPEC.md` Section 2 already records the stack, the AI-SPEC stack decision plus validation against this system's requirements
 3. Chunking strategy with examples and rationale
 4. Retrieval pipeline design (query → results flow)

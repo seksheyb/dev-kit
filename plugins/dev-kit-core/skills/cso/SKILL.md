@@ -260,7 +260,7 @@ Mark each finding `VERIFIED` (confirmed via code tracing), `UNVERIFIED` (pattern
 
 **Variant Analysis:** when a finding is VERIFIED, grep the entire codebase for the same vulnerability pattern. One confirmed SSRF means there may be 5 more. Report variants as separate findings linked to the original.
 
-**Parallel verification:** for each candidate finding, launch an independent verification subagent with fresh context — give it only the file path + line number and the FP rules, and ask it to independently score 1-10. Discard findings scored below the mode's gate. If subagents are unavailable, self-verify by re-reading the code with a skeptic's eye and note "Self-verified".
+**Parallel verification:** for each candidate finding, launch an independent verification subagent with fresh context — give it only the file path + line number and the FP rules, and ask it to independently score 1-10. Discard findings scored below the mode's gate. If subagents are unavailable, self-verify by re-reading the code with a skeptic's eye — but mark that finding's Status as `SELF-VERIFIED`, not `VERIFIED`, in Phase 13/14 output. A same-context re-read shares the reasoning blind spots that produced the finding in the first place; it must never read identically to a finding an independent subagent actually confirmed.
 
 ## Phase 13: Findings Report + Remediation
 
@@ -278,7 +278,7 @@ Mark each finding `VERIFIED` (confirmed via code tracing), `UNVERIFIED` (pattern
 ## Finding N: [Title] — [File:Line]
 * Severity: CRITICAL | HIGH | MEDIUM
 * Confidence: N/10
-* Status: VERIFIED | UNVERIFIED | TENTATIVE
+* Status: VERIFIED | SELF-VERIFIED | UNVERIFIED | TENTATIVE
 * Category: [Secrets | Supply Chain | CI/CD | Infrastructure | Integrations | LLM Security | Skill Supply Chain | OWASP A01-A10]
 * Description / Exploit scenario / Impact / Recommendation (specific fix with example)
 ```

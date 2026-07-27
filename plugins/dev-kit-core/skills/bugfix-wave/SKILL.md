@@ -55,11 +55,16 @@ wave anyway — so it has nothing per-wave to defer to an orchestrator turn.
 Self-merge works, but only under conditions the old version of this skill did not meet — which
 is why it used to half-fail and need a straggler pass. Both are verified:
 
-1. **The orchestrator must not hold the source branch checked out.** Git allows one checkout
-   per branch, so a track pushing into a checked-out branch is rejected with
-   `! [remote rejected] (branch is currently checked out)`. That is git declining, not agent
-   flakiness. Phase 2 has the orchestrator `git checkout --detach` before dispatching, which
-   frees the ref.
+1. **No working tree may hold the source branch checked out.** Git allows one checkout per
+   branch across *all* worktrees, so a track pushing into a branch checked out anywhere is
+   rejected with `! [remote rejected] (branch is currently checked out)`. That is git
+   declining, not agent flakiness. Phase 2 has the orchestrator `git checkout --detach` before
+   dispatching, which frees the ref — **but only if the orchestrator's own working tree was
+   the one holding it.** When a working tree you do not own holds it (the primary repo
+   directory, or a leftover agent worktree), no detach you can run frees it, self-merge is off
+   the table for that whole run, and Phase 3 reconciles every track centrally instead. That is
+   a supported outcome, not a broken one; the Edge Cases entry on
+   `"branch is currently checked out"` tells the causes apart.
 2. **Concurrent tracks race on the ref.** The first push fast-forwards; the second is rejected
    as non-fast-forward. The §2.3 merge protocol makes each track fetch, merge, and retry.
 
@@ -380,7 +385,9 @@ other tracks merging at the same time:
    verification (their changes are now in your tree), and go back to step 1. Retry up to
    **5 times**.
 4. **Rejected with "branch is currently checked out"** → stop immediately. Do not try to work
-   around it. Report `Merged: no` with that exact reason; the orchestrator reconciles you.
+   around it. Report `Merged: no` and quote the rejection **verbatim** in `Merge note`; the
+   orchestrator reconciles you. This is a normal outcome with several possible causes, none of
+   them yours to diagnose or fix from inside a worktree — it is not a failure on your part.
 5. **A conflict lands in a file you do NOT own** (see Boundaries) → `git merge --abort`,
    leave your branch unmerged, report `Merged: no` and list the file under "Conflicts handed
    off". Never resolve another track's file.
@@ -496,6 +503,13 @@ script logs this at the wave boundary. Check those tracks specifically after ste
 fixes may be correct but applied to the wrong base, and merging both can produce a silently
 wrong result rather than a conflict. Re-dispatch rather than hand-patch when in doubt.
 
+**When a whole wave failed to merge** — the usual cause being a source branch held checked out
+by a working tree you do not own (see Edge Cases) — the blast radius is wider than the
+file-conflict case above: *every* later wave opened with `git reset --hard <source-branch>` on
+a base carrying none of the earlier wave's fixes, not just the tracks deferred for a conflict.
+Reconcile the earlier wave first (Phase 3.1 step 1), then re-examine every later track rather
+than only the deferred ones.
+
 ### 3.3 — After final wave
 
 Report to the user:
@@ -556,10 +570,30 @@ Worktrees don't share `node_modules`. If the subagent's code changes are logical
 the error is just missing dependencies, accept the merge. The real typecheck runs in the main
 worktree.
 
-**Subagent reports `Merged: no` with "branch is currently checked out"**: you skipped the
-`git checkout --detach` in Phase 2, so every track in that wave hit the same wall. Their work
-is intact on their branches. Detach, reconcile all of them via Phase 3.1 step 1, and check
-whether later waves built on the stale base (§3.2).
+**Subagent reports `Merged: no` with "branch is currently checked out"**: git refuses a push
+into a branch that is checked out **in any working tree**, whether or not Phase 2's detach was
+performed. The symptom therefore has several distinct causes, and asserting one before you
+look sends you hunting for a mistake you may not have made.
+
+Start from the benign reading: the track's commits are intact on its branch, and "a subagent
+could not self-merge" is an **expected, benign outcome** in a run the orchestrator reconciles
+centrally — Phase 3.1 step 1 exists for exactly this. It becomes a failure only if you leave
+it unreconciled.
+
+To tell the causes apart, run `git worktree list` and find the entry whose bracketed branch is
+the source branch. That path names the blocker:
+
+| `git worktree list` shows the source branch held by | Cause | Remedy |
+|---|---|---|
+| **Your own working tree** | You skipped the `git checkout --detach` in §2.2 — or you re-attached at Phase 3.1 step 4 while a straggler was still pushing. Every track in the wave hits the same wall | Detach again, then reconcile all of them via Phase 3.1 step 1 |
+| **The primary worktree** (the main repo working directory — the first line of `git worktree list`) and it is not yours | Legitimate and outside your control: a human, or the parent orchestrator that dispatched you, holds the branch there. Detaching in *your* tree frees nothing | Nothing to repair. Merge every track centrally via Phase 3.1 step 1 and report the run as reconciled, not as an error |
+| **A leftover `.claude/worktrees/agent-*` worktree** | Residue from a crashed prior run — §2.0's preflight is what catches this before dispatch | Remove the stale worktree (Phase 3.1 step 5 commands), then reconcile |
+| **Nothing** — no worktree lists it | The holder was released between the push and your check, or the rejection text was misread. Re-read the track's `Merge note` verbatim before acting | Retry the merge yourself via Phase 3.1 step 1; if it now succeeds, there is nothing else to do |
+
+In every case the work is on the branches and the reconciliation is the same (Phase 3.1
+step 1). In every case you must also check whether later waves built on a stale base (§3.2):
+a wave that could not self-merge is invisible to the next wave's `git reset --hard
+<source-branch>`.
 
 **Subagent can't delete its branch**: expected — it is checked out in the track's own
 worktree. The orchestrator deletes it in Phase 3.1 step 6, after the worktree is removed.

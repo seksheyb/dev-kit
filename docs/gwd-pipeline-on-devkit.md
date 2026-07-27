@@ -37,15 +37,15 @@ cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it desc
 
 | # | Stage | Primary dev-kit assets | In → Out |
 |---|-------|------------------------|----------|
-| **0** | Bootstrap & governance | `constitution` · *(legacy)* `spec-miner` → `gate-reverse-engineer` · *(existing docs)* `doc-classifier` → `doc-synthesizer` · *(existing code)* `cso` · `graphify` | repo/PRD → `docs/global/project/constitution.md`, recovered SDD/PRD/ADRs, `docs/milestones/<M>/reports/security/`, `docs/state/graphs/graph.json` |
-| **1** | Requirements & product framing | `brainstorming` · `specify` (generate + clarify) · `assumption-mapping` → `backlog-grooming` · `market-researcher` · `spec-review-cpo` | PRD (or `docs/global/requirements/BACKLOG.md` for milestone 2+) → `SPEC/spec.md` (+ `US-xxx` story bank) + locked Scope Decision Record + updated `docs/global/requirements/BACKLOG.md` |
+| **0** | Bootstrap & governance | `constitution` · *(legacy)* `spec-miner` → `gate-reverse-engineer` · *(existing docs)* `doc-classifier` → `doc-synthesizer` · *(existing code)* `cso` · `graphify` | repo/PRD → `docs/global/project/constitution.md`, `docs/global/project/PROJECT.md`, recovered SDD/PRD/ADRs, `docs/milestones/<M>/reports/security/`, `docs/state/graphs/graph.json` |
+| **1** | Requirements & product framing | `brainstorming` · `specify` (generate + clarify) · `assumption-mapping` → `backlog-grooming` · `market-researcher` · `spec-review-cpo` | PRD (or `docs/global/requirements/BACKLOG.md` for milestone 2+) → `SPEC/spec.md` (+ `US-xxx` story bank) + `SPEC/checklists/requirements.md` + locked Scope Decision Record + updated `docs/global/requirements/BACKLOG.md` |
 | **2** | Architecture & tech stack | `architecture-designer` · `diagram` · `sdd-review-cto` | requirements → `docs/global/architecture/SDD.md` + ADRs |
-| **3** | Research & roadmap | `project-researcher` ×4 → `research-synthesizer` · `roadmapper` | requirements + research → `docs/milestones/<M>/ROADMAP.md` (vertical slices) + `docs/state/STATE.md` |
+| **3** | Research & roadmap | `project-researcher` ×4 → `research-synthesizer` · `roadmapper` | requirements + research → `docs/milestones/<M>/ROADMAP.md` (vertical slices) + `docs/milestones/<M>/REQUIREMENTS.md` + `docs/state/STATE.md` |
 | **4** | Design system *(if UI)* | `design-consultation` → `design-html`[^plan-review-design] | product → `docs/global/design/DESIGN.md` |
 | **5** | Phase discovery | `codebase-mapper` ×4 · `assumptions-analyzer` · `phase-researcher` · `advisor-researcher` · `pattern-mapper` · `graphify` (query) | phase → `PHASE/CONTEXT.md`, `PHASE/PATTERNS.md`, `PHASE/RESEARCH.md`, codebase maps |
 | **6** | AI / UI phase specs *(conditional)* | *(AI)* `framework-selector` → `ai-researcher` → `domain-researcher` → `eval-planner` (data-ai lane) · *(UI)* `ui-researcher` → `ui-checker` | phase → `SPEC/AI-SPEC.md` / `PHASE/UI-SPEC.md` |
 | **7** | Plan the phase | `writing-plans` · `planner` · `plan-review` (cmd) → `plan-reviewer` → 4 lenses (incl. `plan-review-design`) · `gate-plan-review` · `analyze` | context → `PHASE/<NN>-<MM>-PLAN.md` (waves + tracks), reviewed & complexity-gated |
-| **8** | Execute the phase | `using-git-worktrees` · `sprint-execution` · `test-driven-development` · `dispatching-parallel-agents` · `fullstack-guardian`/`secure-code-guardian` · `refactoring-specialist` · `guard` · `design-handoff` (Claude Design → codebase bridge, when UI in scope) · `verification-before-completion` · **lane skills** | plan → code + tests, per-track parallel |
+| **8** | Execute the phase | `using-git-worktrees` · `sprint-execution` · `test-driven-development` · `dispatching-parallel-agents` · `fullstack-guardian`/`secure-code-guardian` · `refactoring-specialist` · `guard` · `design-html` (per-phase screens, when UI in scope) · `design-handoff` (Claude Design → codebase bridge, when UI in scope) · `verification-before-completion` · **lane skills** | plan → code + tests, per-track parallel |
 | **9** | Debug *(as needed)* | `debug` (cmd) → `debugger` ← `systematic-debugging` · `learn` | failure → root-cause fix + regression test |
 | **10** | Adversarial review ↔ fix loop | `review` (cmd) → `code-review-gate` (round) ↔ `bugfix-wave` · `code-review-protocol` · `qa` (cmd/agent) · `ui-auditor` | code → fixes (loop ≤6) |
 | **11** | Verify the goal | `verify` (cmd) → `verifier` · `converge` · `integration-checker` · `nyquist-auditor` · `gate-automation` ← `test-master`/`playwright-expert` · *(AI)* `eval-auditor` (data-ai lane) | code → `PHASE/VERIFICATION.md`, gaps closed, Playwright/Maestro flows, `PHASE/reviews/EVAL-REVIEW.md` |
@@ -111,7 +111,7 @@ dev-kit supplies the assets, not the branch logic.)
 | `plan-review-design` (S7) | The plan has any UI scope | Auto-reports "not applicable", verdict APPROVE, completeness N/A |
 | `plan-review-devex` (S7) | The plan has a developer-facing surface (API/CLI/SDK) | Auto-reports "not applicable", auto-approve N/A |
 | `plan-review-eng` / `-goal-backward` (S7) | **Always** (unconditional lenses) | — |
-| `spec-review-cpo` (S1) | A spec exists and a real scope/strategy call is needed before planning | Skip; no strategic/scope challenge happens for this spec at all — nothing downstream re-checks it |
+| `spec-review-cpo` (S1) | **Always** — once per spec, before any plan exists (the pipeline's only product/strategy gate) | Not skippable in practice — nothing downstream re-checks scope, so skipping it means no strategic/scope challenge ever happens for this spec |
 | `docs/global/requirements/BACKLOG.md` write (part of S1's `spec-review-cpo`) | The posture/milestone-split work identifies anything descoped from this milestone | Skip — nothing writes/updates the file this run; a milestone that descopes nothing leaves it untouched |
 | **Milestone loop** (after S15) | `docs/global/requirements/BACKLOG.md` has Now/Next items after close-out | Skip — project ends here; the backlog (if any) sits idle until someone manually starts a new milestone |
 | `refactoring-specialist` (S8) | A track touches existing code | Skip; new-file tracks don't need it |
@@ -122,6 +122,7 @@ dev-kit supplies the assets, not the branch logic.)
 | `ui-auditor` (S10) | Phase shipped UI | Skip; `code-review-gate` + `qa` still run |
 | `nyquist-auditor` (S11) | `verifier` Step 6d found requirements with no automated test coverage (`validation_gaps` non-empty) | Skip; nothing to fill |
 | `gate-automation` (S11) | Sprint diff added/changed **primary** user flows | No new flows required (internal-only changes excluded) |
+| `integration-checker` (S11) | The milestone has 2+ completed phases | Skip on the milestone's first phase — nothing cross-phase exists yet |
 | `eval-auditor` (S11) | The phase built an AI system with an AI-SPEC eval contract | Skip |
 | `cso` (S0) | Entry path has existing code — Legacy or Continuing-milestone | Skip on a first-milestone Greenfield entry; nothing to scan yet |
 | `design-reviewer` (full/deep) + `accessibility-tester` (S12a) | Milestone shipped **UI** anywhere across its phases | Skip both; a CLI/API-only milestone has no rendered surface to audit |
@@ -132,7 +133,7 @@ dev-kit supplies the assets, not the branch logic.)
 | `cso` (S12b) | Always runs (`--diff` mode, scoped to this milestone's accumulated changes) | — |
 | `security-auditor` (S12b) | Always runs; **branches internally** | With a threat model → verifies mitigations; without → falls back directly to `security-reviewer`'s general methodology |
 | **Ship mode** (S13) | Automated (`ship` → `land-and-deploy`) vs manual (`finishing-a-development-branch`) — an operator choice, not a repo predicate | Pick one path; both end in a merged/deployed or explicitly-kept branch |
-| Infra deploy specifics (S13) | Deploy platform detected (Fly/Render/Vercel/Netlify/GH Actions) | GitLab/unknown → `land-and-deploy` stops, hands off to manual merge |
+| Infra deploy specifics (S13) | Deploy platform detected (Fly/Render/Vercel/Netlify/Heroku via `Procfile`/Railway via `railway.json`·`railway.toml`/GH Actions) | GitLab/unknown → `land-and-deploy` stops, hands off to manual merge |
 | `incident-responder` (S15) | An active production incident is underway | Skip |
 | **Lane skills** (S8 mostly) | The project's actual stack matches the lane | Unmatched lanes never fire — a Python+React app invokes `python-pro`/`react-expert`, not `golang-pro`/`swift-expert` |
 
@@ -150,7 +151,9 @@ Establish the rules of the game before any spec exists, and recover ground truth
 
 1. **`constitution`** — write/amend `docs/global/project/constitution.md` (semantically versioned project principles).
    Everything downstream treats it as binding: `analyze` flags any conflict with a MUST principle as CRITICAL,
-   `converge` emits constitution-violation remediation first.
+   `converge` emits constitution-violation remediation first. Stage 0 also writes `docs/global/project/PROJECT.md` —
+   what the project is, who it's for, the milestone's success definition, hard constraints — consumed downstream by
+   `market-researcher` (Stage 1, as project context) and `roadmapper` (Stage 3, as a required input).
 2. **Legacy path** *(inherited/undocumented repo)* — **`spec-miner`** reverse-engineers observed requirements in
    EARS format from the code itself; **`gate-reverse-engineer`** promotes that into a "Legacy SDD", "Legacy PRD",
    and retrospective ADRs the rest of the pipeline can plan against.
@@ -233,7 +236,9 @@ input is a fresh PRD. **Every milestone after that:** input is `docs/global/requ
    but never commit.
 2. **`research-synthesizer`** — reads all four, writes & commits `docs/milestones/<M>/research/SUMMARY.md`, derives suggested phase structure.
 3. **`roadmapper`** — derive phases from requirement categories & dependencies (never a "Setup→Core→Polish"
-   template), enforce **vertical slices**, validate 100% requirement coverage, write `docs/milestones/<M>/ROADMAP.md` + initialize
+   template), reading `docs/global/project/PROJECT.md` (core value, constraints) among its required inputs; enforce
+   **vertical slices**, validate 100% requirement coverage, write `docs/milestones/<M>/ROADMAP.md` + create
+   `docs/milestones/<M>/REQUIREMENTS.md` (phase mappings, traceability section included) + initialize
    `docs/state/STATE.md`.
 
 > **Boundary ‖** — a natural `/clear` point after the roadmap.
@@ -320,7 +325,7 @@ Build the context a planner needs, cheaply, before writing tasks.
   **`eval-auditor`**, does **not** run here: it is an audit of an
   *implemented* phase and its `<input>` takes the phase's `PHASE/<NN>-<MM>-SUMMARY.md` files, which don't exist until
   Stage 8 — it fires at Stage 11 instead. **`rag-architect`** / **`prompt-engineer`** / **`ml-pipeline`** etc.
-  supply the build methodology. All four of
+  supply the build methodology when the tracks execute at Stage 8 — routed there, not dispatched here. All four of
   `framework-selector`/`ai-researcher`/`domain-researcher`/`eval-planner` check Stage 5's `PHASE/RESEARCH.md` (if it
   exists) before researching, so this lane never duplicates Stage 5's research or picks an un-reconciled stack for
   the same phase.
@@ -385,8 +390,9 @@ the lighter tier, with the full set still available as an explicit escalation.
    **`secure-code-guardian`** (auth/input/crypto), **`refactoring-specialist`** (injected into any track touching
    existing code — behavior-preserving, one move at a time).
 6. **`guard`** — destructive-command warnings + edit-scope freeze when a track touches prod or shared surface.
-7. **`design-handoff`** *(UI tracks only)* — bridges a `design-html`-built Claude Design screen into this track's
-   actual codebase: translates `docs/global/design/DESIGN.md` into a hex/typography quick-reference and copy-paste component prompts
+7. **`design-handoff`** *(UI tracks only)* — **`design-html`** first fires its standalone Stage-8 invocation here,
+   building this phase's screen in its own screen-scoped Claude Design project bound to the Stage 4 system id (see
+   Stage 4); `design-handoff` then bridges that screen into this track's actual codebase: translates `docs/global/design/DESIGN.md` into a hex/typography quick-reference and copy-paste component prompts
    for the lane skill below to build against, since a codebase-side implementer has no automatic access to the
    Claude Design system's context (`get_claude_design_prompt` only auto-loads that for work staying inside Claude
    Design itself). Runs once its first output is needed, per phase — not eagerly at Stage 4, since at that point

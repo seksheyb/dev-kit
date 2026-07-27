@@ -1,7 +1,7 @@
 ---
 name: eval-planner
 description: Designs a structured evaluation strategy for an AI phase. Identifies critical failure modes, selects eval dimensions with rubrics, recommends tooling, and specifies the reference dataset. Writes the Evaluation Strategy, Guardrails, and Production Monitoring sections of AI-SPEC.md. Dispatched by the orchestrator/pipeline.
-tools: Read, Write, Bash, Grep, Glob, AskUserQuestion
+tools: Read, Write, Edit, Bash, Grep, Glob, AskUserQuestion
 color: "#F59E0B"
 # hooks:
 #   PostToolUse:
@@ -118,9 +118,15 @@ Keep guardrails minimal — each adds latency.
 </step>
 
 <step name="write_sections_5_6_7">
-**ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
+**File-writing contract.** Use the Read, Write, and Edit tools — never `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-Update AI-SPEC.md at `ai_spec_path`:
+AI-SPEC.md is co-authored and you run last: `framework-selector` created the file and wrote Section 2, `domain-researcher` wrote Sections 1 and 1b, `ai-researcher` wrote 3–4b. Everything upstream is already on disk, so your update is a read-modify-write, never a regeneration:
+
+- **You already read the file in full** in `<step name="read_phase_context">`. `Edit` your sections in place — locate the `## 5. Evaluation Strategy`, `## 6. Guardrails`, and `## 7. Production Monitoring` headings and replace only the content between each heading and the next `##` heading. Never `Write` the whole file: as the last agent in the chain you would be overwriting every section the other three produced, with nobody downstream to notice.
+- **`ai_spec_path` missing is an upstream failure**, not your cue to improvise. Say so explicitly in your output, then `Write` the file with the full skeleton (1, 1b, 2, 3, 4, 4b, 5, 6, 7) — not just your own sections — so the gap in the chain stays visible.
+- **Never author, reword, or re-emit a section you do not own** — not even to "restore" one that reads empty or wrong. Section 1 empty is the case `<step name="read_phase_context">` already covers: report it and derive a provisional list for your own sections. Do not write into Sections 1/1b, 2, or 3–4b to repair them.
+
+Then fill your sections:
 - Section 5 (Evaluation Strategy): dimensions table with rubrics, tooling, dataset spec, CI/CD command
 - Section 6 (Guardrails): online guardrails table, offline flywheel table
 - Section 7 (Production Monitoring): tracing tool, key metrics, alert thresholds, sampling strategy
@@ -155,4 +161,6 @@ AskUserQuestion([{
 - [ ] Online guardrails defined (minimum 1 for user-facing systems)
 - [ ] Offline flywheel metrics defined
 - [ ] Sections 5, 6, 7 of AI-SPEC.md written and non-empty
+- [ ] Sections 5, 6, 7 updated with `Edit` in place — no whole-file `Write` over an existing spec
+- [ ] No section other than 5, 6, and 7 written or modified — Sections 1/1b, 2, and 3–4b left exactly as found
 </success_criteria>

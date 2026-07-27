@@ -47,7 +47,7 @@ hostage. Sources: REPORT.md §1 (D-findings that are skill-side) + §4b HIGH tab
 
 | # | Asset | Fix | Status |
 |---|---|---|---|
-| 1.1 | `agents/planner.md` | Phase-context loader must ingest `PHASE/PATTERNS.md`, `PHASE/UI-SPEC.md`, `SPEC/AI-SPEC.md` (when present). Also close the `## Parallel Execution Map` template gap (§3.5 risk 2). | ✅ **Done** — see 1.1 note |
+| 1.1 | `agents/planner.md` | Phase-context loader must ingest `PHASE/PATTERNS.md`, `PHASE/UI-SPEC.md`, `SPEC/AI-SPEC.md` (when present). Also close the `## Parallel Execution Map` template gap (§3.5 risk 2). | ✅ **Done** — map placement is a contract decision; review gate in Milestone 4 item 2 |
 | 1.2 | `agents/pattern-mapper.md` | Fix the mis-named consumer claim (`:67`) — the real consumer today is `plan-review-goal-backward`; add planner once 1.1 ships. Add a non-empty-input precondition guard. | ⬜ Open — unblocked now that 1.1 has shipped |
 | 1.3 | `agents/project-researcher.md` | Add an assigned-file dispatch input so four parallel researchers stop overwriting each other. | ✅ **Done** — `assigned_axis` |
 | 1.4 | `agents/roadmapper.md` | Must *create* `REQUIREMENTS.md` (traceability section included), not just update it. Remove the Setup→…→Polish worked example under "Good Phase Patterns" (D5). | ⬜ Open |

@@ -9,7 +9,7 @@ metadata:
   role: architect
   scope: infrastructure
   output-format: architecture
-  related-skills: devops-engineer, kubernetes-specialist, terraform-engineer, security-reviewer, microservices-architect, monitoring-expert
+  related-skills: devops-engineer, kubernetes-specialist, terraform-engineer, security-reviewer, microservices-architect, monitoring-expert, diagram
 ---
 
 # Cloud Architect
@@ -208,7 +208,7 @@ az consumption usage list \
 ## Output Templates
 
 When designing cloud architecture, provide:
-1. Architecture diagram with services and data flow
+1. Architecture diagram with services and data flow — invoke the `diagram` skill via the Skill tool and follow its guidance for authoring, rendering, and file placement; this skill is responsible for which services, data flows, and trust boundaries the diagram must show
 2. Service selection rationale (compute, storage, database, networking)
 3. Security architecture (IAM, network segmentation, encryption)
 4. Cost estimation and optimization strategy

@@ -9,7 +9,7 @@ metadata:
   role: architect
   scope: system-design
   output-format: architecture
-  related-skills: python-pro, database-optimizer, monitoring-expert, api-designer
+  related-skills: python-pro, database-optimizer, monitoring-expert, api-designer, diagram
 ---
 
 # RAG Architect
@@ -17,9 +17,9 @@ metadata:
 ## Core Workflow
 
 1. **Requirements Analysis** — Identify retrieval needs, latency constraints, accuracy requirements, and scale
-2. **Vector Store Design** — Select database, schema design, indexing strategy, sharding approach
+2. **Vector Store Design** — Check `AI-SPEC.md` Section 2 (`## 2. Framework`, at the `ai_spec_path` the orchestrator supplied — default `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`) first. If it already records a vector store or embedding model decision, **adopt it**: name the recorded stack and reduce this step to *validating* that choice against this system's latency/scale/accuracy requirements — where validation surfaces a genuine conflict (the recorded stack cannot meet a stated requirement), surface it to the operator explicitly rather than silently re-deciding. A missing `AI-SPEC.md` is not fatal — note it and run the full selection flow below unchanged: select database, schema design, indexing strategy, sharding approach.
 3. **Chunking Strategy** — Document splitting, overlap, semantic boundaries, metadata enrichment
-4. **Retrieval Pipeline** — Embedding selection, query transformation, hybrid search, reranking
+4. **Retrieval Pipeline** — Query transformation, hybrid search, reranking, and embedding selection (already resolved by step 2 when `AI-SPEC.md` provided it; otherwise select and evaluate here)
 5. **Evaluation & Iteration** — Metrics tracking, retrieval debugging, continuous optimization
 
 For each step, validate before moving on (see checkpoints below).
@@ -165,7 +165,7 @@ print(results)
 ## Constraints
 
 ### MUST DO
-- Evaluate multiple embedding models on your domain data before committing
+- Evaluate multiple embedding models on your domain data before committing — unless `AI-SPEC.md` Section 2 already records a stack decision, in which case validate that decision against this system's requirements instead of re-deriving it
 - Implement hybrid search (vector + keyword) for production systems
 - Add metadata filters for multi-tenant or domain-specific retrieval
 - Measure retrieval metrics (precision@k, recall@k, MRR, NDCG)
@@ -187,8 +187,8 @@ print(results)
 ## Output Templates
 
 When designing RAG architecture, deliver:
-1. System architecture diagram (ingestion + retrieval pipelines)
-2. Vector database selection with trade-off analysis
+1. System architecture diagram (ingestion + retrieval pipelines) — invoke the `diagram` skill via the Skill tool and follow its guidance for authoring, rendering, and file placement; this skill is responsible for which components and data flows the diagram must show
+2. Vector database selection with trade-off analysis — or, when `AI-SPEC.md` Section 2 already records the stack, the AI-SPEC stack decision plus validation against this system's requirements
 3. Chunking strategy with examples and rationale
 4. Retrieval pipeline design (query → results flow)
 5. Evaluation plan with metrics, benchmarks, and pass/fail thresholds

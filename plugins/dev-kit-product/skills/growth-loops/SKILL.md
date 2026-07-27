@@ -9,7 +9,7 @@ metadata:
   role: strategist
   scope: design
   output-format: document
-  related-skills: cohort-analysis, assumption-mapping, ab-test-analysis
+  related-skills: cohort-analysis, assumption-mapping, ab-test-analysis, diagram
 ---
 
 # Growth Loops
@@ -90,6 +90,6 @@ The weakest step in the loop is where to invest:
 
 Deliver:
 - Identified growth loop(s) with loop type classification
-- Loop diagram with metrics at each step
+- Loop diagram with metrics at each step — invoke the `diagram` skill via the Skill tool and follow its guidance for authoring, rendering, and file placement; this skill is responsible for which steps, metrics, and feedback path the diagram must show
 - Constraint analysis: where is the loop weakest?
 - Top 2-3 experiments to strengthen the loop

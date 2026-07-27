@@ -42,7 +42,7 @@ cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it desc
 | **2** | Architecture & tech stack | `architecture-designer` · `diagram` · `sdd-review-cto` | requirements → `docs/global/architecture/SDD.md` + ADRs |
 | **3** | Research & roadmap | `project-researcher` ×4 → `research-synthesizer` · `roadmapper` | requirements + research → `docs/milestones/<M>/ROADMAP.md` (vertical slices) + `docs/state/STATE.md` |
 | **4** | Design system *(if UI)* | `design-consultation` → `design-html`[^plan-review-design] | product → `docs/global/design/DESIGN.md` |
-| **5** | Phase discovery | `codebase-mapper` ×4 · `assumptions-analyzer` · `advisor-researcher` · `phase-researcher` · `pattern-mapper` · `graphify` (query) | phase → `PHASE/CONTEXT.md`, `PHASE/PATTERNS.md`, `PHASE/RESEARCH.md`, codebase maps |
+| **5** | Phase discovery | `codebase-mapper` ×4 · `assumptions-analyzer` · `phase-researcher` · `advisor-researcher` · `pattern-mapper` · `graphify` (query) | phase → `PHASE/CONTEXT.md`, `PHASE/PATTERNS.md`, `PHASE/RESEARCH.md`, codebase maps |
 | **6** | AI / UI phase specs *(conditional)* | *(AI)* `domain-researcher` → `eval-planner` (data-ai lane) · *(UI)* `ui-researcher` → `ui-checker` | phase → `SPEC/AI-SPEC.md` / `PHASE/UI-SPEC.md` |
 | **7** | Plan the phase | `writing-plans` · `planner` · `plan-review` (cmd) → `plan-reviewer` → 4 lenses (incl. `plan-review-design`) · `gate-plan-review` · `analyze` | context → `PHASE/<NN>-<MM>-PLAN.md` (waves + tracks), reviewed & complexity-gated |
 | **8** | Execute the phase | `using-git-worktrees` · `sprint-execution` · `test-driven-development` · `dispatching-parallel-agents` · `fullstack-guardian`/`secure-code-guardian` · `refactoring-specialist` · `guard` · `design-handoff` (Claude Design → codebase bridge, when UI in scope) · `verification-before-completion` · **lane skills** | plan → code + tests, per-track parallel |
@@ -295,8 +295,11 @@ Build the context a planner needs, cheaply, before writing tasks.
   a starting point, not something to silently re-derive from scratch. The `tech`/`quality` focuses have no graphify
   equivalent (package manifests, lint config) and always explore fresh.
 - **`assumptions-analyzer`** — deep-read 5–15 source files, return evidence-cited, confidence-labeled assumptions.
-- **`advisor-researcher`** *(per gray-area decision)* — one 5-column options comparison table per open question.
 - **`phase-researcher`** — investigate the phase's technical domain (don't-hand-roll list, pitfalls, package-legitimacy gate) → `PHASE/RESEARCH.md`.
+- **`advisor-researcher`** *(per gray-area decision)* — one 5-column options comparison table per open question.
+  **Listed after `phase-researcher`, not before:** it has no `Write` tool and "reads and writes no files itself" — the
+  caller folds each returned table into `PHASE/RESEARCH.md`, and `phase-researcher` is what creates that file.
+  Dispatching the two in one message is fine; the tables just have nowhere to land until `RESEARCH.md` exists.
 - **`pattern-mapper`** — map each new/changed file to its closest existing analog with line-numbered excerpts → `PHASE/PATTERNS.md`.
   **Runs last in this stage, not in the fan-out above:** it derives its file list by reading `PHASE/CONTEXT.md` and
   `PHASE/RESEARCH.md`, so it belongs "between research and planning steps" — dispatching it alongside the mappers
@@ -646,7 +649,7 @@ deliberately leaves out — see [`workflow-recommendations.md`](workflow-recomme
 - **Stage 4:** `design-consultation`, `design-html` (`plan-review-design` is introduced here conceptually but
   only executes — and is counted — under Stage 7; `design-handoff` is counted under Stage 8, where it actually
   fires — see both stages' notes)
-- **Stage 5:** `codebase-mapper`, `assumptions-analyzer`, `advisor-researcher`, `phase-researcher`, `pattern-mapper`
+- **Stage 5:** `codebase-mapper`, `assumptions-analyzer`, `phase-researcher`, `advisor-researcher`, `pattern-mapper`
 - **Stage 6:** `domain-researcher`, `ui-researcher`, `ui-checker`
 - **Stage 7:** `writing-plans`, `planner`, `plan-review` (cmd), `plan-reviewer`, `plan-review-eng`, `plan-review-design`, `plan-review-devex`, `plan-review-goal-backward`, `gate-plan-review`, `analyze`
 - **Stage 8:** `using-git-worktrees`, `sprint-execution`, `test-driven-development`, `dispatching-parallel-agents`, `fullstack-guardian`, `secure-code-guardian`, `refactoring-specialist`, `guard`, `design-handoff`, `verification-before-completion`

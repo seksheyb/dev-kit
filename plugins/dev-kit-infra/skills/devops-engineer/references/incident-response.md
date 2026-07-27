@@ -284,10 +284,17 @@ Thanks to @oncall-team for rapid response.
 
 ## Compliance Requirements
 
+All `notification_deadline` values below are measured from discovery — the moment the
+incident is first suspected — not from containment, root-cause confirmation, or
+whenever the investigation finishes. Record the discovery timestamp as soon as an
+incident is classified as Security or Compliance (see Incident Classification above)
+so these deadlines are counted correctly.
+
 ```yaml
 # Incident notification requirements
+# All notification_deadline values are measured from discovery, not containment.
 gdpr:
-  notification_deadline: 72h
+  notification_deadline: 72h  # from becoming aware of the breach
   authority: Data Protection Officer
   required_info:
     - Nature of breach
@@ -297,7 +304,7 @@ gdpr:
     - Remediation measures
 
 sox:
-  notification_deadline: immediate
+  notification_deadline: immediate  # from discovery
   authority: Audit Committee
   documentation:
     - Financial impact
@@ -305,7 +312,7 @@ sox:
     - Remediation plan
 
 pci_dss:
-  notification_deadline: 24h
+  notification_deadline: 24h  # from discovery of the compromise
   authority: Card brands + acquirer
   required_info:
     - Cardholder data affected

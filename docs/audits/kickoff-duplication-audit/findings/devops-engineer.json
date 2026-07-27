@@ -1,0 +1,60 @@
+{
+  "asset": "devops-engineer",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/SKILL.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/references/github-actions.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/references/docker-patterns.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/references/kubernetes.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/references/terraform-iac.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/references/deployment-strategies.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/references/platform-engineering.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/references/release-automation.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/references/incident-response.md"
+  ],
+  "claims": [
+    {
+      "local_id": "devops-engineer-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [604, 612],
+      "kickoff_quote": "For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it — ... terraform-engineer / kubernetes-specialist / devops-engineer for infra ... Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills.",
+      "skill_quote": "- Setting up CI/CD pipelines (GitHub Actions, GitLab CI, Jenkins)",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/SKILL.md",
+      "skill_line": 28,
+      "reasoning": "This is routing, not methodology: the operator is choosing which lane skill a given track's subagent loads, conditioned on which plugins were enabled at step 2. The skill's 'When to Use This Skill' section describes its own applicability but cannot know the wave's track decomposition or the enabled plugin set, so the KICKOFF text is the invocation's argument. Keep.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "devops-engineer-2",
+      "class": "load-bearing-parameter",
+      "severity": "medium",
+      "step": "13",
+      "kickoff_line_range": [1103, 1104],
+      "kickoff_quote": "Route the infra lane over this milestone's deploy surface. Run these in sequence, not in parallel — they write overlapping config and the later ones depend on the earlier ones' output:",
+      "skill_quote": "  related-skills: terraform-engineer, kubernetes-specialist, sre-engineer, monitoring-expert, security-reviewer",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/SKILL.md",
+      "skill_line": 12,
+      "reasoning": "Cross-skill ordering and the no-parallelism constraint are orchestration facts. The skill names its peer skills in frontmatter metadata but nowhere states any run order relative to them; grepping the full references/ chain for 'sre-engineer|monitoring-expert|terraform-engineer|kubernetes-specialist|sequence|order' returned only unrelated hits (awslogs config, 'Deploy in dependency order' inside a release-automation sample workflow). The skill's own 'Core Workflow' (lines 40-46) is internal to one invocation. Keep.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "devops-engineer-3",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "13",
+      "kickoff_line_range": [1106, 1107],
+      "kickoff_quote": "1. devops-engineer — own the CI/CD pipeline config that land-and-deploy's readiness gate will poll. This is the one that gate depends on, so do it first.",
+      "skill_quote": "Provide: CI/CD pipeline config, Dockerfile, K8s/Terraform files, deployment verification, rollback procedure",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/SKILL.md",
+      "skill_line": 82,
+      "reasoning": "The deliverable named ('CI/CD pipeline config') does overlap the skill's own Output Templates line, so that half is mildly redundant; but the load-bearing half is scope narrowing plus the downstream consumer — land-and-deploy's readiness gate polls this artifact, which is why devops-engineer runs first of the five. The skill has no knowledge of land-and-deploy or its gate. Keep; at most trim the restated deliverable noun.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

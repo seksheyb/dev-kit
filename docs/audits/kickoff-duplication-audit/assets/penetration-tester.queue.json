@@ -1,0 +1,115 @@
+{
+  "asset": "penetration-tester",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/penetration-tester.md",
+  "claim_count": 3,
+  "claims": [
+    {
+      "local_id": "penetration-tester-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [
+        1064,
+        1064
+      ],
+      "kickoff_quote": "Use the penetration-tester agent for authorized active exploitation \u2014 recon, OWASP, API, network, cloud.",
+      "skill_quote": "- **Recon**: passive gathering, DNS/subdomain enumeration... - **Web (OWASP Top 10)**... - **API**... - **Network & infra**... - **Cloud & mobile**... - **Wireless**... - **Social engineering**...",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/penetration-tester.md",
+      "skill_line": 21,
+      "reasoning": "The agent's Coverage section (lines 21-27) offers seven test categories including wireless and social engineering. The KICKOFF line selects only five (recon, OWASP, API, network, cloud) as in-scope for this milestone gate, silently excluding mobile/wireless/social-engineering. This is mode/scope selection among options the agent itself offers \u2014 exactly the kind of conditional gating the operator must judge \u2014 not a restatement of the agent's own methodology.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "penetration-tester",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/penetration-tester.md",
+      "raised_by": [
+        "penetration-tester"
+      ],
+      "locations": [
+        [
+          1064,
+          1064
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "penetration-tester-1"
+    },
+    {
+      "local_id": "penetration-tester-2",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "12",
+      "kickoff_line_range": [
+        1064,
+        1068
+      ],
+      "kickoff_quote": "Give it the full rules of engagement in the dispatch, because it stops and asks for them otherwise: the authorized targets, the explicit exclusions, the testing window, the risk tolerance, an emergency contact, and where the written authorization itself lives. It refuses without written authorization; that is correct behavior, do not try to talk it past it.",
+      "skill_quote": "Never begin without confirmed scope and written authorization. Before any active test, establish: the authorized targets, explicit exclusions, the testing window, rules of engagement, risk tolerance, and emergency contacts. If scope or authorization is unclear or absent, STOP and request it \u2014 do not proceed.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/penetration-tester.md",
+      "skill_line": 12,
+      "reasoning": "Five of the six enumerated items (authorized targets, explicit exclusions, testing window, risk tolerance, emergency contacts) are a near-verbatim restatement of the agent's own hard-gate checklist at line 12, and the closing sentence ('it refuses... do not proceed') restates the same line's STOP-and-request rule. The KICKOFF explicitly concedes this is happening ('because it stops and asks for them otherwise'), which is the giveaway that the guide is re-deriving a gate the asset already enforces rather than supplying new information. The sixth item \u2014 'where the written authorization itself lives' \u2014 is the one genuinely novel, load-bearing addition (a context pointer the agent cannot know on its own; see penetration-tester-3).",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "penetration-tester",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/penetration-tester.md",
+      "raised_by": [
+        "penetration-tester"
+      ],
+      "locations": [
+        [
+          1064,
+          1068
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "penetration-tester-2"
+    },
+    {
+      "local_id": "penetration-tester-3",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [
+        1066,
+        1067
+      ],
+      "kickoff_quote": "the risk tolerance, an emergency contact, and where the written authorization itself lives.",
+      "skill_quote": "Never begin without confirmed scope and written authorization.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/penetration-tester.md",
+      "skill_line": 12,
+      "reasoning": "The agent requires 'confirmed... written authorization' but never asks where that document lives \u2014 it has no way to know that on its own. Grepped the agent file, SKILL.md, and the full security-reviewer references/ chain for 'authoriz' (case-insensitive): every hit is about confirming/checking authorization exists, none about locating the artifact itself. This is a genuine invocation argument (pointing the agent at context it needs), not a restatement.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "penetration-tester",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/penetration-tester.md",
+      "raised_by": [
+        "penetration-tester"
+      ],
+      "locations": [
+        [
+          1066,
+          1067
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "penetration-tester-3"
+    }
+  ]
+}

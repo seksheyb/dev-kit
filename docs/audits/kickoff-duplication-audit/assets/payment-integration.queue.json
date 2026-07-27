@@ -1,0 +1,63 @@
+{
+  "asset": "payment-integration",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/payment-integration/SKILL.md",
+  "claim_count": 1,
+  "claims": [
+    {
+      "local_id": "payment-integration-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [
+        614,
+        614
+      ],
+      "kickoff_quote": "Every name above is a skill, and the track subagent loads its own assigned skill itself.",
+      "skill_quote": "Knowledge pack for implementing secure, compliant payment systems: gateway integration, transaction processing, subscription management, and fraud prevention with emphasis on PCI compliance and reliability.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/payment-integration/SKILL.md",
+      "skill_line": 8,
+      "reasoning": "The guide states the loading mechanism \u2014 the track subagent loads payment-integration itself rather than the orchestrator pre-loading it. The skill only describes itself as a knowledge pack and says nothing anywhere about who loads it or when; this is orchestration-layer information a skill structurally cannot carry. Load-bearing, keep.",
+      "systemic": true,
+      "other_locations": [],
+      "asset": "payment-integration",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/payment-integration/SKILL.md",
+      "raised_by": [
+        "payment-integration",
+        "postgres-pro",
+        "python-pro",
+        "react-native-expert",
+        "swift-expert",
+        "typescript-pro"
+      ],
+      "locations": [
+        [
+          613,
+          613
+        ],
+        [
+          613,
+          614
+        ],
+        [
+          614,
+          614
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [
+        "payment-integration::payment-integration-2",
+        "postgres-pro::postgres-pro-2",
+        "python-pro::python-pro-2",
+        "react-native-expert::react-native-expert-2",
+        "swift-expert::swift-expert-2",
+        "typescript-pro::typescript-pro-2"
+      ],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "payment-integration-1"
+    }
+  ]
+}

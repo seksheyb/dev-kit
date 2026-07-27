@@ -1,0 +1,40 @@
+{
+  "asset": "test-driven-development",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/test-driven-development/SKILL.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/test-driven-development/testing-anti-patterns.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md"
+  ],
+  "claims": [
+    {
+      "local_id": "test-driven-development-1",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "08",
+      "kickoff_line_range": [569, 570],
+      "kickoff_quote": "under the test-driven-development skill — write the failing tests first, then implement to green",
+      "skill_quote": "Write the test first. Watch it fail. Write minimal code to pass.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/test-driven-development/SKILL.md",
+      "skill_line": 10,
+      "reasoning": "The em-dash gloss 'write the failing tests first, then implement to green' is a one-line compression of the skill's entire red-green cycle, which SKILL.md states as its Overview (line 10) and again as the Iron Law 'NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST' (line 34) and the Final Rule (lines 367-368). It carries no parameter, no mode selection and no gating the skill cannot supply. It is in fact doubly covered: sprint-execution SKILL.md:132 already binds the same contract ('TDD-first is the default task contract. Every implementation task: write the failing test, watch it fail, implement, watch it pass, commit. Subagents follow the test-driven-development skill; the dispatch prompt says so explicitly'), so the operator restating it a third time adds nothing. Note the gloss is also lossier than the skill — it drops the mandatory 'Verify RED' beat (line 115) and the REFACTOR beat (line 185) — so keeping it is worse than deleting it.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "test-driven-development-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [568, 570],
+      "kickoff_quote": "Then use the sprint-execution skill to execute PHASE/<NN>-<MM>-PLAN.md under the test-driven-development skill",
+      "skill_quote": "description: Use when implementing any feature or bugfix, before writing implementation code",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/test-driven-development/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "The composition instruction — that TDD is the discipline sprint-execution executes the named PHASE plan file under — is an argument of the invocation, not methodology. The TDD skill's own trigger (line 3) is generic ('implementing any feature or bugfix') and the skill never names sprint-execution, waves, worktrees or PHASE/<NN>-<MM>-PLAN.md anywhere (grepped 'sprint', 'wave', 'worktree', 'PHASE', 'plan' across SKILL.md and testing-anti-patterns.md — zero hits for the orchestration nouns). Per the ordering/composition rule this is load-bearing and must be KEPT; only the trailing gloss (claim 1) should be cut.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

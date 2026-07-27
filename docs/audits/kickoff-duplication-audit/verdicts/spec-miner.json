@@ -1,0 +1,32 @@
+{
+  "asset": "spec-miner",
+  "verdicts": [
+    {
+      "claim_id": "spec-miner-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md line 98: \"Save the mined specification to `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md` — pick the next available `<NNN>` and a `<slug>` naming the system or feature under analysis.\"",
+      "reasoning": "Verified KICKOFF.md lines 63-76 verbatim contain 'into SPEC/spec.md' and that gwd-pipeline-on-devkit.md line 23 documents 'SPEC/' as guide shorthand for exactly docs/milestones/<M>/specs/<NNN>-<slug>/ — the same path the skill's own Output Templates section (line 98) specifies, so there is no contradiction. Per the audit's own classification rule, output file paths/directory conventions are explicitly NOT duplication regardless of whether the guide's phrasing is terser than the skill's — they are the invocation's arguments. Note the claim's stated justification (that the KICKOFF text supplies concrete M/NNN/slug values) overstates things — the KICKOFF text supplies only the shorthand alias, not literal values, and the skill's own line 98 already contains the pick-next-available-NNN logic — but the classification itself (load-bearing-parameter, not restatement) still holds under the explicit rule for output-path mentions, so the claim survives with a corrected rationale rather than a corrected class.",
+      "note": "reasoning in the original claim slightly overstates what KICKOFF concretely supplies; classification nonetheless correct"
+    },
+    {
+      "claim_id": "spec-miner-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md line 38: \"4. **Document** - Write observed requirements in EARS format\", reinforced by the dedicated \"EARS Format Quick Reference\" table (lines 57-68) and `references/ears-format.md`.",
+      "reasoning": "Verified KICKOFF.md lines 63-76 verbatim contain 'in EARS format into SPEC/spec.md'. Read the full SKILL.md: EARS is spec-miner's sole, non-optional output convention — there is no alternate format mode to select among, no conditional gate on it, and the skill dedicates a whole quick-reference table plus a references/ears-format.md file to it. This matches the audit's own explicit example of duplication: 're-teach domain rules the skill dedicates a section to (EARS format, ID allocation, taxonomy names)'. Naming EARS in the invocation restates a fixed default the skill will produce regardless, not a parameter or mode choice. Low severity is appropriate since it is a single descriptive adjective, not a restated multi-step methodology or template structure.",
+      "note": null
+    },
+    {
+      "claim_id": "spec-miner-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md line 100: \"This is the same canonical spec path the `specify` skill writes, so downstream planning skills read either origin identically.\" (spec-miner's SKILL.md, read in full, never mentions gate-reverse-engineer, Legacy SDD, Legacy PRD, or ADRs anywhere.)",
+      "reasoning": "Verified KICKOFF.md lines 63-76 verbatim direct spec-miner's output to 'the gate-reverse-engineer agent to promote that into a Legacy SDD ... Legacy PRD ... and retrospective ADRs'. Confirmed gate-reverse-engineer is a real, separate agent (/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-reverse-engineer.md) documented elsewhere (gwd-pipeline-on-devkit.md lines 40, 83, 158) as the promoter of spec-miner's mined spec into Legacy SDD/PRD/ADRs. spec-miner's own SKILL.md contains no reference to gate-reverse-engineer or to SDD/PRD/ADR promotion anywhere in its 111 lines — it cannot know about this downstream agent or its outputs. This is textbook cross-skill sequencing / hand-off-target information the classification rules list as load-bearing ('Which other artifact to feed in as context', 'Ordering / parallelism across skills'), not restated internal methodology.",
+      "note": null
+    }
+  ]
+}

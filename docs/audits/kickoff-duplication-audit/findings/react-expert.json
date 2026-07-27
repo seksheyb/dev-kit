@@ -1,0 +1,59 @@
+{
+  "asset": "react-expert",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/SKILL.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/references/hooks-patterns.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/references/migration-class-to-modern.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/references/performance.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/references/react-19-features.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/references/server-components.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/references/state-management.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/references/testing-react.md"
+  ],
+  "claims": [
+    {
+      "local_id": "react-expert-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [604, 612],
+      "kickoff_quote": "For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it — python-pro / fastapi-expert / django-expert / postgres-pro / api-designer for backend work, react-expert / nextjs-developer / typescript-pro / vue-expert for web, ... Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills. Tell me the track-to-lane mapping before you dispatch.",
+      "skill_quote": "description: Use when building React 18+ applications in .jsx or .tsx files, Next.js App Router projects, or create-react-app setups.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "The only mention of react-expert in KICKOFF is a lane-routing name inside a surface-to-skill mapping list. Which skill owns a given track's surface, and whether the plugin was enabled at step 2, are facts about the run that the skill itself cannot know. This is the invocation's argument, not a restatement of skill methodology — keep it.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "react-expert-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [614, 616],
+      "kickoff_quote": "Every name above is a skill, and the track subagent loads its own assigned skill itself. framework-selector and ai-researcher are **agents**, not skills — a track subagent cannot load either one, so never put them in a track's skill slot.",
+      "skill_quote": "  role: specialist\n  scope: implementation",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/SKILL.md",
+      "skill_line": 9,
+      "reasoning": "Dispatch mechanics — who loads react-expert and in which slot — live entirely outside the skill; SKILL.md declares only its own role/scope and says nothing about subagent dispatch. Orchestration and asset-kind disambiguation are operator-level parameters, so this text is load-bearing.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "react-expert-3",
+      "class": "contradiction",
+      "severity": "medium",
+      "step": "08",
+      "kickoff_line_range": [569, 571],
+      "kickoff_quote": "Then use the sprint-execution skill to execute PHASE/<NN>-<MM>-PLAN.md under the test-driven-development skill — write the failing tests first, then implement to green, with every \"done\" claim backed by fresh command output per the verification-before-completion skill, not confidence.",
+      "skill_quote": "3. **Implement** - Write TypeScript components with proper types ... 6. **Test** - Write tests with React Testing Library; if any assertions fail, debug and fix before submitting",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/SKILL.md",
+      "skill_line": 36,
+      "reasoning": "Step 8 mandates test-first (failing tests before implementation) for the very tracks that are told to load react-expert as their lane skill, but react-expert's Core Workflow is explicitly implement-then-test: Implement is step 3 and Test is step 6, and references/testing-react.md documents Testing Library patterns without any red-green ordering. A track subagent following its assigned lane skill's own workflow will write code before tests, contradicting the wave's TDD gate. The guide text is what compensates, so it must be kept; the skill is what should change.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

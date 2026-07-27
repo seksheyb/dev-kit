@@ -1,0 +1,109 @@
+{
+  "asset": "ui-auditor",
+  "verdicts": [
+    {
+      "claim_id": "ui-auditor-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "line 10: \"An implemented frontend has been submitted for adversarial visual and interaction audit.\" — and the only conditional skip anywhere in the file is line 291: \"**If shadcn not initialized:** Skip entirely. Do not add Registry Safety section.\"",
+      "reasoning": "KICKOFF line 800 does read verbatim `*(only if this phase shipped UI)*`. Verified as an absence claim: grepped the 462-line file for skip / abort / not applicable / no UI / non-ui / backend-only / 'if this phase'. Every hit is either the UI-SPEC-absent branch (lines 67, 180, 202, 216, 230) or the registry skip (line 291). The skill has no self-abort path for a phase that shipped no frontend — line 10 presupposes one was submitted, and the frontmatter description calls it an audit 'of implemented frontend code'. Whether the phase shipped UI is operator judgment the agent cannot make before being dispatched. KEEP. (Note: this asset has no references/ chain — plugins/dev-kit-core/agents/references does not exist — so the 462-line file is the complete search surface.)"
+    },
+    {
+      "claim_id": "ui-auditor-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "lines 66-67: \"If UI-SPEC.md exists and is approved: audit against it specifically. / If no UI-SPEC exists: audit against abstract 6-pillar standards.\" Also line 19: \"Audit implemented UI against UI-SPEC.md (if exists) or abstract 6-pillar standards\" and line 25: \"score this phase's build against `UI-SPEC.md` (or 6-pillar standards) only\".",
+      "reasoning": "Both quoted skill lines exist exactly as claimed at 66-67, and the branch is stated three more times (19, 25) plus applied per-pillar at 179-180, 201-202, 215-216, 229-230 — all verified. Considered and rejected the load-bearing reading: the UI-SPEC path is not an invocation argument here, because execution_flow Step 1 (line 367) already instructs the agent to parse `$PHASE_DIR/UI-SPEC.md` itself, and the diff scoping is fixed by 'diff-scoped' at line 25. The KICKOFF supplies no path, condition, or mode the skill lacks. Medium, not high: the sentence also carries the 'this phase's' framing which reinforces scope, so it is not pure noise."
+    },
+    {
+      "claim_id": "ui-auditor-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "line 23: \"**Artifact paths are configurable.** Defaults below use `$PHASE_DIR/reviews/screenshots/` for screenshots and `$PHASE_DIR/reviews/UI-REVIEW.md` for the report — use whatever paths the dispatch prompt provides.\" Reinforced at line 301: \"path configurable by the orchestrator\".",
+      "reasoning": "Verified verbatim at line 23. The skill explicitly hands output-path authority to the dispatch prompt, which makes supplying `PHASE/reviews/UI-REVIEW.md` the invocation's argument by the skill's own design, not duplication. KEEP. Low value is the right call and I confirmed the supporting detail: plugins/dev-kit-core/references/doc-sitemap.md line 168 does canonicalise `PHASE/reviews/UI-REVIEW.md`, so the supplied path is byte-identical to both the skill default and the sitemap — but 'identical to the default' is not grounds to delete a parameter the skill asks to be told."
+    },
+    {
+      "claim_id": "ui-auditor-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "line 41: \"Every scored pillar must have at least one specific finding justifying the score.\" — near-verbatim. Plus line 158 heading \"## 6-Pillar Scoring (1-4 per pillar)\" with definitions at 160-164, and lines 38-40 \"**Required finding classification:** - **BLOCKER** ... - **WARNING** ...\".",
+      "reasoning": "All three limbs verified in place. Line 41 is a word-for-word match for 'at least one specific finding justifying each score'. The 1-4 scale is fixed by the skill's own heading (158), its four score definitions (160-164), the output table's `{1-4}/4` cells (316-321) and the frontmatter responsibility 'Score each pillar 1-4' (line 20). BLOCKER/WARNING is a labelled mandatory subsection (38-40), i.e. exactly the 'taxonomy the skill dedicates a section to' pattern. This is the skill's own output contract restated. Side observation that does NOT change the verdict: the skill's <output_format> template (303-359) never actually surfaces BLOCKER/WARNING labels in the findings sections, so the taxonomy is declared but not wired into the artifact — that is a skill defect to fix in the skill, not a reason to keep the KICKOFF sentence."
+    },
+    {
+      "claim_id": "ui-auditor-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "line 150: \"If no dev server is detected: audit runs on code review only (Tailwind class audit, string audit for generic labels, state handling check).\" Plus line 119 \"**When browser tooling is NOT available:** fall back to the CLI screenshot approach below\" and line 146 \"No dev server at localhost:3000 — code-only audit\".",
+      "reasoning": "Line 150 verified verbatim. 'Never blocks on a browser' is guaranteed by 119/146/150. 'Static-grep-first' has no new content either: every pillar's stated method is a grep block (168-177, 192-199, 206-213, 220-227, 236-243), each headed '**Audit method:** Grep ...'. 'Cheap' is cost framing, not an instruction, and carries no parameter, path, condition or ordering the skill lacks. Confirmed only at low severity, and I note the fragment is mildly WRONG as well as redundant: execution_flow puts screenshot capture at Step 3 (line 375) before pillar greps at Step 5 (385), so the pass is not literally 'grep-first'. That inaccuracy is an argument for deleting the phrase, not for keeping it."
+    },
+    {
+      "claim_id": "ui-auditor-6",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "line 105: \"Before attempting the CLI screenshot approach, check whether browser automation tools (Playwright MCP, an in-session Browser pane, or equivalent) are available in this session. If they are, use them instead of the CLI approach:\"",
+      "reasoning": "Verified verbatim at line 105, including the identical parenthetical tool list ('Playwright MCP, an in-session Browser pane, or equivalent'). The whole <browser_tooling_approach> section (101-121) exists to fix this precedence; its heading (103) reads 'preferred when available', and execution_flow Step 3 re-binds it at line 375: 'Run the screenshot approach (browser tooling preferred, CLI fallback).' The KICKOFF's 'get the capture precedence right' is the operator teaching the skill an ordering the skill already states three times internally. This is not cross-skill ordering (which would be load-bearing) — it is ordering entirely inside one agent's own procedure."
+    },
+    {
+      "claim_id": "ui-auditor-7",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "lines 108-110: \"2. Take desktop screenshot (1440x900) / 3. Take mobile screenshot (375x812) / 4. For specific components listed in UI-SPEC.md, navigate to each component route and capture targeted screenshots for comparison against the spec's stated dimensions, colors, and layout.\"",
+      "reasoning": "Verified verbatim at 108-110, and the same constants appear again in the CLI fallback script at line 136 (`--viewport-size=1440,900`) and line 139 (`--viewport-size=375,812`). Viewport constants baked into the skill's own numbered procedure in two places are methodology, not per-invocation arguments — nothing in the KICKOFF overrides or parameterises them. Additional evidence the KICKOFF should not be enumerating these: the CLI path also captures tablet 768x1024 (line 142), which the KICKOFF sentence silently omits, so the guide's list is already an incomplete copy of the skill's."
+    },
+    {
+      "claim_id": "ui-auditor-8",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "line 150: \"If no dev server is detected: audit runs on code review only (Tailwind class audit, string audit for generic labels, state handling check). Note in output that visual screenshots were not captured.\" Plus line 119 \"**When browser tooling is NOT available:** fall back to the CLI screenshot approach below.\", the dev-server conditional at 129-147, and line 18 \"Capture screenshots via CLI if a dev server is running (code-only audit otherwise)\".",
+      "reasoning": "All three limbs verified individually. (a) CLI-is-the-fallback-when-no-browser — line 119, verbatim. (b) fires only if a dev server is already running — the bash guard at 129-131 (`DEV_STATUS=$(curl ...)` / `if [ \"$DEV_STATUS\" = \"200\" ]`), with no start-a-server branch anywhere. (c) degrades to code-only rather than failing — line 150 plus the else-branch echo at 146 plus the frontmatter responsibility at 18, and the output template even has a `**Screenshots:** {captured / not captured (no dev server)}` field (line 308) and a success-criteria checkbox 'Screenshots captured (or noted as unavailable)' (line 448). Nothing in this KICKOFF sentence is unknown to the skill."
+    },
+    {
+      "claim_id": "ui-auditor-9",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "line 25: \"Leave subjective/live \\\"does it feel right\\\" judgment, cross-page consistency, AI-slop detection, and all fixing to `design-reviewer` ...\" and line 117: \"items requiring subjective judgment are flagged `needs_human_review: true`.\"",
+      "reasoning": "Confirmed, but on corrected evidence — the claim's own reasoning is factually wrong where it says 'line 117 is the only occurrence' of 'subjective'. I re-grepped: 'subjective' appears at lines 25 and 117. That correction strengthens the finding rather than weakening it. Line 25 states the deferral rule UNCONDITIONALLY (subjective judgment is out of scope, hand it to design-reviewer) — it is not branch-scoped — and line 117 supplies the concrete flag mechanism in the browser branch. So the KICKOFF's 'flag anything needing subjective judgment rather than scoring it' is covered at full scope by the skill and adds no condition, path or mode. Severity stays low: the un-scoping does put mild pressure toward generalising line 117's `needs_human_review` flag to the CLI and code-only paths, which the skill would be better off doing itself."
+    },
+    {
+      "claim_id": "ui-auditor-10",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "line 10: \"Score what was actually built against the design contract or 6-pillar standards — do not average scores upward to soften findings.\" Repeated at line 32: \"Averaging pillar scores upward so no single score looks too damning\".",
+      "reasoning": "Verified verbatim at line 10 — the KICKOFF clause 'Do not average scores upward to soften the findings' differs from the skill only by the article 'the'. The skill then names the same behaviour as the first entry in its 'Common failure modes — how UI auditors go soft' list at line 32, and success criteria line 459 adds 'Fair scoring: 4/4 is achievable, 1/4 means real problems'. The rule is enforced twice in the skill before the operator ever says it. No parameter, condition or mode attaches to this sentence."
+    },
+    {
+      "claim_id": "ui-auditor-11",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "line 36: \"- Identifying 3 priority fixes and stopping, when 6+ issues exist\" — listed under \"**Common failure modes — how UI auditors go soft:**\" (line 31).",
+      "reasoning": "Verified verbatim at line 36. The skill's <adversarial_stance> exists precisely to pre-empt stopping at three, so the KICKOFF clause forbids something already forbidden. I tested the strongest counter-argument — that the skill's own template pressures toward exactly three ('## Top 3 Priority Fixes' at 327, '### Top 3 Fixes' at 426, 'Score each pillar 1-4, identify top 3 priority fixes' at 20, checkbox at 451) — but that internal tension is a skill defect the skill itself already resolves at line 36; it does not make the operator's restatement load-bearing. Medium rather than high because the guide clause is doing real anti-softening work against that template pressure, so removing it should be paired with tightening the skill's template."
+    },
+    {
+      "claim_id": "ui-auditor-12",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "line 25: \"**Division of labor:** this is the per-phase, diff-scoped, contract-conformance pass — score this phase's build against `UI-SPEC.md` (or 6-pillar standards) only. Leave subjective/live \\\"does it feel right\\\" judgment, cross-page consistency, AI-slop detection, and all fixing to `design-reviewer`, which runs once per milestone and reads this file (`$PHASE_DIR/reviews/UI-REVIEW.md`) as its baseline.\"",
+      "reasoning": "Verified character-for-character at line 25 — I read the line directly rather than trusting the queue. The skill carries the same scoping ('contract conformance on this diff'), the same quoted phrase ('does it feel right'), the same exclusion list (subjective judgment, cross-page consistency, all fixing — the skill enumerates one MORE, AI-slop detection), the same handoff target (design-reviewer) and the same 'reads this file as its baseline' clause. This is the most literal duplication in the block. The sole fragment the skill cannot know is the step number, correctly carved out as ui-auditor-13."
+    },
+    {
+      "claim_id": "ui-auditor-13",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "line 25: \"... to `design-reviewer`, which runs once per milestone and reads this file (`$PHASE_DIR/reviews/UI-REVIEW.md`) as its baseline.\" — the skill knows the cadence ('once per milestone') but names no pipeline step number anywhere.",
+      "reasoning": "KEEP the two words 'at step 12' only. Cross-asset pipeline position is exactly the ordering information a single agent cannot know from its own file. I verified the pointer is also CORRECT rather than stale drift: KICKOFF.md '## 12. Final review — the milestone gate' spans lines 971-1072, and the design-reviewer dispatch sits at line 987 inside it, so step 12 is where design-reviewer actually runs. Not a contradiction, not stale. Everything surrounding this fragment is the duplication captured in ui-auditor-12."
+    }
+  ]
+}

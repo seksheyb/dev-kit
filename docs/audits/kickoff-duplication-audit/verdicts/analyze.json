@@ -1,0 +1,53 @@
+{
+  "asset": "analyze",
+  "verdicts": [
+    {
+      "claim_id": "analyze-1",
+      "confirmed": false,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:12-14 — \"This is\\na static, read-only audit; run it once the phase's `PLAN.md` exists (after `planner` /\\n`writing-plans` has produced it) and before execution begins.\" (the claim's anchor at line 13 is the middle of this sentence); frontmatter line 3 — \"Perform a non-destructive cross-artifact consistency and quality analysis ... before implementation begins.\"",
+      "reasoning": "The quoted skill sentence exists and does say what the claim says. But the overlap is the invocation's own naming clause — 'Use the analyze skill for a <what it is>' — not a restatement of the skill's methodology, gate, or template. None of the redundant-restatement triggers apply: it spells out no phase, no checklist, no output section, and no hard rule (the actual read-only gate is a separate sentence, adjudicated under analyze-6). Under the rule that incidental phrasing which merely echoes a Goal/description line is not duplication, this fails. Cutting it would leave a bare 'Use the analyze skill:' with no statement of what is being invoked, which is a worse prompt for zero enforcement gain. Refuted."
+    },
+    {
+      "claim_id": "analyze-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:30 — \"- **CONSTITUTION** — `docs/global/project/constitution.md` by default (see the `constitution` skill).\"; SKILL.md:23-26 — \"**SPEC** — the governing spec: `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md` (configurable; if the project keeps requirements in ... `ROADMAP.md`/`REQUIREMENTS.md` instead, use whichever the plan's `requirements` frontmatter references).\"",
+      "reasoning": "Verified both the KICKOFF text (KICKOFF.md:545-546, verbatim) and the skill line 30 quote (exact, at the claimed line). The classification survives on two independent grounds. First, `SPEC/` and `PHASE/` are KICKOFF's own bound shorthands (KICKOFF.md:15 'Two shorthands used below: `PHASE/` = ...', rebound per-phase at KICKOFF.md:346 '`PHASE/` below is that phase's directory'), so the triple is expressed in an invocation vocabulary the skill cannot resolve. Second, and stronger: the skill deliberately leaves SPEC configurable (line 23-26 offers spec.md OR ROADMAP.md OR REQUIREMENTS.md), and the invocation pins `SPEC/spec.md`. Selecting among options the skill leaves open is a genuine argument. The only true overlap is the literal constitution default at line 30, which is one path anchoring the triple — too small to cut. Confirmed as load-bearing; keep."
+    },
+    {
+      "claim_id": "analyze-3",
+      "confirmed": false,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:28-29 — \"A phase may have several plans across waves; load **all** of them and treat their `<task>`\\nblocks as the combined task set. If the user points at one plan file directly, analyze that file.\"",
+      "reasoning": "The quote is real and near-verbatim at the claimed line — but the claim stops reading one clause too early, and that clause reverses the verdict. Line 29 continues: 'If the user points at one plan file directly, analyze that file.' The invocation hands the skill exactly such a pointer — `PHASE/<NN>-<MM>-PLAN.md` (KICKOFF.md:546), a singular-looking path — so without the 'Load every plan file for this phase' clause the skill's own single-file branch is the behavior most likely to fire, and sibling wave plans would be silently dropped from the audit. The skill therefore does NOT unconditionally enforce load-all; it offers two behaviors and the operator text selects one. That is mode selection against an ambiguity created by the invocation's own argument, which the classification rules put squarely under load-bearing, not duplication. The claim's supporting citations are also weaker than stated: line 55 says 'PLAN = the phase's `PLAN.md` file(s)' and line 56 notes tasks are inline, but neither repeats the combine-all rule, so the asserted 'repeats it again at step 1' is not accurate. Refuted; keep the text."
+    },
+    {
+      "claim_id": "analyze-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:157 — \"**Coverage Summary Table:**\"; SKILL.md:159 — \"| Requirement Key | Has Task? | Task IDs | Notes |\"; SKILL.md:95 — \"**Task coverage mapping**: Map each task to one or more requirements or stories (inference by keyword / explicit reference patterns like IDs or key phrases)\"; SKILL.md:170 — \"- Coverage % (requirements with >=1 task)\"",
+      "reasoning": "Verified every cited line. Step 6 'Produce Compact Analysis Report' fixes the report structure and lists the Coverage Summary Table as a mandatory section with its exact columns; step 3 builds the task-coverage semantic model that populates it, and the Metrics block even emits Coverage %. The table is unconditional — the skill has no mode in which it is skipped, so 'Produce a requirement-to-task coverage table' selects nothing and adds no parameter. This is the textbook 'prompt restates output format the skill's template already fixes' case. Medium rather than high because it is a single short sentence whose removal changes no behavior; it is dead weight, not a contradiction."
+    },
+    {
+      "claim_id": "analyze-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "SKILL.md:40-44 — \"**Constitution Authority**: The project constitution is **non-negotiable** within this analysis scope. Constitution conflicts are automatically CRITICAL and require adjustment of the spec, plan, or tasks—not dilution, reinterpretation, or silent ignoring of the principle.\" (the 'automatically CRITICAL' sentence begins on line 41); SKILL.md:140 — \"- **CRITICAL**: Violates constitution MUST, missing core spec artifact, or requirement with zero coverage that blocks baseline functionality\"; SKILL.md:200 — \"- **Prioritize constitution violations** (these are always CRITICAL)\"",
+      "reasoning": "All three skill locations verified at the claimed lines. The KICKOFF sentence maps clause-for-clause onto the skill's dedicated Operating Constraint: 'conflict with a constitution MUST principle is CRITICAL' = line 140 + line 41; 'needs the spec or the plan adjusted' = 'require adjustment of the spec, plan, or tasks'; 'never the principle reinterpreted' = 'not dilution, reinterpretation, or silent ignoring of the principle'. I hunted for anything the operator adds and found the opposite — KICKOFF is strictly narrower (omits 'or tasks', omits the escalation path to the `constitution` skill at lines 43-44). A prompt that re-derives a hard rule the skill enforces in three places, less completely than the skill does, is duplication with a drift risk. High severity: it is the longest fully-redundant span in the block."
+    },
+    {
+      "claim_id": "analyze-6",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "SKILL.md:36-38 — \"**STRICTLY READ-ONLY**: Do **not** modify any files. Output a structured analysis report. Offer an optional remediation plan (user must explicitly approve before any follow-up editing would be performed).\"; SKILL.md:185 — \"Ask the user: \\\"Would you like me to suggest concrete remediation edits for the top N issues?\\\" (Do NOT apply them automatically.)\"; SKILL.md:198 — \"- **NEVER modify files** (this is read-only analysis)\"",
+      "reasoning": "Verified at the claimed lines. Both halves of the KICKOFF sentence are already skill-enforced hard rules: 'Change nothing — report' is line 36 verbatim in force and is re-asserted at line 198, and 'offer a remediation plan only if I approve it' is the parenthetical at line 37-38 plus the whole of step 8 (line 183-185). There is no parameter here — no path, no mode, no condition the operator resolves; the skill has no non-read-only mode to select against. I considered whether restating a safety gate is defensible emphasis, but the skill states it three times including as an Operating Constraint and an Analysis Guideline, which is exactly the 're-derives the skill's own hard rules or gates when the skill already enforces them' trigger. High severity."
+    }
+  ]
+}

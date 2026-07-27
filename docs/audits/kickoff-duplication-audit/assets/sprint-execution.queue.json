@@ -1,0 +1,348 @@
+{
+  "asset": "sprint-execution",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+  "claim_count": 9,
+  "claims": [
+    {
+      "local_id": "sprint-execution-11",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [
+        567,
+        569
+      ],
+      "kickoff_quote": "Use the context-restore skill to reload the last checkpoint. Then use the using-git-worktrees skill to isolate this wave's workspace, install deps, and confirm a clean baseline.",
+      "skill_quote": "4. Verify you are NOT on the default branch without explicit user consent; create/verify the sprint working branch or worktree \u2014 use `using-git-worktrees` for this (it detects existing isolation first, so it's a no-op if the orchestrator itself is already running inside one).",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "skill_line": 34,
+      "reasoning": "Ordering across skills (context-restore first, worktree isolation before dispatch) is the operator's call, and 'install deps, confirm a clean baseline' has no counterpart anywhere in the skill. There is partial overlap \u2014 \u00a71.4 already routes to using-git-worktrees, and the skill notes the call is a no-op if isolation exists \u2014 so the redundant sliver is small and harmless. KEEP.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "sprint-execution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "raised_by": [
+        "sprint-execution"
+      ],
+      "locations": [
+        [
+          567,
+          569
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "sprint-execution-1"
+    },
+    {
+      "local_id": "sprint-execution-4",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "08",
+      "kickoff_line_range": [
+        569,
+        571
+      ],
+      "kickoff_quote": "under the test-driven-development skill \u2014 write the failing tests first, then implement to green",
+      "skill_quote": "- **TDD-first is the default task contract.** Every implementation task: write the failing test, watch it fail, implement, watch it pass, commit. Subagents follow the test-driven-development skill; the dispatch prompt says so explicitly.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "skill_line": 132,
+      "reasoning": "The skill already names test-driven-development as the default contract for every implementation task and spells out the red-green loop, and commits to injecting it into each dispatch prompt. The KICKOFF re-teaches the loop rather than selecting a mode the skill leaves open \u2014 TDD is not optional here.",
+      "systemic": true,
+      "other_locations": [],
+      "asset": "sprint-execution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "raised_by": [
+        "sprint-execution",
+        "test-driven-development"
+      ],
+      "locations": [
+        [
+          569,
+          570
+        ],
+        [
+          569,
+          571
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [
+        "sprint-execution::sprint-execution-4",
+        "test-driven-development::test-driven-development-1"
+      ],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "sprint-execution-2"
+    },
+    {
+      "local_id": "sprint-execution-7",
+      "class": "unenforced-gap",
+      "severity": "medium",
+      "step": "08",
+      "kickoff_line_range": [
+        570,
+        571
+      ],
+      "kickoff_quote": "with every \"done\" claim backed by fresh command output per the verification-before-completion skill, not confidence",
+      "skill_quote": "SEARCH EVIDENCE \u2014 no coverage found. Greps run over SKILL.md (the skill's only file; the directory has no references/): `grep -inE \"verification-before|fresh command|fresh output|evidence|confidence|proof\"` returns exactly one hit, line 180, which is about merge verification, not done-claims: \"A handover's `Merged` field is a self-report, not evidence; this check is the evidence.\" The closest related sentences are line 185 \"7. **Optionally dispatch a verification subagent** for wave/phase-completion checks before advancing.\" (explicitly optional, and about waves not per-task done-claims) and line 217 \"Skip verifications the plan specifies, or accept 'close enough' on spec compliance\" (defers to the plan, asserts no evidence standard of its own). The skill never names verification-before-completion and never requires fresh command output behind a completion claim.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "skill_line": 185,
+      "reasoning": "The skill's close-handover block (\u00a75, line 156) asks a subagent for a 'Tests: <suite result one-liner>' but never demands that the line be backed by freshly-run output, and the orchestrator is nowhere told to reject self-reported greens \u2014 the one place the skill applies that logic is merges. The KICKOFF text is therefore load-bearing and must be KEPT; the fix belongs in the skill (an evidence rule on the Tests/Status fields, mirroring \u00a76.2's treatment of `Merged`).",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "sprint-execution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "raised_by": [
+        "sprint-execution"
+      ],
+      "locations": [
+        [
+          570,
+          571
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "sprint-execution-3"
+    },
+    {
+      "local_id": "sprint-execution-2",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "08",
+      "kickoff_line_range": [
+        571,
+        574
+      ],
+      "kickoff_quote": "It dispatches one subagent per track, each in its own git worktree, runs its own two-stage review gates (per-track/per-wave, then a final whole-branch pass) with a compaction-proof progress ledger, and merges centrally.",
+      "skill_quote": "Execute a written plan by dispatching subagents \u2014 one per track \u2014 in parallel waves, each in an isolated git worktree, with the orchestrator owning merges, state, and gates.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "skill_line": 8,
+      "reasoning": "A four-clause summary of the skill's own internal architecture: per-track worktree dispatch (line 8, \u00a73), the two review stages (\u00a77 lines 192 and 194, 'Per-track/per-wave review' / 'Final whole-branch review'), the compaction-proof ledger (line 21 and \u00a76.6 line 184) and central merge (\u00a76.1 line 179). Every clause is methodology the skill fixes for itself; none of it is an argument the operator supplies.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "sprint-execution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "raised_by": [
+        "sprint-execution"
+      ],
+      "locations": [
+        [
+          571,
+          574
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "sprint-execution-4"
+    },
+    {
+      "local_id": "sprint-execution-1",
+      "class": "redundant-restatement",
+      "severity": "high",
+      "step": "08",
+      "kickoff_line_range": [
+        574,
+        576
+      ],
+      "kickoff_quote": "Before moving on, confirm the merge mechanically: `git log <integration-branch>..<branch> --oneline` must come back empty for every branch \u2014 a handover's `Merged` field is a self-report, not evidence.",
+      "skill_quote": "2. **Verify the merge mechanically:** `git log <integration-branch>..<branch> --oneline` must come back **empty** for every branch. A handover's `Merged` field is a self-report, not evidence; this check is the evidence.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "skill_line": 180,
+      "reasoning": "This is a near-verbatim copy of the skill's \u00a76.2 gate, down to the exact git command and the 'self-report, not evidence' phrasing. The skill also lists it twice more as a Red Flag (line 212) and a wave-advance bar (line 214). Nothing in the KICKOFF sentence parameterises the gate; it re-derives a hard rule the skill already enforces.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "sprint-execution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "raised_by": [
+        "sprint-execution"
+      ],
+      "locations": [
+        [
+          574,
+          576
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "high"
+      ],
+      "claim_id": "sprint-execution-5"
+    },
+    {
+      "local_id": "sprint-execution-3",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "08",
+      "kickoff_line_range": [
+        576,
+        577
+      ],
+      "kickoff_quote": "One wave per run, so invoke it again for each wave; never start wave N+1 until wave N has merged and verified clean.",
+      "skill_quote": "- **One wave per Workflow run.** Wave N+1 is dispatched only after the integration branch contains all of Wave N's merged work, so the next wave's worktrees inherit it.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "skill_line": 55,
+      "reasoning": "The one-wave-per-run rule and the wave-N+1 bar are stated in the skill four times: \u00a73 (line 55-56), \u00a73a (line 102 'ONE wave per run \u2014 there is no waves[] array, and passing one throws'), \u00a76.8 (line 186), and the Red Flags (lines 206 and 214). The KICKOFF adds no parameter \u2014 it re-derives a gate the skill enforces mechanically.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "sprint-execution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "raised_by": [
+        "sprint-execution"
+      ],
+      "locations": [
+        [
+          576,
+          577
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "sprint-execution-6"
+    },
+    {
+      "local_id": "sprint-execution-9",
+      "class": "load-bearing-parameter",
+      "severity": "medium",
+      "step": "08",
+      "kickoff_line_range": [
+        577,
+        579
+      ],
+      "kickoff_quote": "(This review is per-track/per-wave scaffolding to keep execution honest \u2014 it is not step 10's adversarial phase-level review, which runs once against the whole built phase.)",
+      "skill_quote": "- **Final whole-branch review:** after all waves, run one broad review over `merge-base..HEAD` on the most capable model.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "skill_line": 194,
+      "reasoning": "The skill knows about its own two review stages but cannot know that the surrounding pipeline runs a separate adversarial phase-level review at step 10. Without this parenthetical the operator would plausibly treat \u00a77's final whole-branch pass as satisfying step 10 and skip it. Pure cross-step disambiguation \u2014 KEEP.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "sprint-execution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "raised_by": [
+        "sprint-execution"
+      ],
+      "locations": [
+        [
+          577,
+          579
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "sprint-execution-7"
+    },
+    {
+      "local_id": "sprint-execution-5",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "08",
+      "kickoff_line_range": [
+        583,
+        585
+      ],
+      "kickoff_quote": "Once the final whole-branch review comes back clean, sprint-execution hands off to the finishing-a-development-branch skill, which puts a merge / PR / keep / discard menu in front of me",
+      "skill_quote": "- **After the final whole-branch review comes back clean**, the sprint's implementation work is done \u2014 invoke the finishing-a-development-branch skill to verify tests one last time and present the merge/PR/keep/discard decision.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "skill_line": 198,
+      "reasoning": "The descriptive half of the 'Know how this skill ends' paragraph restates \u00a77's final bullet almost clause-for-clause, including the trigger condition and the four menu options. The operative half (which option to pick, and why) is separately load-bearing \u2014 see claim 6 \u2014 but this sentence itself only narrates the skill's own exit path.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "sprint-execution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "raised_by": [
+        "sprint-execution"
+      ],
+      "locations": [
+        [
+          583,
+          585
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "sprint-execution-8"
+    },
+    {
+      "local_id": "sprint-execution-6",
+      "class": "load-bearing-parameter",
+      "severity": "high",
+      "step": "08",
+      "kickoff_line_range": [
+        585,
+        589
+      ],
+      "kickoff_quote": "Take **keep** (\"keep the branch as-is\"): the branch still has to survive step 10's adversarial review loop, step 11's verification and step 12's milestone gate, and the PR is opened at step 13. Merging or opening the PR at this point bypasses all four. If I answer anything other than keep, say plainly which gates I am skipping before you act on it.",
+      "skill_quote": "Don't decide that disposition yourself; it's the skill's call to make with the user.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "skill_line": 198,
+      "reasoning": "The skill deliberately refuses to pick a disposition and defers to the user. The KICKOFF is the user's standing answer plus the pipeline-level reason (four downstream gates at steps 10/11/12/13) that no skill can know. Not a contradiction \u2014 it fills exactly the hole the skill leaves open. Must be KEPT.",
+      "systemic": true,
+      "other_locations": [],
+      "asset": "sprint-execution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "raised_by": [
+        "finishing-a-development-branch",
+        "sprint-execution"
+      ],
+      "locations": [
+        [
+          585,
+          589
+        ],
+        [
+          586,
+          589
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [
+        "finishing-a-development-branch::finishing-a-development-branch-6",
+        "sprint-execution::sprint-execution-6"
+      ],
+      "contributing_severities": [
+        "high",
+        "low"
+      ],
+      "claim_id": "sprint-execution-9"
+    }
+  ]
+}

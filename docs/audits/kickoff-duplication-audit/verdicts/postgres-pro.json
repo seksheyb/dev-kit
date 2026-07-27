@@ -1,0 +1,13 @@
+{
+  "asset": "postgres-pro",
+  "verdicts": [
+    {
+      "claim_id": "postgres-pro-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 604-611: 'For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it — python-pro / fastapi-expert / django-expert / postgres-pro / api-designer for backend work, ... Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills.' (verified verbatim, postgres-pro appears exactly once in KICKOFF.md at line 605) vs SKILL.md line 3 (frontmatter description, verified verbatim): 'Use when optimizing PostgreSQL queries, configuring replication, or implementing advanced database features. Invoke for EXPLAIN analysis, JSONB operations, extension usage, VACUUM tuning, performance monitoring.'",
+      "reasoning": "Verified both quotes exist exactly as claimed. grep confirms 'postgres-pro' appears exactly once in the entire KICKOFF.md, at line 605, embedded in a lane-routing list. The KICKOFF text is a dispatch-time instruction telling the orchestrator to name which lane skill owns each track's surface and pick from the plugins enabled that run — an ordering/assignment directive across skills (which track gets which skill, among the skills actually enabled) that the skill itself cannot know. This matches the rubric's explicit 'NOT duplication' categories (mode/skill selection among options, ordering across skills). I read the full postgres-pro SKILL.md body (152 lines: EXPLAIN/BUFFERS workflow, index design by access pattern, replication setup, VACUUM/pg_stat monitoring, JSONB/extension guidance) and none of that methodology is restated, paraphrased, or re-derived anywhere in KICKOFF.md — the guide only names the skill by its bare identifier in a routing table, it never re-teaches what the skill does or how. There is no contradiction (guide and skill agree postgres-pro is for backend/DB work), no stale-drift (skill still matches the routing category it's listed under), and no unenforced-gap (nothing here asserts behavior the skill lacks). The claim's classification as load-bearing-parameter with low severity is correct and defensible: this is a legitimate routing reference, not a candidate for trimming."
+    }
+  ]
+}

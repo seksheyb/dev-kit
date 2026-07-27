@@ -1,0 +1,43 @@
+{
+  "asset": "postgres-pro",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/postgres-pro/SKILL.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/postgres-pro/references/performance.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/postgres-pro/references/jsonb.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/postgres-pro/references/extensions.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/postgres-pro/references/replication.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/postgres-pro/references/maintenance.md"
+  ],
+  "claims": [
+    {
+      "local_id": "postgres-pro-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [603, 611],
+      "kickoff_quote": "For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it — python-pro / fastapi-expert / django-expert / postgres-pro / api-designer for backend work, ... Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills.",
+      "skill_quote": "description: Use when optimizing PostgreSQL queries, configuring replication, or implementing advanced database features. Invoke for EXPLAIN analysis, JSONB operations, extension usage, VACUUM tuning, performance monitoring.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/postgres-pro/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "The only KICKOFF reference to postgres-pro is a bare name inside a lane-routing table that tells the orchestrator which skill to assign to which track surface. Routing/assignment across skills is the invocation's argument, not skill methodology — the skill's own frontmatter description is a trigger condition for self-selection, which is a different mechanism from an orchestrator naming it in a track brief. Nothing about EXPLAIN, indexes, JSONB, replication or VACUUM is restated in KICKOFF.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "postgres-pro-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [613, 614],
+      "kickoff_quote": "Every name above is a skill, and the track subagent loads its own assigned skill itself.",
+      "skill_quote": "5. **Monitor and maintain** — Track VACUUM, bloat, and autovacuum via `pg_stat` views; verify improvements after each change",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/postgres-pro/SKILL.md",
+      "skill_line": 35,
+      "reasoning": "This is orchestration mechanics (skill vs agent, who loads what) that a lane skill structurally cannot and should not carry. Grepped the SKILL.md and all five references for lane/track/dispatch/subagent/orchestrat — the only hit is the unrelated word 'Track' at line 35 (quoted here as the closest match), confirming the skill has zero orchestration content. Load-bearing, keep as-is; not an unenforced-gap since it is not a claim about postgres-pro's own behavior.",
+      "systemic": true,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

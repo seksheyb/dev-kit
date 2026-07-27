@@ -1,0 +1,21 @@
+{
+  "asset": "context-save",
+  "verdicts": [
+    {
+      "claim_id": "context-save-1",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md:118-119 (identically repeated at 240-241, 284-285, 334-335, 554-555, 955-956): 'Use the context-save skill to checkpoint this boundary — what is done, what got decided, and what is next.' vs. SKILL.md:32-37 Step 2: 'Using the gathered state plus the conversation history, produce a summary covering: 1. What's being worked on... 2. Decisions made... 3. Remaining work... 4. Notes...' and the fixed output template at SKILL.md:93-103 with headers '### Summary', '### Decisions Made', '### Remaining Work', '### Notes'.",
+      "reasoning": "Verified the KICKOFF quote exists verbatim at all six claimed locations (grep confirms lines 118, 240, 284, 334, 554, 955 exactly). Verified SKILL.md:32-37 and the output template at 93-103. The trailing clause 'what is done, what got decided, and what is next' is a compressed restatement of the skill's own fixed checklist/template items (decisions made -> Decisions Made; what is next -> Remaining Work; what is done -> Summary/progress). The skill's own frontmatter description (SKILL.md:3) already promises 'captures git state, decisions made, and remaining work' — so even bare invocation without the gloss would produce this. This is restating output structure the skill's template already fixes (squarely 'IS duplication' bucket: restates output format/section structure). It is also incomplete relative to the skill's actual 4-item checklist (omits Notes), which supports that the operator is trying to recall/restate the skill's own methodology rather than supplying new information — a hallmark of redundant-restatement rather than a deliberate scoping instruction. Repeated verbatim across all 6 invocation sites (systemic), so medium severity is appropriate: low-value duplicated boilerplate that adds sync-drift risk without being load-bearing."
+    },
+    {
+      "claim_id": "context-save-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md:118 'Use the context-save skill to checkpoint this boundary' (identically at 240, 284, 334, 554, 955), each immediately followed by a bare '/clear' block, and each preceding step opens with a paired context-restore invocation. Skill frontmatter (SKILL.md:3): 'Use when asked to save progress, save state, checkpoint work, or hand off a session before ending it — captures git state, decisions made, and remaining work into a file that context-restore can load later, even from a different branch or worktree.'",
+      "reasoning": "Verified the skill's description only states generic trigger conditions ('when asked to... checkpoint work... hand off a session before ending it') and says nothing about which of the 16 pipeline steps constitute session boundaries, nor about pairing with /clear or with context-restore at the next step's start. Confirmed all six KICKOFF placements (118, 240, 284, 334, 554, 955) sit immediately before a '/clear' block, which is placement/ordering information the skill cannot originate — this is exactly the 'ordering / parallelism across skills' and 'which points are session boundaries' categories the rubric marks as load-bearing, not duplication. Correctly classified as load-bearing-parameter; must be kept."
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "asset": "advisor-researcher",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/advisor-researcher.md",
+  "references_read": [],
+  "claims": [
+    {
+      "local_id": "advisor-researcher-1",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "05",
+      "kickoff_line_range": [384, 385],
+      "kickoff_quote": "and each returning a\n5-column options table (Option / Pros / Cons / Complexity / Recommendation)",
+      "skill_quote": "- Do NOT add columns beyond the 5-column format (Option, Pros, Cons, Complexity, Recommendation)",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/advisor-researcher.md",
+      "skill_line": 124,
+      "reasoning": "The output table's column count and exact column names are fixed by the agent's own <output_format> template (line 80: `| Option | Pros | Cons | Complexity | Recommendation |`) and re-armored as an anti-pattern at line 124. The operator prompt cannot change this shape, so restating it adds no parameter — it is output-format duplication.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "advisor-researcher-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "05",
+      "kickoff_line_range": [383, 384],
+      "kickoff_quote": "each given its gray area's name and description, the phase context\nfrom the roadmap, brief project context, and the same calibration tier",
+      "skill_quote": "- `<gray_area>` -- area name and description",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/advisor-researcher.md",
+      "skill_line": 48,
+      "reasoning": "The agent's <input> block (lines 45-52) declares the four inputs it expects but cannot supply them; the caller must. Naming the concrete sources ('the phase context from the roadmap', 'the same calibration tier' as the tier already fixed at KICKOFF line 368) is the invocation's argument list. Overlaps the <input> enumeration in wording but is load-bearing, not redundant.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "advisor-researcher-3",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "05",
+      "kickoff_line_range": [382, 383],
+      "kickoff_quote": "Then fan out one advisor-researcher agent per gray-area\ndecision, all in one message",
+      "skill_quote": "- Do NOT research beyond the single assigned gray area",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/advisor-researcher.md",
+      "skill_line": 122,
+      "reasoning": "The agent enforces its own one-gray-area scope but has no way to know how many gray areas exist or that the dispatches should be parallel. Fan-out cardinality and 'all in one message' parallelism are orchestration facts only the caller holds.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "advisor-researcher-4",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "05",
+      "kickoff_line_range": [385, 386],
+      "kickoff_quote": "fold those tables\nback into RESEARCH.md.",
+      "skill_quote": "> Note: this agent reads and writes no files itself — `<phase_context>` arrives inline in the dispatch prompt, and the returned table is folded by the caller into artifacts such as `docs/milestones/<M>/phases/<NN>-<slug>/RESEARCH.md` or `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/advisor-researcher.md",
+      "skill_line": 8,
+      "reasoning": "The agent note anticipates that the caller folds the table somewhere, but explicitly leaves the destination open ('artifacts such as ... RESEARCH.md or ... PLAN.md'). Picking RESEARCH.md at this step is the caller's choice and an argument of the invocation, so it must stay.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

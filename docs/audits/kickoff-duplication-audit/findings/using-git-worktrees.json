@@ -1,0 +1,51 @@
+{
+  "asset": "using-git-worktrees",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/using-git-worktrees/SKILL.md",
+  "references_read": [],
+  "claims": [
+    {
+      "local_id": "using-git-worktrees-1",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [566, 567],
+      "kickoff_quote": "Then use the using-git-worktrees skill to isolate this wave's workspace, install deps, and confirm a clean baseline.",
+      "skill_quote": "## Step 2: Project Setup\n\nAuto-detect and run appropriate setup:",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/using-git-worktrees/SKILL.md",
+      "skill_line": 104,
+      "reasoning": "\"install deps, and confirm a clean baseline\" enumerates the skill's own Step 2 (Project Setup, line 104: auto-detect npm install / cargo build / pip install) and Step 3 (Verify Clean Baseline, line 123: \"Run tests to ensure workspace starts clean\"), both of which are unconditional and reinforced in the Always list (lines 203-204: \"Auto-detect and run project setup\", \"Verify clean test baseline\"). The operator prompt is re-deriving the skill's internal phase list rather than passing a parameter. Severity is low because it is a compact three-word gloss, not a full methodology restatement, and it aids readability of the step-8 chain.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "using-git-worktrees-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [566, 568],
+      "kickoff_quote": "Use the context-restore skill to reload the last checkpoint. Then use the using-git-worktrees skill to isolate this wave's workspace ... Then use the sprint-execution skill to execute PHASE/<NN>-<MM>-PLAN.md under the test-driven-development skill",
+      "skill_quote": "**Note for orchestrator skills** (e.g. `sprint-execution`): this isolates *your own* workspace — the one you write state/roadmap files from and merge subagent work into — not the per-subagent isolation you set up separately via `isolation=\"worktree\"` on each Task/Agent dispatch.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/using-git-worktrees/SKILL.md",
+      "skill_line": 14,
+      "reasoning": "The ordering (after context-restore, before sprint-execution) and the scoping to \"this wave's workspace\" are invocation arguments the skill cannot know — the skill only knows it isolates the caller's own workspace, not that the caller is a per-wave step-8 run. Classified load-bearing; keep.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "using-git-worktrees-3",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [571, 573],
+      "kickoff_quote": "It dispatches one subagent per track, each in its own git worktree, runs its own two-stage review gates (per-track/per-wave, then a final whole-branch pass) with a compaction-proof progress ledger, and merges centrally.",
+      "skill_quote": "**Note for orchestrator skills** (e.g. `sprint-execution`): this isolates *your own* workspace — the one you write state/roadmap files from and merge subagent work into — not the per-subagent isolation you set up separately via `isolation=\"worktree\"` on each Task/Agent dispatch. Different layer, same underlying mechanism.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/using-git-worktrees/SKILL.md",
+      "skill_line": 14,
+      "reasoning": "The \"each in its own git worktree\" clause describes sprint-execution's per-subagent isolation, which this skill explicitly disclaims as a different layer at line 14 — so it is not this skill's methodology being restated, and the two texts agree rather than conflict. Recorded as load-bearing (and consistent) for the denominator; it belongs to sprint-execution's accounting.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

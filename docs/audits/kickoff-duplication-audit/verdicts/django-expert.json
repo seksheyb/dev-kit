@@ -1,0 +1,21 @@
+{
+  "asset": "django-expert",
+  "verdicts": [
+    {
+      "claim_id": "django-expert-1",
+      "confirmed": false,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md line 7: `  domain: backend` (frontmatter metadata); KICKOFF.md lines 604-606: \"python-pro / fastapi-expert / django-expert / postgres-pro / api-designer for backend work, react-expert / nextjs-developer / typescript-pro / vue-expert for web, swift-expert / kotlin-specialist / flutter-expert / react-native-expert for mobile, ...\"",
+      "reasoning": "Refuted. The KICKOFF text is not restating django-expert's own methodology, gate, or template - it is a cross-plugin routing table the orchestrator uses to decide which of ~20 lane skills across 6 different domains (backend/web/mobile/AI/infra/specialized) owns which track, ending in an explicit instruction to 'tell me the track-to-lane mapping before you dispatch.' django-expert itself has no knowledge that it is being grouped alongside fastapi-expert/postgres-pro/api-designer, or that a mobile/AI/infra alternative exists - that grouping is the operator's own routing decision, not something derivable by loading the skill. The 'domain: backend' frontmatter field is inert metadata the orchestrator does not consult as a routing table (the queue's own reasoning admits this). The overlap between 'for backend work' and 'domain: backend' is incidental one-word phrasing, not the skill's actual methodology, gate, or template being duplicated - this is exactly the 'overlap is incidental phrasing' refutation case, not redundant-restatement."
+    },
+    {
+      "claim_id": "django-expert-2",
+      "confirmed": true,
+      "final_class": "contradiction",
+      "final_severity": "medium",
+      "evidence": "SKILL.md lines 30-35 (Core Workflow): \"1. **Analyze requirements**... 2. **Design models** — ... run `manage.py makemigrations` and `manage.py migrate`; verify schema before proceeding 3. **Implement views** — ... 4. **Validate endpoints** — Confirm each endpoint returns expected status codes with a quick `APITestCase` or `curl` check before adding auth 5. **Add auth** — ... 6. **Test** — Django TestCase, APITestCase\"; KICKOFF.md lines 569-570: \"execute PHASE/<NN>-<MM>-PLAN.md under the test-driven-development skill — write the failing tests first, then implement to green\".",
+      "reasoning": "Confirmed. django-expert's own numbered Core Workflow is sequential and prescriptive (it uses ordering language like 'verify schema before proceeding' and 'before adding auth'), and it places formal Testing as step 6 - last, after models, views, endpoint validation, and auth are built. That is a build-then-test workflow. KICKOFF step 8 mandates the opposite for any track that loads this skill: write the failing test first, then implement to green, under the test-driven-development skill. I grepped the full references/ chain (models-orm.md, drf-serializers.md, viewsets-views.md, authentication.md, testing-django.md) for test-first/TDD/red-green/write-test-before-code language and found none - testing-django.md is APITestCase/fixtures/factory recipes only, with no ordering guidance that would reconcile the two. A track subagent handed django-expert as its lane skill under the step-8 test-first mandate gets a lane reference whose own workflow instructs it to build first and test last, a genuine behavioral disagreement between the guide and the skill."
+    }
+  ]
+}

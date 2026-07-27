@@ -1,0 +1,45 @@
+{
+  "asset": "doc-synthesizer",
+  "verdicts": [
+    {
+      "claim_id": "doc-synthesizer-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "doc-synthesizer.md:17 \"You are dispatched by the orchestrator/pipeline after all classifiers have completed.\"",
+      "reasoning": "The skill states the precondition (dispatch after classifiers finish) but has no way to enforce the barrier itself, nor to know it should be exactly one instance rather than N. The KICKOFF text 'Stage 2 is a barrier ... one doc-synthesizer agent' is an orchestration/ordering decision the operator must make and the skill cannot see or verify from inside a single invocation. Correctly load-bearing, not duplication."
+    },
+    {
+      "claim_id": "doc-synthesizer-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "doc-synthesizer.md:14 \"`INTEL_DIR` and `CONFLICTS_PATH` are orchestrator-configurable per invocation; the values shown are the defaults.\" (also <inputs>, lines 29-36, which lists CLASSIFICATIONS_DIR, INTEL_DIR, CONFLICTS_PATH, MODE as prompt-supplied)",
+      "reasoning": "The skill explicitly documents these four values as per-invocation caller-supplied arguments and calls the shown paths mere defaults. Supplying concrete paths and choosing MODE new vs merge is the operator's job and cannot come from inside the skill. Correctly load-bearing."
+    },
+    {
+      "claim_id": "doc-synthesizer-3",
+      "confirmed": false,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "doc-synthesizer.md:41 \"Default ordering: `ADR > SPEC > PRD > DOC`. Higher-precedence sources win when content contradicts.\"",
+      "reasoning": "Refuted. The KICKOFF clause 'merges it under precedence rules into INGEST-CONFLICTS.md plus per-type intel under docs/state/intel/' does not restate any of the skill's actual methodology (it never gives the ADR>SPEC>PRD>DOC order, never mentions LOCKED handling, cycle detection, or the three-bucket taxonomy). It is a one-line gloss explaining what happens to the CONFLICTS_PATH/INTEL_DIR parameters that were just introduced in the same sentence -- i.e. it reads as continued parameter orientation ('here's what these paths will contain'), not a re-derivation of the skill's internal process or rules. This is exactly the 'overlap is incidental phrasing rather than the skill's actual methodology' refutation case, so the redundant-restatement classification does not survive."
+    },
+    {
+      "claim_id": "doc-synthesizer-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "doc-synthesizer.md:47 \"**LOCKED vs LOCKED:** two locked ADRs in the ingest set that contradict → hard BLOCKER, both in `new` and `merge` modes. Never auto-resolve.\" (also restated at line 100 in detect_conflicts pass 1, line 188 in anti_patterns \"Pick a winner between two LOCKED ADRs — always BLOCK\", and line 203 in success_criteria \"LOCKED-vs-LOCKED contradictions surface as BLOCKERs, never auto-resolved\")",
+      "reasoning": "Verified all four in-skill locations state the identical hard rule. doc-classifier.md:101 and :127 confirm 'Accepted' status is precisely the classifier's definition of 'locked', so the KICKOFF sentence 'Two Accepted ADRs that contradict each other are an unresolved blocker — report it, never pick a winner' is not a narrower or complementary rule, it is the same gate restated in guide prose. The skill already enforces this at four separate points in its own file; the KICKOFF text re-derives a hard rule the skill fully owns. Confirmed redundant-restatement."
+    },
+    {
+      "claim_id": "doc-synthesizer-5",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "doc-synthesizer.md:59 \"Read every `*.json` in `CLASSIFICATIONS_DIR`. Build an in-memory index keyed by `source_path`. Count by type.\"",
+      "reasoning": "The skill is indifferent to how it was dispatched -- it just reads CLASSIFICATIONS_DIR regardless of whether a work-list script or manual one-off dispatch produced it. The KICKOFF guidance about skipping the workflow script for a handful of docs is a corpus-size judgment call that lives entirely with the operator/orchestrator and has no analog inside the agent. Correctly load-bearing."
+    }
+  ]
+}

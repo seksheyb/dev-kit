@@ -1,0 +1,79 @@
+{
+  "asset": "test-master",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/test-master/SKILL.md",
+  "claim_count": 2,
+  "claims": [
+    {
+      "local_id": "test-master-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "11",
+      "kickoff_line_range": [
+        941,
+        944
+      ],
+      "kickoff_quote": "the feature has a real failure mode, invoking playwright-expert for web or test-master for Maestro as the test-design skill.",
+      "skill_quote": "Generates test files, creates mocking strategies, analyzes code coverage, designs test architectures, and produces test plans and defect reports across functional, performance, and security testing disciplines. Use when writing unit tests, integration tests, or E2E tests...",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/test-master/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "Which skill authors the E2E flow (playwright-expert vs test-master) is decided by the project's mobile-automation platform (Maestro), a repo-evidence fact only the operator/gate-automation agent can determine \u2014 the skill's own description is framework-agnostic and does not select itself for any one platform. This is routing/mode-selection supplied by the guide, not a restatement of test-master's internal methodology.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "test-master",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/test-master/SKILL.md",
+      "raised_by": [
+        "test-master"
+      ],
+      "locations": [
+        [
+          941,
+          944
+        ]
+      ],
+      "steps": [
+        "11"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "test-master-1"
+    },
+    {
+      "local_id": "test-master-2",
+      "class": "unenforced-gap",
+      "severity": "low",
+      "step": "11",
+      "kickoff_line_range": [
+        941,
+        944
+      ],
+      "kickoff_quote": "invoking playwright-expert for web or test-master for Maestro as the test-design skill.",
+      "skill_quote": "SEARCH EVIDENCE: grep -rni 'maestro' across SKILL.md and all 10 files in references/ returned zero hits. grep -rni 'mobile' returned only three hits, none Maestro-specific: references/automation-frameworks.md:293 '| Appium, Detox | Mobile |' (a one-line quick-reference row, no detail) and references/e2e-testing.md:107-108/121, which are Playwright device-emulation entries ('mobile-chrome', 'mobile-safari', 'Mobile | Responsive features'), not native mobile E2E tooling.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/test-master/references/automation-frameworks.md",
+      "skill_line": 293,
+      "reasoning": "The guide directs test-master to author Maestro mobile-E2E flows, but neither the skill body nor any of its ten reference files contain Maestro-specific guidance (YAML flow syntax, gestures, device config) \u2014 the only mobile-automation mention is a bare 'Appium, Detox' quick-reference row. Severity is low rather than high because the skill explicitly claims framework-agnostic generality elsewhere ('Apply the same structure for pytest... and other frameworks', SKILL.md:49), so it is likely still usable by analogy, but this is a genuine coverage gap in the skill's own material that the guide's one-line delegation does not compensate for.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "test-master",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/test-master/SKILL.md",
+      "raised_by": [
+        "test-master"
+      ],
+      "locations": [
+        [
+          941,
+          944
+        ]
+      ],
+      "steps": [
+        "11"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "test-master-2"
+    }
+  ]
+}

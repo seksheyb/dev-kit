@@ -1,0 +1,161 @@
+{
+  "asset": "context-restore",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/context-restore/SKILL.md",
+  "claim_count": 2,
+  "claims": [
+    {
+      "local_id": "context-restore-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "01",
+      "kickoff_line_range": [
+        131,
+        131
+      ],
+      "kickoff_quote": "Use the context-restore skill to reload the last checkpoint.",
+      "skill_quote": "description: Use when asked to resume, restore context, pick up where you left off, or figure out where you were \u2014 restores the working context saved earlier by context-save, defaulting to the most recent state across all branches so a session can resume even after a worktree or workspace handoff.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/context-restore/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "The invocation's real payload is placement, not method: it schedules context-restore as the first act of six specific pipeline steps, each immediately after a `/clear` that follows a paired context-save block (KICKOFF lines 118, 240, 284, 334, 554, 955). Where in a multi-step pipeline the boundary sits is information the skill structurally cannot hold \u2014 its description triggers on a user asking to resume, not on a stage transition. Keep all six.",
+      "systemic": true,
+      "other_locations": [
+        [
+          253,
+          253
+        ],
+        [
+          300,
+          300
+        ],
+        [
+          362,
+          362
+        ],
+        [
+          567,
+          567
+        ],
+        [
+          974,
+          974
+        ]
+      ],
+      "asset": "context-restore",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/context-restore/SKILL.md",
+      "raised_by": [
+        "context-restore"
+      ],
+      "locations": [
+        [
+          131,
+          131
+        ],
+        [
+          253,
+          253
+        ],
+        [
+          300,
+          300
+        ],
+        [
+          362,
+          362
+        ],
+        [
+          567,
+          567
+        ],
+        [
+          974,
+          974
+        ]
+      ],
+      "steps": [
+        "01"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "context-restore-1"
+    },
+    {
+      "local_id": "context-restore-2",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "01",
+      "kickoff_line_range": [
+        131,
+        131
+      ],
+      "kickoff_quote": "to reload the last checkpoint",
+      "skill_quote": "**Default: load the most recent saved context across ALL branches.** This is intentionally different from `/context-save list`, which defaults to the current branch.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/context-restore/SKILL.md",
+      "skill_line": 12,
+      "reasoning": "\"the last checkpoint\" names the skill's own no-argument default, restated three times in the skill: line 12 (Default: most recent across ALL branches), line 16 (`/context-restore` \u2192 load the most recent saved context (any branch)), and line 43 (Otherwise \u2192 load the **first file from `sort -r`** \u2014 the newest timestamp prefix is the canonical \"most recent\"). Mode selection is normally load-bearing, but selecting the default is a no-op \u2014 a bare \"Use the context-restore skill.\" produces identical behavior. Severity low: it is a four-word clause, it is not wrong, and \"checkpoint\" is the pipeline's own vocabulary (the paired context-save block says \"checkpoint this boundary\" and context-save's description says \"checkpoint work\"), so the synonym does not mislead. Flagged for the denominator, not as a defect worth a rewrite pass on its own.",
+      "systemic": true,
+      "other_locations": [
+        [
+          253,
+          253
+        ],
+        [
+          300,
+          300
+        ],
+        [
+          362,
+          362
+        ],
+        [
+          567,
+          567
+        ],
+        [
+          974,
+          974
+        ]
+      ],
+      "asset": "context-restore",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/context-restore/SKILL.md",
+      "raised_by": [
+        "context-restore"
+      ],
+      "locations": [
+        [
+          131,
+          131
+        ],
+        [
+          253,
+          253
+        ],
+        [
+          300,
+          300
+        ],
+        [
+          362,
+          362
+        ],
+        [
+          567,
+          567
+        ],
+        [
+          974,
+          974
+        ]
+      ],
+      "steps": [
+        "01"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "context-restore-2"
+    }
+  ]
+}

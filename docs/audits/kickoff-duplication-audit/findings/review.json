@@ -1,0 +1,41 @@
+{
+  "asset": "review",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/review.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/references/independent-review.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/references/review-engines (listed: antigravity.md, claude.md, codex.md, cursor.md, gemini.md)",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/code-review-gate.md"
+  ],
+  "claims": [
+    {
+      "local_id": "review-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "10",
+      "kickoff_line_range": [755, 756],
+      "kickoff_quote": "*(only if you want a one-shot look at the current diff, outside the loop — it runs code-review-gate in single mode, so it is never a substitute for round 1)*",
+      "skill_quote": "Dispatch `agents/code-review-gate` (single mode) on that diff with the selected engine.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/review.md",
+      "skill_line": 7,
+      "reasoning": "This is conditional gating the operator must judge (when to use this ad-hoc command vs. the round-mode loop already running in step 10), not a restatement of methodology. The mention of 'single mode' orients the operator on why the command is not equivalent to the loop; it is the kind of context KICKOFF must supply because the command itself gives no guidance on when NOT to use it as a substitute.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "review-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "10",
+      "kickoff_line_range": [755, 756],
+      "kickoff_quote": "so it is never a substitute for round 1",
+      "skill_quote": "**Single mode** (default — no `round` input given): one-shot review of an explicit file list, a phase's diff, or a branch about to land. ... **Round mode** (`round` input given, `1..6`): one round of a phase's adversarial review loop, spawned per round after sprint tasks are merged into the phase's integration branch.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/code-review-gate.md",
+      "skill_line": 21,
+      "reasoning": "The dispatched agent (code-review-gate, reached via review.md's references chain) defines single mode and round mode as structurally distinct — round mode requires phase_dir/round/branch inputs the bare /review command never supplies. KICKOFF's caveat is the operator-facing consequence of that distinction (do not treat this command as round 1), which the command file itself never states — this is gating judgment, not duplicated methodology.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

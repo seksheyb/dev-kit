@@ -1,0 +1,53 @@
+{
+  "asset": "brainstorming",
+  "verdicts": [
+    {
+      "claim_id": "brainstorming-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md:131-132 verbatim: 'Then use the brainstorming skill to explore <product, one line> with me.' Skill SKILL.md:10: 'Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.'",
+      "reasoning": "The `<product, one line>` placeholder is the invocation's argument (what to brainstorm about), which the skill has no way of knowing on its own — confirmed as a pure parameter pass-through. The milestone-2+ substitution note (KICKOFF.md:140-141, swapping in BACKLOG.md Now/Next items) is likewise operator-side wiring, not skill duplication. Survives."
+    },
+    {
+      "claim_id": "brainstorming-2",
+      "confirmed": false,
+      "final_class": "unenforced-gap",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:186 '## Premise Challenge (both postures — mandatory)' sits inside the H1 section '# Mode: YC Office-Hours Diagnostic' (SKILL.md:116-212). The Standard-design-flow checklist (SKILL.md:32-43) and its 'Process' elaboration (51-89) contain no premise/assumption-challenge step — item 3 goes straight from clarifying questions to 'Propose 2-3 approaches'.",
+      "reasoning": "The claim is right that the three questions at SKILL.md:193-195 textually match the KICKOFF sentence almost verbatim, but wrong to call it 'redundant-restatement': that section is scoped under the YC Office-Hours Diagnostic mode heading, not under the Standard design flow checklist that governs the default 'scoped feature' path this KICKOFF paragraph sets up (confirmed by grep -in 'premise' — every hit at 186/188/189/201/209 lives inside the YC-mode H1, and line 30 only says diagnostic/validation modes feed premises INTO standard flow, not that standard flow generates its own). Deleting this KICKOFF text as 'duplicative' would remove the only thing forcing a premise challenge when brainstorming runs the standard flow directly — that is exactly what an unenforced-gap looks like, not a redundant restatement. Reclassified; superseded by claim brainstorming-3 which states the gap correctly."
+    },
+    {
+      "claim_id": "brainstorming-3",
+      "confirmed": true,
+      "final_class": "unenforced-gap",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:20-30 'Choosing a Mode' table + note that diagnostic/validation modes feed premises into standard flow; SKILL.md:32-43 'Checklist (standard design flow)' (5 items, no premise step); SKILL.md:186 '## Premise Challenge (both postures — mandatory)' nested inside '# Mode: YC Office-Hours Diagnostic' (SKILL.md:116).",
+      "reasoning": "Hunted the full file (only 250 lines, confirmed via `ls` that brainstorming has no references/ subdirectory, so there's nowhere else to look) and grepped every 'premise' hit: all of them (30, 118, 172, 186, 188, 189, 201, 209) sit inside or refer to the YC Office-Hours Diagnostic mode. The Standard design flow's own checklist and Process section never mention a premise/assumption-challenge gate, and the Idea Validation (Go/No-Go) mode's own 'Assessment' section also doesn't invoke it. Since the KICKOFF's default 'Otherwise' branch is exactly the standard scoped-feature case, without this KICKOFF sentence the skill would not force any premise-challenge step there at all. Genuine absence — the guide text is load-bearing and must be kept until the skill promotes Premise Challenge into the standard-flow checklist itself."
+    },
+    {
+      "claim_id": "brainstorming-4",
+      "confirmed": false,
+      "final_class": "unenforced-gap",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:197-202: 'If question 1 exposes a framing that's inherited-by-convention rather than reasoned (\"we've always done it this way\"), escalate to a full first-principles decomposition — load `spec-review-cpo`'s `references/first-principles.md`...' — this text is the tail of the same '## Premise Challenge (both postures — mandatory)' subsection (SKILL.md:186) nested under '# Mode: YC Office-Hours Diagnostic' (SKILL.md:116).",
+      "reasoning": "The wording overlap with SKILL.md:197 is real, but 'redundant-restatement' mischaracterizes it the same way brainstorming-2 does: this escalation clause is part of the identical Premise-Challenge passage that the Standard design flow checklist (SKILL.md:32-43) never references. It is not pure duplication that could be safely cut — it is the second half of the same load-bearing sentence compensating for the same unenforced gap (the skill's own escalation logic is unreachable from a standard-flow invocation unless something tells the model to go read it). Folded into the finding already confirmed under brainstorming-3; the original 'redundant' framing does not survive."
+    },
+    {
+      "claim_id": "brainstorming-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md:135-136: 'Otherwise: one question at a time, 2–3 approaches with a recommendation, and section-by-section design approval before we write anything.' SKILL.md:37-39: '2. **Ask clarifying questions** — one at a time...' / '3. **Propose 2-3 approaches** — with trade-offs and your recommendation' / '4. **Present design** — in sections scaled to their complexity, get user approval after each section', plus the HARD-GATE at SKILL.md:12-14 ('Do NOT invoke any implementation skill, write any code... until you have presented a design and the user has approved it').",
+      "reasoning": "Unlike the Premise Challenge clauses, this text maps onto the part of the skill that IS actually enforced for standard design flow — SKILL.md:34 says 'You MUST create a task for each of these items and complete them in order', and items 2-4 of that checklist are exactly what the KICKOFF sentence restates ('one question at a time' / '2-3 approaches with a recommendation' / 'section-by-section design approval'), with 'before we write anything' restating the HARD-GATE. No parameter, path, or operator-only judgment is added; this is the skill's own already-enforced methodology copied into the prompt. Confirmed as genuine duplication."
+    },
+    {
+      "claim_id": "brainstorming-6",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md:136-137: 'Use your YC-office-hours or go/no-go mode instead if this is a pre-code idea validation call rather than a scoped feature.' SKILL.md:27: '| A startup or product idea; \"is this worth building?\"; pre-code exploration | **YC office-hours diagnostic** |' (row of the 'Choosing a Mode' table, SKILL.md:20-28).",
+      "reasoning": "This is mode selection among the three modes the skill itself offers (SKILL.md:20-28 table), and only the operator/user knows at invocation time whether the current call is pre-code validation versus a scoped feature — the skill's own table can't make that call for them. Legitimate load-bearing parameter; the wording overlap with the table's 'pre-code' discriminator is minor and doesn't change the verdict."
+    }
+  ]
+}

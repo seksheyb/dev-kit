@@ -1,0 +1,79 @@
+{
+  "asset": "verification-before-completion",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/verification-before-completion/SKILL.md",
+  "claim_count": 2,
+  "claims": [
+    {
+      "local_id": "verification-before-completion-1",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [
+        570,
+        571
+      ],
+      "kickoff_quote": "with every \"done\" claim backed by fresh command output per the verification-before-completion skill, not confidence.",
+      "skill_quote": "NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/verification-before-completion/SKILL.md",
+      "skill_line": 19,
+      "reasoning": "The gloss restates the skill's own Iron Law almost word for word (\"fresh\" + \"evidence/command output\" for every completion claim), and the \"not confidence\" clause duplicates the rationalization table row \"I'm confident\" -> \"Confidence != evidence\" (line 68). The skill is unconditional and self-enforcing, so the restatement adds no parameter the skill lacks. Severity low: it is a single subordinate clause that also serves as the invocation trigger naming the skill, so only the trailing justification is strictly redundant.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "verification-before-completion",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/verification-before-completion/SKILL.md",
+      "raised_by": [
+        "verification-before-completion"
+      ],
+      "locations": [
+        [
+          570,
+          571
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "verification-before-completion-1"
+    },
+    {
+      "local_id": "verification-before-completion-2",
+      "class": "load-bearing-parameter",
+      "severity": "medium",
+      "step": "08",
+      "kickoff_line_range": [
+        574,
+        576
+      ],
+      "kickoff_quote": "Before moving on, confirm the merge mechanically: `git log <integration-branch>..<branch> --oneline` must come back empty for every branch \u2014 a handover's `Merged` field is a self-report, not evidence.",
+      "skill_quote": "| Agent completed | VCS diff shows changes | Agent reports \"success\" |",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/verification-before-completion/SKILL.md",
+      "skill_line": 49,
+      "reasoning": "The skill supplies the general principle (never trust an agent's self-report; check VCS state) and its gate step 1 explicitly requires the caller to IDENTIFY the command that proves the claim (line 29), but it deliberately contains no project-specific commands. The concrete `git log <integration-branch>..<branch> --oneline` check and the `Merged` handover field are sprint-execution/KICKOFF-specific arguments the skill cannot know. Keep this text.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "verification-before-completion",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/verification-before-completion/SKILL.md",
+      "raised_by": [
+        "verification-before-completion"
+      ],
+      "locations": [
+        [
+          574,
+          576
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "verification-before-completion-2"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "asset": "mcp-developer",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/mcp-developer/SKILL.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/mcp-developer/references/protocol.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/mcp-developer/references/typescript-sdk.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/mcp-developer/references/python-sdk.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/mcp-developer/references/tools.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/mcp-developer/references/resources.md"
+  ],
+  "claims": [
+    {
+      "local_id": "mcp-developer-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [603, 612],
+      "kickoff_quote": "For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it — ... payment-integration / fintech-engineer / mcp-developer for specialized domains. Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills. Tell me the track-to-lane mapping before you dispatch.",
+      "skill_quote": "description: Use when building, debugging, or extending MCP servers or clients that connect AI systems with external tools and data sources.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/mcp-developer/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "The only KICKOFF text naming mcp-developer is lane-routing: which track surface this skill owns, that the operator must select it from enabled plugins, and that the mapping is reported before dispatch. That is orchestration context outside the skill's frame — the skill declares its own trigger conditions (line 3, and metadata triggers on line 8) but cannot know the wave's track decomposition or which plugins were enabled at step 2. Load-bearing, keep.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "mcp-developer-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [613, 615],
+      "kickoff_quote": "Every name above is a skill, and the track subagent loads its own assigned skill itself. framework-selector and ai-researcher are **agents**, not skills — a track subagent cannot load either one, so never put them in a track's skill slot.",
+      "skill_quote": "  role: specialist",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/mcp-developer/SKILL.md",
+      "skill_line": 9,
+      "reasoning": "This sentence classifies mcp-developer (as one of 'every name above') as a skill loadable by a track subagent, versus agents that cannot be. The skill's frontmatter carries role/scope metadata but nothing about how a track subagent loads it or what the alternative dispatch mechanisms are — that distinction only exists at the orchestration layer. Load-bearing, keep.",
+      "systemic": true,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

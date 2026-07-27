@@ -1,0 +1,195 @@
+{
+  "asset": "doc-synthesizer",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/doc-synthesizer.md",
+  "claim_count": 5,
+  "claims": [
+    {
+      "local_id": "doc-synthesizer-4",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        83,
+        84
+      ],
+      "kickoff_quote": "Stage 2 is a barrier, because synthesis needs the whole set at once: one doc-synthesizer agent",
+      "skill_quote": "You are dispatched by the orchestrator/pipeline after all classifiers have completed.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/doc-synthesizer.md",
+      "skill_line": 17,
+      "reasoning": "The agent states the precondition but structurally cannot enforce it \u2014 dispatch ordering and the one-instance-not-N-instances choice live entirely with the operator. This is ordering/parallelism instruction, which the classification rules put squarely in load-bearing. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "doc-synthesizer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/doc-synthesizer.md",
+      "raised_by": [
+        "doc-synthesizer"
+      ],
+      "locations": [
+        [
+          83,
+          84
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "doc-synthesizer-1"
+    },
+    {
+      "local_id": "doc-synthesizer-3",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        84,
+        87
+      ],
+      "kickoff_quote": "one doc-synthesizer agent, given CLASSIFICATIONS_DIR docs/state/intel/classifications/, INTEL_DIR docs/state/intel/, CONFLICTS_PATH docs/state/tmp/INGEST-CONFLICTS.md and MODE new",
+      "skill_quote": "`INTEL_DIR` and `CONFLICTS_PATH` are orchestrator-configurable per invocation; the values shown are the defaults.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/doc-synthesizer.md",
+      "skill_line": 14,
+      "reasoning": "The agent explicitly declares these four values as per-invocation inputs (<inputs>, lines 29-36) and states that the paths it shows are only defaults. Supplying them, and selecting MODE new (vs merge), is exactly the operator's job. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "doc-synthesizer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/doc-synthesizer.md",
+      "raised_by": [
+        "doc-synthesizer"
+      ],
+      "locations": [
+        [
+          84,
+          87
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "doc-synthesizer-2"
+    },
+    {
+      "local_id": "doc-synthesizer-2",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        86,
+        88
+      ],
+      "kickoff_quote": "reads that directory and merges it under precedence rules into INGEST-CONFLICTS.md plus per-type intel under docs/state/intel/.",
+      "skill_quote": "**Default ordering:** `ADR > SPEC > PRD > DOC`. Higher-precedence sources win when content contradicts.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/doc-synthesizer.md",
+      "skill_line": 41,
+      "reasoning": "The behavioural description \u2014 read CLASSIFICATIONS_DIR, merge under precedence, emit a conflicts report plus per-type intel \u2014 is the skill's entire <process> (load_classifications line 59, extract_per_type lines 75-93, write_conflicts_report line 115). The directory/file paths themselves are load-bearing arguments and are already given earlier in the same sentence; only the restated methodology is redundant. Low severity because it reads as one-line orientation rather than a re-derived checklist.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "doc-synthesizer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/doc-synthesizer.md",
+      "raised_by": [
+        "doc-synthesizer"
+      ],
+      "locations": [
+        [
+          86,
+          88
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "doc-synthesizer-3"
+    },
+    {
+      "local_id": "doc-synthesizer-1",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "00",
+      "kickoff_line_range": [
+        88,
+        89
+      ],
+      "kickoff_quote": "Two Accepted ADRs that contradict each other are an unresolved blocker \u2014 report it, never pick a winner.",
+      "skill_quote": "**LOCKED vs LOCKED:** two locked ADRs in the ingest set that contradict \u2192 hard BLOCKER, both in `new` and `merge` modes. Never auto-resolve.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/doc-synthesizer.md",
+      "skill_line": 47,
+      "reasoning": "The agent already encodes this exact hard rule three times: precedence_rules line 47, detect_conflicts pass 1 (line 100), anti_patterns line 188 ('Do NOT: Pick a winner between two LOCKED ADRs \u2014 always BLOCK'), and success_criteria line 203. 'Accepted' is the classifier's definition of locked (doc-classifier.md:101 'does status read `Accepted` (locked)'), so the KICKOFF wording is the same rule, not a narrower one. Pure restatement of the skill's own gate.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "doc-synthesizer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/doc-synthesizer.md",
+      "raised_by": [
+        "doc-synthesizer"
+      ],
+      "locations": [
+        [
+          88,
+          89
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "doc-synthesizer-4"
+    },
+    {
+      "local_id": "doc-synthesizer-5",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        89,
+        91
+      ],
+      "kickoff_quote": "If there are only a handful of docs, skip the workflow: dispatch the classifiers in one message and run the synthesizer in the next turn, same inputs. The work-list script only earns its keep over a long pile.",
+      "skill_quote": "Read every `*.json` in `CLASSIFICATIONS_DIR`. Build an in-memory index keyed by `source_path`. Count by type.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/doc-synthesizer.md",
+      "skill_line": 59,
+      "reasoning": "The agent is indifferent to how it was dispatched \u2014 it just reads the classifications directory. Whether the operator runs a work-list workflow script or dispatches by hand is a judgement about corpus size that lives outside the agent entirely. Keep.",
+      "systemic": true,
+      "other_locations": [],
+      "asset": "doc-synthesizer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/doc-synthesizer.md",
+      "raised_by": [
+        "doc-classifier",
+        "doc-synthesizer"
+      ],
+      "locations": [
+        [
+          86,
+          88
+        ],
+        [
+          89,
+          91
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [
+        "doc-classifier::doc-classifier-3",
+        "doc-synthesizer::doc-synthesizer-5"
+      ],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "doc-synthesizer-5"
+    }
+  ]
+}

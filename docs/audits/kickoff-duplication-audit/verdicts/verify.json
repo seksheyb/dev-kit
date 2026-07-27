@@ -1,0 +1,77 @@
+{
+  "asset": "verify",
+  "verdicts": [
+    {
+      "claim_id": "verify-1",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "commands/verify.md:5 — \"Parse `$ARGUMENTS` as the goal, plan, or acceptance criteria to verify against (default: the current change's stated goal).\"",
+      "reasoning": "KICKOFF's parenthetical \"the current change's stated goal\" is lifted verbatim from the command's own documented default. The imperative half of the sentence (\"Pass the phase goal explicitly\") is a legitimate operator instruction, but re-quoting the skill's own default text to justify it is restating what the command already says about itself, not supplying new information the command can't know. Low severity: harmless duplication, not misleading."
+    },
+    {
+      "claim_id": "verify-2",
+      "confirmed": true,
+      "final_class": "stale-drift",
+      "final_severity": "low",
+      "evidence": "grep -in diff across commands/verify.md, agents/verifier.md, and references/thinking-models/verification.md returns zero hits describing diff-based grading; the only 'differ'-type hit is verifier.md:14 (\"These often differ\", about SUMMARY vs. code) which is unrelated.",
+      "reasoning": "\"grades the working diff\" describes a behavior that does not exist anywhere in the skill's chain. The verifier is phase-directory-oriented throughout (verifier.md:16 canonical PHASE dir; Step 1 loads PLAN/SUMMARY/roadmap at verifier.md:84; Step 0 keys off PHASE_DIR/VERIFICATION.md at verifier.md:67). The guide's characterization of the bare invocation's mechanism is inaccurate even though the resulting operator instruction (pass the goal explicitly) remains correct."
+    },
+    {
+      "claim_id": "verify-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "commands/verify.md:5 — \"Parse `$ARGUMENTS` as the goal, plan, or acceptance criteria to verify against (default: the current change's stated goal).\"",
+      "reasoning": "The command only knows to parse $ARGUMENTS as \"the goal, plan, or acceptance criteria\" generically; it documents a different, non-phase-specific default. Naming the phase's goal/success criteria and pointing at the PHASE directory as the canonical source is exactly the argument value the command cannot supply itself — pure invocation parameter."
+    },
+    {
+      "claim_id": "verify-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "agents/verifier.md:3 (frontmatter description) — \"Verifies phase goal achievement through goal-backward analysis. Checks codebase delivers what phase promised, not just that tasks completed. Creates VERIFICATION.md report.\"; agents/verifier.md:46 — \"**Task completion ≠ Goal achievement**\"; agents/verifier.md:442 — \"Create `{phase_dir}/VERIFICATION.md`\"",
+      "reasoning": "\"Writes PHASE/VERIFICATION.md via the verifier agent — goal-backward, not task-completion\" is a compressed paraphrase of the agent's own description line and its core_principle heading. The output filename is fixed by the agent itself, not an operator-supplied path, so nothing here is an argument KICKOFF needs to carry."
+    },
+    {
+      "claim_id": "verify-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "agents/verifier.md:262 — \"**6d. Detect validation gaps (feeds `nyquist-auditor`).** A requirement can be functionally ✓ SATISFIED per 6b (the behavior works) yet have zero automated test proving it — that is a *different* gap than a goal gap, and it is `nyquist-auditor`'s job to fill\"; agents/verifier.md:478 (frontmatter `validation_gaps:` block); agents/verifier.md:587-588 (\"Dispatch `nyquist-auditor` with `<gaps>` = VERIFICATION.md's `validation_gaps` list\").",
+      "reasoning": "The agent already names Step 6d, already structures the validation_gaps frontmatter, and already instructs the caller to dispatch nyquist-auditor with that list. KICKOFF's sentence restates this chain; the only non-duplicated fragment is the forward-pointer \"below\" (where in KICKOFF the nyquist step physically sits), a minor guide-navigation aid, not a skill fact."
+    },
+    {
+      "claim_id": "verify-6",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "agents/verifier.md:574 — \"Structured gaps in VERIFICATION.md frontmatter for the gap-closure planning workflow.\" (verifier names no downstream consumer or re-scoped step).",
+      "reasoning": "The agent structures gaps for consumption but does not name which step consumes them or how they combine with other assets. Routing verify's gap list together with converge's appended section and any EVAL-REVIEW.md BLOCKER into one re-scoped step-8 remediation wave is cross-asset orchestration that only the guide, sitting above all three assets, can state."
+    },
+    {
+      "claim_id": "verify-7",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "commands/verify.md:7 — \"Dispatch `agents/verifier` with that context.\"",
+      "reasoning": "The command describes a single dispatch; it has no concept of being invoked a second time or of when re-invocation should happen relative to a remediation pass. \"Then re-run /dev-kit-core:verify on the same phase goal\" is ordering/re-invocation policy across steps that a single-run command cannot express about itself."
+    },
+    {
+      "claim_id": "verify-8",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "agents/verifier.md:70-78 — \"If previous verification exists with `gaps:` section → RE-VERIFICATION MODE ... Failed items: Full 3-level verification (exists, substantive, wired) / Passed items: Quick regression check (existence + basic sanity only)\"; also restated at references/thinking-models/verification.md:50 (\"Re-verification of previously passed items ... only need a quick regression check\").",
+      "reasoning": "KICKOFF's four-line description of auto-detection plus the failed-full/passed-quick split is a near-verbatim restatement of the agent's own Step 0, which is echoed a second time in the agent's own thinking-model reference. Nothing in KICKOFF's phrasing adds information the operator needs to supply or a decision the operator must make — it is pure re-explanation of a mechanism the skill already fully owns and already documents twice. Medium severity because it's a substantive multi-line methodology restatement, not an incidental echo."
+    },
+    {
+      "claim_id": "verify-9",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "agents/verifier.md:373-375 (Step 9 status decision tree: gaps_found / human_needed / passed) and agents/verifier.md:35 (\"This agent implements the **Escalation Gate** pattern\"); grep -inE 'cycle|retry|repeat|escalat|twice|third|iteration' across verifier.md and references/thinking-models/verification.md returns only that one generic Escalation Gate mention, no iteration count or cap anywhere.",
+      "reasoning": "The agent defines the three terminal statuses for a single run but has no concept of counting cycles across separate dispatches, and no cap on how many remediation-then-re-verify loops are allowed. A per-invocation agent structurally cannot enforce 'stop after two cycles and escalate to me' — that policy spans multiple command invocations and belongs to whatever orchestrates repeated dispatch (the guide). Hunted specifically for this per the unenforced-gap protocol; the search came back empty, confirming the guide text is load-bearing, not duplicated."
+    }
+  ]
+}

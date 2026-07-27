@@ -1,0 +1,93 @@
+{
+  "asset": "qa",
+  "verdicts": [
+    {
+      "claim_id": "qa-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "agents/qa.md:3 — \"description: Live web-app QA agent. ... Dispatched by the orchestrator/pipeline.\"",
+      "reasoning": "KICKOFF:761 is verbatim \"Once the loop exits clean:\". This is cross-skill ordering (QA runs after the adversarial review/fix loop exits), which the agent explicitly delegates upward — its own description ends \"Dispatched by the orchestrator/pipeline.\" Nothing in agents/qa.md or commands/qa.md fixes its position relative to the review loop. Ordering across skills is load-bearing by the stated discipline. Keep."
+    },
+    {
+      "claim_id": "qa-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "agents/qa.md:52-58 — \"**Check for clean working tree (full mode only):**\" / `git status --porcelain` (:55) / \":58 If dirty, **STOP** and ask the user/orchestrator: commit the changes, stash them, or abort — each bug fix needs its own atomic commit on a clean tree.\"",
+      "reasoning": "Verified both sides at the claimed lines. KICKOFF:764-766 tells the operator to run the same command, states the same consequence (agent stops on a dirty tree), and gives the same justification (\"every fix it makes needs its own atomic commit\") — the skill's Setup gate re-derived almost word for word, with the option set narrowed from commit/stash/abort to commit/stash. The only genuine delta is timing (pre-flight instead of mid-run), which is why this is medium and not high: it saves a wasted unattended dispatch. But it adds no parameter, path, or condition the skill lacks — the skill already knows it needs a clean tree before it starts."
+    },
+    {
+      "claim_id": "qa-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "agents/qa.md:139 — \"**Document:** write or update `docs/global/process/TESTING.md` (framework, run command, test layers, conventions) and, if `CLAUDE.md` exists and lacks a `## Testing` section, append one\"; corroborated at :136 (install and configure), :137 (seed 3-5 real tests), :140 (`.github/workflows/test.yml`), :141 (`git commit -m \"chore: bootstrap test framework ({framework})\"`)",
+      "reasoning": "Every side effect the guide enumerates at KICKOFF:767-771 maps one-for-one onto Phase 1b steps 5, 6, 8, 9, 10 of the agent (lines 136-141), in the same order — this is the skill's internal phase checklist transcribed into operator prose. Downgraded from high to medium because the enumeration is what makes the (genuinely load-bearing) human approval gate at :771 actionable: the operator cannot read agents/qa.md, so \"tell me before you let it do that\" is uninformative without knowing what \"that\" writes. Trim to a one-line side-effect summary rather than deleting outright. Minor accuracy drift also noted: the guide says CI is written \"when the repo has no CI config\", the skill (:140) writes it when `.github/` exists OR no CI config is found anywhere, and skips for non-GitHub providers."
+    },
+    {
+      "claim_id": "qa-4",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "agents/qa.md:122 — \"**Runtime detected, no test framework:** this agent runs unattended, so don't stop to ask — pick the primary recommendation below, note the choice in the report, and proceed\"",
+      "reasoning": "KICKOFF:771 \"Tell me before you let it do that.\" is verbatim. I hunted the whole 327-line agent (no references/ chain exists for this asset) for any approval gate before Phase 1b: there is none, and :122 explicitly opts out of asking. So the guide inserts an operator-judged gate the skill deliberately does not have — conditional gating the operator must judge, therefore keep. Correctly NOT classed unenforced-gap: the skill's unattended behavior is intentional and stated, not a missing enforcement."
+    },
+    {
+      "claim_id": "qa-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "agents/qa.md:58 — \"(Skip this check entirely in report_only mode — no commits will be made.)\" and agents/qa.md:143 — \"Skip this entire phase in `report_only` mode — use the \\\"No test framework detected\\\" report note from Setup instead.\"",
+      "reasoning": "Both exemptions asserted at KICKOFF:771-772 are verified in the skill at the two lines above, and the guide's compression is accurate. Nothing here is a parameter or a condition the operator supplies — the skill selects both skips off the `report_only` flag itself. Low severity: one sentence of accurate compression, harmless but recoverable."
+    },
+    {
+      "claim_id": "qa-6",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "agents/qa.md:10 — \"Use whatever browser automation is available in the session — an in-session Browser pane (navigate / computer / read_page / get_page_text / console / network tools), Playwright MCP, or a headless-browser CLI. ... If no browser tooling is available, say so and stop — do not substitute unit tests for browser QA.\"; also :102 \"Verify browser tooling is available\" and Rule 11 at :325 \"Never refuse to use the browser. ... Never substitute evals or unit tests.\"",
+      "reasoning": "The quoted KICKOFF text (774-776) reproduces the skill's three tooling options in the skill's own order plus the stop-don't-substitute rule the skill states twice (:10, :325) and checks in Phase 1 (:102). Confirmed as restatement — but scoped: the claim's line_range runs to 779 while its quote stops at 776, and I do not extend the finding to 776-779 (\"That stop is the correct outcome, not a failure\" is human framing absent from the skill; \"this one applies in report_only mode too\" is operator-facing disambiguation). Cut 774-776, keep 776-779."
+    },
+    {
+      "claim_id": "qa-7",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "agents/qa.md:45-48 — \"**Tiers determine which issues get fixed (full mode only):** / - **Quick:** Fix critical + high severity only / - **Standard:** + medium severity (default) / - **Exhaustive:** + low/cosmetic severity\"; restated again as Phase 7 triage at :218-221",
+      "reasoning": "KICKOFF:787-790 reproduces the agent's tier table, which the agent already states twice. Checked the load-bearing escape hatch and it fails on the facts: the invocation at :783 is the bare `/dev-kit-core:qa`, and commands/qa.md:5 parses `$ARGUMENTS` only for a `report_only` flag — the command exposes no tier argument at all, so naming Quick and Exhaustive is not mode selection among modes the operator can pick, it is re-teaching the agent's internal severity taxonomy. Highest-severity duplication on this asset: four lines of prose that select nothing."
+    },
+    {
+      "claim_id": "qa-8",
+      "confirmed": true,
+      "final_class": "contradiction",
+      "final_severity": "low",
+      "evidence": "agents/qa.md:251 — \"Skip if: not \\\"verified\\\", OR purely visual/CSS with no JS behavior, OR no test framework exists.\"; and :262 \"...still failing → delete and defer; >2 min exploration → skip and defer.\"",
+      "reasoning": "KICKOFF:788 promises \"a regression test per fix\" with no qualifier; Phase 8e.5 skips the regression test for best-effort and reverted fixes, pure visual/CSS fixes, projects with no framework, and any test costing more than two minutes. Those are common QA cases (visual findings are one of the agent's own scoring categories at :205), so the guide sets an expectation the skill will routinely not meet — an operator could read a missing test as a failure. Confirmed as a scope overstatement rather than a head-on behavioral conflict, hence low; it is subsumed if qa-7's tier prose is trimmed, since it lives in the same sentence."
+    },
+    {
+      "claim_id": "qa-9",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "agents/qa.md:223 — \"Mark issues unfixable from source (third-party widget bugs, infrastructure issues) as \\\"deferred\\\" regardless of tier.\"",
+      "reasoning": "KICKOFF:790-791 is a near-verbatim copy of this Phase 7 hard rule, parenthetical examples included (\"third-party widget bug, an infrastructure issue\" / \"deferred at every tier\" vs \"regardless of tier\"). No operator decision, no parameter, no ordering — the agent applies this to itself unconditionally. Clean cut."
+    },
+    {
+      "claim_id": "qa-10",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "agents/qa.md:12 — \"**`report_only` mode:** If the dispatch prompt sets `report_only: true`, run ONLY the QA baseline (Phases 1-6 + report). Never fix bugs, never read source code, never edit files, never commit.\"; bootstrap exclusion at :143; reinforced at :197 \"In report_only mode: skip Phases 7-9 entirely\" and Rule 13 at :327",
+      "reasoning": "The five enumerated consequences at KICKOFF:794-795 (no fixes / no source reading / no edits / no commits / no bootstrap) map item-for-item onto the agent's own mode definition, which the agent states in four separate places. The operator-facing decision is carried entirely by the preceding clause \"only if you want the defects documented and nothing touched\" (adjudicated separately as qa-11); the expansion behind it is the skill's text. Cut the enumeration, keep the choosing clause."
+    },
+    {
+      "claim_id": "qa-11",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "commands/qa.md:5 — \"Parse `$ARGUMENTS` for an optional `report_only` flag (also matches \\\"report only\\\" / \\\"no fixes\\\").\"; agent side at agents/qa.md:40 \"| report_only | false | `report_only: true` |\"",
+      "reasoning": "Verified at the claimed line of the command file. KICKOFF:793-797 selects between two modes the command itself offers, gated on a judgement only the operator can make (do you want defects fixed, or only documented). Textbook load-bearing mode selection: the \"instead of the bare command above\" framing and the choosing clause must be kept even though the expansion of what report_only does (qa-10) is cut."
+    }
+  ]
+}

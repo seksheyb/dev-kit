@@ -1,0 +1,110 @@
+{
+  "asset": "project-researcher",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/project-researcher.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/references/doc-sitemap.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/references/native-equivalents.md"
+  ],
+  "claims": [
+    {
+      "local_id": "project-researcher-1",
+      "class": "unenforced-gap",
+      "severity": "high",
+      "step": "03",
+      "kickoff_line_range": [258, 260],
+      "kickoff_quote": "questions you want answered — and tell each one explicitly that it owns only its single\nassigned file: they default to writing STACK, FEATURES and PITFALLS on every run, which would\nhave four parallel agents overwriting each other.",
+      "skill_quote": "In `docs/milestones/<M>/research/`:\n1. **STACK.md** — Always\n2. **FEATURES.md** — Always\n3. **ARCHITECTURE.md** — If patterns discovered\n4. **PITFALLS.md** — Always",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/project-researcher.md",
+      "skill_line": 537,
+      "reasoning": "The skill has no concept of a single assigned output file — Step 5 unconditionally orders every instance to write STACK/FEATURES/PITFALLS, so four parallel instances all write the same three paths. Greps over the agent file and both references for 'assign', 'owns', 'only.*file', 'single', 'one file', 'axis', 'overwrit', 'clobber', 'collide', 'scope.*file' returned nothing relevant (only line 227 'Confidence levels assigned honestly' and line 216 'Single Source Reliance'). The closest thing in the skill is line 237-238, '(it reads this agent's STACK/FEATURES/ARCHITECTURE/PITFALLS files, one per parallel researcher, and synthesizes them)', which acknowledges the one-file-per-researcher topology but never instructs the agent to honor it. The KICKOFF sentence is therefore load-bearing and must be KEPT; the defect is in the skill.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "project-researcher-2",
+      "class": "contradiction",
+      "severity": "medium",
+      "step": "03",
+      "kickoff_line_range": [254, 255],
+      "kickoff_quote": "project-researcher agents in one message — one per axis: STACK, FEATURES, ARCHITECTURE,\nPITFALLS — writing docs/milestones/<M>/research/{STACK,FEATURES,ARCHITECTURE,PITFALLS}.md.",
+      "skill_quote": "3. **ARCHITECTURE.md** — If patterns discovered",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/project-researcher.md",
+      "skill_line": 541,
+      "reasoning": "KICKOFF assigns one agent unconditionally to ARCHITECTURE.md and then makes research-synthesizer depend on all four files existing, but the skill makes ARCHITECTURE.md conditional on 'If patterns discovered'. The ARCHITECTURE-axis agent can legitimately return having written nothing, leaving a hole the guide does not anticipate. This is a behavioral disagreement, not a restatement.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "project-researcher-3",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "03",
+      "kickoff_line_range": [260, 260],
+      "kickoff_quote": "They write but never commit.",
+      "skill_quote": "**DO NOT commit.** Spawned in parallel with other researchers. Orchestrator commits after all complete.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/project-researcher.md",
+      "skill_line": 549,
+      "reasoning": "The no-commit rule is one of the skill's own hard rules and is stated twice inside it — Step 6 at line 549 and the success-criteria checkbox at line 631 ('Files written (DO NOT commit — orchestrator handles this)'). KICKOFF restates it, then restates it a second time in the same block at lines 262-263 ('the four researchers never commit; research-synthesizer is the one that does'). Duplicated within a single block, so it is one finding with two locations rather than genuinely systemic across steps.",
+      "systemic": false,
+      "other_locations": [[262, 263]]
+    },
+    {
+      "local_id": "project-researcher-4",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "03",
+      "kickoff_line_range": [253, 255],
+      "kickoff_quote": "Then dispatch four\nproject-researcher agents in one message — one per axis: STACK, FEATURES, ARCHITECTURE,\nPITFALLS — writing docs/milestones/<M>/research/{STACK,FEATURES,ARCHITECTURE,PITFALLS}.md.",
+      "skill_quote": "All files → `docs/milestones/<M>/research/` (canonical per `references/doc-sitemap.md`; orchestrator supplies the concrete milestone path)",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/project-researcher.md",
+      "skill_line": 234,
+      "reasoning": "Fan-out count (four), single-message parallel dispatch, and the concrete milestone-substituted output paths are the invocation's arguments — the skill explicitly says the orchestrator supplies the concrete milestone path and is silent on how many instances to spawn. Load-bearing, keep.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "project-researcher-5",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "03",
+      "kickoff_line_range": [256, 258],
+      "kickoff_quote": "Give every one of them the same context — the project one-liner,\ndocs/global/project/PROJECT.md and SPEC/spec.md, ecosystem mode, and the specific open\nquestions you want answered",
+      "skill_quote": "Orchestrator provides: project name/description, research mode, project context, specific questions. Parse and confirm before proceeding.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/project-researcher.md",
+      "skill_line": 516,
+      "reasoning": "The skill names the abstract input categories but cannot know which concrete artifacts fill them; docs/global/project/PROJECT.md and SPEC/spec.md are the invocation's arguments. The 'same context for all four' constraint is also a cross-agent coordination fact the skill cannot see. Load-bearing, keep — though the abstract list shape does mirror line 516, so the sentence could be tightened to just the filenames.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "project-researcher-6",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "03",
+      "kickoff_line_range": [257, 257],
+      "kickoff_quote": "docs/global/project/PROJECT.md and SPEC/spec.md, ecosystem mode, and the specific open",
+      "skill_quote": "| **Ecosystem** (default) | \"What exists for X?\" | Libraries, frameworks, standard stack, SOTA vs deprecated | Options list, popularity, when to use each |",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/project-researcher.md",
+      "skill_line": 92,
+      "reasoning": "Mode selection among the three modes the skill itself offers (ecosystem / feasibility / comparison) is an invocation argument, not duplication. Ecosystem happens to be the skill's default, so naming it is belt-and-braces rather than strictly required — hence low severity — but it is still a parameter, not restated methodology.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "project-researcher-7",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "03",
+      "kickoff_line_range": [260, 263],
+      "kickoff_quote": "When all four\nhave returned, use research-synthesizer to merge them into\ndocs/milestones/<M>/research/SUMMARY.md and commit it",
+      "skill_quote": "**Never write `SUMMARY.md`** — that file is `research-synthesizer`'s exclusive output.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/project-researcher.md",
+      "skill_line": 545,
+      "reasoning": "The skill tells the agent not to write SUMMARY.md, but it cannot tell the operator to dispatch research-synthesizer next or when (after all four return). Sequencing across assets is explicitly load-bearing. Only the trailing clause 'the four researchers never commit' is redundant, and that is captured separately as project-researcher-3.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

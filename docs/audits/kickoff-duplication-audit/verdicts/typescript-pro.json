@@ -1,0 +1,13 @@
+{
+  "asset": "typescript-pro",
+  "verdicts": [
+    {
+      "claim_id": "typescript-pro-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 604-612 (verified verbatim on disk): 'For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it — python-pro / fastapi-expert / django-expert / postgres-pro / api-designer for backend work, react-expert / nextjs-developer / typescript-pro / vue-expert for web, ... Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills. Tell me the track-to-lane mapping before you dispatch.' Skill: /home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/typescript-pro/SKILL.md line 3, description: 'Implements advanced TypeScript type systems, creates custom type guards, utility types, and branded types, and configures tRPC for end-to-end type safety. Use when building TypeScript applications requiring advanced generics, conditional or mapped types, discriminated unions, monorepo setup, or full-stack type safety with tRPC.'",
+      "reasoning": "The only KICKOFF mention of typescript-pro is a routing instruction: pick typescript-pro (among a named list of alternatives) as the lane skill for a track's web surface, conditioned on which plugins were enabled at step 2 and how the wave's tracks were decomposed at step 8 -- information the skill itself cannot possess. The block does not restate typescript-pro's Core Workflow (tsconfig analysis, branded types, type guards, tsc --noEmit loop, references/ files for advanced-types/type-guards/utility-types/configuration/patterns) or its output format anywhere; it only names typescript-pro as one option in a lane-selection list alongside react-expert, nextjs-developer, vue-expert, etc. This is squarely mode/skill selection plus an explicit operator deliverable ('tell me the track-to-lane mapping before you dispatch'), which the classification rubric calls out as NOT duplication. Confirmed as load-bearing-parameter at low severity, matching the original claim's class and severity -- there is no basis to knock it down."
+    }
+  ]
+}

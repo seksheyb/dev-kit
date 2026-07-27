@@ -1,0 +1,69 @@
+{
+  "asset": "doc-verifier",
+  "verdicts": [
+    {
+      "claim_id": "doc-verifier-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "Skill line 12: \"Dispatched by the docs-update workflow. Each dispatch receives a `<verify_assignment>` XML block containing:\" — says only that it is dispatched by the workflow, nothing about when relative to content-qa.",
+      "reasoning": "KICKOFF's 'last, now that content-qa has finished rewriting' is a cross-asset ordering constraint the doc-verifier skill has no way to know — it is not aware content-qa exists or that it runs first. This is textbook ordering-across-skills, which the classification rubric explicitly marks as load-bearing, not duplication. Confirmed."
+    },
+    {
+      "claim_id": "doc-verifier-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "Skill line 13: \"- `doc_path`: path to the doc file to verify (relative to project_root)\" (singular field, no way to pass multiple docs) and skill line 137: \"Write one JSON file per doc with this exact shape:\".",
+      "reasoning": "The 'exactly one file per dispatch' cardinality is already fixed by the schema — doc_path is a single scalar and the output format is one JSON file per invocation. Restating 'it verifies exactly one file per dispatch' duplicates a fact the schema already forces; the derived operational instruction (fan out one agent per doc, in one message) is the orchestration content, but that is not what this specific clause is doing — it's asserting the agent's own cardinality. Confirmed as redundant, low severity since it's a short clarifying aside rather than a re-taught procedure."
+    },
+    {
+      "claim_id": "doc-verifier-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "Skill line 13: \"- `doc_path`: path to the doc file to verify (relative to project_root)\" — the agent only ever receives whatever doc_path it's given; it has no visibility into what a prior step touched.",
+      "reasoning": "Which concrete docs to verify (README, CHANGELOG, everything under docs/) is derived from what THIS project's document-release step touched — information entirely external to the skill file, which just declares the shape of the single argument it accepts. The single-message parallel dispatch instruction is pure orchestration. Confirmed load-bearing."
+    },
+    {
+      "claim_id": "doc-verifier-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "Skill line 185 (critical_rules #3): \"NEVER modify the doc file. The verifier is read-only. Only write the result JSON to the output directory.\" plus line 133's per-doc result filename `{output_dir}/verify-{doc_filename}.json`.",
+      "reasoning": "Both facts asserted — read-only behavior and separate per-doc result files — are already hard rules/format specs in the skill. The KICKOFF sentence is the operator restating the agent's own invariants as justification for safe parallel dispatch; it adds no information the skill doesn't already guarantee. Confirmed, low severity given it's used as a one-line safety rationale rather than re-teaching a procedure."
+    },
+    {
+      "claim_id": "doc-verifier-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "Skill lines 12-14: \"Dispatched by the docs-update workflow. Each dispatch receives a `<verify_assignment>` XML block containing:\\n- `doc_path`: path to the doc file to verify (relative to project_root)\\n- `project_root`: absolute path to project root\".",
+      "reasoning": "The KICKOFF text re-teaches the exact block name (`<verify_assignment>`), the exact two field names, and the exact relative/absolute semantics already fixed in the skill's own input contract — no actual values are supplied here, only the schema description restated in prose. This is the skill's own template being restated, matching the 'restates output format the skill's template already fixes' duplication criterion. Confirmed at medium severity given the near-verbatim length of the restatement (three lines' worth of schema)."
+    },
+    {
+      "claim_id": "doc-verifier-6",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "Skill line 18: \"**Artifact paths are configurable.** The default result location is `docs/state/tmp/` — use whatever output directory the dispatch prompt provides.\"",
+      "reasoning": "The skill explicitly hands the output-directory choice to the invocation (a mode/parameter the skill itself exposes as configurable). Choosing to leave it at the stated default is a legitimate parameter selection the operator must make per dispatch, not duplicated methodology. Confirmed load-bearing."
+    },
+    {
+      "claim_id": "doc-verifier-7",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "Skill line 16: \"...then write a structured JSON result file. Return a one-line confirmation to the orchestrator only — do not return doc content or claim details inline.\" plus line 133's `{output_dir}/verify-{doc_filename}.json` naming convention.",
+      "reasoning": "Both the exact result-filename convention and the 'confirmation only, no claim detail inline' return contract are already spelled out as hard requirements in the skill (line 16 and reinforced at 169-173/133). The KICKOFF sentence restates the agent's own return format rather than supplying anything the skill couldn't already enforce on its own. Confirmed, low severity."
+    },
+    {
+      "claim_id": "doc-verifier-8",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "medium",
+      "evidence": "Skill line 16: \"Return a one-line confirmation to the orchestrator only — do not return doc content or claim details inline.\"",
+      "reasoning": "The skill deliberately withholds claim detail from its own return value, which means aggregating failures/totals across N result files into one consolidated report is a task the doc-verifier agent structurally cannot perform — it must be done by whoever dispatched it (the orchestrator), reading the JSON files itself. The field names referenced (failures array, doc/line/claim/expected/actual, claims_passed/claims_checked) are the agent's own output schema, but here they're being used as reading instructions for a different actor (the orchestrator), not re-taught to the agent that already knows its own schema. This is genuine orchestration-side instruction, confirmed load-bearing, medium severity given it's substantial (a full aggregation spec)."
+    }
+  ]
+}

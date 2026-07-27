@@ -1,0 +1,77 @@
+{
+  "asset": "sdd-review-cto",
+  "verdicts": [
+    {
+      "claim_id": "sdd-review-cto-1",
+      "confirmed": false,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:27 `## The single architecture gate (relationship to the other reviews)`; SKILL.md:29-30 `This lens owns **project-level technical strategy**, and it runs once, at Stage 2, before the / roadmap exists.` (both verified verbatim)",
+      "reasoning": "Both quoted sentences exist as claimed, but the KICKOFF line is not prompt body — it is the bold markdown label that heads the ```text block at lines 214-225, outside it. It is never sent to the agent, so it cannot cause redundant behavior. Its content is also pipeline-scope information the skill cannot assert: 'the only architecture/technical-strategy gate in the pipeline' is a claim across all 16 KICKOFF steps, which the skill (whose boundary section only names spec-review-cpo at Stage 1 and plan-review-eng at Stage 7) has no visibility to make. Removing it also strips the code block of its operator-facing label. Refuted."
+    },
+    {
+      "claim_id": "sdd-review-cto-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:19-20 `Do NOT write a plan. Review only, against / `docs/global/architecture/SDD.md` and its ADRs under `docs/global/architecture/adr/`.` — and again in frontmatter, SKILL.md:5 `(docs/global/architecture/SDD.md + the ADR bank under docs/global/architecture/adr/)`",
+      "reasoning": "Verified at both locations. The usual exemption for paths ('paths are the invocation's arguments') does not apply here: these are not operator-chosen arguments, they are hard-coded twice inside the skill, so naming them in the prompt restates a fixed target rather than parameterizing anything. Survives as duplication, but I downgrade severity to low against the claim's 'medium' — it is a single target-path phrase carrying no methodology, the paths agree exactly (no drift risk), and it is the natural way to name the artifact under review in a standalone guide."
+    },
+    {
+      "claim_id": "sdd-review-cto-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "SKILL.md:6-8 `design time — before roadmapping and planning — for technical soundness, ADR quality, / technology-selection wisdom, scalability posture, technical-debt trajectory, and evolution / path.`",
+      "reasoning": "Near-verbatim copy of the skill's own frontmatter dimension list, in the same order, with only 'technology-selection wisdom' swapped for its synonym 'innovation-token spend'. Every dimension has a dedicated methodology section that I verified by reading: ADR Quality Review at SKILL.md:124-140, innovation tokens at SKILL.md:75-76 / 113-115 / 151-152 ('**Innovation-token audit.** List every place the design departs from boring, proven technology'), Scalability posture at SKILL.md:109-111, Technical-debt trajectory at SKILL.md:120-122, evolution path at SKILL.md:102-103 and cognitive pattern 9 (SKILL.md:92-93). The parenthetical gloss '(alternatives and trade-offs actually recorded)' re-teaches SKILL.md:131-133, which spells out exactly those two ADR criteria. No operator selection among options — these are the skill's fixed internal review dimensions. Confirmed high."
+    },
+    {
+      "claim_id": "sdd-review-cto-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "SKILL.md:193-196 `* Findings carry severity: **BLOCKER** (an unmet hard requirement, a load-bearing wrong / foundation, or a one-way-door decision made with no alternatives considered — verdict REVISE), / **MAJOR** (real ADR/technology/scalability gap, fixable in the SDD — SOUND-WITH-CHANGES), / **MINOR** (polish, documentation, deferred).`",
+      "reasoning": "Verified verbatim. The skill's Lens Verdict section fixes the three severity names AND the exact severity-to-verdict mapping (BLOCKER→REVISE, MAJOR→SOUND-WITH-CHANGES) that the KICKOFF sentence re-derives. The trailing clause 'so the severity is what drives the verdict, not a separate judgment' is emphasis of a rule the skill already states as a parenthetical on each severity — it introduces no parameter, path, mode, or condition the skill lacks. This is the skill's own grading rule re-taught in the prompt. Confirmed high."
+    },
+    {
+      "claim_id": "sdd-review-cto-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "SKILL.md:162-164 `Write this as an `## CTO Review` section appended to `docs/global/architecture/SDD.md` / (append-in-place, never overwrite existing SDD content — same pattern `spec-review-cpo` uses on / the spec):`; LOCK line at SKILL.md:181-183; posture commitment at SKILL.md:51 `Pick one posture and commit to it. Do not drift.`",
+      "reasoning": "Verified every element. The Required Outputs section fixes the section name (`## CTO Review`), the target file, the append-in-place behavior, the whole Architecture Decision Record template (SKILL.md:166-184) including the LOCK line, and even the spec-review-cpo analogy the KICKOFF re-makes. 'Commit to a posture' is mandated at SKILL.md:51. This falls squarely under 'the prompt restates output format / section structure the skill's template already fixes' — three template elements at once. The only fragment carrying guide-only information is the mapping 'step 1's CPO Review' (the skill says 'spec-review-cpo' / 'Stage 1' but not KICKOFF step numbering); that fragment is keepable, the rest is not. Confirmed high."
+    },
+    {
+      "claim_id": "sdd-review-cto-6",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:41-43 `Check `docs/milestones/<M>/reports/security/` / for the latest report if one exists, note security *architecture* concerns as findings, and defer the depth / to `cso`'s next scheduled run — do not re-run a threat model here.`",
+      "reasoning": "Verified verbatim inside the skill's '**Security is `cso`'s job, not this lens's.**' boundary bullet (SKILL.md:37-43). Same path including the same `<M>` placeholder notation (so `<M>` is not an operator substitution the skill lacks), same deferral, same do-not-re-run rule; the skill additionally names the deferral target in its output template at SKILL.md:179. Confirmed at medium. Noting a small accuracy slip that does not change the verdict: KICKOFF defers depth to 'what docs/milestones/<M>/reports/security/ already holds', whereas the skill defers depth to cso's *next scheduled run* and treats the existing report as optional ('if one exists') — the guide's phrasing is the weaker of the two, another reason to drop rather than keep it."
+    },
+    {
+      "claim_id": "sdd-review-cto-7",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:44-47 `- **Per-phase plan quality is `plan-review-eng`'s job (Stage 7), not this lens's.** That lens / reviews each phase's `<NN>-<MM>-PLAN.md` — task decomposition, test coverage, the plan-delta's code / quality. This lens reviews the *system design the plans will build against*. Assess the / architecture, not any one plan's tasks (no plan exists yet).`",
+      "reasoning": "Verified verbatim. The skill's boundary bullet already carries the exclusion, the owning lens, the stage number, and the rationale ('no plan exists yet'). The KICKOFF's 'step 7' and the skill's 'Stage 7' are the same referent — I confirmed KICKOFF.md:482 is '## 7. Plan the phase' — so the prompt supplies no pipeline-position fact the skill lacks. Nothing here is a mode, condition, or ordering constraint the operator must judge. Confirmed medium."
+    },
+    {
+      "claim_id": "sdd-review-cto-8",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:197-199 `* **Verdict:** SOUND (APPROVE) / SOUND-WITH-CHANGES (APPROVE-WITH-CHANGES) / UNSOUND (REVISE). An / unmet hard requirement or a wrong foundation is always at least one BLOCKER — the design should / not proceed to roadmap until resolved.`",
+      "reasoning": "Verified; the sentence the claim anchors at line 197 in fact spans 197-199. The claim's classification survives. The skill blocks progress 'to roadmap' but has no way to know roadmap is KICKOFF step 3 — I confirmed KICKOFF.md:250 is '## 3. Research & roadmap', so the step binding is sequencing information only the guide holds. It is also the only place the gate is stated as an operator instruction: the skill's wording is a passive assertion ('the design should not proceed'), and the skill conditions it on a BLOCKER finding rather than on the UNSOUND verdict itself. KEEP the sentence; the redundant half is the stop-and-fix semantic, and trimming to 'UNSOUND → do not proceed to step 3' would remove it. Low."
+    },
+    {
+      "claim_id": "sdd-review-cto-9",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:181-183 `**LOCK:** This Architecture Decision Record is binding — the roadmap and phase plans build / against this design and do not re-open these decisions unless the user explicitly reopens this / review. Drift from it in a later plan is a finding, not a silent re-derivation.`",
+      "reasoning": "Verified verbatim inside the skill's output template, so the LOCK sentence is emitted into the SDD on every run — the KICKOFF prose asserts the identical downstream guarantee. Unlike claim sdd-review-cto-1 (a structural label the code block needs), this is a substantive behavioral assertion with no navigational function, and it carries no step binding, path, or condition the skill lacks. It is also strictly weaker than the skill's version: 'nothing downstream re-litigates the architecture' drops the skill's explicit escape hatch ('unless the user explicitly reopens this review') and its drift-is-a-finding clause. Confirmed, low — it is guide prose rather than prompt body, so it never reaches the agent."
+    }
+  ]
+}

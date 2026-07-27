@@ -1,0 +1,151 @@
+{
+  "asset": "code-review-protocol",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-review-protocol/SKILL.md",
+  "claim_count": 4,
+  "claims": [
+    {
+      "local_id": "code-review-protocol-4",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "10",
+      "kickoff_line_range": [
+        692,
+        692
+      ],
+      "kickoff_quote": "Run the whole loop under the code-review-protocol skill, receiving side.",
+      "skill_quote": "Both directions of this skill (requesting and receiving) still apply regardless of which reviewer produced the feedback.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-review-protocol/SKILL.md",
+      "skill_line": 12,
+      "reasoning": "The skill explicitly ships two directions (Part 1 Requesting, line 16; Part 2 Receiving, line 115) and cannot know which one this invocation wants. Selecting 'receiving side' is mode selection among modes the skill itself offers, plus the scope qualifier 'the whole loop' (not just one round) \u2014 both are the invocation's arguments. Keep it. Note the skill's line 12 already anticipates this exact context ('adversarial review rounds' dispatched via agents/code-review-gate), so the pointer is well-formed, not drift.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "code-review-protocol",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-review-protocol/SKILL.md",
+      "raised_by": [
+        "code-review-protocol"
+      ],
+      "locations": [
+        [
+          692,
+          692
+        ]
+      ],
+      "steps": [
+        "10"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "code-review-protocol-1"
+    },
+    {
+      "local_id": "code-review-protocol-1",
+      "class": "redundant-restatement",
+      "severity": "high",
+      "step": "10",
+      "kickoff_line_range": [
+        692,
+        694
+      ],
+      "kickoff_quote": "Every finding is a suggestion to evaluate, not an order to follow: verify each one against the actual code before implementing it, and question the ones that look wrong rather than complying.",
+      "skill_quote": "**Receiving:** External feedback = suggestions to evaluate, not orders to follow. Verify. Question. Then implement. No performative agreement. Technical rigor always.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-review-protocol/SKILL.md",
+      "skill_line": 320,
+      "reasoning": "This is a near-verbatim paraphrase of the skill's own Bottom Line for the receiving side \u2014 same three moves in the same order (suggestions-not-orders, verify, question). It is also stated twice more inside the skill: line 119 'Verify before implementing. Ask before assuming.' and the 6-step Response Pattern at lines 124-132. Having already named 'the code-review-protocol skill, receiving side' one clause earlier, the operator prompt re-teaches what that mode already is.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "code-review-protocol",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-review-protocol/SKILL.md",
+      "raised_by": [
+        "code-review-protocol"
+      ],
+      "locations": [
+        [
+          692,
+          694
+        ]
+      ],
+      "steps": [
+        "10"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "high"
+      ],
+      "claim_id": "code-review-protocol-2"
+    },
+    {
+      "local_id": "code-review-protocol-3",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "10",
+      "kickoff_line_range": [
+        694,
+        695
+      ],
+      "kickoff_quote": "A reviewer that\nmisread the code is a finding to reject with a reason, not a defect to fix.",
+      "skill_quote": "IF suggestion seems wrong:\n  Push back with technical reasoning",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-review-protocol/SKILL.md",
+      "skill_line": 183,
+      "reasoning": "Rejecting a misreading reviewer with a reason is exactly the skill's pushback rule, which it states four times: line 183-184 (External Reviewers block), line 143 'Push back with technical reasoning if wrong', line 225 'Reviewer lacks full context' in When To Push Back, and line 231 'Use technical reasoning, not defensiveness'. The skill even supplies the worked example (lines 291-294). The KICKOFF sentence adds no phase-specific parameter.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "code-review-protocol",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-review-protocol/SKILL.md",
+      "raised_by": [
+        "code-review-protocol"
+      ],
+      "locations": [
+        [
+          694,
+          695
+        ]
+      ],
+      "steps": [
+        "10"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "code-review-protocol-3"
+    },
+    {
+      "local_id": "code-review-protocol-2",
+      "class": "redundant-restatement",
+      "severity": "high",
+      "step": "10",
+      "kickoff_line_range": [
+        695,
+        697
+      ],
+      "kickoff_quote": "No gratitude\nperformance and no performative agreement in the round reports \u2014 technical correctness over\nsocial comfort.",
+      "skill_quote": "\u274c ANY gratitude expression",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-review-protocol/SKILL.md",
+      "skill_line": 250,
+      "reasoning": "The no-gratitude / no-performative-agreement rule is one of the skill's most heavily enforced sections: line 250 bans ANY gratitude expression, lines 136-139 list 'You're absolutely right!' / 'Great point!' as forbidden, line 255 says 'If you catch yourself about to write \"Thanks\": DELETE IT', and the trailing clause 'technical correctness over social comfort' is copied word-for-word from the skill's Core principles (line 10, repeated at line 119). Only the scope qualifier 'in the round reports' adds anything, and it is redundant once the loop is declared to run under the skill.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "code-review-protocol",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-review-protocol/SKILL.md",
+      "raised_by": [
+        "code-review-protocol"
+      ],
+      "locations": [
+        [
+          695,
+          697
+        ]
+      ],
+      "steps": [
+        "10"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "high"
+      ],
+      "claim_id": "code-review-protocol-4"
+    }
+  ]
+}

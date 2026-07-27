@@ -1,0 +1,13 @@
+{
+  "asset": "test-driven-development",
+  "verdicts": [
+    {
+      "claim_id": "test-driven-development-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md line 569 (verified verbatim): 'sprint-execution skill to execute PHASE/<NN>-<MM>-PLAN.md under the test-driven-development' skill. Skill's own frontmatter, SKILL.md line 3: 'description: Use when implementing any feature or bugfix, before writing implementation code'.",
+      "reasoning": "Verified the KICKOFF quote exists verbatim at line 569 and the skill quote exists verbatim at line 3. Grepped the entire skill directory (SKILL.md + testing-anti-patterns.md) for 'sprint', 'wave', 'worktree', 'PHASE/', 'PLAN.md' -- zero hits. The TDD skill's trigger is generic ('implementing any feature or bugfix, before writing implementation code') and never mentions sprint-execution, per-track/per-wave dispatch, worktrees, or the PHASE/<NN>-<MM>-PLAN.md path convention anywhere in its content. The KICKOFF sentence is telling the operator which composed skill (sprint-execution) to invoke, over which specific file (a path parameter the skill cannot know), under which discipline (test-driven-development) -- this is an invocation/composition instruction and a load-bearing file-path parameter, not a restatement of TDD's own methodology. TDD's own red-green-refactor cycle, iron law, and verification checklist are described nowhere in the KICKOFF quote, so there is no methodology duplication here. Confirmed as load-bearing-parameter, low severity, matching the original classification."
+    }
+  ]
+}

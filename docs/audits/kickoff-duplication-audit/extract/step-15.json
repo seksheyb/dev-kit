@@ -1,0 +1,71 @@
+{
+  "step": "15",
+  "title": "Operate, retrospect, close",
+  "line_range": [1293, 1396],
+  "blocks": [
+    {
+      "block_index": 0,
+      "line_range": [1295, 1297],
+      "verbatim_text": "/dev-kit-core:health",
+      "assets_invoked": ["dev-kit-core:health"],
+      "surrounding_prose": "Header: '## 15. Operate, retrospect, close'. After the block: 'A weighted 0-10 codebase-quality dashboard with trend history. That is the codebase half of \"operate\" — the next two blocks are the *running-system* half, and they are the reason step 13 set up SLOs. Run them in this order; both write under docs/global/ops/monitoring/, so do not overlap them.'"
+    },
+    {
+      "block_index": 1,
+      "line_range": [1304, 1315],
+      "verbatim_text": "Dispatch the performance-engineer agent over what this milestone shipped. Measure first — no\noptimizing on a hunch. Establish the baseline and profile the running system, then eliminate the\nsingle biggest bottleneck, re-measure, and iterate; the usual suspects are N+1 queries, pool\nexhaustion, cache misses, synchronous blocking, and memory leaks. Write\ndocs/global/ops/monitoring/performance-report.md with before and after numbers — response time,\nthroughput, resource use — the bottlenecks found, the fixes applied, and the evidence validating\neach gain, plus the alert thresholds that keep the gains from regressing. A report without\nbefore/after numbers is not a performance pass. If the bottleneck turns out to be infra-wide or\ncapacity-related rather than app-level, hand the dashboard and capacity follow-through to\nmonitoring-expert rather than continuing to profile app code.",
+      "assets_invoked": ["performance-engineer", "monitoring-expert"],
+      "surrounding_prose": "Introduced by the sentence before block 0 ends: this is the first of 'the next two blocks' that are 'the running-system half' of operate, run in order, both writing under docs/global/ops/monitoring/, without overlapping them. No prose immediately follows before the next block starts."
+    },
+    {
+      "block_index": 2,
+      "line_range": [1317, 1326],
+      "verbatim_text": "Now review the SLOs against reality, using the sre-engineer and monitoring-expert skills. Step\n13 defined the SLIs/SLOs and wired the alerts on expected traffic; this is the first time there\nis real data to check them against. Report actual SLO attainment and error-budget burn for this\nmilestone — how much budget was consumed, by what, and whether the burn rate is survivable at\nthe next milestone's expected load. Then tune the alert thresholds from that real signal: name\nevery alert that fired without a real incident and every incident that fired no alert, and\nadjust. An SLO that was never breached and never came close is not automatically correct — say\nwhether it is calibrated or merely loose.",
+      "assets_invoked": ["sre-engineer", "monitoring-expert"],
+      "surrounding_prose": "This is the second of the two 'running-system half' blocks that must run in the stated order after the performance-engineer block, both writing under docs/global/ops/monitoring/. It explicitly references step 13's SLIs/SLOs as prior input. Followed by: 'Retro — set the window to the milestone. Bare, this command retrospects the last 7 days, so a milestone that ran longer gets a retro covering only its final week. Pass the actual span:'"
+    },
+    {
+      "block_index": 3,
+      "line_range": [1331, 1333],
+      "verbatim_text": "/dev-kit-core:retro <Nd>",
+      "assets_invoked": ["dev-kit-core:retro"],
+      "surrounding_prose": "Preceded by: 'Retro — set the window to the milestone. Bare, this command retrospects the last 7 days, so a milestone that ran longer gets a retro covering only its final week. Pass the actual span:' <Nd> is a placeholder for the actual number-of-days span of the milestone."
+    },
+    {
+      "block_index": 4,
+      "line_range": [1336, 1340],
+      "verbatim_text": "Use the writing-skills skill to codify that repeated workflow into a real dev-kit skill, so the\nnext milestone inherits it instead of re-deriving it. Only do this for a pattern that actually\nrecurred and is reusable beyond this milestone — a one-off sequence is not a skill.",
+      "assets_invoked": ["writing-skills"],
+      "surrounding_prose": "Conditioned by the italic line immediately above the fence: '(only if the retro surfaced a workflow this project keeps repeating by hand)'. This is a conditional block — only run if that condition from the preceding retro holds."
+    },
+    {
+      "block_index": 5,
+      "line_range": [1343, 1351],
+      "verbatim_text": "Close the loop back to step 1's assumption bank with real evidence, using the product lane.\nRun these in order, each feeding the next: ab-test-analysis on any experiment this milestone\nran, then cohort-analysis on retention and behavior by cohort, then growth-loops on which loops\nactually compounded. Then go back to the assumptions recorded at step 1 and mark each one\nvalidated, invalidated, or still-unknown against what the data now shows, writing the result\nwhere step 1 recorded them. This is the input to milestone 2's scope — without it the next\nmilestone re-runs on the same unvalidated guesses.",
+      "assets_invoked": ["ab-test-analysis", "cohort-analysis", "growth-loops"],
+      "surrounding_prose": "Conditioned by the italic line immediately above the fence: '(only if this milestone shipped user-facing changes with usage data behind them)'. The three named analyses must run in the stated order, each feeding the next, then the result is written back to where step 1 recorded the assumption bank — explicitly framed as required input to milestone 2's scope."
+    },
+    {
+      "block_index": 6,
+      "line_range": [1354, 1364],
+      "verbatim_text": "Use the incident-responder agent: triage, contain, preserve evidence, diagnose, recover, then\nwrite the blameless postmortem to docs/global/ops/postmortems/. Containment never comes at the\ncost of evidence integrity — preserve first, then clean up.\n\nIf this incident has regulatory exposure — a security breach, or any incident touching personal\nor regulated data — hand off to the compliance-auditor agent for the framework-specific\nbreach-notification obligations, and do it early rather than at postmortem time. Disclosure\ndeadlines start running from discovery, not from the fix, so surface the applicable regime and\nits clock to me while the incident is still open.",
+      "assets_invoked": ["incident-responder", "compliance-auditor"],
+      "surrounding_prose": "Conditioned by the italic line immediately above the fence: '(only if a production incident is underway)'. Contains an internal conditional: the compliance-auditor handoff applies only 'if this incident has regulatory exposure — a security breach, or any incident touching personal or regulated data', and should happen early, not at postmortem time, since disclosure deadlines start from discovery."
+    },
+    {
+      "block_index": 7,
+      "line_range": [1367, 1371],
+      "verbatim_text": "Use the chaos-engineer skill to rehearse that failure mode deliberately, before it recurs on\nits own schedule. Start from the postmortem's actual failure path rather than a generic fault\nlist, and verify the alerting and recovery you just tuned above actually fire under it.",
+      "assets_invoked": ["chaos-engineer"],
+      "surrounding_prose": "Conditioned by the italic line immediately above the fence: '(only if the postmortem named a failure mode nobody had rehearsed)'. References 'the alerting and recovery you just tuned above' (the SLO/alert-tuning block) as the thing to verify fires under the rehearsed failure. Followed by: 'Only once nothing is on fire, close the milestone out:' introducing the next block."
+    },
+    {
+      "block_index": 8,
+      "line_range": [1375, 1389],
+      "verbatim_text": "Archive this milestone and close it out by hand. No dev-kit asset does this — there is no\ncomplete-milestone command anywhere in the plugin suite — so it is three deliberate actions:\n\n1. Freeze docs/milestones/<M>/. It is a historical record from here on: nothing writes into it\n   again, and milestone 2's roadmap, specs, phases and reports go under its own\n   docs/milestones/ directory, not this one.\n2. Reset the position pointer in docs/state/STATE.md off this milestone's last phase and onto\n   the next milestone, so the always-open pointer is not still parked inside a finished\n   milestone.\n3. Tag the merged commit — git tag v<M> — and push the tag.\n\nThen read docs/global/requirements/BACKLOG.md: if it has Now or Next items, tell me what\nmilestone 2 would be scoped from. If it has only Later or Icebox items, we are done.",
+      "assets_invoked": [],
+      "surrounding_prose": "Preceded by: 'Only once nothing is on fire, close the milestone out:'. The block itself is explicit that no dev-kit asset performs this action — it is a manual, three-step human/operator procedure (freeze the milestone dir, reset STATE.md's pointer, tag and push). After this block, the guide's final prose (outside step 15's numbered blocks) states: 'Milestone 2+ starts over at step 0, not at step 1 — \"is this repo still greenfield?\" is re-asked every milestone, and the answer is now continuing. The only thing that changes is where step 1 gets its requirements: docs/global/requirements/BACKLOG.md instead of a PRD or a fresh idea.'"
+    }
+  ],
+  "notes": "All 9 fences in the 1293-1396 range are fully contained within the slice; none is cut by the boundary. Rejected non-asset phrasings checked per the trap table: none of the four listed trap phrases (lane skill, core skills, bare command, test-design skill) appear in this range. 'the writing-skills skill' and 'the chaos-engineer skill' and 'the incident-responder agent' and 'the compliance-auditor agent' and 'the sre-engineer and monitoring-expert skills' and 'the performance-engineer agent' are genuine hyphenated asset names actually invoked, not category nouns, so they are recorded as assets_invoked."
+}

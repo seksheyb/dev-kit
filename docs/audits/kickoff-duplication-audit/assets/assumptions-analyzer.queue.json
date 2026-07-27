@@ -1,0 +1,115 @@
+{
+  "asset": "assumptions-analyzer",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/assumptions-analyzer.md",
+  "claim_count": 3,
+  "claims": [
+    {
+      "local_id": "assumptions-analyzer-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "05",
+      "kickoff_line_range": [
+        361,
+        375
+      ],
+      "kickoff_quote": "plus one assumptions-analyzer, given the phase number and name, the phase goal from ROADMAP.md, the locked decisions from earlier phases, the codebase hints you already have, and the calibration tier.",
+      "skill_quote": "Agent receives via prompt:\n\n- `<phase>` -- phase number and name\n- `<phase_goal>` -- phase description from ROADMAP.md\n- `<prior_decisions>` -- summary of locked decisions from earlier phases\n- `<codebase_hints>` -- scout results (relevant files, components, patterns found)\n- `<calibration_tier>` -- one of: `full_maturity`, `standard`, `minimal_decisive`",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/assumptions-analyzer.md",
+      "skill_line": 25,
+      "reasoning": "The KICKOFF sentence is enumerating exactly the five arguments the agent's own <input> block declares it receives via prompt (phase, phase_goal, prior_decisions, codebase_hints, calibration_tier), in the same order. This is the invocation supplying arguments/placeholders for a documented input contract, not restating internal methodology, so it is load-bearing rather than duplicated.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "assumptions-analyzer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/assumptions-analyzer.md",
+      "raised_by": [
+        "assumptions-analyzer"
+      ],
+      "locations": [
+        [
+          361,
+          375
+        ]
+      ],
+      "steps": [
+        "05"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "assumptions-analyzer-1"
+    },
+    {
+      "local_id": "assumptions-analyzer-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "05",
+      "kickoff_line_range": [
+        361,
+        375
+      ],
+      "kickoff_quote": "Fold the assumptions and the phase-relevant findings from those maps into PHASE/CONTEXT.md.",
+      "skill_quote": "it writes no files itself \u2014 the caller folds the returned assumptions into the target phase's `CONTEXT.md` (`docs/milestones/<M>/phases/<NN>-<slug>/CONTEXT.md`) once the user confirms them.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/assumptions-analyzer.md",
+      "skill_line": 9,
+      "reasoning": "The agent's own header note explicitly delegates the fold-into-CONTEXT.md step to the caller/orchestrator, since the agent itself writes no files. KICKOFF is the orchestrator-facing document, so it must carry this instruction for the operator to act on \u2014 the agent file's note wouldn't otherwise reach whoever is following KICKOFF. This is load-bearing orchestration guidance, not internal-methodology restatement.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "assumptions-analyzer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/assumptions-analyzer.md",
+      "raised_by": [
+        "assumptions-analyzer"
+      ],
+      "locations": [
+        [
+          361,
+          375
+        ]
+      ],
+      "steps": [
+        "05"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "assumptions-analyzer-2"
+    },
+    {
+      "local_id": "assumptions-analyzer-3",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "05",
+      "kickoff_line_range": [
+        361,
+        375
+      ],
+      "kickoff_quote": "These five are safe concurrently because they write different files AND read nothing each other produces.",
+      "skill_quote": "1. Read `docs/milestones/<M>/ROADMAP.md` and extract the phase description\n2. Read any prior CONTEXT.md files from earlier phases (find via `find docs/milestones/<M>/phases -name \"CONTEXT.md\"`)\n3. Use Glob and Grep to find files related to the phase goal terms\n4. Read 5-15 most relevant source files to understand existing patterns",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/assumptions-analyzer.md",
+      "skill_line": 55,
+      "reasoning": "This is an ordering/parallelism justification the operator needs to decide dispatch safety; it is confirmed correct by the agent's own <process> and <input> sections, which show it only reads ROADMAP.md, prior CONTEXT.md files, and source files it discovers itself \u2014 never docs/global/codebase/*.md, the output path of the four sibling codebase-mapper agents in the same fan-out (grepped for and absent). Classified load-bearing since parallelism/ordering rationale across dispatched skills is explicitly an operator-level judgment call, not something the skill file itself states.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "assumptions-analyzer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/assumptions-analyzer.md",
+      "raised_by": [
+        "assumptions-analyzer"
+      ],
+      "locations": [
+        [
+          361,
+          375
+        ]
+      ],
+      "steps": [
+        "05"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "assumptions-analyzer-3"
+    }
+  ]
+}

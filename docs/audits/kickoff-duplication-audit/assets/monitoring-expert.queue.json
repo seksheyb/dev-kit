@@ -1,0 +1,160 @@
+{
+  "asset": "monitoring-expert",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/monitoring-expert/SKILL.md",
+  "claim_count": 4,
+  "claims": [
+    {
+      "local_id": "monitoring-expert-3",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "13",
+      "kickoff_line_range": [
+        1115,
+        1116
+      ],
+      "kickoff_quote": "5. monitoring-expert \u2014 wire the dashboards and alerts to the SLOs sre-engineer just defined.\n   These thresholds are a first guess by definition; step 15 tunes them from real signal.",
+      "skill_quote": "4. **Visualize** \u2014 Build dashboards using RED (Rate/Errors/Duration) or USE (Utilization/Saturation/Errors) methods",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/monitoring-expert/SKILL.md",
+      "skill_line": 24,
+      "reasoning": "This selects two of the skill's five workflow stages (Visualize + Alert) out of a skill that also owns logging, tracing, load testing, profiling, and capacity planning, and binds them to an artifact produced by a different skill in the same list \u2014 neither of which the skill can know. The 'first guess / step 15 tunes them' clause is cross-step sequencing, also unknowable to the skill. No RED/USE, metric-type, or severity-level methodology is restated, so this is not duplication.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "monitoring-expert",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/monitoring-expert/SKILL.md",
+      "raised_by": [
+        "monitoring-expert"
+      ],
+      "locations": [
+        [
+          1115,
+          1116
+        ]
+      ],
+      "steps": [
+        "13"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "monitoring-expert-1"
+    },
+    {
+      "local_id": "monitoring-expert-5",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "15",
+      "kickoff_line_range": [
+        1312,
+        1314
+      ],
+      "kickoff_quote": "If the bottleneck turns out to be infra-wide or capacity-related rather than app-level, hand the dashboard and capacity follow-through to monitoring-expert rather than continuing to profile app code.",
+      "skill_quote": "| Capacity Planning | `references/capacity-planning.md` | Scaling, forecasting, budgets |",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/monitoring-expert/SKILL.md",
+      "skill_line": 159,
+      "reasoning": "A routing condition the operator must judge (app-level vs infra-wide bottleneck) that hands control from performance-engineer to this skill. The capability it hands over is genuinely present \u2014 capacity-planning.md covers growth projection, resource forecasting, scaling calculators, and capacity alerts \u2014 so this is a correct handoff, not a stale or unenforced one, and the trigger condition is not something either skill can self-determine.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "monitoring-expert",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/monitoring-expert/SKILL.md",
+      "raised_by": [
+        "monitoring-expert"
+      ],
+      "locations": [
+        [
+          1312,
+          1314
+        ]
+      ],
+      "steps": [
+        "15"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "monitoring-expert-2"
+    },
+    {
+      "local_id": "monitoring-expert-6",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "15",
+      "kickoff_line_range": [
+        1318,
+        1322
+      ],
+      "kickoff_quote": "Now review the SLOs against reality, using the sre-engineer and monitoring-expert skills. Step 13 defined the SLIs/SLOs and wired the alerts on expected traffic; this is the first time there is real data to check them against. Report actual SLO attainment and error-budget burn for this milestone \u2014 how much budget was consumed, by what, and whether the burn rate is survivable at the next milestone's expected load.",
+      "skill_quote": "1. **Assess** \u2014 Identify what needs monitoring (SLIs, critical paths, business metrics)",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/monitoring-expert/SKILL.md",
+      "skill_line": 21,
+      "reasoning": "monitoring-expert names SLIs exactly once (line 21) and has zero error-budget or burn-rate content anywhere \u2014 a grep for 'slo|error.budget|burn|attainment' across SKILL.md and all 8 references returns only that line. Deliberately NOT filed as an unenforced-gap: the co-invoked sre-engineer owns this (SKILL.md:39-40 SLO/SLI and Error Budget reference rows, :90 'Prometheus SLO Alerting Rule (Multiwindow Burn Rate)'). The KICKOFF sentence is therefore load-bearing role-splitting \u2014 telling the operator which two skills to pair and which half each answers \u2014 not a restatement of monitoring-expert's own methodology.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "monitoring-expert",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/monitoring-expert/SKILL.md",
+      "raised_by": [
+        "monitoring-expert"
+      ],
+      "locations": [
+        [
+          1318,
+          1322
+        ]
+      ],
+      "steps": [
+        "15"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "monitoring-expert-3"
+    },
+    {
+      "local_id": "monitoring-expert-1",
+      "class": "unenforced-gap",
+      "severity": "high",
+      "step": "15",
+      "kickoff_line_range": [
+        1322,
+        1324
+      ],
+      "kickoff_quote": "Then tune the alert thresholds from that real signal: name every alert that fired without a real incident and every incident that fired no alert, and adjust.",
+      "skill_quote": "5. **Alert** \u2014 Define threshold and anomaly alerts on critical paths; validate no false-positive flood before shipping",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/monitoring-expert/SKILL.md",
+      "skill_line": 25,
+      "reasoning": "The skill's only alert-quality step is a pre-ship false-positive sanity check; it has no post-deployment tuning loop and, critically, no false-NEGATIVE analysis (incidents that fired no alert) anywhere. Searches run across SKILL.md and all 8 reference files for 'tune|tuning|calibrat|false positive|noisy|incident|postmortem|retro|revisit|adjust|refine|feedback|production signal|missed|silenc|fatigue' returned only SKILL.md:173 'Alert on every error (alert fatigue)' and alerting-rules.md:81 '# Bad alert: Too noisy, not actionable' \u2014 both design-time heuristics, neither a review procedure against observed firings. The co-invoked sre-engineer skill was also grepped for the same terms and has zero hits, so nothing downstream covers it either. The KICKOFF sentence is the only thing that makes this pass happen and must be KEPT.",
+      "systemic": true,
+      "other_locations": [],
+      "asset": "monitoring-expert",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/monitoring-expert/SKILL.md",
+      "raised_by": [
+        "monitoring-expert",
+        "sre-engineer"
+      ],
+      "locations": [
+        [
+          1321,
+          1323
+        ],
+        [
+          1322,
+          1324
+        ]
+      ],
+      "steps": [
+        "15"
+      ],
+      "merged_from": [
+        "monitoring-expert::monitoring-expert-1",
+        "sre-engineer::sre-engineer-4"
+      ],
+      "contributing_severities": [
+        "high",
+        "medium"
+      ],
+      "claim_id": "monitoring-expert-4"
+    }
+  ]
+}

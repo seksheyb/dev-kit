@@ -1,0 +1,43 @@
+{
+  "asset": "react-expert",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/SKILL.md",
+  "claim_count": 1,
+  "claims": [
+    {
+      "local_id": "react-expert-3",
+      "class": "contradiction",
+      "severity": "medium",
+      "step": "08",
+      "kickoff_line_range": [
+        569,
+        571
+      ],
+      "kickoff_quote": "Then use the sprint-execution skill to execute PHASE/<NN>-<MM>-PLAN.md under the test-driven-development skill \u2014 write the failing tests first, then implement to green, with every \"done\" claim backed by fresh command output per the verification-before-completion skill, not confidence.",
+      "skill_quote": "3. **Implement** - Write TypeScript components with proper types ... 6. **Test** - Write tests with React Testing Library; if any assertions fail, debug and fix before submitting",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/SKILL.md",
+      "skill_line": 36,
+      "reasoning": "Step 8 mandates test-first (failing tests before implementation) for the very tracks that are told to load react-expert as their lane skill, but react-expert's Core Workflow is explicitly implement-then-test: Implement is step 3 and Test is step 6, and references/testing-react.md documents Testing Library patterns without any red-green ordering. A track subagent following its assigned lane skill's own workflow will write code before tests, contradicting the wave's TDD gate. The guide text is what compensates, so it must be kept; the skill is what should change.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "react-expert",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/SKILL.md",
+      "raised_by": [
+        "react-expert"
+      ],
+      "locations": [
+        [
+          569,
+          571
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "react-expert-1"
+    }
+  ]
+}

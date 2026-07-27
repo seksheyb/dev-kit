@@ -1,0 +1,51 @@
+{
+  "asset": "ml-pipeline",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/skills/ml-pipeline/SKILL.md",
+  "claim_count": 1,
+  "claims": [
+    {
+      "local_id": "ml-pipeline-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [
+        615,
+        624
+      ],
+      "kickoff_quote": "They already ran at step 6: the framework, model provider and build methodology are settled and live in SPEC/AI-SPEC.md, with step 5's PHASE/RESEARCH.md as the phase-level companion. AI tracks build against that choice here \u2014 read both files, do not re-open the selection, and if the stack is genuinely wrong go back to step 6 rather than deciding it inside a track.",
+      "skill_quote": "1. **Design pipeline architecture** \u2014 Map data flow, identify stages, define interfaces between components",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/skills/ml-pipeline/SKILL.md",
+      "skill_line": 21,
+      "reasoning": "This names the specific upstream artifacts (SPEC/AI-SPEC.md, PHASE/RESEARCH.md) an AI-lane track must consume as context and forbids re-deciding the stack \u2014 pipeline-choice context the skill cannot possibly carry. Grepped the SKILL and all five references for 'AI-SPEC|SPEC\\.md|RESEARCH\\.md|framework select|already (chosen|selected|settled)|do not re-?open' with zero hits, so nothing in the skill duplicates it; step 1 of the Core Workflow starts from architecture design with no upstream-decision deference. Keep.",
+      "systemic": true,
+      "other_locations": [],
+      "asset": "ml-pipeline",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/skills/ml-pipeline/SKILL.md",
+      "raised_by": [
+        "ai-researcher",
+        "ml-pipeline"
+      ],
+      "locations": [
+        [
+          615,
+          624
+        ],
+        [
+          616,
+          621
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [
+        "ai-researcher::ai-researcher-6",
+        "ml-pipeline::ml-pipeline-2"
+      ],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "ml-pipeline-1"
+    }
+  ]
+}

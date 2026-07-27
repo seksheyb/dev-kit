@@ -1,0 +1,21 @@
+{
+  "asset": "verification-before-completion",
+  "verdicts": [
+    {
+      "claim_id": "verification-before-completion-1",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md line 19: \"NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE\" and line 68 rationalization-table row: \"I'm confident\" | \"Confidence ≠ evidence\". KICKOFF.md lines 570-571: 'with every \"done\" claim backed by fresh command output per the verification-before-completion skill, not confidence.'",
+      "reasoning": "Verified both quotes exist verbatim at their claimed line numbers. The KICKOFF clause restates the skill's own Iron Law (fresh evidence required for every completion claim) and its explicit rationalization-table rebuttal of 'confidence' as a substitute for evidence. This is the skill's own methodology/gate being re-taught in the invocation, not a parameter the skill could not know -- the skill is unconditional and self-enforcing once invoked. Severity stays low: the clause also functions as the actual invocation trigger naming the skill, so only the trailing justification ('not confidence') is strictly surplus."
+    },
+    {
+      "claim_id": "verification-before-completion-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "medium",
+      "evidence": "SKILL.md line 49 (Common Failures table): \"Agent completed | VCS diff shows changes | Agent reports \\\"success\\\"\" -- states the general principle only. KICKOFF.md lines 574-576: 'confirm the merge mechanically: `git log <integration-branch>..<branch> --oneline` must come back empty for every branch — a handover's `Merged` field is a self-report, not evidence.'",
+      "reasoning": "Verified both quotes exist verbatim at their claimed locations. The skill supplies only the abstract rule (trust VCS diff, not an agent's self-report) and generically instructs the caller to IDENTIFY a proving command (line 29) -- it has no knowledge of sprint-execution's branch-naming scheme, the integration-branch/track-branch relationship, or the handover document's 'Merged' field. The concrete git command and the specific self-report field it distrusts are sprint-execution/KICKOFF-specific facts the skill cannot supply. Correctly load-bearing; keep this text."
+    }
+  ]
+}

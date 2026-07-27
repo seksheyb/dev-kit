@@ -1,0 +1,71 @@
+{
+  "asset": "django-expert",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/django-expert/SKILL.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/django-expert/references/models-orm.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/django-expert/references/drf-serializers.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/django-expert/references/viewsets-views.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/django-expert/references/authentication.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/django-expert/references/testing-django.md"
+  ],
+  "claims": [
+    {
+      "local_id": "django-expert-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [603, 611],
+      "kickoff_quote": "For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it — python-pro / fastapi-expert / django-expert / postgres-pro / api-designer for backend work ... Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills. Tell me the track-to-lane mapping before you dispatch.",
+      "skill_quote": "description: \"Use when building Django web applications or REST APIs with Django REST Framework. Invoke when working with settings.py, models.py, manage.py, or any Django project file.\"",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/django-expert/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "The only KICKOFF mention of django-expert is cross-skill routing: which track/lane gets this skill, that the mapping be reported before dispatch, and that only enabled plugins are eligible. The skill's own description states its trigger conditions but cannot know the wave's track decomposition or which plugins the operator enabled at step 2. This is selection/ordering across skills, explicitly load-bearing.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "django-expert-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [614, 616],
+      "kickoff_quote": "Every name above is a skill, and the track subagent loads its own assigned skill itself. framework-selector and ai-researcher are **agents**, not skills — a track subagent cannot load either one, so never put them in a track's skill slot.",
+      "skill_quote": "role: specialist",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/django-expert/SKILL.md",
+      "skill_line": 9,
+      "reasoning": "This clarifies the loading mechanism (subagent self-loads a skill) and the skill-vs-agent distinction. SKILL.md only carries a `role: specialist` frontmatter field and says nothing about who loads it or how it is dispatched — the operator-side text carries information the skill genuinely cannot.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "django-expert-3",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [603, 606],
+      "kickoff_quote": "python-pro / fastapi-expert / django-expert / postgres-pro / api-designer for backend work",
+      "skill_quote": "  domain: backend",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/django-expert/SKILL.md",
+      "skill_line": 7,
+      "reasoning": "The surface-area label \"for backend work\" restates the skill's own `domain: backend` frontmatter (and its description's Django/DRF trigger list). Strictly this half of the routing sentence is derivable from the skill metadata; severity is low because the enumerated grouping still helps the operator build the mapping fast and the metadata is not a routing table the orchestrator consults.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "django-expert-4",
+      "class": "contradiction",
+      "severity": "medium",
+      "step": "08",
+      "kickoff_line_range": [603, 624],
+      "kickoff_quote": "step 08 (Build it, test-first)",
+      "skill_quote": "6. **Test** — Django TestCase, APITestCase",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/django-expert/SKILL.md",
+      "skill_line": 35,
+      "reasoning": "Step 08 is titled \"Build it, test-first\", but django-expert's Core Workflow (lines 30-35) places Test last, after models, views, endpoint validation and auth — a build-then-test order. Neither SKILL.md nor references/testing-django.md contains any test-first / write-the-test-before-the-code instruction (grepped the references chain for test ordering; testing-django.md is APITestCase/fixtures/factory recipes only). A track handed this skill under a test-first mandate gets an internally build-first methodology.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

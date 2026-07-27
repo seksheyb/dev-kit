@@ -1,0 +1,65 @@
+{
+  "asset": "dispatching-parallel-agents",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/dispatching-parallel-agents/SKILL.md",
+  "references_read": [],
+  "claims": [
+    {
+      "local_id": "dispatching-parallel-agents-1",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "08",
+      "kickoff_line_range": [595, 597],
+      "kickoff_quote": "the ceremony-free counterpart to sprint-execution: ... no plan file, no worktree isolation, no wave/gate protocol.",
+      "skill_quote": "**Already have a written plan or a triaged bug list?** This is the no-ceremony, no-worktree variant for ad hoc mid-session dispatch. Once ceremony is warranted — a plan file with a parallel execution map exists (`sprint-execution`), or you have a prioritized bug list with severity tags (`bugfix-wave`) — use that skill's worktree/wave/gate machinery instead; it's the same core pattern with isolation, sequencing, and merge protocol layered on top.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/dispatching-parallel-agents/SKILL.md",
+      "skill_line": 16,
+      "reasoning": "The skill's Overview already fixes its relationship to sprint-execution and names the exact three things the KICKOFF clause names — no ceremony, no worktree, no wave/gate machinery. The prompt text re-derives the skill's own self-positioning paragraph almost term for term, adding no parameter the skill cannot know.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "dispatching-parallel-agents-2",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [595, 596],
+      "kickoff_quote": "one focused subagent per independent task, dispatched in parallel",
+      "skill_quote": "**Core principle:** Dispatch one agent per independent problem domain. Let them work concurrently.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/dispatching-parallel-agents/SKILL.md",
+      "skill_line": 14,
+      "reasoning": "This restates the skill's stated core principle verbatim in substance. The skill also operationalizes it at line 69 ('Issue all three subagent dispatches in the same response — they run in parallel') and line 78, so the prompt is not supplying a mode choice or a parameter — it is repeating the one rule the skill is built around.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "dispatching-parallel-agents-3",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [595, 595],
+      "kickoff_quote": "Use the dispatching-parallel-agents skill instead",
+      "skill_quote": "**Already have a written plan or a triaged bug list?** This is the no-ceremony, no-worktree variant for ad hoc mid-session dispatch.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/dispatching-parallel-agents/SKILL.md",
+      "skill_line": 16,
+      "reasoning": "The imperative itself is the invocation — which of step 8's alternative execution skills to load, substituting for the sprint-execution block above it. The skill knows the sprint-execution boundary in the abstract but cannot know it is the fallback path for block 0 of KICKOFF step 8. Keep.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "dispatching-parallel-agents-4",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [592, 593],
+      "kickoff_quote": "*(only if you have 2+ independent tasks outside this plan — no written plan, no triaged bug list, e.g. a quick ad-hoc fix mid-wave)*",
+      "skill_quote": "description: Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies — parallel test failures, unrelated bugs, or any ad hoc mid-session work that splits cleanly into isolated subagent dispatches",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/dispatching-parallel-agents/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "This is operator-facing italic prose outside the paste block: it tells the human whether to paste at all, at a point where the skill is not yet loaded and so cannot self-select. It does overlap the skill's frontmatter and its lines 16-19 disqualifiers ('written plan', 'triaged bug list'), but as an un-loaded-skill gate it is load-bearing; the 'outside this plan' / 'mid-wave' framing is KICKOFF-specific context the skill cannot supply.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

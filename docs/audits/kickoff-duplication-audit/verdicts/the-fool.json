@@ -1,0 +1,39 @@
+{
+  "asset": "the-fool",
+  "verdicts": [
+    {
+      "claim_id": "the-fool-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:19-26 — '## When to Use This Skill' followed by line 21 '- Stress-testing a plan, architecture, or strategy before committing'. Verified verbatim at line 21. The section is a flat, unconditional list of six use cases with no stakes threshold, no 'when not to use', and no opt-out. Hunted for one: `grep -rniE \"high.stakes|when not to|skip this|don't need|overkill|escalat|reversib|threshold\"` across SKILL.md and all six references/ files returns only references/mode-selection-guide.md:58 ('| Pre-mortem -> Red Team | High-stakes system launch. Find internal failures, then external attacks. |') and :69 ('### When NOT to Suggest Multi-Mode'), both of which govern mode sequencing *after* the skill is already running, not whether to run it.",
+      "reasoning": "SURVIVES. KICKOFF lines 187-188 ('*(only if this spec is unusually high-stakes — new architecture, a security/payments/auth surface, or a bet-the-company scope call)*') plus line 191-192 ('Optional — most specs don't need this escalation.') is exactly the rubric's 'conditional gating the operator must judge': whether a given spec merits an extra adversarial pass is a pipeline-level cost/benefit call about *this* spec, which the skill cannot make about itself. The nearest thing the skill has (mode-selection-guide.md:58) presupposes the skill is already invoked. Text must be KEPT. I downgraded severity from medium to low: the only actionable defect is internal to the guide — the optionality is stated twice within six lines (the parenthetical gate at 187-188 and 'Optional — most specs don't need this escalation' at 191-192), which is a copy-editing redundancy against itself, not against the skill. Nothing here should be deleted on skill-overlap grounds.",
+      "adjudicator_note": "Verified the claim's own quoted line number (21) is correct."
+    },
+    {
+      "claim_id": "the-fool-2",
+      "confirmed": false,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:52 — '- \"Find weaknesses\" → Ask: \"Find failure modes\" (Pre-mortem) vs \"Attack this\" (Red team)'. Also SKILL.md:49 '**Step 2 — Refine mode** (only when the category maps to 2 modes):', SKILL.md:46 '| Find weaknesses | Anticipate how this fails or gets exploited |', SKILL.md:81 '- Use `AskUserQuestion` for mode selection — never assume which mode', SKILL.md:95 '- Output mode selection as plain text when `AskUserQuestion` can provide structured options', and references/mode-selection-guide.md:58 '| Pre-mortem → Red Team | High-stakes system launch. Find internal failures, then external attacks. |'.",
+      "reasoning": "REFUTED, and refuted on the claim's own strongest point. The claim treats the disjunction 'pre-mortem or red-team' as the fatal defect ('pre-assigns two mutually exclusive modes ... without resolving the choice, so the operator neither picks a mode nor lets the skill's selector run'). That is backwards. {Pre-mortem, Red team} is *precisely and exclusively* the pair the skill's own step-1 category 'Find weaknesses' expands into at line 52 — the only category of the four that maps to those two modes. So KICKOFF line 190 resolves step 1 of the skill's two-step selector and deliberately leaves step 2 open, which is the exact input the AskUserQuestion refinement at lines 49-52 exists to consume. An unresolved disjunction does not bypass the selector; it feeds it. The alignment is not coincidental: references/mode-selection-guide.md:58 independently pairs Pre-mortem with Red Team for 'High-stakes system launch', matching the 'unusually high-stakes' gate at KICKOFF:187 word for word. Guide and skill agree; there is no contradiction. On line 81 specifically: 'never assume which mode' binds the executing agent against silently guessing — it is not a prohibition on the invoker supplying a category, and line 95's MUST NOT is about *presentation format* ('as plain text when AskUserQuestion can provide structured options'), not about provenance of the choice. The audit rubric also names this case explicitly as NOT duplication and NOT a defect: 'Mode selection among modes the skill itself offers (\"use pre-mortem mode\")' is a load-bearing parameter. Reclassified accordingly; the text is a legitimate narrowing hint and should be kept."
+    },
+    {
+      "claim_id": "the-fool-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "high",
+      "evidence": "SKILL.md:30 — '1. **Identify** — Extract the user's position from conversation context. Restate it as a steelmanned thesis for confirmation.' Verified verbatim at line 30. This is the skill's sole subject-acquisition step. Independently hunted for any file/path/artifact notion: `grep -rniE \"spec|file|document|artifact|path|read \" references/` across all six reference files returns only illustrative prose (e.g. evidence-audit.md:11 'Extract claims — Identify the specific claims being made', dialectic-synthesis.md:76 example text) — zero read-a-target-file instruction, zero path parameter, zero input contract anywhere in SKILL.md or references/.",
+      "reasoning": "SURVIVES. The skill takes its subject from conversation context and has no input-file concept at all, so 'against SPEC/spec.md' on KICKOFF line 190 is the invocation's single indispensable argument: strip it and the skill has nothing determinate to challenge in a fresh agent context. I also checked the path is not stale — SPEC/spec.md is the settled convention across KICKOFF.md (lines 65, 146, 170, 178, 190, 202, 257, 269, 272, 534, 545, 869, 912, 1191, 1235), and it matches the artifact spec-review-cpo reviews one block earlier at line 178 ('Use the spec-review-cpo skill to review SPEC/spec.md'). High severity upheld: this is the highest-value keep in the block.",
+      "adjudicator_note": "Verified the claim's own quoted line number (30) is correct."
+    },
+    {
+      "claim_id": "the-fool-4",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:12 — '  related-skills: architecture-designer, specify'. Verified verbatim at line 12; it is the frontmatter's only cross-skill reference and does not name spec-review-cpo. No other mention of spec-review-cpo, ordering, or 'runs after' exists in SKILL.md or in any of the six references/ files.",
+      "reasoning": "SURVIVES. 'as an extra adversarial pressure-test on top of spec-review-cpo's own posture' (KICKOFF:190-191) carries two things the skill cannot know: sequencing (the-fool runs after spec-review-cpo, whose invocation is the immediately preceding block at KICKOFF:178) and composition semantics (additive — it layers on top of that review rather than replacing it, which is why the REVISE/BLOCKER stop condition at line 185 still governs). Ordering and cross-skill relationships are load-bearing per the rubric. Low severity is right: unlike the target path, this is framing rather than a hard argument — losing it would degrade the operator's understanding of where the pass sits without breaking the invocation."
+    }
+  ]
+}

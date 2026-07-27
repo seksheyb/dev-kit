@@ -1,0 +1,21 @@
+{
+  "asset": "rag-architect",
+  "verdicts": [
+    {
+      "claim_id": "rag-architect-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 601-620: '...rag-architect / prompt-engineer / ml-pipeline for AI work... Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills.' verified verbatim against skill: SKILL.md line 3, description: 'Designs and implements production-grade RAG systems by chunking documents, generating embeddings, configuring vector stores, building hybrid search pipelines, applying reranking, and evaluating retrieval quality. Use when building RAG systems, vector databases, or knowledge-grounded AI applications requiring semantic search, document retrieval, context augmentation, similarity search, or embedding-based indexing.'",
+      "reasoning": "The KICKOFF text is a dispatch/routing instruction: given a wave of tracks and the set of plugins enabled at step 2, name which lane skill owns each track and tell the orchestrator the track-to-lane mapping before dispatching. That mapping (which tracks exist, which plugins are enabled, the wave/brief structure) is information the skill cannot possibly know from inside its own file -- it is the invocation's argument, not a restatement of the skill's methodology. The skill's own description independently names the same surface (RAG, vector search, embeddings, semantic search) so there is no drift or contradiction, just non-overlapping concerns: KICKOFF picks WHO gets dispatched, SKILL.md describes WHAT that skill does once dispatched. Correctly classified load-bearing-parameter, low severity (mention among a list of many lane options, not a load-bearing gate)."
+    },
+    {
+      "claim_id": "rag-architect-2",
+      "confirmed": true,
+      "final_class": "unenforced-gap",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md lines 616-620: 'They already ran at step 6: the framework, model provider and build methodology are settled and live in SPEC/AI-SPEC.md, with step 5's PHASE/RESEARCH.md as the phase-level companion. AI tracks build against that choice here — read both files, do not re-open the selection, and if the stack is genuinely wrong go back to step 6 rather than deciding it inside a track.' Verified against SKILL.md line 20: '2. **Vector Store Design** — Select database, schema design, indexing strategy, sharding approach' and SKILL.md line 168: '- Evaluate multiple embedding models on your domain data before committing'.",
+      "reasoning": "Independently re-ran the grep sweep across SKILL.md and all 5 references files (chunking-strategies.md, embedding-models.md, rag-evaluation.md, retrieval-optimization.md, vector-databases.md -- 3858 total lines) for -niE 'already (chosen|selected|decided)|do not re-?open|existing (choice|decision)|SPEC|AI-SPEC|prior decision|respect the|constrain|upstream|pre-?exist|given (a|the) (choice|decision|stack)|inherit'. Zero hits express deference to a pre-made architecture decision; the only matches are unrelated uses of 'specific'/'specialized'/'constrained' (memory-constrained, ServerlessSpec, cost constraints, domain-specific) and structural headers ('## Constraints' meaning the skill's own MUST DO/MUST NOT list, not upstream constraints). The skill's own Core Workflow step 2 is literally 'Select database, schema design, indexing strategy' with no conditional on an existing choice, and its MUST DO list independently mandates 'Evaluate multiple embedding models on your domain data before committing' -- both point toward re-opening a selection, not deferring to one already made. references/vector-databases.md and references/embedding-models.md are both structured as comparison/selection guides for making a choice, not as validators of a choice supplied externally. This is a genuine absence: nothing in the skill or its reference chain tells a track subagent to check for and defer to an existing SPEC/AI-SPEC.md decision. The KICKOFF text is therefore load-bearing and must be KEPT; the underlying finding is that the skill lacks a 'defer to upstream architecture decision if supplied' rule."
+    }
+  ]
+}

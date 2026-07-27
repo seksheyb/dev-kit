@@ -1,0 +1,81 @@
+{
+  "asset": "compliance-auditor",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/compliance-auditor.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/incident-responder.md"
+  ],
+  "claims": [
+    {
+      "local_id": "compliance-auditor-1",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "12",
+      "kickoff_line_range": [1055, 1059],
+      "kickoff_quote": "Hand the auditor all three of the things it establishes before it can map law to controls, rather than letting it guess them: which regulations actually apply, what categories of personal or regulated data this milestone touches, and which jurisdictions the users and the data sit in.",
+      "skill_quote": "1. Establish organizational scope, applicable regulations, data types, and geography.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/compliance-auditor.md",
+      "skill_line": 10,
+      "reasoning": "The three enumerated items are a one-to-one re-listing of the agent's own step 1 (applicable regulations / data types / geography), and the KICKOFF text even says these are things 'it establishes' — conceding the agent already owns them. The residual instruction ('supply them rather than let it guess') is a thin wrapper around a list the agent's first numbered step already fixes; only the scoping word 'this milestone' is operator-supplied.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "compliance-auditor-2",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "12",
+      "kickoff_line_range": [1058, 1059],
+      "kickoff_quote": "Point it at any prior audit history and existing control or policy docs too.",
+      "skill_quote": "2. Review existing controls, policies, and prior audit history.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/compliance-auditor.md",
+      "skill_line": 11,
+      "reasoning": "Near word-for-word restatement of the agent's step 2 — same three nouns (controls, policies, prior audit history) in the same order. It names no path, artifact, or filename, so it adds no invocation argument the agent lacks; it merely re-teaches the agent's own second phase.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "compliance-auditor-3",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [1052, 1055],
+      "kickoff_quote": "*(only if regulated data or industry is in scope — GDPR/HIPAA/PCI/SOC2)*\nUse the compliance-auditor agent against the applicable regime, and the matching product-lane skill for framework detail — gdpr-ccpa-compliance or hipaa-compliance.",
+      "skill_quote": "- **Regulatory**: GDPR, CCPA/CPRA, HIPAA/HITECH, PCI DSS, SOC 2 Type II, ISO 27001/27701, NIST CSF, FedRAMP.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/compliance-auditor.md",
+      "skill_line": 16,
+      "reasoning": "The agent knows its own framework list but has no knowledge of the sibling product-lane skills (plugins/dev-kit-product/skills/gdpr-ccpa-compliance, .../hipaa-compliance) or that exactly one of them should be paired with it — that is cross-asset orchestration only the operator can decide. The conditional gate ('only if regulated data or industry is in scope') is likewise a judgement the agent cannot make before being dispatched. KEEP.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "compliance-auditor-4",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "15",
+      "kickoff_line_range": [1359, 1361],
+      "kickoff_quote": "If this incident has regulatory exposure — a security breach, or any incident touching personal or regulated data — hand off to the compliance-auditor agent for the framework-specific breach-notification obligations, and do it early rather than at postmortem time.",
+      "skill_quote": "For an active incident, defer containment and forensics to the incident-responder agent; this agent covers the regulatory fallout — breach-notification deadlines, regulator reporting, control gaps exposed.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/compliance-auditor.md",
+      "skill_line": 25,
+      "reasoning": "The incident-responder/compliance-auditor division of labour and the 'breach-notification' deliverable are already written into both agents: compliance-auditor.md:25 states it from this side, and incident-responder.md:24 states the reciprocal ('For incidents with regulatory exposure (breach notification, data incidents), track disclosure deadlines and loop in legal/compliance early — see the compliance-auditor agent for framework-specific obligations'), including the word 'early'. The KICKOFF sentence re-derives a handoff both files already enforce; only the trigger predicate is arguably operator judgement.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "compliance-auditor-5",
+      "class": "unenforced-gap",
+      "severity": "low",
+      "step": "15",
+      "kickoff_line_range": [1361, 1363],
+      "kickoff_quote": "Disclosure deadlines start running from discovery, not from the fix, so surface the applicable regime and its clock to me while the incident is still open.",
+      "skill_quote": "SEARCH EVIDENCE — closest sentence in the asset is the Output section, line 25: 'An audit report: executive summary, per-control findings with evidence, a risk matrix, and a prioritized remediation roadmap. State control-coverage percentage and any critical findings.' The asset's only other mention of deadlines is line 17 ('breach-notification deadlines') as a topic area. Greps run over compliance-auditor.md (no references/ dir exists — confirmed by ls of plugins/dev-kit-core/agents/): -niE 'deadline|clock|early|interim|urgent|immediat|discovery|72|notif' returned only lines 17 and 25. Nothing in the asset requires an interim, pre-report output, and nothing anchors the clock to discovery rather than remediation.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/compliance-auditor.md",
+      "skill_line": 25,
+      "reasoning": "The asset's only specified deliverable is a full audit report; it never mandates surfacing the applicable regime and its notification clock as an early interim output while an incident is live, and never states that the clock starts at discovery. incident-responder.md:24 covers 'track disclosure deadlines' generically but not the discovery-anchored rule. So this KICKOFF sentence is load-bearing and must be KEPT — the finding is that compliance-auditor.md should carry it.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "The two invocations are compatible in substance but asymmetric in dispatch shape: step 12 says the agent needs a paired product-lane skill (gdpr-ccpa-compliance / hipaa-compliance) 'for framework detail', while step 15 asks the same agent alone for 'the framework-specific breach-notification obligations' with no companion skill. If the framework detail genuinely lives in the product-lane skills, the step-15 handoff is under-equipped; if the agent can supply it alone (compliance-auditor.md:16-17 suggests it can), the step-12 pairing is the questionable half. Low severity, but the guide should pick one story.",
+  "capped": ""
+}

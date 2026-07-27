@@ -1,0 +1,37 @@
+{
+  "asset": "writing-skills",
+  "verdicts": [
+    {
+      "claim_id": "writing-skills-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:61 '## Codifying a Repeated Flow into a Skill' (the special-case mode header), preceded by the general 'When to Create a Skill' criteria at lines 51-58.",
+      "reasoning": "Verified verbatim: KICKOFF.md:1335 '*(only if the retro surfaced a workflow this project keeps repeating by hand)*' and :1337 'Use the writing-skills skill to codify that repeated workflow into a real dev-kit skill' match exactly. Three things here the skill genuinely cannot supply on its own: (1) the operator-judged gate on whether to enter this block at all ('only if the retro surfaced...') — a conditional the skill cannot self-trigger; (2) selection of the skill's 'Codifying a Repeated Flow' mode (line 61) over its general from-scratch creation path (lines 49-58) — mode selection among modes the skill itself offers is explicitly NOT duplication per the rubric; (3) the antecedent 'that repeated workflow' — which specific workflow is conversational context the skill has no access to. The skill's own deployment step (line 713, 'Commit the skill into its plugin's skills/ directory') is generic and does not itself specify 'dev-kit skill' as a destination, so KICKOFF's framing carries real information. This is textbook load-bearing-parameter, not restatement."
+    },
+    {
+      "claim_id": "writing-skills-2",
+      "confirmed": false,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:51-52 'Create when: ... You'd reference this again across projects / Pattern applies broadly (not project-specific)' and :58 'Don't create for: ... Project-specific conventions (put in your instructions file)'.",
+      "reasoning": "The underlying quotes check out, but the alleged disagreement does not survive scrutiny. KICKOFF's block does not tell the agent to bypass the skill's own creation bar — it tells the agent to 'Use the writing-skills skill', meaning the skill's own 'When to Create a Skill' section (lines 49-58) and its provenance guard (line 74) remain fully in force regardless of how loosely KICKOFF frames the triggering justification. KICKOFF's 'reusable beyond this milestone' is a coarse, necessary-but-not-exhaustive pre-filter for even considering the block ('is this worth bringing up'), not a claim that milestone-level reuse alone is sufficient to pass the skill's own project-specificity screen. If an agent surfaces a project-specific pattern, the skill's own 'Don't create for: Project-specific conventions' line still fires and blocks creation — nothing in KICKOFF instructs the agent to skip that check. Silence about cross-project applicability is not the same as asserting a conflicting, weaker bar. There is no place where the guide and the skill actually direct different real-world behavior; at most the guide's framing ('this project', 'next milestone') is a load-bearing local trigger condition, already partly captured as load-bearing-parameter in writing-skills-1. Reclassified and refuted as contradiction; downgraded severity since the residual finding (imprecise motivational framing) is minor."
+    },
+    {
+      "claim_id": "writing-skills-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:65 '**The productivity multiplier:** without codification, each repeat re-pays the full discovery cost (failed attempts included). With it, the next matching request runs the proven path immediately.' (also SKILL.md:63, 'Codifying it converts a slow, re-derived flow into a fast, deterministic one.')",
+      "reasoning": "Verified: KICKOFF.md:1337-1338 'so the next milestone inherits it instead of re-deriving it' is pure motivational framing with no new behavior, parameter, or gate attached. It restates — almost word for word ('re-deriving' / 're-derived', 'inherits' / 'runs the proven path immediately') — the same productivity-multiplier argument the skill already makes twice in the very section (line 61-65) the KICKOFF invocation is pointing the agent at. This is incidental duplicated phrasing, not the skill's methodology, gate, or template, so low severity is correct — trimming it from KICKOFF would lose no enforceable behavior since the skill argues the identical point independently."
+    },
+    {
+      "claim_id": "writing-skills-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:56 '- One-off solutions' (under 'Don't create for:'), together with SKILL.md:51 'You'd reference this again across projects' and SKILL.md:74 'If you cannot find one, refuse and ask for a successful run first.'",
+      "reasoning": "Verified: KICKOFF.md:1338-1339 'Only do this for a pattern that actually recurred and is reusable beyond this milestone — a one-off sequence is not a skill.' re-derives a hard gate the skill already enforces structurally in two places: the 'Don't create for: One-off solutions' / 'Create when: You'd reference this again across projects' criteria (lines 49-58), and the Provenance guard's requirement to find an actual prior successful, bounded, user-accepted run before codifying anything (line 74). Since the agent is instructed to 'Use the writing-skills skill' immediately in the same sentence, these gates fire regardless of whether KICKOFF restates them. This is a genuine re-derivation of the skill's own hard rule/gate (not mere motivation, unlike writing-skills-3), so medium severity — removing the sentence changes nothing the skill wouldn't independently enforce, but it is a heavier restatement than pure flavor text."
+    }
+  ]
+}

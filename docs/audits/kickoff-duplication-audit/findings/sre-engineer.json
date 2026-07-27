@@ -1,0 +1,99 @@
+{
+  "asset": "sre-engineer",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/sre-engineer/SKILL.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/sre-engineer/references/slo-sli-management.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/sre-engineer/references/error-budget-policy.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/sre-engineer/references/monitoring-alerting.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/sre-engineer/references/incident-chaos.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/sre-engineer/references/automation-toil.md"
+  ],
+  "claims": [
+    {
+      "local_id": "sre-engineer-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "13",
+      "kickoff_line_range": [1111, 1113],
+      "kickoff_quote": "4. sre-engineer — define the SLIs and SLOs for what this milestone shipped, against real expected traffic. Step 15 reviews error-budget burn against exactly these, so vague or aspirational targets there become an unreviewable step 15.",
+      "skill_quote": "2. **Define SLOs** - Identify meaningful SLIs and set appropriate targets",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/sre-engineer/SKILL.md",
+      "skill_line": 20,
+      "reasoning": "The skill offers six workflow modes (assess, define SLOs, monitor, automate toil, chaos, capacity). Selecting the define-SLOs mode, scoping it to 'what this milestone shipped', and stating the downstream consumer (step 15) are all invocation arguments the skill cannot know. Load-bearing, not duplication.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "sre-engineer-2",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "13",
+      "kickoff_line_range": [1112, 1113],
+      "kickoff_quote": "so vague or aspirational targets there become an unreviewable step 15.",
+      "skill_quote": "- Set SLOs without user impact justification",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/sre-engineer/SKILL.md",
+      "skill_line": 58,
+      "reasoning": "The prohibition on vague/aspirational SLO targets is already a MUST NOT DO hard rule (line 58), reinforced by MUST DO 'Define quantitative SLOs (e.g., 99.9% availability)' (line 48) and the SLO Review Checklist items 'Achievable' / 'Measurable' in references/slo-sli-management.md lines 216-221. The clause re-derives a gate the skill enforces; only the cross-step coupling half of the sentence is load-bearing.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "sre-engineer-3",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "15",
+      "kickoff_line_range": [1319, 1321],
+      "kickoff_quote": "Report actual SLO attainment and error-budget burn for this milestone — how much budget was consumed, by what, and whether the burn rate is survivable at the next milestone's expected load.",
+      "skill_quote": "- Calculate error budgets from SLO targets",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/sre-engineer/SKILL.md",
+      "skill_line": 49,
+      "reasoning": "The output shape asked for — attainment, budget consumed, burn rate, survivability horizon — is exactly what references/error-budget-policy.md's ErrorBudgetCalculator.calculate_budget_status already returns ('sli', 'compliant', 'budget_used', 'budget_remaining_pct', 'burn_rate', 'days_to_exhaustion', lines 240-252). The milestone scoping and 'next milestone's expected load' framing remain load-bearing; the metric enumeration does not.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "sre-engineer-4",
+      "class": "unenforced-gap",
+      "severity": "medium",
+      "step": "15",
+      "kickoff_line_range": [1321, 1323],
+      "kickoff_quote": "Then tune the alert thresholds from that real signal: name every alert that fired without a real incident and every incident that fired no alert, and adjust.",
+      "skill_quote": "CLOSEST FOUND: references/monitoring-alerting.md line 366 'false_positives: int' inside `AlertQualityMetrics` (total_alerts, actionable_alerts, false_positives, auto_resolved; 'Target: >90% precision, <30% toil', line 381). That struct measures false positives but has no false-negative / missed-incident field, and nothing in the skill instructs re-tuning thresholds after measurement. GREPS RUN across SKILL.md + all five references: 'tune|tuning|false positive|noise|fired|no alert|calibrat|loose|threshold|detect|fatigue|actionable|symptom' and a second pass on 'tighten|recalibrat|calibrat|too loose|too lax|revisit|adjust|refine|false negative|missed|undetected|silent' — the second pass returned ZERO matches in the whole skill directory. incident-chaos.md's postmortem 'Detection' section (line 169) reviews detection qualitatively for one incident but is not an alert-threshold tuning loop.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/sre-engineer/references/monitoring-alerting.md",
+      "skill_line": 366,
+      "reasoning": "The skill can define alerts and can score their precision, but nowhere instructs the agent to feed real signal back and adjust thresholds, and its alert-quality model structurally omits incidents that fired no alert. The KICKOFF sentence is therefore load-bearing and must be KEPT; the finding is against the skill.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "sre-engineer-5",
+      "class": "unenforced-gap",
+      "severity": "medium",
+      "step": "15",
+      "kickoff_line_range": [1323, 1324],
+      "kickoff_quote": "An SLO that was never breached and never came close is not automatically correct — say whether it is calibrated or merely loose.",
+      "skill_quote": "CLOSEST FOUND: references/slo-sli-management.md lines 216-221, the 'SLO Review Checklist' — '1. **User-centric**... 2. **Achievable**: Can you meet it with current architecture? ... 4. **Meaningful**: Does violating it require action?'. That checklist is a pre-finalization gate against targets that are too STRICT or unmeasurable; it contains no test for a target that is too LOOSE, and it is never framed as a post-hoc review against observed data. GREPS RUN over SKILL.md + all five references: 'calibrat|loose|too lax|tighten|recalibrat|revisit|adjust|refine' — ZERO matches. SKILL.md's MUST NOT DO list (lines 57-65) has 'Set SLOs without user impact justification' but nothing about an unbreached SLO being under-tightened.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/sre-engineer/references/slo-sli-management.md",
+      "skill_line": 219,
+      "reasoning": "Nothing in the skill or its references treats a never-breached SLO as suspect or asks for a calibrated-vs-loose verdict; the skill's only SLO review is a pre-finalization checklist, not a retrospective recalibration. The KICKOFF sentence supplies behavior the skill lacks and must be kept.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "sre-engineer-6",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "13",
+      "kickoff_line_range": [1102, 1103],
+      "kickoff_quote": "Route the infra lane over this milestone's deploy surface. Run these in sequence, not in parallel — they write overlapping config and the later ones depend on the earlier ones' output:",
+      "skill_quote": "| Monitoring | `references/monitoring-alerting.md` | Golden signals, alert design, dashboards |",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/sre-engineer/SKILL.md",
+      "skill_line": 41,
+      "reasoning": "Ordering and parallelism across five sibling skills, and the hand-off that monitoring-expert consumes sre-engineer's SLOs, are cross-skill orchestration facts. The skill's own Hand-off Guidance (lines 26-31) names incident-responder and chaos-engineer only and says nothing about devops-engineer/terraform/monitoring-expert sequencing. Keep.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

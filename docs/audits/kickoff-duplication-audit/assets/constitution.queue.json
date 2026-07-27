@@ -1,0 +1,304 @@
+{
+  "asset": "constitution",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+  "claim_count": 8,
+  "claims": [
+    {
+      "local_id": "constitution-1",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        39,
+        43
+      ],
+      "kickoff_quote": "Use the constitution skill to interview me and write docs/global/project/constitution.md.",
+      "skill_quote": "The constitution lives at `docs/global/project/constitution.md` \u2014 the single canonical path every downstream skill reads from. Don't invent a variant location.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "skill_line": 16,
+      "reasoning": "Output paths are normally load-bearing arguments, but this skill hardcodes the path as canonical and explicitly forbids variants, so naming it in the prompt adds nothing the skill would not already do. Same restatement appears verbatim in the milestone-2+ block. Low severity \u2014 harmless reinforcement, not a divergence risk.",
+      "systemic": true,
+      "other_locations": [
+        [
+          46,
+          53
+        ]
+      ],
+      "asset": "constitution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "raised_by": [
+        "constitution"
+      ],
+      "locations": [
+        [
+          39,
+          43
+        ],
+        [
+          46,
+          53
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "constitution-1"
+    },
+    {
+      "local_id": "constitution-2",
+      "class": "unenforced-gap",
+      "severity": "medium",
+      "step": "00",
+      "kickoff_line_range": [
+        39,
+        43
+      ],
+      "kickoff_quote": "Use the constitution skill to interview me and write docs/global/project/constitution.md.",
+      "skill_quote": "SEARCH EVIDENCE \u2014 grepped SKILL.md and constitution-template.md (case-insensitive) for 'interview', 'ask', 'question', 'user input', 'conversation', 'elicit', 'prompt the user'. Only hits: line 38 \"- If user input (conversation) supplies a value, use it.\" and line 40 \"...`RATIFICATION_DATE` is the original adoption date (if unknown ask or mark TODO)...\". The skill's placeholder-collection flow is passive \u2014 it consumes conversation already present, otherwise infers from repo context, otherwise emits TODO; the only 'ask' is scoped to one date field. There is no instruction anywhere to run an elicitation pass with the user.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "skill_line": 38,
+      "reasoning": "On a greenfield milestone-1 repo there is neither prior conversation nor repo context, so the skill as written would infer or TODO its way through every principle rather than interview. The KICKOFF word 'interview' is therefore load-bearing and must be KEPT; the finding is against the skill for not owning its own elicitation step.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "constitution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "raised_by": [
+        "constitution"
+      ],
+      "locations": [
+        [
+          39,
+          43
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "constitution-2"
+    },
+    {
+      "local_id": "constitution-3",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        39,
+        43
+      ],
+      "kickoff_quote": "Then write docs/global/project/PROJECT.md: what this project is, who it is for, what success looks like for milestone 1, and any hard constraints known today.",
+      "skill_quote": "The constitution lives at `docs/global/project/constitution.md` \u2014 the single canonical path every downstream skill reads from. Don't invent a variant location.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "skill_line": 16,
+      "reasoning": "PROJECT.md is entirely outside this skill's scope \u2014 the skill writes exactly one file and never mentions PROJECT.md (grepped; zero hits in SKILL.md and the template). This is an additional operator-assigned deliverable riding along in the same prompt block, not duplicated methodology. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "constitution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "raised_by": [
+        "constitution"
+      ],
+      "locations": [
+        [
+          39,
+          43
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "constitution-3"
+    },
+    {
+      "local_id": "constitution-4",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "00",
+      "kickoff_line_range": [
+        46,
+        53
+      ],
+      "kickoff_quote": "bump its semantic version and propagate the amendments to dependent docs; do not re-initialize it from the template.",
+      "skill_quote": "`CONSTITUTION_VERSION` must increment according to semantic versioning rules:",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "skill_line": 41,
+      "reasoning": "Semantic version bumping is not optional in the skill \u2014 step 2 makes it mandatory and spells out MAJOR/MINOR/PATCH criteria at lines 41-45, plus a validation gate at line 70 ('Version line matches report'). The KICKOFF clause re-derives a hard rule the skill already enforces on every run.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "constitution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "raised_by": [
+        "constitution"
+      ],
+      "locations": [
+        [
+          46,
+          53
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "constitution-4"
+    },
+    {
+      "local_id": "constitution-5",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "00",
+      "kickoff_line_range": [
+        46,
+        53
+      ],
+      "kickoff_quote": "propagate the amendments to dependent docs",
+      "skill_quote": "Your job is to (a) collect/derive concrete values, (b) fill the template precisely, and (c) propagate any amendments across dependent artifacts.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "skill_line": 25,
+      "reasoning": "Near-verbatim restatement of the skill's own charter sentence, which is then operationalized as the five-item 'Consistency propagation checklist' at step 4 (lines 53-58) and reported in the Sync Impact Report (line 65). The prompt teaches back the skill's own methodology.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "constitution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "raised_by": [
+        "constitution"
+      ],
+      "locations": [
+        [
+          46,
+          53
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "constitution-5"
+    },
+    {
+      "local_id": "constitution-6",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "00",
+      "kickoff_line_range": [
+        46,
+        53
+      ],
+      "kickoff_quote": "Use the constitution skill in amend mode against the existing docs/global/project/constitution.md ... do not re-initialize it from the template.",
+      "skill_quote": "Do not create a new template; always operate on the project's constitution file (initializing it from `constitution-template.md` only when it does not exist).",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "skill_line": 94,
+      "reasoning": "The skill already branches on file existence (lines 19-20 and 94-95), so 'do not re-initialize it from the template' restates a rule it enforces unconditionally. Secondary note: 'amend mode' names a mode the skill does not offer \u2014 grep for 'mode' in SKILL.md returns zero hits; create-vs-amend is auto-detected, not selected. So this is not the sanctioned 'mode selection among modes the skill offers' exception.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "constitution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "raised_by": [
+        "constitution"
+      ],
+      "locations": [
+        [
+          46,
+          53
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "constitution-6"
+    },
+    {
+      "local_id": "constitution-7",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        46,
+        53
+      ],
+      "kickoff_quote": "Skip the spec-miner and doc-ingest paths below entirely: there is no undocumented legacy pile here and this project's own docs are already current.",
+      "skill_quote": "After the constitution is written, suggest the next phase: run the `specify` skill to turn a feature description into a specification that the constitution now governs.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "skill_line": 99,
+      "reasoning": "Cross-asset orchestration the skill cannot know: the skill's only handoff statement points at `specify` and says nothing about spec-miner or doc-ingest. Gating sibling blocks on repo greenfield-ness is operator judgement. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "constitution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "raised_by": [
+        "constitution"
+      ],
+      "locations": [
+        [
+          46,
+          53
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "constitution-7"
+    },
+    {
+      "local_id": "constitution-8",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        46,
+        53
+      ],
+      "kickoff_quote": "This is milestone <M>, not the first. ... Update docs/global/project/PROJECT.md's success definition to this milestone's.",
+      "skill_quote": "- If user input (conversation) supplies a value, use it.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "skill_line": 38,
+      "reasoning": "`<M>` is a per-milestone substitution and the PROJECT.md success-definition edit is out of the skill's single-file scope; the skill has no milestone concept at all (grep 'milestone': zero hits). Exactly the kind of conversational value line 38 expects the operator to supply. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "constitution",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "raised_by": [
+        "constitution"
+      ],
+      "locations": [
+        [
+          46,
+          53
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "constitution-8"
+    }
+  ]
+}

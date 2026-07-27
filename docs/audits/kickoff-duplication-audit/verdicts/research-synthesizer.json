@@ -1,0 +1,29 @@
+{
+  "asset": "research-synthesizer",
+  "verdicts": [
+    {
+      "claim_id": "research-synthesizer-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 260-261: 'have four parallel agents overwriting each other. They write but never commit. When all four\\nhave returned, use research-synthesizer to merge them into' vs research-synthesizer.md line 21: 'You are dispatched by the orchestrator/pipeline (after STACK, FEATURES, ARCHITECTURE, PITFALLS research completes).'",
+      "reasoning": "This is a cross-agent barrier/ordering constraint (wait for all four project-researcher dispatches before invoking this agent). The skill's line 21 only describes its own precondition passively and can only detect a violation after the fact via the 'SYNTHESIS BLOCKED / Missing files' return (lines 209-222) -- it cannot enforce the orchestrator waiting. Ordering/parallelism constraints across agents are explicitly load-bearing per the classification rubric ('dispatch alongside X', 'before step 2' examples). Confirmed as correctly classified load-bearing-parameter, low severity since it's a simple sequencing note with a fallback detection path already in the skill."
+    },
+    {
+      "claim_id": "research-synthesizer-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md lines 262-263: 'docs/milestones/<M>/research/SUMMARY.md and commit it — the four researchers never commit;\\nresearch-synthesizer is the one that does.' vs research-synthesizer.md line 34: 'Commit ALL research files (researchers write but don't commit — you commit everything)' and line 137: 'The 4 parallel research dispatches write files but do NOT commit. You commit everything together.' with exact commands at lines 141-144 ('git add docs/milestones/<M>/research/' / 'git commit -m \"docs: complete project research\"').",
+      "reasoning": "The commit-ownership rule is already stated twice inside the skill itself -- once as a core responsibility bullet (line 34) and again as a full execution step with the literal git commands (Step 7, lines 135-144). The KICKOFF sentence supplies no path, parameter, or condition the skill lacks; it just re-derives a hard gate the skill already enforces and documents completely. This matches 'IS duplication': re-derives the skill's own hard rule when the skill already enforces it. Medium severity is appropriate given how thoroughly and specifically the skill already covers this (twice, with the exact commands)."
+    },
+    {
+      "claim_id": "research-synthesizer-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md lines 263-264: 'Have it also derive a suggested phase structure\\nfrom the merged research for the roadmapper step below to weigh.' vs research-synthesizer.md line 101: '**Suggest phase structure:**' (inside 'Step 4: Derive Roadmap Implications ... This is the most important section', lines 97-105), plus references/research-summary-template.md line 68: 'Based on research, suggested phase structure:', success-criteria checkbox at line 233 ('Roadmap implications include phase suggestions'), and downstream_consumer table row at line 44 ('Implications for Roadmap | Phase structure suggestions').",
+      "reasoning": "Deriving a suggested phase structure for the roadmapper to weigh is already the skill's own designated 'most important' execution step, its output template already fixes the section, its success criteria already gate on it, and the roadmapper is already named as the consumer inside the skill's own downstream_consumer block. The KICKOFF sentence adds no parameter, path, or condition the skill cannot already know -- it restates the skill's own internal methodology and template structure. Medium severity given how central and already-enforced this behavior is inside the skill (named its most important step)."
+    }
+  ]
+}

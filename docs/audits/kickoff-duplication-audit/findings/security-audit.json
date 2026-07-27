@@ -1,0 +1,53 @@
+{
+  "asset": "security-audit",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/security-audit.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/security-auditor.md"
+  ],
+  "claims": [
+    {
+      "local_id": "security-audit-1",
+      "class": "load_bearing_parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [1028, 1032],
+      "kickoff_quote": "every phase in this milestone — verify each declared threat mitigation actually exists in code, phase by phase",
+      "skill_quote": "Parse `$ARGUMENTS` for an optional scope (paths, subsystem, or focus area; default: the whole repo or current change).",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/security-audit.md",
+      "skill_line": 5,
+      "reasoning": "The command's scope defaults to 'the whole repo or current change' per its own $ARGUMENTS line, and the surrounding KICKOFF prose explicitly warns that a bare invocation 'silently narrows a milestone gate down to one change.' Specifying 'every phase in this milestone' and iterating 'phase by phase' is exactly the operator-supplied scope argument the command expects, not a restatement of anything the command itself already does.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "security-audit-2",
+      "class": "redundant_restatement",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [1028, 1032],
+      "kickoff_quote": "verify each declared threat mitigation actually exists in code",
+      "skill_quote": "Run a security audit — scan for vulnerabilities and verify declared threat mitigations exist in code — dispatch the security-auditor agent.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/security-audit.md",
+      "skill_line": 2,
+      "reasoning": "This is a near-verbatim restatement of the command's own one-line frontmatter description, which already promises to 'verify declared threat mitigations exist in code.' The KICKOFF text adds no new constraint here beyond what the command already declares as its purpose, so it is low-severity emphasis/restatement rather than new information.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "security-audit-3",
+      "class": "load_bearing_parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [1028, 1032],
+      "kickoff_quote": "write the result to that phase's PHASE/reviews/SECURITY.md",
+      "skill_quote": "Reports gaps. Writes SECURITY.md — canonically `PHASE/reviews/SECURITY.md`; path configurable by the orchestrator.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/security-auditor.md",
+      "skill_line": 14,
+      "reasoning": "The security-audit command file itself never mentions SECURITY.md or any output path — only the dispatched security-auditor agent does, and it explicitly marks that path as 'configurable by the orchestrator.' The KICKOFF line is the orchestrator supplying that configurable output path/argument (which happens to match the agent's own default), which the rules classify as load-bearing rather than duplicative.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

@@ -1,0 +1,69 @@
+{
+  "asset": "design-html",
+  "verdicts": [
+    {
+      "claim_id": "design-html-1",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:77-80 — “Missing (no DESIGN.md, or DESIGN.md has no bound system)? Stop and tell the user to run `design-consultation` first — do not call `list_design_systems` yourself, do not ask which system applies, do not proceed unbound.”",
+      "reasoning": "Verified KICKOFF.md:311 (‘Stop there in that case: do NOT go on to design-html, which refuses to run unbound and would just tell me to come back here.’), plus the systemic sibling instances at KICKOFF.md:328-329 (‘the block above deliberately stopped short of it, because design-html refuses to run unbound’) and :330 (‘Every downstream design step reads that id and stops if it is absent.’). All three restate the skill's own unbound-gate behavior (Step 0, SKILL.md:77-80) as justification/color rather than as an instruction the skill needs. The flow-control command itself (‘do NOT go on to design-html’ / ‘Stop there’) is legitimate orchestration the skill cannot supply, but the explanatory clauses describing *why* (what design-html would do) duplicate the skill's own hard rule verbatim in substance. Low severity is correct: it's rationale bleeding into the guide, not new instruction, and it doesn't misstate the skill's behavior (no drift)."
+    },
+    {
+      "claim_id": "design-html-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:55 — “Detect what design context exists, in this order:” (Step 0 has no concept of a prior pipeline stage or a 'reference implementation' purpose).",
+      "reasoning": "Verified KICKOFF.md:312-313 (‘Only if a system was already bound, continue to design-html for the reference implementation.’). design-html's SKILL.md never references being chained after design-consultation, never uses the term 'reference implementation', and has no way to know this is a one-time, once-ever invocation versus an ordinary phase-scoped run. This is pipeline sequencing/conditional gating the skill genuinely cannot supply — correctly load-bearing."
+    },
+    {
+      "claim_id": "design-html-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:72-75 — “Read, don't resolve, the design system binding. This skill does not decide which design system to use — `design-consultation` is the only skill that resolves or binds `claude_design_system_id`…”",
+      "reasoning": "Verified KICKOFF.md:326-327 (‘The Claude Design system id is <uuid>. Store it as claude_design_system_id in docs/global/design/DESIGN.md.’). design-html explicitly refuses to resolve or write this binding (SKILL.md:72-75), and the uuid itself is a human-pasted value from a manual Claude Design UI action no MCP tool performs — the skill cannot know or produce it. The guide must carry both the concrete value and the write instruction. Correctly load-bearing."
+    },
+    {
+      "claim_id": "design-html-4",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:66 — “3. **Freeform** — nothing found. Ask the user to describe what they want, and for a screen name.”",
+      "reasoning": "Verified KICKOFF.md:635 (‘*(only if this phase ships UI)*’). design-html's Step 0 has no gate for 'does this phase ship UI' — its freeform fallback (line 66) will happily ask for a screen description and proceed regardless. Whether to invoke design-html at all for a given phase is a judgment call the skill cannot make; the guide's conditional is the only place that gate exists. Correctly load-bearing."
+    },
+    {
+      "claim_id": "design-html-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:123-125 — “The deliverable itself is always `.dc.html` (Claude Design's Design Components format, built in Step 3) regardless of the target codebase's frontend framework — framework-native translation, if needed, happens later at Step 5…”",
+      "reasoning": "Verified KICKOFF.md:637-638 (‘as Claude Design .dc.html deliverables against the bound claude_design_system_id’). The output format is unconditional and not a mode selection — there is only one format the skill ever produces, so naming it is not a parameter choice, it's restating a fixed fact. The 'against the bound claude_design_system_id' half likewise restates Step 0's already-established gate (SKILL.md:77-83). Low severity: costs a clause, reads as orientation, doesn't add information the skill needs."
+    },
+    {
+      "claim_id": "design-html-6",
+      "confirmed": false,
+      "final_class": "contradiction",
+      "final_severity": "low",
+      "evidence": "SKILL.md:14 and :235 — “One page per invocation. For multi-page designs, run once per page.”",
+      "reasoning": "Verified the skill's hard rule exists verbatim at both locations, and verified KICKOFF.md:637-639 (‘Use design-html to build this phase's actual screens… this invocation gets its own screen-scoped project’). But this does not rise to a genuine contradiction on a hostile line-by-line read: the sentence describes the overall step-8 task at a level of abstraction (use design-html, across however many calls are needed, to produce the phase's screens) rather than asserting a single design-html call must emit multiple pages — nothing in the text says 'in one call' or 'all screens at once'. The surrounding context reinforces a per-screen loop: 'Hand it to the UI tracks by path before they build' and the handoff file naming '<name> is the project or screen name' both imply multiple screens/tracks, each getting its own design-html run and its own handoff file, exactly matching the skill's own per-screen project convention (SKILL.md:81-83, 138-139). Critically, whatever agent actually executes this step loads SKILL.md itself, whose very first paragraph (line 14) and Important Rules (line 235) state the one-page rule unmissably — so even granting the phrasing is compressed/ambiguous, it does not cause the executing agent to violate the skill in practice, since the skill's own text controls once loaded. This is ambiguous phrasing, not a genuine behavioral disagreement between guide and skill. Downgraded from 'confirmed contradiction, medium' to refuted; noting the ambiguity is real but not load-bearing enough to require a doc fix."
+    },
+    {
+      "claim_id": "design-html-7",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:57-62 — “**Approved mockup** —… Check `.claude/design/screens.json`… for a prior entry matching this screen name. If found, ask: evolve it… or start fresh…”",
+      "reasoning": "Verified KICKOFF.md:638-639 (‘step 4 built the one-time reference implementation, not these’). design-html's own screens.json lookup (SKILL.md:57-62) matches purely on screen name with no concept of a 'reference implementation' distinct from a real phase screen; without this pipeline-level disambiguation an operator could confuse the two builds across pipeline stages. This is cross-stage sequencing knowledge only the guide carries — correctly load-bearing."
+    },
+    {
+      "claim_id": "design-html-8",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:81-83 — “2. Check `DESIGN.md` for `claude_design_project_id` — that's design-consultation's own demo/preview project. Don't build this screen into it; this skill's screens get their own project(s), bound to the same `claude_design_system_id`.”",
+      "reasoning": "Verified KICKOFF.md:639 (‘and this invocation gets its own screen-scoped project’). The skill already establishes, unconditionally, that its screens get their own project(s) distinct from design-consultation's demo project (SKILL.md:81-83, echoed again at :138-139 'a screen typically gets its own project, distinct from design-consultation's demo project'). The guide's clause adds no information beyond what the skill already guarantees on its own — correctly a low-severity restatement (the neighboring 'step 4 built the reference implementation, not these' clause in the same sentence is the load-bearing part, adjudicated separately as design-html-7)."
+    }
+  ]
+}

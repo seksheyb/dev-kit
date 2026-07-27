@@ -1,0 +1,21 @@
+{
+  "asset": "doc-classifier",
+  "verdicts": [
+    {
+      "claim_id": "doc-classifier-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 80-82: 'Stage 1: one doc-classifier agent per document, all in parallel — give each its FILEPATH and OUTPUT_DIR docs/state/intel/classifications/.' vs doc-classifier.md lines 52-53: '- `FILEPATH` — the document to classify (absolute path)\\n- `OUTPUT_DIR` — where to write your JSON output (e.g., `docs/state/intel/classifications/`)'",
+      "reasoning": "Verified both quotes verbatim at the cited lines. The skill only declares the parameter NAMES it expects (FILEPATH, OUTPUT_DIR) plus an illustrative example path; it cannot know the actual value the orchestrator will supply, nor the fan-out topology ('one agent per document, all in parallel'). Per the audit's own rules, output/target paths and dispatch parallelism are load-bearing invocation arguments, not duplicated methodology. The claim's own low-severity note is accurate too: the concrete OUTPUT_DIR value happens to equal the skill's documented default (line 8: 'default `docs/state/intel/classifications/`'), so it's a no-op restatement of a default value — but it must still be passed explicitly since the doc-synthesizer's CLASSIFICATIONS_DIR must line up with whatever value is actually used. Survives as load-bearing-parameter, low severity."
+    },
+    {
+      "claim_id": "doc-classifier-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md lines 82-83: 'Each writes its classification JSON there and returns a one-line confirmation and nothing else; no JSON and no document contents come back inline, so do not ask for structured output.' vs doc-classifier.md line 135 (step return_confirmation): 'Return one line to the orchestrator. No JSON, no document contents.'",
+      "reasoning": "Verified both quotes verbatim at the cited lines, plus the three additional enforcement points cited: line 3 frontmatter description ('...returns a one-line confirmation'), line 148 anti_pattern ('Output anything other than the one-line confirmation to the orchestrator'), and line 159 success_criteria ('Confirmation line returned to orchestrator (<= 1 line)'). The skill fixes this output contract in four separate places already; the KICKOFF text restates the same contract ('one-line confirmation and nothing else; no JSON and no document contents') in near-identical language, which is a restatement of the skill's own already-enforced hard rule, not new information. The claim correctly carves out the trailing clause 'so do not ask for structured output' as operator-side guidance for how to phrase the Task-tool dispatch (that part is load-bearing and should be kept), but classifies the rest of the span as redundant — a fair and defensible split. Confirmed as redundant-restatement, medium severity."
+    }
+  ]
+}

@@ -152,6 +152,12 @@ an asset. **Currently blocked by 2.12, 2.13, and 2.14.**
 
 ## Milestone 3 — Path-ownership flip: ids in, paths out (repo: dev-kit)
 
+> **Superseded in shape by `roadmap-shortlisted-workflow.md` item 4.** The scope below is
+> unchanged and still correct; item 4 restates it as the **per-asset sweep** it actually is,
+> merges the disjoint consumer-identity axis into the same pass (11 + 12 assets, zero
+> overlap, union 23), and notes that `workflow.js`/`MANIFEST.json` are already asset-sharded
+> for exactly this. Design the workflow from item 4; keep this section as the scope of record.
+
 The structural move the audit did not make. Every asset that currently says "the caller
 supplies the path" gets its **default path from the sitemap contract**, parameterized only by
 ids. The dispatch contract becomes: *pass `<M>`/`<NN>`/`<branch>`/round `n`; the asset resolves
@@ -169,6 +175,16 @@ paths itself and accepts an explicit path only as an override.*
 **Exit criterion:** no KICKOFF prompt needs to contain a path string. Ids only.
 
 ## Milestone 4 — Ship the seven drafted rewrites (repo: devkit-pipeline)
+
+> **Superseded in shape by `roadmap-shortlisted-workflow.md` item 5, which merges this
+> milestone with Milestone 5.** Two findings drive that: (a) rewriting is **per-step**, not
+> per-asset — step 08 pulls 37 assets while `context-save` spans 6 steps — so it cannot ride
+> the item-4 sweep and must be a second pass that consumes it; (b) **five of the seven drafts
+> still carry path strings** in their trimmed replacement text, and `step07-planner-handoff`
+> is now **factually wrong** (it asserts the planner does not load `PATTERNS.md`, which 1.1
+> fixed). Those five must be re-derived after item 4, not shipped. `step11-converge-sweep` and
+> `step15-closeout-methodology` carry no paths and no stale premises — they remain the early
+> down payment. Item numbers below are still referenced by item 5; keep them.
 
 The ~100-line down payment, already drafted in `rewrites/`. Order per REPORT §6:
 

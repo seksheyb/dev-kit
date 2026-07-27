@@ -1,0 +1,29 @@
+{
+  "asset": "penetration-tester",
+  "verdicts": [
+    {
+      "claim_id": "penetration-tester-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "penetration-tester.md lines 21-27: '- **Recon**: ... - **Web (OWASP Top 10)**: ... - **API**: ... - **Network & infra**: ... - **Cloud & mobile**: ... - **Wireless**: ... - **Social engineering**: ...' (7 Coverage categories) vs KICKOFF.md:1064-1065 'Use the penetration-tester agent for authorized active exploitation — recon, OWASP, API, network, cloud.'",
+      "reasoning": "Verified the agent's Coverage section really does offer seven categories (recon, web/OWASP, API, network & infra, cloud & mobile, wireless, social engineering) at lines 21-27. The KICKOFF dispatch line names only five of them (recon, OWASP, API, network, cloud), silently narrowing out mobile, wireless, and social-engineering for this milestone gate. This is scope/mode selection among options the agent itself enumerates — a conditional gating call only the operator can make for a given engagement — not a restatement of the agent's methodology. Correctly load-bearing-parameter at low severity (an emphasis/scope narrowing, not a hard behavioral change)."
+    },
+    {
+      "claim_id": "penetration-tester-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "penetration-tester.md line 12: 'Never begin without confirmed scope and written authorization. Before any active test, establish: the authorized targets, explicit exclusions, the testing window, rules of engagement, risk tolerance, and emergency contacts. If scope or authorization is unclear or absent, STOP and request it — do not proceed.'",
+      "reasoning": "Verified line 12 verbatim. KICKOFF.md:1064-1068 lists 'the authorized targets, the explicit exclusions, the testing window, the risk tolerance, an emergency contact' — five of the agent's own six gate items, in the same order, plus restates the STOP/refuse behavior ('It refuses without written authorization; that is correct behavior'). The KICKOFF text itself concedes the motive is defensive duplication ('because it stops and asks for them otherwise'), which is the tell that this is re-deriving a checklist the agent already enforces internally rather than supplying new information. This matches 'the prompt spells out the skill's own internal methodology/checklist' squarely. Medium severity is appropriate: it's verbose duplication but harmless (matches, doesn't contradict) and one clause ('where the written authorization itself lives') is genuinely novel, covered separately by claim 3."
+    },
+    {
+      "claim_id": "penetration-tester-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "penetration-tester.md line 12: 'Never begin without confirmed scope and written authorization.' — grepped case-insensitively for 'authoriz' across penetration-tester.md, security-reviewer/SKILL.md, and every file in security-reviewer/references/ (penetration-testing.md, report-template.md, sast-tools.md, infrastructure-security.md, secret-scanning.md, vulnerability-patterns.md).",
+      "reasoning": "Confirmed by direct grep: every 'authoriz*' hit across the agent file, SKILL.md, and the full references/ chain is about confirming/verifying that authorization exists (e.g. SKILL.md:31 'Confirm written authorization...', SKILL.md:39 'Verify written scope authorization before active testing') — none says anything about where the authorization document is located or how to find it. The agent has a hard gate requiring 'confirmed... written authorization' but no mechanism to locate that artifact on its own. KICKOFF.md:1066-1067's 'and where the written authorization itself lives' is therefore a genuine invocation argument (pointing the agent at needed context), correctly load-bearing-parameter, not duplication."
+    }
+  ]
+}

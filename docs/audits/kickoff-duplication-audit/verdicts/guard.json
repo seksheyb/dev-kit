@@ -1,0 +1,69 @@
+{
+  "asset": "guard",
+  "verdicts": [
+    {
+      "claim_id": "guard-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 631-632: 'guard (this track touches prod / shared / destructive surface). Skip any that do not apply.' (block is one of four guard skills each parenthetically gated on a track property). Skill frontmatter, SKILL.md line 3: 'Use when touching prod, debugging live systems, working in shared environments, or asked to \"be careful\", \"prod mode\", \"safety mode\", \"guard mode\", \"freeze edits\", \"lock scope to a directory\", or \"unfreeze\".'",
+      "reasoning": "The KICKOFF text restates the skill's trigger surface (prod/shared surfaces) only to hand the operator a per-track conditional judgment call ('if this track touches X, apply guard; skip if not') plus an explicit escape hatch ('Skip any that do not apply'). That is conditional gating the skill cannot perform on its own -- textbook load-bearing-parameter per the audit's own rule. Confirmed as filed. Note: the queue's cited kickoff_line_range [630,631] is off by one line versus the actual file (verified quote sits at 631-632); the quote itself is genuine and unaltered, so this does not change the verdict."
+    },
+    {
+      "claim_id": "guard-2",
+      "confirmed": false,
+      "final_class": "contradiction",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 631-632 (step 8, per-track guard list) vs. lines 1082-1089 (step 13, explicit safety-mode-only invocation). SKILL.md line 14: '| \"guard\", \"full safety\" | **Both** |' and line 91: 'To remove the edit boundary, unfreeze. Protections end with the session.'",
+      "reasoning": "The claim's premise does not survive: step 8's guard application happens inside a per-track subagent that sprint-execution dispatches into its own isolated git worktree (KICKOFF.md line ~572: 'dispatches one subagent per track, each in its own git worktree'). The guard skill's freeze state file is written 'in the repo' (SKILL.md line 17), i.e. in that worktree's own working directory, and SKILL.md line 91 states protections end with the session -- the track subagent's session ends when its work is merged, well before step 13 runs in the main/integration session. So even if a step-8 track subagent triggered Full Guard Mode via the bare word 'guard', neither the freeze-dir state file nor the session-scoped protection would carry into step 13's separate session and working directory. There is no cross-step state bleed for the default (sprint-execution, worktree-isolated) path this pipeline describes, so step 8 does not 'silently arm' anything step 13 has to defuse. The claim mistakes two independent, differently-scoped invocations of the same skill for a live contradiction. Refuted."
+    },
+    {
+      "claim_id": "guard-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 1082-1083: 'Use the guard skill in safety mode for the rest of this milestone — destructive-command warnings only.' SKILL.md line 12: '| \"be careful\", \"prod mode\", \"safety mode\" | **Destructive-command warnings** |'",
+      "reasoning": "'safety mode' is the skill's own named mode selector (load-bearing), but the appositive 'destructive-command warnings only' just re-derives what the skill's own activation table already maps that mode to. Cheap restatement, correctly scored low severity. Confirmed."
+    },
+    {
+      "claim_id": "guard-4",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 1082-1086: 'Use the guard skill in safety mode for the rest of this milestone ... From here through the deploy at the end of step 14 I want destructive-command warnings active'. SKILL.md line 91: 'To remove the edit boundary, unfreeze. Protections end with the session.'",
+      "reasoning": "The skill only knows session-scoped protections; it has no concept of 'milestone' or 'step 14'. The activation window supplied by KICKOFF is genuine pipeline-specific duration information the skill cannot infer on its own. Confirmed as load-bearing."
+    },
+    {
+      "claim_id": "guard-5",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 1083-1084: 'Do not set an edit-scope freeze and do not ask me which directory to lock edits to: step 14 rewrites README, CHANGELOG and docs/** across the whole repo'. SKILL.md line 86: 'Activates destructive-command warnings AND the edit boundary in one step. Ask once: \"Guard mode: which directory should edits be restricted to? Destructive command warnings are always on.\"'",
+      "reasoning": "This explicitly forecloses Protection 3's directory prompt and supplies the reason (step 14 rewrites README/CHANGELOG/docs/** repo-wide) -- pipeline-specific knowledge the skill has no way to know. It's also a legitimate disambiguation: the sentence names the skill 'guard' in the same breath as 'safety mode', and the skill's own table maps the bare word 'guard' to Full Guard Mode (line 14), so spelling out 'no freeze, don't ask for a directory' removes real ambiguity about which of the skill's three protections is meant here. Confirmed as load-bearing."
+    },
+    {
+      "claim_id": "guard-6",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 1084-1085: 'a freeze boundary blocks writes outright rather than warning on them, so it would stop step 14 dead.' SKILL.md line 58: 'Any Edit or Write targeting a file outside the allowed path is **blocked** (not just warned).'",
+      "reasoning": "The 'blocks ... rather than warning' clause re-derives the skill's own block-vs-warn contrast verbatim in substance. The trailing consequence clause ('so it would stop step 14 dead') is genuine load-bearing project knowledge the skill can't have, but that half was already carved out correctly by the original claim. The mechanism-restatement half is real duplication; low severity is appropriate given it's a single clause. Confirmed."
+    },
+    {
+      "claim_id": "guard-7",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md lines 1085-1088: 'From here through the deploy at the end of step 14 I want destructive-command warnings active: stop and ask before anything matching force-push, git reset --hard, rm -rf, DROP TABLE/DATABASE, kubectl delete, or a docker prune, and tell me the specific risk rather than just naming the pattern.' SKILL.md line 23: 'When active, every shell command is checked against destructive patterns before running. On a match: **stop, warn the user with the specific risk, and ask before executing.**' plus the protected-pattern table at SKILL.md lines 29-37 (rm -rf, DROP TABLE/DROP DATABASE, TRUNCATE, git push --force, git reset --hard, git checkout ./restore ., git clean -f, kubectl delete, docker rm -f/system prune, piped remote scripts -- 10 rows total).",
+      "reasoning": "Verified: the KICKOFF text names exactly 6 of the skill's 10 protected patterns (force-push, git reset --hard, rm -rf, DROP TABLE/DATABASE, kubectl delete, docker prune) and restates the stop/warn-with-specific-risk behavior the skill already fixes at line 23 and reinforces in its warning-format template (lines 48-50, 'Risk: <what is irreversibly lost>'). This both duplicates the skill's own methodology and creates a genuine narrowing risk (TRUNCATE, git checkout/restore ., git clean -f, and piped-script protection are silently omitted from the enumerated subset). Medium severity is warranted given that narrowing risk. Confirmed."
+    },
+    {
+      "claim_id": "guard-8",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md line 1089: 'This is a speed bump, not a wall — I can always override — but I want to be the one overriding.' SKILL.md line 23 (same paragraph as above): 'The user can always override — this is a speed bump, not a wall.'",
+      "reasoning": "Near-verbatim reuse of the skill's own sentence and exact em-dash construction, just reordered. 'I want to be the one overriding' adds nothing beyond what 'ask before executing' (already in the same skill sentence) implies. Confirmed as redundant-restatement, medium severity given the near word-for-word overlap."
+    }
+  ]
+}

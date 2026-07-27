@@ -1,0 +1,81 @@
+{
+  "asset": "domain-researcher",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/domain-researcher.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/references/ai/evals.md"
+  ],
+  "claims": [
+    {
+      "local_id": "domain-researcher-1",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "06",
+      "kickoff_line_range": [437, 439],
+      "kickoff_quote": "writes SPEC/AI-SPEC.md §1 (critical failure modes — the sharpest 3–5 domain failure modes promoted to system level, informed by §2's system_type) and §1b (the domain rubric ingredients)",
+      "skill_quote": "Promote the sharpest 3-5 of the domain failure modes you researched into system-level failure modes: behaviours that cannot go wrong for *this* phase, stated as observable output behaviour, not as ML jargon. Read Section 2 (framework and `system_type`, written by `framework-selector`) so the list covers the failure modes that system type actually exhibits",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/domain-researcher.md",
+      "skill_line": 106,
+      "reasoning": "The parenthetical re-derives the agent's own <write_section_1> methodology verbatim — the 3–5 count, the promote-to-system-level framing, and the read-§2-for-system_type dependency are all fixed by the skill. Naming §1/§1b as the outputs is load-bearing scoping (the skill enforces it at line 176), but the internal method restatement is not.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "domain-researcher-2",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "06",
+      "kickoff_line_range": [439, 439],
+      "kickoff_quote": "eval-planner reads and confirms §1 downstream.",
+      "skill_quote": "You author this section; `eval-planner` reads and confirms it downstream, so it must exist and be non-empty before you finish.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/domain-researcher.md",
+      "skill_line": 104,
+      "reasoning": "The downstream-consumer contract is stated word-for-word inside the skill, including the non-empty gate it motivates. The operator prompt adds no new information; it is a restatement of a hard rule the skill already carries.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "domain-researcher-3",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "06",
+      "kickoff_line_range": [442, 443],
+      "kickoff_quote": "and tell it not to re-derive the domain-adjacent findings step 5 already surfaced.",
+      "skill_quote": "Stage 5's `phase-researcher` may already have surfaced domain-adjacent findings (e.g. a compliance-heavy pitfall, a don't-hand-roll item relevant to evaluation) for this same phase; do not re-derive what it already found",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/domain-researcher.md",
+      "skill_line": 54,
+      "reasoning": "The skill's `research_path` input spec names stage 5 / phase-researcher explicitly and issues the same do-not-re-derive instruction, and the extract_domain_signal step (line 62) repeats it (\"treat them as a starting point, not something to re-research from zero\"). The KICKOFF sentence is a third copy of the same rule.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "domain-researcher-4",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "06",
+      "kickoff_line_range": [439, 442],
+      "kickoff_quote": "Give it the system_type from framework-selector, the phase name and goal from docs/milestones/<M>/ROADMAP.md, SPEC/AI-SPEC.md as ai_spec_path, PHASE/CONTEXT.md, docs/milestones/<M>/REQUIREMENTS.md and PHASE/RESEARCH.md",
+      "skill_quote": "> Note: artifact paths (AI-SPEC.md, CONTEXT.md, REQUIREMENTS.md, RESEARCH.md, ROADMAP.md) are supplied by the orchestrator as concrete paths; canonical locations follow `references/doc-sitemap.md` — see `<input>` below.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/domain-researcher.md",
+      "skill_line": 14,
+      "reasoning": "The skill explicitly delegates concrete path resolution and the system_type value to the orchestrator, so this enumeration is the invocation's argument list, not duplicated methodology. Keep it verbatim.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "domain-researcher-5",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "06",
+      "kickoff_line_range": [434, 436],
+      "kickoff_quote": "*(only if this phase builds an AI/LLM system needing an eval contract — after the block above)*\nUse the domain-researcher agent for the real-world evaluation criteria in this domain",
+      "skill_quote": "Dispatched by the orchestrator/pipeline.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/domain-researcher.md",
+      "skill_line": 3,
+      "reasoning": "Conditional gating (AI/LLM phase only) and ordering relative to the ai-researcher block are judgments the agent cannot make about itself — the frontmatter states it is dispatched by the orchestrator and says nothing about when. Load-bearing.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

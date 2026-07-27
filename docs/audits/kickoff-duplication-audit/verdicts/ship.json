@@ -1,0 +1,69 @@
+{
+  "asset": "ship",
+  "verdicts": [
+    {
+      "claim_id": "ship-1",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:8 — \"This is a **non-interactive, fully automated** workflow. Do NOT ask for confirmation at any step. The user said `/ship` which means DO IT. Run straight through and output the PR URL at the end.\" Corroborated at line 3 (frontmatter: \"Non-interactive by default; the user says /ship and the next thing they see is the PR URL.\"), lines 19-26 (\"**Never stop for:**\" list), and line 213 (\"- **Never ask for trivial confirmations** (\\\"ready to push?\\\", \\\"create PR?\\\")\").",
+      "reasoning": "Verified the quoted sentence exists verbatim at line 8, the skill's opening line of body text. KICKOFF line 1166 says \"It is non-interactive:\" — this is not a mode selection, because the skill offers no interactive alternative: non-interactivity is asserted in the frontmatter, in the first body sentence, in the Never-stop-for list, and again in Important Rules. The operator is restating a default the skill already enforces four times over. Low severity: it is three words serving as a colon-lead-in to the phase chain, so removing it costs nothing but it also carries almost no weight."
+    },
+    {
+      "claim_id": "ship-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:35 — \"Determine the base branch (the branch the PR targets, or the repo default):\" followed by lines 36-38 deriving it entirely from `gh pr view`, `glab mr view`, or `git symbolic-ref`. Nothing in the skill accepts, reads, or infers a milestone identifier; the only milestone-shaped paths (lines 75, 93: `docs/milestones/<M>/phases/...`) are discovered from the branch's phase coverage, not supplied.",
+      "reasoning": "Survives. This is the dispatch sentence itself — naming which skill to run is by definition the invocation's job and cannot be inside the skill. The \"for this milestone\" qualifier is a scope argument: the skill derives its diff scope and base branch purely from git state (lines 35-38, 46) and has no way to know which milestone the operator means. Correctly classified load-bearing-parameter, recorded for the denominator. Low severity as a non-finding."
+    },
+    {
+      "claim_id": "ship-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "SKILL.md:3 — \"description: Fully automated ship workflow — merge base, run tests with failure triage, audit test coverage and plan completion, review the diff, bump version, write the CHANGELOG, split bisectable commits, push, and create/update the PR.\" Step headings confirm the same ordering: line 50 \"## Step 2: Merge the base branch (BEFORE tests)\", 58 \"## Step 3: Run tests (on merged code)\", 71 \"## Step 4: Test Coverage Audit\", 91 \"## Step 5: Plan Completion Audit\", 103 \"## Step 6: Pre-landing review\", 120 \"## Step 7: Version bump (auto-decide)\", 130 \"## Step 8: CHANGELOG (auto-generate)\", 144 \"## Step 10: Commit (bisectable chunks)\", 166 \"## Step 12: Push\", 174 \"## Step 13: Create or update the PR/MR\".",
+      "reasoning": "Verified line 3 verbatim, and verified all ten step headings the chain recites. The KICKOFF arrow chain (merge base → test-failure triage → coverage → plan audit → review → version bump → CHANGELOG → bisectable commits → push → create/update PR) is the skill's own frontmatter description re-punctuated with arrows, in the identical order, using the identical nouns (\"failure triage\", \"bisectable commits\", \"create/update the PR\"). I tried hard to find something it selects or orders that the skill does not: there is no branch point, no alternative phase set, no skipped step, no substitution. The skill's steps are already strictly sequential and numbered. This is the skill's internal phase list pasted into the operator prompt, and it is the bulk of the invocation's word count — high severity is defensible."
+    },
+    {
+      "claim_id": "ship-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:75 — \"0. **Reuse Stage 11 output first.** For each phase this branch covers, check for a `VERIFICATION.md` (`docs/milestones/<M>/phases/<NN>-<slug>/VERIFICATION.md`) with a `validation_gaps` list. For every gap already resolved there — `nyquist-auditor` reported it FILLED (a passing test exists for it now) or explicitly justified as SKIP — trust that result; do not re-derive it.\" Rationale stated one line earlier, line 73: \"This is a **final whole-branch safety net, not a first-pass audit** — on the common path, `nyquist-auditor` already did this exact job per-phase at Stage 11 ... Don't silently re-do that work.\"",
+      "reasoning": "Verified both sentences at their claimed lines. Step 4 opens with a dedicated sub-step 0 whose entire subject is reusing nyquist-auditor's per-phase results, naming nyquist-auditor explicitly and instructing \"trust that result; do not re-derive it\" — semantically identical to KICKOFF's \"reusing each phase's nyquist-auditor results as pre-confirmed evidence rather than re-tracing every path\". Line 73 even supplies the same justification. The prompt adds no path, no threshold, no condition the skill lacks. Confirmed redundant-restatement at medium — this is a hard rule the skill enforces with its own escape hatch (line 79's early-exit), not incidental phrasing."
+    },
+    {
+      "claim_id": "ship-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:95 — \"0. **Reuse Stage 11 output first.** If a `VERIFICATION.md` exists for the relevant phase(s), read its pass/fail verdicts (`gaps:` list, `status`, per-truth evidence) and scan the plan file for any `## Phase N: Convergence` task blocks `converge` appended — use both as **pre-confirmed evidence** for the plan items they cover, the same way `converge` itself treats `VERIFICATION.md` as pre-confirmed evidence rather than re-deriving it from scratch.\"",
+      "reasoning": "Verified verbatim at line 95. The KICKOFF clause \"plan-completion audit, reusing PHASE/VERIFICATION.md and converge's output the same way\" names exactly the two artifacts the skill's Step 5 sub-step 0 names (VERIFICATION.md and converge's appended Convergence task blocks) and uses the skill's own term of art, \"pre-confirmed evidence\", which appears in the skill at this line. The skill additionally specifies the fallback condition (line 95 tail: \"Only fall back to Steps 1-4 below ... for phases with no `VERIFICATION.md`\"), so the prompt is strictly a subset. Nothing is parameterized. Confirmed, medium."
+    },
+    {
+      "claim_id": "ship-6",
+      "confirmed": false,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:118 — \"Optionally run an adversarial second pass — \\\"try to break this diff\\\" — with a fresh subagent, scoped to ship's own delta, for large or risky changes.\" Contrast SKILL.md:109, which is the *mandatory* pass and is never called adversarial: \"- **Ship's own generated delta** — anything `ship` itself wrote or changed in Steps 2-5 ... This code was never seen by Stage 10 or 12, so it gets the **full mandatory review** below, dispatched as a subagent if available:\". The word \"adversarial\" appears in the skill only at line 107 (\"already adversarially reviewed\", describing Stage 10/12), line 114 (same, referring back), and line 118 (the optional pass).",
+      "reasoning": "REFUTED. The claim asserts the whole clause restates the skill's scoping rule, but the load-bearing half survives scrutiny. The scoping half (\"scoped only to the delta ship itself just generated\") does duplicate lines 107/109/114. However the skill calls the *adversarial* review optional and gates it on operator judgment the skill cannot make — line 118, \"Optionally ... for large or risky changes\". The skill's own mandatory Step 6 pass (line 109) is a Correctness/Security/Performance/Hygiene checklist and is never labelled adversarial. So KICKOFF's unconditional \"adversarial pre-landing review\" elects a mode the skill offers but leaves off by default; under the classification rubric that is mode selection / emphasis of something the skill makes optional, which is load-bearing, severity low. Deleting this clause would change behavior (the adversarial pass would be skipped on a not-obviously-risky milestone), which a pure restatement cannot do. The severity is low because the scoping words riding alongside it are genuinely redundant and could be trimmed to just \"run the optional adversarial pass\"."
+    },
+    {
+      "claim_id": "ship-7",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:8 — \"Run straight through and output the PR URL at the end.\" Also SKILL.md:207 — \"**Output the PR/MR URL.**\" (final line of Step 13), and SKILL.md:218 — \"- **The goal:** the user says `/ship`, the next thing they see is the review summary + PR URL.\", and SKILL.md:3 — \"the user says /ship and the next thing they see is the PR URL.\"",
+      "reasoning": "Verified all four locations at their real line numbers. KICKOFF's \"End at the PR URL.\" is line 8's \"output the PR URL at the end\" with the words reordered — the skill already fixes the PR URL as its terminal output in the frontmatter, in the opening rule, as the last instruction of its last step, and in Important Rules. The claim cited line 218; line 8 is the closer match and I record it as the primary evidence. Confirmed redundant-restatement, low. Note this verdict is scoped to the sentence \"End at the PR URL.\" only and does not extend to the following sentence, which is adjudicated separately under ship-8 — the skill states its terminus but never states a prohibition, so those are genuinely different assertions."
+    },
+    {
+      "claim_id": "ship-8",
+      "confirmed": true,
+      "final_class": "unenforced-gap",
+      "final_severity": "medium",
+      "evidence": "ABSENCE VERIFIED INDEPENDENTLY. The skill is a single 218-line file with no `references/` chain (`find .../skills/ship -type f` returns only SKILL.md). `grep -inE \"land-and-deploy|land |landing|do not merge|don'?t merge|never merge|deploy|hand off|handoff|stop there|terminate|boundary|after the PR|post-PR\"` over the whole file returns only: line 48 (release/publish CI workflow detection — \"not a web service with existing deployment\", unrelated), line 84 (\"Empty/zero/**boundary** states\" — test coverage, unrelated), line 103 (\"## Step 6: Pre-landing review\"), line 125 (\"what kind of release this is\"), line 136 (\"never landed on the base branch\" — CHANGELOG collapsing), line 191 (\"## Pre-Landing Review\" PR body heading). No hit forbids merging or deploying. The nearest terminal statement is SKILL.md:207 \"**Output the PR/MR URL.**\", and it is preceded five lines earlier by SKILL.md:172 \"**You are NOT done** — PR creation is a mandatory final step.\" The `land-and-deploy` skill exists at `/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/land-and-deploy` and `ship` never names it.",
+      "reasoning": "CONFIRMED after hunting: I re-ran the absence check myself across merge/deploy/land/handoff/terminate/boundary vocabulary plus synonyms, and confirmed the skill has no `references/` directory to hide the rule in. Two independent grounds make the KICKOFF sentence load-bearing and require KEEPING it. (1) Absence: the skill states where it ends but never forbids going further — an implicit terminus is not a prohibition, and it sits next to line 172's opposite-direction \"You are NOT done\" plus line 8's \"DO IT / run straight through\" framing, which an over-eager agent can over-read into merging the PR it was just told to create. (2) Cross-skill sequencing: \"land-and-deploy is a separate skill that runs after step 14\" is pipeline-position information — the skill cannot know a step 14 exists or that document-release must run against an open PR before landing. That is ordering across skills, which is load-bearing on its own terms. Medium severity: the finding is on the SKILL — `ship` should encode its own terminal boundary and name the handoff — while the guide text must be retained until it does."
+    }
+  ]
+}

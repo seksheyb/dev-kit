@@ -1,0 +1,32 @@
+{
+  "asset": "accessibility-tester",
+  "verdicts": [
+    {
+      "claim_id": "accessibility-tester-1",
+      "confirmed": false,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md:1007 'Then dispatch the accessibility-tester agent; it only reads.' vs accessibility-tester.md:28 'Do not fix code unless the dispatcher asks — report and recommend.' and accessibility-tester.md:4 'tools: Read, Grep, Glob, Bash' (no Write/Edit tool granted at all).",
+      "reasoning": "The claim argues 'it only reads' is load-bearing ordering/parallelism info contrasting with design-reviewer's browser-exclusivity and commit behavior described in the preceding paragraph. But the fact being conveyed — that this agent does not write, fix, or commit anything — is already fully established by the skill itself in two places: the frontmatter tools list (Read, Grep, Glob, Bash — no Write/Edit tool exists to fix code with) and the explicit output-section sentence 'Do not fix code unless the dispatcher asks — report and recommend.' An attentive orchestrator reading the skill file already knows this agent is read-only and cannot conflict with a live-browser-driving, commit-making agent. KICKOFF's four words restate a fact the skill already declares in its own tool grant and its own output contract, rather than supplying a parameter, path, or judgment call the skill has no way to know. This is a re-derivation of the skill's own hard constraint (read-only, no fixes), which the classification rubric places squarely in the duplication bucket. Severity is low because the restatement is brief and harmless, but it does not survive as 'load-bearing'.",
+      "systemic": false
+    },
+    {
+      "claim_id": "accessibility-tester-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md:1007-1009 'Give it its conformance target explicitly — WCAG 2.1 AA unless this project committed to something stricter — so it is not inferring the bar it is grading against.' vs accessibility-tester.md:10 'Establish the application structure, target audience, and compliance target (default WCAG 2.1 AA).'",
+      "reasoning": "Verified both quotes exist verbatim at the claimed lines. The bare value 'WCAG 2.1 AA' does overlap with the skill's own stated default, but the operative clause is the conditional override — 'unless this project committed to something stricter' — which requires project-specific knowledge (has this project's own requirements docs specified a higher bar than the skill's generic default?) that the skill cannot possess on its own. This is exactly the 'conditional gating the operator must judge' case the rubric carves out as load-bearing rather than duplication. The instruction also serves the load-bearing function of forcing an explicit parameter hand-off ('so it is not inferring the bar') rather than letting the agent silently fall back to its internal default, which matters because the dispatcher — not the skill — is positioned to know whether this project committed to something stricter.",
+      "systemic": false
+    },
+    {
+      "claim_id": "accessibility-tester-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md:1009-1010 'This is a gate: tell me plainly whether it passed, because a failing scorecard blocks the ship.' vs accessibility-tester.md:28 'State the conformance level achieved and any residual limitations.' — no other line in the 28-line file uses the words gate, scorecard, pass, fail, or block.",
+      "reasoning": "Independently re-read the entire accessibility-tester.md file (all 28 lines) and grepped mentally for gate/pass/fail/scorecard/block terminology — none of these concepts appear anywhere. The skill's own output contract is a narrative findings report (severity-sorted violations plus a stated conformance level and residual limitations); it has no notion of a binary pass/fail verdict or of being used as a milestone ship-blocking gate. Casting the report as 'a gate' that 'blocks the ship' is milestone-workflow framing that belongs entirely to KICKOFF's orchestration layer — the reusable skill is deliberately agnostic about how its output is consumed downstream. This survives as load-bearing (not duplication) because it is information the skill genuinely does not and should not contain.",
+      "systemic": false
+    }
+  ]
+}

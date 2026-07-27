@@ -1,0 +1,77 @@
+{
+  "asset": "framework-selector",
+  "verdicts": [
+    {
+      "claim_id": "framework-selector-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "framework-selector.md:131 — \"You run first in the AI chain, so you own the AI-SPEC.md skeleton. If `ai_spec_path` does not exist, create it with every section heading in place — later agents fill their own sections and must not have to invent numbering:\"",
+      "reasoning": "Skill quote verified verbatim at line 131. The skill asserts its own position in the chain as a premise, but cannot cause the operator to dispatch it before ai-researcher/domain-researcher/eval-planner — the three blocks that follow in step 06 depend on its return values. Ordering across skills is load-bearing by rule. The trailing 'it settles the framework and is the first writer of SPEC/AI-SPEC.md' is rationale for the ordering, not a separate duplicated rule. KEEP."
+    },
+    {
+      "claim_id": "framework-selector-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "framework-selector.md:16 — \"- `ai_spec_path`: path to AI-SPEC.md — default `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`. You run first in the AI chain, so this file will normally not exist yet — you create it.\"",
+      "reasoning": "Quote verified verbatim at line 16. The declared default contains `<M>` and `<NNN>-<slug>` placeholders the agent cannot expand, and line 8 states outright: 'artifact paths are supplied by the orchestrator as concrete paths'. Supplying the resolved SPEC/AI-SPEC.md path is the invocation's argument — textbook load-bearing. KEEP."
+    },
+    {
+      "claim_id": "framework-selector-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "framework-selector.md:32 — \"**Check for RESEARCH.md first:** if `PHASE/RESEARCH.md` already exists (written by Stage 5's `phase-researcher`), read its `## Standard Stack` and `## Don't Hand-Roll` sections before running the interview — it may have already identified a relevant library or a \\\"don't hand-roll this\\\" recommendation for this same phase. Skip any interview question it already answers, and don't recommend a framework its Package Legitimacy Audit flagged `[SLOP]`.\" (CONTEXT.md half at line 36: \"Skip what the codebase scan or the phase's `CONTEXT.md` (`PHASE/CONTEXT.md`) already answers.\")",
+      "reasoning": "Verified verbatim at line 32; every element of the four-line KICKOFF sentence maps onto it — read RESEARCH.md first, the two named section headings `## Standard Stack` and `## Don't Hand-Roll`, before the interview, skip questions it already answers, and the `[SLOP]` prohibition down to the literal token. The CONTEXT.md half is covered at line 36. No part is an invocation argument: `research_path` and `context_path` are declared with these exact defaults at lines 17-18, with `PHASE` expanded at line 8, so the paths are not new information either. This is the skill's own <project_context> methodology re-taught to the operator — the largest single duplication in the block."
+    },
+    {
+      "claim_id": "framework-selector-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "framework-selector.md:36 — \"Use a single AskUserQuestion call with ≤ 6 questions.\" (also line 12 \"Run a ≤6-question interview\" and line 233 \"- [ ] Interview completed (≤ 6 questions, single AskUserQuestion call)\")",
+      "reasoning": "Quote verified at line 36, and the cap is triply stated in the skill (role, interview, success criteria). The KICKOFF sentence is flat description — it selects no mode, sets no parameter, gates nothing, and does not even emphasize anything the skill leaves optional. Duplication, but a single short clause, so low."
+    },
+    {
+      "claim_id": "framework-selector-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "framework-selector.md:131 — \"You run first in the AI chain, so you own the AI-SPEC.md skeleton. If `ai_spec_path` does not exist, create it with every section heading in place — later agents fill their own sections and must not have to invent numbering:\" followed by the literal skeleton at lines 133-161; restated at line 238 — \"- [ ] AI-SPEC.md created at `ai_spec_path` with the full section skeleton (1, 1b, 2, 3, 4, 4b, 5, 6, 7) if it did not already exist\"",
+      "reasoning": "All three pieces verified: the conditional ('If ai_spec_path does not exist'), the rationale ('later agents fill their own sections'), and the exact section list. Line 238 even enumerates the numbering in the same order the KICKOFF does. The skill's template fixes the output structure; re-enumerating §1/§1b/§2/§3/§4/§4b/§5–§7 in the prompt is restated output format. 'and it writes §2 (framework) itself' is likewise in the skill at lines 12 and 163."
+    },
+    {
+      "claim_id": "framework-selector-6",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "framework-selector.md:194 — \"Do not write any other section — Sections 1/1b belong to `domain-researcher`, 3–4b to `ai-researcher`, 5–7 to `eval-planner`. Leave their placeholders untouched.\"",
+      "reasoning": "Quote verified at line 194, and it binds the AGENT's writes. The KICKOFF sentence binds a different actor — the orchestrator — telling it not to hand-write any section of AI-SPEC.md itself. No agent file can constrain the operator, and nothing in framework-selector.md addresses operator authorship. The trailing 'authored downstream in this same step by domain-researcher, which eval-planner then reads and confirms' is cross-agent sequencing within step 06. The §-to-agent ownership map embedded in it does echo line 194 and the skeleton bylines (lines 137/140/145/148/151/154/157/160), which is why this stays low rather than being waved through as fully novel. KEEP."
+    },
+    {
+      "claim_id": "framework-selector-7",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "framework-selector.md:201-211 — \"FRAMEWORK_RECOMMENDATION:\" / \"  primary: {framework name and version}\" / \"  rationale: ...\" / \"  alternative: ...\" / \"  alternative_reason: ...\" / \"  system_type: ...\" / \"  model_provider: ...\" / \"  eval_concerns: ...\" / \"  hard_constraints: {list of constraints}\" / \"  existing_ecosystem: {detected libraries from codebase scan}\"",
+      "reasoning": "Verified: <output_format> at lines 197-211 fixes the block name and every field the KICKOFF re-lists (the KICKOFF lists 7 of the skill's 9 keys, omitting only rationale and alternative_reason). Restating the return contract the skill's own template already fixes is duplication by rule. The immediately following sentence — which three values the operator must harvest — is the load-bearing part and is scored separately under claims 8/9; the seven-field enumeration itself carries no information the skill lacks."
+    },
+    {
+      "claim_id": "framework-selector-8",
+      "confirmed": false,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "framework-selector.md:202 — \"  primary: {framework name and version}\"; framework-selector.md:169 — \"**Framework:** {framework name and version}\"",
+      "reasoning": "REFUTED as a contradiction. Both quotes verified. It is true that the block key is `primary`, not `framework` — but that is not the guide and the skill disagreeing about behavior. `primary` is defined in the skill as literally '{framework name and version}', §2 carries the same value under the label '**Framework:**' (line 169), and the KICKOFF sentence is 'Keep system_type, framework and model_provider from that block' — plain-English 'the framework', not a literal key lookup. The very next dispatch block at KICKOFF.md:425 confirms the intended reading: 'Give it the framework name and version, the system_type and the model_provider framework-selector just returned.' No orchestrator following this ends up with the wrong value, so there is no behavioral disagreement to fix — this is incidental phrasing, which the classification rules exclude. The sentence's actual function — telling the operator which three values to carry into the downstream dispatches — is load-bearing and should be KEPT as written."
+    },
+    {
+      "claim_id": "framework-selector-9",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "framework-selector.md:163 — \"Then write **Section 2 — Framework** with your recommendation. This is the same content you return to the orchestrator, persisted so downstream agents (`ai-researcher` for Sections 3–4b, `eval-planner` for tooling defaults in Sections 5–7) can read it rather than re-deriving it:\"",
+      "reasoning": "Quote verified at line 163. The skill establishes that the same content exists on two channels (returned block and persisted §2) but expresses no preference about which the operator reads, and cannot: which channel to harvest from, and the fact that the ai-researcher/domain-researcher/eval-planner dispatch prompts below take these as required inline inputs, is inter-skill data flow the agent has no visibility into. KEEP."
+    }
+  ]
+}

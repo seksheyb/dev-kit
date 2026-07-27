@@ -1,0 +1,57 @@
+{
+  "asset": "python-pro",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/python-pro/SKILL.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/python-pro/references/type-system.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/python-pro/references/async-patterns.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/python-pro/references/standard-library.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/python-pro/references/testing.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/python-pro/references/packaging.md"
+  ],
+  "claims": [
+    {
+      "local_id": "python-pro-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [603, 611],
+      "kickoff_quote": "For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it — python-pro / fastapi-expert / django-expert / postgres-pro / api-designer for backend work ... Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills. Tell me the track-to-lane mapping before you dispatch.",
+      "skill_quote": "description: Use when building Python 3.12+ applications (3.11 floor supported) requiring type safety, async programming, or robust error handling.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/python-pro/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "This is pure routing: which lane skill owns which track surface, and the operator-side requirement to report the mapping before dispatch. The skill's frontmatter description states when python-pro applies, but a skill cannot know the wave's track decomposition or which plugins were enabled at step 2. Nothing of python-pro's internal methodology is restated.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "python-pro-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [613, 613],
+      "kickoff_quote": "Every name above is a skill, and the track subagent loads its own assigned skill itself.",
+      "skill_quote": "name: python-pro",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/python-pro/SKILL.md",
+      "skill_line": 2,
+      "reasoning": "Dispatch mechanics — that python-pro is a skill (loadable by a track subagent) rather than an agent. SKILL.md declares its own name/kind in frontmatter but contains no statement about who loads it or how it is assigned to a subagent, so this orchestration fact is load-bearing operator context.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "python-pro-3",
+      "class": "contradiction",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [564, 570],
+      "kickoff_quote": "## 8. Build it, test-first ... execute PHASE/<NN>-<MM>-PLAN.md under the test-driven-development skill — write the failing tests first, then implement to green",
+      "skill_quote": "3. **Implement** — Write Pythonic code with full type hints and error handling\n4. **Test** — Create comprehensive pytest suite with >90% coverage",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/python-pro/SKILL.md",
+      "skill_line": 32,
+      "reasoning": "python-pro is dispatched only inside step 8, whose whole framing is test-first, yet python-pro's Core Workflow orders implement-before-test; grep for tdd|test.first|red.green|before writing|write the test across SKILL.md and all five references returned nothing. The ordering conflict is real but low-severity because test-first is enforced by the separately-named test-driven-development skill at lines 567-570, not delegated to the lane skill. Fix belongs in the skill (make step 4 TDD-compatible), not in KICKOFF.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

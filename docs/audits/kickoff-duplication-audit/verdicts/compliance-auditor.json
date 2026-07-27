@@ -1,0 +1,29 @@
+{
+  "asset": "compliance-auditor",
+  "verdicts": [
+    {
+      "claim_id": "compliance-auditor-1",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md:1054-1059 'Hand the auditor all three of the things it establishes before it can map law to controls, rather than letting it guess them: which regulations actually apply, what categories of personal or regulated data this milestone touches, and which jurisdictions the users and the data sit in.' vs compliance-auditor.md:10 '1. Establish organizational scope, applicable regulations, data types, and geography.'",
+      "reasoning": "The three enumerated items (regulations / data categories / jurisdictions) map one-to-one onto the agent's own step-1 checklist (applicable regulations / data types / geography) in the same order. The only operator-supplied content is the scoping phrase 'this milestone touches' -- everything else re-teaches the agent's own method step. Verified the skill text exists at line 10 exactly as quoted."
+    },
+    {
+      "claim_id": "compliance-auditor-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md:1058-1059 'Point it at any prior audit history and existing control or policy docs too.' vs compliance-auditor.md:11 '2. Review existing controls, policies, and prior audit history.'",
+      "reasoning": "Same three nouns (controls, policies, prior audit history) in the same order as the agent's own step 2, with no file path, artifact name, or other invocation argument attached. This is pure restatement of the agent's second method step, not a load-bearing parameter. Verified the skill text exists at line 11 exactly as quoted."
+    },
+    {
+      "claim_id": "compliance-auditor-3",
+      "confirmed": true,
+      "final_class": "unenforced-gap",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md:1359-1363 '...hand off to the compliance-auditor agent for the framework-specific breach-notification obligations, and do it early rather than at postmortem time. Disclosure deadlines start running from discovery, not from the fix, so surface the applicable regime and its clock to me while the incident is still open.' Nearest coverage in the asset chain: compliance-auditor.md:25 (Output section) only promises a full audit report (executive summary, per-control findings, risk matrix, remediation roadmap) with no interim/early deliverable, and compliance-auditor.md:17 mentions 'breach-notification deadlines' only as a topic area, never as a discovery-anchored clock. incident-responder.md:24 says only 'track disclosure deadlines and loop in legal/compliance early' -- generic, no discovery-anchored rule, no mandate to surface applicable regime+clock as an early standalone output while the incident is open.",
+      "reasoning": "Hunted the full asset (no references/ dir exists, confirmed by ls) and incident-responder.md, the only other agent this invocation touches. Grepped for deadline|clock|discovery|72|notif|early|interim across both files: only line 17 and 25 in compliance-auditor.md and the one generic sentence in incident-responder.md hit, none of which state (a) the clock starts at discovery rather than remediation, or (b) that the regime+clock must be surfaced as an early interim artifact while the incident is still open, as opposed to folded into the eventual audit report. This is a genuine absence -- the KICKOFF text carries a domain rule (discovery-anchored breach-notification clocks, e.g. GDPR's 72-hour-from-awareness rule) that no asset in the chain enforces, so it is load-bearing and must be kept. Severity raised to medium from the queue's 'low': missing a discovery-anchored disclosure deadline is a genuine regulatory/legal risk (fines, missed statutory windows), not a cosmetic gap."
+    }
+  ]
+}

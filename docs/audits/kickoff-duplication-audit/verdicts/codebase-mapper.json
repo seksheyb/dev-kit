@@ -1,0 +1,53 @@
+{
+  "asset": "codebase-mapper",
+  "verdicts": [
+    {
+      "claim_id": "codebase-mapper-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "codebase-mapper.md line 90: \"Read the focus area from your prompt. It will be one of: `tech`, `arch`, `quality`, `concerns`.\"",
+      "reasoning": "The skill is a single generic agent that offers four internal modes and requires the caller to name one (line 90, reinforced by the per-mode document map at lines 92-96 and the role block at lines 17-21). It cannot know on its own that the pipeline wants all four modes run as a 4-way parallel fan-out named tech/arch/quality/concerns in one dispatch message — that cardinality and naming is the caller's argument, i.e. mode selection among modes the skill itself offers. KICKOFF text at lines 363-364 verified verbatim against devkit-pipeline/KICKOFF.md. Survives."
+    },
+    {
+      "claim_id": "codebase-mapper-2",
+      "confirmed": true,
+      "final_class": "contradiction",
+      "final_severity": "medium",
+      "evidence": "codebase-mapper.md line 191: \"Replace `[YYYY-MM-DD]` with the date provided in your prompt (the `Today's date:` line). NEVER guess or infer the date — always use the exact date from the prompt.\"",
+      "reasoning": "KICKOFF line 364 states categorically that the focus area 'is the only input they take,' but the skill hard-requires a second input, a literal 'Today's date:' line in the dispatch prompt, and explicitly forbids inferring it (line 191). Grepped the entire dev-kit repo for 'Today's date' — codebase-mapper.md line 191 is the ONLY hit anywhere; grepped KICKOFF.md for 'today' (case-insensitive) — two hits, neither is a convention for threading a date into subagent dispatch prompts. So nothing upstream in the guide supplies this second input, and no repo-wide dispatch convention compensates for the guide's omission. An operator following KICKOFF literally passes only the focus area, and every one of the 7 templates' 'Analysis Date: [YYYY-MM-DD]' and footer '[date]' placeholders is left unfilled. This is a direct disagreement about the agent's actual input surface, not just an omitted parameter — genuine contradiction. (The skill's optional `--paths` hint at line 98-109, also foreclosed by 'only input,' is unused anywhere in KICKOFF.md — confirms the guide's input-surface claim is simply wrong, not merely silent.)"
+    },
+    {
+      "claim_id": "codebase-mapper-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "codebase-mapper.md line 15: \"You are a codebase mapper. You explore a codebase for a specific focus area and write analysis documents directly to `docs/global/codebase/` — the canonical codebase-map location every downstream consumer reads from.\"",
+      "reasoning": "The output path is hardcoded in the skill in three places: the role block (line 15, same 'canonical' wording), the write_documents step (line 186: \"Write document(s) to `docs/global/codebase/` using the templates below.\"), and success criteria (line 865: \"All documents for focus area written to `docs/global/codebase/`\"). The agent takes no output-path parameter, so restating 'docs/global/codebase/*.md, the canonical project-wide location' in KICKOFF duplicates a fixed skill behavior rather than passing an argument. Severity stays low because the trailing 'not into PHASE/' clause is real load-bearing value: grepped codebase-mapper.md for 'PHASE' and got zero hits, so the skill has no awareness of the PHASE/ concept at all — the contrast against its sibling agents in the same fan-out (which do write into PHASE/) is cross-asset disambiguation the skill cannot supply."
+    },
+    {
+      "claim_id": "codebase-mapper-4",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "codebase-mapper.md line 17: \"You are dispatched by the orchestrator/pipeline with one of four focus areas:\"",
+      "reasoning": "Grepped codebase-mapper.md for 'pattern-mapper', 'CONTEXT.md', 'concurrent', 'orchestrator' — the only orchestrator-related hits are boilerplate ('dispatched by the orchestrator/pipeline', 'Ready for orchestrator summary', 'Do not return findings to orchestrator', 'orchestrator handles git operations'); there is zero mention of pattern-mapper, PHASE/CONTEXT.md, or concurrency-safety reasoning anywhere in the file, including the <why_this_matters> consumer table (lines 43-52), which only names phase planning/execution. The five-way concurrency justification, the pattern-mapper exclusion (on the concrete ground that its two inputs don't exist yet), and the instruction to fold findings into PHASE/CONTEXT.md are pure cross-agent dispatch orchestration facts that live only on the caller side. Genuine gap-hunt performed; nothing found. Survives as load-bearing."
+    },
+    {
+      "claim_id": "codebase-mapper-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "codebase-mapper.md line 120: \"If one exists, invoke the `graphify` skill with a query for this focus area before doing any fresh exploration:\"",
+      "reasoning": "KICKOFF's 'The arch and concerns mappers should query the graph at docs/state/graphs/graph.json before exploring fresh' restates the skill's own <step name=\"check_existing_graph\"> nearly verbatim: same focus-area restriction ('Only for `arch` and `concerns` focus', line 113), same literal path ('ls docs/state/graphs/graph.json 2>/dev/null', line 116-118), and the same ordering rule ('before doing any fresh exploration', line 120), which the skill also re-asserts in its own success criteria (line 863: 'checked for an existing graphify graph and queried it before fresh exploration'). This is the prompt re-deriving the skill's own internal methodology/gate, not supplying an argument the skill lacks — core case of redundant-restatement."
+    },
+    {
+      "claim_id": "codebase-mapper-6",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "codebase-mapper.md line 124: \"Use graphify's results as your **starting point** — cite the community/hotspot findings with file paths, then verify and deepen with direct Read/Grep as normal.\"",
+      "reasoning": "The whole skill file is written in second person addressing the codebase-mapper sub-agent itself; line 124 governs only that agent's own behavior (use the graph as a starting point, then verify with Read/Grep). It contains no instruction directed at the orchestrator's own conduct. KICKOFF's trailing clause 'and so should you, rather than re-reading the tree' is explicitly addressed to the orchestrator (the one composing the dispatch), telling it to prefer the graph over re-scanning the tree itself before/alongside dispatching the mappers — information a per-agent skill file structurally cannot carry about its caller. Survives as load-bearing."
+    }
+  ]
+}

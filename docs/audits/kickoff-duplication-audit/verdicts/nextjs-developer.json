@@ -1,0 +1,13 @@
+{
+  "asset": "nextjs-developer",
+  "verdicts": [
+    {
+      "claim_id": "nextjs-developer-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 604-612 verbatim: \"For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it — python-pro / fastapi-expert / django-expert / postgres-pro / api-designer for backend work, react-expert / nextjs-developer / typescript-pro / vue-expert for web, ... Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills.\" matches exactly at the claimed line range. SKILL.md line 3 (nextjs-developer): description: \"Use when building Next.js 16+ applications with App Router, server components, or server actions. Invoke to configure route handlers, implement middleware, set up API routes, add streaming SSR, write generateMetadata for SEO, scaffold loading.tsx/error.tsx boundaries, or deploy to Vercel. Triggers on: Next.js, Next.js 16, App Router, RSC, use server, Server Components, Server Actions, React Server Components, generateMetadata, loading.tsx, Turbopack, Next.js deployment, Vercel, Next.js performance.\"",
+      "reasoning": "Verified both quotes exist verbatim at the cited locations. The KICKOFF passage is a cross-skill dispatch/routing instruction for the orchestrator at step 08 (wave execution): it tells the operator which sibling lane skill to name in a track's brief for web work, among a roster of alternatives (react-expert, nextjs-developer, typescript-pro, vue-expert), and to record the track-to-lane mapping before dispatch. A single skill's own SKILL.md cannot know this — it only declares its own triggers/description (line 3), not its position in a menu of sibling skills or which track should be assigned to it. I read the full SKILL.md (146 lines: Core Workflow, Reference Guide, Constraints, Code Examples, Output Templates, Knowledge Reference) and confirmed the KICKOFF text does not restate any of the skill's internal methodology, MUST DO/MUST NOT DO constraints, or output templates — it is purely selection-among-siblings plus a dispatch-order requirement (mapping before dispatch), both explicitly load-bearing per the classification rules. Confirmed as load-bearing-parameter, low severity (as originally classified) — no restatement of skill internals found, no contradiction, no gap."
+    }
+  ]
+}

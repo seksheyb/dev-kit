@@ -1,0 +1,23 @@
+{
+  "asset": "refactoring-specialist",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/refactoring-specialist/SKILL.md",
+  "references_read": [],
+  "claims": [
+    {
+      "local_id": "refactoring-specialist-1",
+      "class": "load_bearing_parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [629, 632],
+      "kickoff_quote": "Also apply: secure-code-guardian (this track touches auth / input handling / crypto), fullstack-guardian (this feature spans frontend and backend together), refactoring-specialist (this track touches existing code), guard (this track touches prod / shared / destructive surface). Skip any that do not apply.",
+      "skill_quote": "description: \"Use when refactoring code, cleaning up code smells, reducing complexity or duplication, restructuring legacy or untested code, or extracting/renaming/simplifying existing structure — any executor track that touches existing code and must preserve behavior exactly, verified by tests at every step.\"",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/refactoring-specialist/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "The KICKOFF invocation is a one-clause conditional gate ('this track touches existing code') that the operator/orchestrator must judge per-track before deciding whether to dispatch this skill alongside the other guard skills — it names none of the skill's internal methodology, safety contract, workflow steps, or catalogs. Per the classification rules this is conditional gating the operator must judge, i.e. load-bearing, not a restatement of the skill's own content even though it paraphrases the skill's own 'use when' trigger (that overlap is expected and desired for a gating clause).",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

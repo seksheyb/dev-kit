@@ -1,0 +1,101 @@
+{
+  "asset": "converge",
+  "verdicts": [
+    {
+      "claim_id": "converge-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:87 — \"Identify the active feature/phase — from the user's context, the most recently modified phase directory, or by asking.\" (verbatim at line 87)",
+      "reasoning": "Verified on disk. The skill explicitly has no way to know the phase: it must take it from user context, guess from mtime, or ask. `<NN>` is the invocation's single argument. Supplying it removes the guess/ask branch entirely. Load-bearing, keep."
+    },
+    {
+      "claim_id": "converge-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:21-22 — \"This is **not** a diff tool and does **not** track changes. It assesses the present state / of the code relative to the feature's artifacts — no git, no branch comparison, no history.\" (\"no git, no branch comparison, no history\" is on line 22)",
+      "reasoning": "Verified. The KICKOFF's \"Assess the present-state code — no git, no diffing, no history\" is a near-verbatim copy of the skill's own second paragraph, including the three-item negation list. I checked whether this could be mode selection: it cannot — the skill offers no diff/history mode, this is an unconditional hard property of the skill stated in bold. Duplication."
+    },
+    {
+      "claim_id": "converge-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:58 — \"- **CONSTITUTION** — `docs/global/project/constitution.md` by default (see the `constitution` skill).\"; SKILL.md:48 SPEC default `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`; SKILL.md:52-53 \"A phase may have several plans / across waves/tracks; load **all** of them to build the intent inventory.\"",
+      "reasoning": "Verified, with severity downgraded from medium to low. I checked the KICKOFF shorthand legend (KICKOFF.md:15-16: `PHASE/` = `docs/milestones/<M>/phases/<NN>-<slug>/`, `SPEC/` = `docs/milestones/<M>/specs/<NNN>-<slug>/`), so `SPEC/spec.md` expands to exactly the skill's line-48 default and `docs/global/project/constitution.md` is character-for-character the skill's line-58 default. These are INPUT paths the skill already resolves, not output paths/filenames the invocation must supply, so the \"file paths are arguments\" carve-out does not apply. Downgraded to low because \"every PLAN file for this phase\" does disambiguate against the skill's alternate single-file mode at line 54 (\"If the user points at one plan file directly, converge against that file\") — but it selects the DEFAULT of that pair, which needs no operator input, so it is still restatement rather than mode selection."
+    },
+    {
+      "claim_id": "converge-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:126-131 — \"Parse the `gaps:` list from frontmatter ... These truths already failed goal-backward verification — fold each into the / intent inventory as a pre-confirmed `missing`/`partial` finding sourced from / `source-ref: verifier: <truth>`, without re-deriving it from scratch in Step 4.\" (the phrase \"pre-confirmed\" is on line 128); restated at SKILL.md:38-40",
+      "reasoning": "Verified; the queue's line anchor 128 sits inside the quoted sentence (which spans 127-129), so the citation is sound. The KICKOFF uses the skill's own term of art \"pre-confirmed evidence\" and names the skill's own default VERIFICATION path (SKILL.md:55-56). Step 2 dedicates a labelled subsection to this exact behavior and the Relationship section repeats it. Nothing conditional is added — the skill already treats VERIFICATION.md this way whenever it exists. Duplication."
+    },
+    {
+      "claim_id": "converge-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:31-33 — \"Converge is the **remediation compiler**, not the verdict: it runs an exhaustive / requirement-level sweep (every FR/SC/AC, every constitution MUST, plus `unrequested` / scope-creep detection) and turns whatever remains into executable `<task>` blocks.\"",
+      "reasoning": "Verified. \"Sweep every FR, SC, AC and constitution MUST\" is the same enumeration in the same order and near-identical wording as line 32, and Steps 3-4 (lines 137-166) re-encode it as the intent inventory. This is the skill's core methodology, not an operator-side scoping decision. The KICKOFF omits `unrequested` from the sweep list but reinstates it in the gap-type list on line 872, so there is no contradiction — just duplication."
+    },
+    {
+      "claim_id": "converge-6",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "SKILL.md:16-18 — \"**append each piece of remaining work as a new, traceable `<task>` / block** under a `## Phase N: Convergence` header at the bottom of the plan file so that an / implementation pass can complete it.\" Gap-type taxonomy at SKILL.md:155-162 (`missing`/`partial`/`contradicts`/`unrequested`); append contract at SKILL.md:207-217.",
+      "reasoning": "Verified, with a corrected line anchor: the queue cites line 15, but the quoted fragment begins on line 16 (line 15 is an earlier clause of the same multi-line Goal sentence). Off-by-one citation, not a substantive miss. Substance is the strongest duplication in this invocation: the KICKOFF reproduces the skill's Goal sentence including the word \"traceable\", the literal header string `## Phase N: Convergence`, and end-of-file placement, plus the skill's own four-name gap taxonomy verbatim. Output-format and taxonomy restatement are named explicitly in the duplication rules. High."
+    },
+    {
+      "claim_id": "converge-7",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:244 — \"4. Never reuse or renumber existing task numbers or `## Phase N` headers.\"; also SKILL.md:70-71 \"rewrite, renumber, reorder, or delete any existing `<task>` block (including tasks from a / prior Convergence section)\" under the bold **APPEND-ONLY, NEVER REWRITE** heading at line 65",
+      "reasoning": "Verified at both locations. The skill states this as an explicit MUST NOT in Operating Constraints and again as step-7 append-contract item 4. The KICKOFF sentence re-derives a hard rule the skill already enforces twice; it adds no exception, scope, or condition."
+    },
+    {
+      "claim_id": "converge-8",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:243 — \"Constitution-violation tasks MUST be emitted first and described as `CRITICAL`.\"; severity definition at SKILL.md:176 \"**CRITICAL**: violates a constitution MUST principle...\"",
+      "reasoning": "Verified verbatim. Ordering within the skill's own emitted output is the skill's methodology, not an invocation argument. Note the contrast: the later KICKOFF block at line ~889 tells sprint-execution to \"keep the constitution-violation remediation tasks first\" — THAT is load-bearing because it targets a different skill, but inside the converge prompt it is a restatement of converge's own MUST."
+    },
+    {
+      "claim_id": "converge-9",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:38-40 — \"`converge` treats a phase's / `VERIFICATION.md` (when present) as pre-confirmed evidence — see Step 2 — but still runs / its own full sweep, since verifier only checks roadmap-level truths, not every FR/SC/AC.\" (quote begins on line 38, \"but still runs\" is on line 39)",
+      "reasoning": "Verified. The skill has an entire section titled \"Relationship to Other Verify-Stage Assets\" (line 29) whose stated purpose is converge-vs-verifier complementarity, and lines 36-38 additionally state what verifier uniquely catches that converge does not — so the KICKOFF's \"the two are complementary\" is fully covered, with no contradiction. Descriptive half only; the imperative half of the same sentence is separately load-bearing (converge-10). Low, because it functions as rationale for the operator-side instruction that follows."
+    },
+    {
+      "claim_id": "converge-10",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:18-19 — \"This should run only after implementation has run on / the current `PLAN.md`.\" This is the ONLY invocation precondition in the file; grep for \"passed\" returns no hit anywhere in SKILL.md.",
+      "reasoning": "Confirmed load-bearing, keep. This is a conditional-gating decision the operator must make: whether to invoke converge at all after verify returned `passed`. A skill can never instruct that it be invoked — it only runs once dispatched — and I confirmed the skill states only its own precondition (after implementation), never the pipeline-level rule that a passing verify does not excuse skipping converge. Nothing in the 261-line file (no references/ chain exists — the skill directory contains SKILL.md only) covers this."
+    },
+    {
+      "claim_id": "converge-11",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:72-73 — \"- modify, create, or delete any application code — completing the appended tasks is the job / of the implementation pass (`sprint-execution`).\"; restated at SKILL.md:257-259 handoff \"recommend running an / implementation pass (`sprint-execution`) to complete them\"",
+      "reasoning": "Verified. Same prohibition, same rationale, near-identical clause structure — the skill carries it as a MUST NOT bullet under **APPEND-ONLY, NEVER REWRITE** and again in Step 8's handoff. The KICKOFF adds nothing the skill lacks (it is in fact vaguer, omitting the `sprint-execution` handoff target the skill names). Re-derivation of the skill's own hard rule."
+    },
+    {
+      "claim_id": "converge-12",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:256-257 — \"- On `tasks_appended`: state how many tasks were appended, under which `## Phase N: / Convergence` header(s), and in which `PLAN.md` file(s)\"",
+      "reasoning": "Verified. Step 8's handoff already mandates reporting the task count and the target plan file(s); the KICKOFF asks for a strict subset (it drops the header-name element the skill also reports). Output-format restatement. Low severity: it presumes the `tasks_appended` branch and the operator's downstream conditional block (KICKOFF.md:881-882, \"only if converge appended a `## Phase N: Convergence` section\") keys off this report, so the ask is harmless even though redundant."
+    }
+  ]
+}

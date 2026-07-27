@@ -1,0 +1,96 @@
+{
+  "asset": "devops-engineer",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/SKILL.md",
+  "claim_count": 2,
+  "claims": [
+    {
+      "local_id": "devops-engineer-2",
+      "class": "load-bearing-parameter",
+      "severity": "medium",
+      "step": "13",
+      "kickoff_line_range": [
+        1103,
+        1104
+      ],
+      "kickoff_quote": "Route the infra lane over this milestone's deploy surface. Run these in sequence, not in parallel \u2014 they write overlapping config and the later ones depend on the earlier ones' output:",
+      "skill_quote": "  related-skills: terraform-engineer, kubernetes-specialist, sre-engineer, monitoring-expert, security-reviewer",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/SKILL.md",
+      "skill_line": 12,
+      "reasoning": "Cross-skill ordering and the no-parallelism constraint are orchestration facts. The skill names its peer skills in frontmatter metadata but nowhere states any run order relative to them; grepping the full references/ chain for 'sre-engineer|monitoring-expert|terraform-engineer|kubernetes-specialist|sequence|order' returned only unrelated hits (awslogs config, 'Deploy in dependency order' inside a release-automation sample workflow). The skill's own 'Core Workflow' (lines 40-46) is internal to one invocation. Keep.",
+      "systemic": true,
+      "other_locations": [],
+      "asset": "devops-engineer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/SKILL.md",
+      "raised_by": [
+        "cloud-architect",
+        "devops-engineer",
+        "docker-expert",
+        "monitoring-expert",
+        "sre-engineer",
+        "terraform-engineer"
+      ],
+      "locations": [
+        [
+          1102,
+          1103
+        ],
+        [
+          1103,
+          1104
+        ]
+      ],
+      "steps": [
+        "13"
+      ],
+      "merged_from": [
+        "cloud-architect::cloud-architect-3",
+        "devops-engineer::devops-engineer-2",
+        "docker-expert::docker-expert-2",
+        "monitoring-expert::monitoring-expert-4",
+        "sre-engineer::sre-engineer-6",
+        "terraform-engineer::terraform-engineer-2"
+      ],
+      "contributing_severities": [
+        "low",
+        "medium"
+      ],
+      "claim_id": "devops-engineer-1"
+    },
+    {
+      "local_id": "devops-engineer-3",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "13",
+      "kickoff_line_range": [
+        1106,
+        1107
+      ],
+      "kickoff_quote": "1. devops-engineer \u2014 own the CI/CD pipeline config that land-and-deploy's readiness gate will poll. This is the one that gate depends on, so do it first.",
+      "skill_quote": "Provide: CI/CD pipeline config, Dockerfile, K8s/Terraform files, deployment verification, rollback procedure",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/SKILL.md",
+      "skill_line": 82,
+      "reasoning": "The deliverable named ('CI/CD pipeline config') does overlap the skill's own Output Templates line, so that half is mildly redundant; but the load-bearing half is scope narrowing plus the downstream consumer \u2014 land-and-deploy's readiness gate polls this artifact, which is why devops-engineer runs first of the five. The skill has no knowledge of land-and-deploy or its gate. Keep; at most trim the restated deliverable noun.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "devops-engineer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/SKILL.md",
+      "raised_by": [
+        "devops-engineer"
+      ],
+      "locations": [
+        [
+          1106,
+          1107
+        ]
+      ],
+      "steps": [
+        "13"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "devops-engineer-2"
+    }
+  ]
+}

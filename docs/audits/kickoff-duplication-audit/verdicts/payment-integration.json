@@ -1,0 +1,13 @@
+{
+  "asset": "payment-integration",
+  "verdicts": [
+    {
+      "claim_id": "payment-integration-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md line 614: \"Every name above is a skill, and the track subagent loads its own assigned skill itself.\" | payment-integration/SKILL.md line 8: \"Knowledge pack for implementing secure, compliant payment systems: gateway integration, transaction processing, subscription management, and fraud prevention with emphasis on PCI compliance and reliability.\"",
+      "reasoning": "Both quotes verified verbatim at the cited lines. The KICKOFF sentence conveys dispatch/orchestration mechanics (the track subagent, not the orchestrator, loads the skill) that distinguishes skills from agents like framework-selector/ai-researcher earlier in the same paragraph. The skill's line 8 is purely a self-description of its knowledge-pack content and says nothing about who loads it or when -- a skill file structurally cannot describe the orchestrator's dispatch protocol for itself. This is load-bearing orchestration-layer information, not restated methodology, so the claim survives as load-bearing-parameter/low exactly as submitted."
+    }
+  ]
+}

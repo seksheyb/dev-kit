@@ -1,0 +1,187 @@
+{
+  "asset": "gate-plan-review",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-plan-review.md",
+  "claim_count": 5,
+  "claims": [
+    {
+      "local_id": "gate-plan-review-1",
+      "class": "load-bearing-parameter",
+      "severity": "medium",
+      "step": "07",
+      "kickoff_line_range": [
+        531,
+        535
+      ],
+      "kickoff_quote": "Dispatch the gate-plan-review agent, passing all five of its inputs, not just the plan: plan_path = PHASE/<NN>-<MM>-PLAN.md, sdd_path = docs/global/architecture/SDD.md, adr_dir = docs/global/architecture/adr/ (the ADR bank itself, not its parent directory), spec_path = SPEC/spec.md, graphify_path = docs/state/graphs/GRAPH_REPORT.md (or the literal string \"none\" if no graph was built).",
+      "skill_quote": "`plan_path` \u2014 absolute path to the plan file (the only canonical plan path: `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`) ... `sdd_path` \u2014 absolute path to the SDD (`docs/global/architecture/SDD.md`) ... `adr_dir` \u2014 path to the ADR bank (`docs/global/architecture/adr/`) ... `spec_path` \u2014 absolute path to the spec / brief that drove the plan ... `graphify_path` \u2014 absolute path to the graphify report or wiki index used (or `\"none\"`; typically `docs/state/graphs/GRAPH_REPORT.md`)",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-plan-review.md",
+      "skill_line": 11,
+      "reasoning": "The agent documents these as inputs it receives, but it cannot supply the concrete values itself for a given project/phase \u2014 the orchestrator must actually wire the specific plan/SDD/ADR/spec/graphify paths at call time. Emphasizing 'not just the plan' is a genuine risk warning (a caller could dispatch with only plan_path), so this is call-site argument-passing, not restated methodology.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "gate-plan-review",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-plan-review.md",
+      "raised_by": [
+        "gate-plan-review"
+      ],
+      "locations": [
+        [
+          531,
+          535
+        ]
+      ],
+      "steps": [
+        "07"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "gate-plan-review-1"
+    },
+    {
+      "local_id": "gate-plan-review-2",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "07",
+      "kickoff_line_range": [
+        535,
+        537
+      ],
+      "kickoff_quote": "Two of its six review dimensions are SDD Alignment and ADR Gaps, and both are dead without sdd_path and adr_dir \u2014 it hands the review engine those paths to read, never inlined content.",
+      "skill_quote": "- **SDD Alignment**: Does the plan implement decisions documented in the SDD and ADRs?\n     - **ADR Gaps**: Are there new architectural decisions in the plan that LACK a corresponding ADR? ... List the input file paths only \u2014 **never inline plan, SDD, or spec content**.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-plan-review.md",
+      "skill_line": 71,
+      "reasoning": "The prompt names two of the skill's own six internal review-dimension labels verbatim (SDD Alignment, ADR Gaps \u2014 matching the skill's exact bolded headings at lines 71-72) and restates the skill's own content-passing rule ('never inline... content', already stated at line 69 and again in Hard Rules at line 111). This is the skill's own methodology/vocabulary being re-derived in the guide rather than left to the agent.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "gate-plan-review",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-plan-review.md",
+      "raised_by": [
+        "gate-plan-review"
+      ],
+      "locations": [
+        [
+          535,
+          537
+        ]
+      ],
+      "steps": [
+        "07"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "gate-plan-review-2"
+    },
+    {
+      "local_id": "gate-plan-review-3",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "07",
+      "kickoff_line_range": [
+        537,
+        539
+      ],
+      "kickoff_quote": "This is a gate, not advice. It runs a deterministic complexity check against every track's declared model and effort, then dispatches an independent **non-Claude** review engine (Gemini \u2192 Codex \u2192 Claude fallback order).",
+      "skill_quote": "0. **Deterministic complexity check (runs first, before the review engine).** ... validates that every track's `Model`/`Effort` columns in the `## Parallel Execution Map` match the bands computed from its `complexity:` signals block ... Select a review engine per `@references/independent-review.md` (role: Plan-gate review \u2014 default `gemini`, fallback order `gemini` \u2192 `codex` \u2192 `claude`).",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-plan-review.md",
+      "skill_line": 29,
+      "reasoning": "The two-phase process (deterministic complexity check first, then dispatch of a review engine in a fixed gemini\u2192codex\u2192claude fallback order) is already fully specified by the agent's own step 0 and step 2, and the exact fallback order is also fixed independently in references/independent-review.md's registry table (row for gate-plan-review). The orchestrator has no ability to change this order, so restating it is re-deriving the skill's own hard-coded default rather than passing an argument.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "gate-plan-review",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-plan-review.md",
+      "raised_by": [
+        "gate-plan-review"
+      ],
+      "locations": [
+        [
+          537,
+          539
+        ]
+      ],
+      "steps": [
+        "07"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "gate-plan-review-3"
+    },
+    {
+      "local_id": "gate-plan-review-4",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "07",
+      "kickoff_line_range": [
+        539,
+        541
+      ],
+      "kickoff_quote": "Report back gate_passed, next_action, and which engine actually ran \u2014 if it fell back to Claude, say so plainly, because a claude-on-claude gate is a weaker gate.",
+      "skill_quote": "`engine` \u2014 which engine was actually used (after any fallback per the registry).",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-plan-review.md",
+      "skill_line": 89,
+      "reasoning": "The output contract (gate_passed, next_action, engine as the actually-used engine after fallback) is already fixed by the agent's step 4/5 and by SCHEMAS.md's review-summary.json shape, and references/independent-review.md separately already requires that 'a fallback is visible to the caller, not silent' (line 70). Reminding the reader which fields come back and that fallback must be surfaced restates a contract the schema and reference doc already enforce, rather than supplying new orchestration data.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "gate-plan-review",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-plan-review.md",
+      "raised_by": [
+        "gate-plan-review"
+      ],
+      "locations": [
+        [
+          539,
+          541
+        ]
+      ],
+      "steps": [
+        "07"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "gate-plan-review-4"
+    },
+    {
+      "local_id": "gate-plan-review-5",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "07",
+      "kickoff_line_range": [
+        541,
+        541
+      ],
+      "kickoff_quote": "Wave 1 does not start until gate_passed is true.",
+      "skill_quote": "`gate_passed` is `true` iff `complexity_ok` is `true` **and** `severity_counts.HIGH == 0` after subtracting resolved-by-justification HIGHs.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-plan-review.md",
+      "skill_line": 93,
+      "reasoning": "The agent defines what gate_passed means but has no knowledge of 'Wave 1' \u2014 that is downstream orchestration sequencing owned entirely by KICKOFF/the caller (sprint-execution), not something the skill file could state. This is legitimate ordering/gating information the operator must carry, not duplication of the agent's own contract.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "gate-plan-review",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-plan-review.md",
+      "raised_by": [
+        "gate-plan-review"
+      ],
+      "locations": [
+        [
+          541,
+          541
+        ]
+      ],
+      "steps": [
+        "07"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "gate-plan-review-5"
+    }
+  ]
+}

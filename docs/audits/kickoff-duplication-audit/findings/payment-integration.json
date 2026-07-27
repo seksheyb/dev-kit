@@ -1,0 +1,37 @@
+{
+  "asset": "payment-integration",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/payment-integration/SKILL.md",
+  "references_read": [],
+  "claims": [
+    {
+      "local_id": "payment-integration-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [604, 612],
+      "kickoff_quote": "For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it — ... payment-integration / fintech-engineer / mcp-developer for specialized domains. Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills. Tell me the track-to-lane mapping before you dispatch.",
+      "skill_quote": "description: \"Use when the task involves payment integration — payment gateways, transaction processing, subscription billing, PCI DSS v4.0.1 compliance, tokenization, fraud prevention, webhooks, refunds/chargebacks, or multi-currency support.\"",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/payment-integration/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "This is the only KICKOFF mention of payment-integration and it is pure routing: which wave track gets this lane skill, gated on which plugins the operator actually enabled at step 2, with a mapping the operator must report before dispatch. The skill's frontmatter declares its own trigger domain but cannot know the wave's track decomposition or the enabled-plugin set, so the guide text is the invocation's argument, not a restatement. The coarse label 'for specialized domains' overlaps the skill's self-description only at the grouping level and carries no methodology.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "payment-integration-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [614, 614],
+      "kickoff_quote": "Every name above is a skill, and the track subagent loads its own assigned skill itself.",
+      "skill_quote": "Knowledge pack for implementing secure, compliant payment systems: gateway integration, transaction processing, subscription management, and fraud prevention with emphasis on PCI compliance and reliability.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/payment-integration/SKILL.md",
+      "skill_line": 8,
+      "reasoning": "The guide states the loading mechanism — the track subagent loads payment-integration itself rather than the orchestrator pre-loading it. The skill only describes itself as a knowledge pack and says nothing anywhere about who loads it or when; this is orchestration-layer information a skill structurally cannot carry. Load-bearing, keep.",
+      "systemic": true,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

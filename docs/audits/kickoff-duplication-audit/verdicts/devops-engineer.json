@@ -1,0 +1,21 @@
+{
+  "asset": "devops-engineer",
+  "verdicts": [
+    {
+      "claim_id": "devops-engineer-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "medium",
+      "evidence": "SKILL.md line 12 (frontmatter): 'related-skills: terraform-engineer, kubernetes-specialist, sre-engineer, monitoring-expert, security-reviewer' — merely lists peer skill names, no ordering or concurrency semantics attached. The skill's own 'Core Workflow' (lines 33-38: Assess/Design/Implement/Validate/Deploy/Monitor) governs only this single skill's internal steps, not cross-skill sequencing with terraform-engineer/kubernetes-specialist/sre-engineer/monitoring-expert.",
+      "reasoning": "Verified the KICKOFF quote exists verbatim at lines 1103-1104 of /home/ubuntu/skillsproject/devkit-pipeline/KICKOFF.md: 'Route the infra lane over this milestone's deploy surface. Run these in sequence, not in parallel — they write overlapping config and the later ones depend on the earlier ones' output:'. Grepped the entire devops-engineer references/ chain (github-actions.md, docker-patterns.md, kubernetes.md, terraform-iac.md, deployment-strategies.md, platform-engineering.md, release-automation.md, incident-response.md) plus SKILL.md for sequence/order/parallel language; the only hits are internal to sample workflows (release-automation.md line 395 'Deploy in dependency order' refers to stage dependencies within one CI pipeline, not cross-skill dispatch order) or unrelated (parallel test matrices). No skill or reference anywhere states that devops-engineer must run before terraform-engineer/kubernetes-specialist/sre-engineer/monitoring-expert, or that these must run sequentially rather than in parallel. This is orchestration-level information the skill cannot know about itself — correctly load-bearing, not duplicated."
+    },
+    {
+      "claim_id": "devops-engineer-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md line 82: 'Provide: CI/CD pipeline config, Dockerfile, K8s/Terraform files, deployment verification, rollback procedure' — this is the skill's own Output Templates line and does name 'CI/CD pipeline config' as a deliverable, but it has no concept of a downstream consumer or run-order priority.",
+      "reasoning": "Verified the KICKOFF quote exists verbatim at lines 1106-1107: '1. devops-engineer — own the CI/CD pipeline config that land-and-deploy's readiness gate will poll. This is the one that gate depends on, so do it first.' Grepped the devops-engineer skill and its full references/ chain for 'land-and-deploy' and 'readiness gate' — zero matches anywhere. The skill genuinely has no knowledge that another workflow step (land-and-deploy) polls this exact artifact, nor that this is why devops-engineer must run first among the five infra-lane skills. That consumer-identity and first-in-sequence fact is load-bearing orchestration info the skill cannot supply. The naming of 'CI/CD pipeline config' does overlap the skill's own Output Templates noun, which is a minor redundant sliver, but it is not the substance of the claim and correctly keeps severity at low rather than promoting this to redundant-restatement."
+    }
+  ]
+}

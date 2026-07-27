@@ -1,0 +1,223 @@
+{
+  "asset": "analyze",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/analyze/SKILL.md",
+  "claim_count": 6,
+  "claims": [
+    {
+      "local_id": "analyze-5",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "07",
+      "kickoff_line_range": [
+        545,
+        545
+      ],
+      "kickoff_quote": "Use the analyze skill for a read-only cross-artifact audit before any code exists",
+      "skill_quote": "This is a static, read-only audit; run it once the phase's `PLAN.md` exists (after `planner` / `writing-plans` has produced it) and before execution begins.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/analyze/SKILL.md",
+      "skill_line": 13,
+      "reasoning": "The 'read-only cross-artifact audit before any code exists' framing repeats the skill's Goal statement and its frontmatter description verbatim in substance. The ordering value (that this runs at step 07) is carried by the invocation's position in the guide, not by this clause; only a bare 'Use the analyze skill' is load-bearing here. Low severity \u2014 it functions as a one-line orientation.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "analyze",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/analyze/SKILL.md",
+      "raised_by": [
+        "analyze"
+      ],
+      "locations": [
+        [
+          545,
+          545
+        ]
+      ],
+      "steps": [
+        "07"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "analyze-1"
+    },
+    {
+      "local_id": "analyze-6",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "07",
+      "kickoff_line_range": [
+        545,
+        546
+      ],
+      "kickoff_quote": "SPEC/spec.md \u2194 PHASE/<NN>-<MM>-PLAN.md \u2194 docs/global/project/constitution.md.",
+      "skill_quote": "- **CONSTITUTION** \u2014 `docs/global/project/constitution.md` by default (see the `constitution` skill).",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/analyze/SKILL.md",
+      "skill_line": 30,
+      "reasoning": "`SPEC/` and `PHASE/` are KICKOFF's own path shorthands, bound at KICKOFF lines 15-16 and rebound per-phase at line 346, so naming the three inputs in that vocabulary is a genuine invocation argument that the skill cannot know. Only the literal constitution path duplicates the skill's default (line 30) \u2014 a minor overlap not worth cutting since it anchors the triple.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "analyze",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/analyze/SKILL.md",
+      "raised_by": [
+        "analyze"
+      ],
+      "locations": [
+        [
+          545,
+          546
+        ]
+      ],
+      "steps": [
+        "07"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "analyze-2"
+    },
+    {
+      "local_id": "analyze-1",
+      "class": "redundant-restatement",
+      "severity": "high",
+      "step": "07",
+      "kickoff_line_range": [
+        546,
+        547
+      ],
+      "kickoff_quote": "Load every plan file for this phase and treat their <task> blocks as one combined task set.",
+      "skill_quote": "A phase may have several plans across waves; load **all** of them and treat their `<task>` blocks as the combined task set.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/analyze/SKILL.md",
+      "skill_line": 28,
+      "reasoning": "Near-verbatim restatement of the skill's own File Locations rule; the skill repeats it again at step 1 (line 55) and in the artifact-convention callout (lines 16-19). The operator prompt adds no parameter the skill lacks.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "analyze",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/analyze/SKILL.md",
+      "raised_by": [
+        "analyze"
+      ],
+      "locations": [
+        [
+          546,
+          547
+        ]
+      ],
+      "steps": [
+        "07"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "high"
+      ],
+      "claim_id": "analyze-3"
+    },
+    {
+      "local_id": "analyze-4",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "07",
+      "kickoff_line_range": [
+        547,
+        548
+      ],
+      "kickoff_quote": "Produce a requirement-to-task coverage table.",
+      "skill_quote": "**Coverage Summary Table:**\n\n| Requirement Key | Has Task? | Task IDs | Notes |",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/analyze/SKILL.md",
+      "skill_line": 157,
+      "reasoning": "The skill's report template (step 6) fixes this exact table as a mandatory section, and step 3 builds the 'Task coverage mapping' semantic model (line 95) that feeds it. The prompt restates output structure the template already mandates rather than selecting among options.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "analyze",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/analyze/SKILL.md",
+      "raised_by": [
+        "analyze"
+      ],
+      "locations": [
+        [
+          547,
+          548
+        ]
+      ],
+      "steps": [
+        "07"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "analyze-4"
+    },
+    {
+      "local_id": "analyze-2",
+      "class": "redundant-restatement",
+      "severity": "high",
+      "step": "07",
+      "kickoff_line_range": [
+        548,
+        549
+      ],
+      "kickoff_quote": "Any conflict with a constitution MUST principle is CRITICAL and needs the spec or the plan adjusted, never the principle reinterpreted.",
+      "skill_quote": "Constitution conflicts are automatically CRITICAL and require adjustment of the spec, plan, or tasks\u2014not dilution, reinterpretation, or silent ignoring of the principle.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/analyze/SKILL.md",
+      "skill_line": 41,
+      "reasoning": "The skill has a dedicated 'Constitution Authority' operating constraint stating exactly this, reinforced in Severity Assignment (line 140 CRITICAL definition) and Analysis Guidelines (line 200, 'Prioritize constitution violations (these are always CRITICAL)'). The KICKOFF sentence re-derives a hard rule the skill already enforces three times.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "analyze",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/analyze/SKILL.md",
+      "raised_by": [
+        "analyze"
+      ],
+      "locations": [
+        [
+          548,
+          549
+        ]
+      ],
+      "steps": [
+        "07"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "high"
+      ],
+      "claim_id": "analyze-5"
+    },
+    {
+      "local_id": "analyze-3",
+      "class": "redundant-restatement",
+      "severity": "high",
+      "step": "07",
+      "kickoff_line_range": [
+        549,
+        550
+      ],
+      "kickoff_quote": "Change nothing \u2014 report, and offer a remediation plan only if I approve it.",
+      "skill_quote": "**STRICTLY READ-ONLY**: Do **not** modify any files. Output a structured analysis report. Offer an optional remediation plan (user must explicitly approve before any follow-up editing would be performed).",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/analyze/SKILL.md",
+      "skill_line": 36,
+      "reasoning": "Both halves are the skill's own Operating Constraints, plus step 8 'Offer Remediation' (line 185, 'Do NOT apply them automatically') and Analysis Guidelines line 198 'NEVER modify files'. Nothing here is an invocation argument.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "analyze",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/analyze/SKILL.md",
+      "raised_by": [
+        "analyze"
+      ],
+      "locations": [
+        [
+          549,
+          550
+        ]
+      ],
+      "steps": [
+        "07"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "high"
+      ],
+      "claim_id": "analyze-6"
+    }
+  ]
+}

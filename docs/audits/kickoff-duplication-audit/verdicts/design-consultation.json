@@ -1,0 +1,69 @@
+{
+  "asset": "design-consultation",
+  "verdicts": [
+    {
+      "claim_id": "design-consultation-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:27 `**Check for existing DESIGN.md** (`docs/global/design/DESIGN.md`):` — and SKILL.md:33-34 `If a DESIGN.md exists: read it, then ask: \"You already have a design system. Want to **update** it, **start fresh**, or **cancel**?\"`",
+      "reasoning": "Verified KICKOFF.md:294 header and KICKOFF.md:296 `Runs **once ever**, not per phase.` verbatim. The skill's DESIGN.md pre-check exists (line 27) but resolves to update/start-fresh/cancel, NOT to declining to run — so the operator's `does not exist` gate is a different decision, not a restatement. `grep -n 'once ever|per phase|UI\\b'` over SKILL.md returns only frontmatter line 9, palette line 287, template line 396 and CLAUDE.md line 453 — the skill has no notion of pipeline phases, no once-ever cadence, and no has-UI test anywhere. `<product>` and the context-restore chaining are invocation arguments. Keep in full."
+    },
+    {
+      "claim_id": "design-consultation-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:5 `complete coherent design system (aesthetic, typography, color, layout, spacing, motion),` — plus the Phase 3 proposal template at SKILL.md:147-153 (AESTHETIC / DECORATION / LAYOUT / COLOR / TYPOGRAPHY / SPACING / MOTION) and the DESIGN.md template headings at SKILL.md:387-424 (`## Aesthetic Direction`, `## Typography`, `## Color`, `## Spacing`, `## Layout`, `## Motion`).",
+      "reasoning": "The six-facet enumeration is verbatim from the skill's own frontmatter description and is fixed twice more by the skill's own templates; it constrains nothing the skill would otherwise omit. NARROWING: the finding applies only to the trailing enumeration `— aesthetic, typography, color, layout, spacing, motion`. The `<product>` placeholder inside the same quoted range is a load-bearing argument and must survive any edit. Low severity: it reads as a natural gloss, not a competing spec."
+    },
+    {
+      "claim_id": "design-consultation-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:40-42 `**Require the Claude Design MCP.** This skill only delivers via Claude Design — there is no local-file fallback. If `mcp__claude-design__*` tools aren't available, stop here and tell the user Claude Design is required before this skill can produce anything.`",
+      "reasoning": "Verified verbatim at SKILL.md:40-42, and stated a second time in the shared protocol at /home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/references/claude-design-mcp-protocol.md:7-9 (`**Claude Design is the only delivery mechanism for these skills — there is no local-file fallback.** ... stop and tell the user the Claude Design MCP is required (don't silently degrade to writing local HTML).`). The skill treats this as a hard stop, not an option, so the KICKOFF sentence is not permitted emphasis-of-an-option — it re-derives an enforced gate. It also duplicates KICKOFF's own surrounding prose at KICKOFF.md:296-297, so the assertion appears twice inside step 04. Systemic: design-html:68-70 carries the identical paragraph."
+    },
+    {
+      "claim_id": "design-consultation-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:44-47 `**Resolve the Claude Design system binding.** ... Run its Step 0 now, before anything else:` and SKILL.md:56-61 `do NOT ask any aesthetic/vibe/color/typography/mood questions and do not re-confirm the direction ... skip Phase 2 (research), Phase 3 (proposal), and Phase 4 (drill-downs) entirely, then go straight to Phase 5.`",
+      "reasoning": "All three elements of the KICKOFF sentence are the skill's own internals: the ordering (`Run its Step 0 now, before anything else`, line 47) is self-imposed, not operator-supplied; the id name `claude_design_system_id` is the skill's own variable (lines 49, 377); and the skip-the-aesthetic-questions consequence is spelled out more completely at lines 55-61 than KICKOFF states it. The operator does not judge whether a system `fits` either — SKILL.md:51 has the skill call `list_design_systems` and ask the user directly. No parameter is supplied here."
+    },
+    {
+      "claim_id": "design-consultation-5",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:310-311 `Run this mode when the user wants to see **competing full directions side-by-side** (\"show me options\", \"explore designs\", \"I don't like how this looks\") instead of a single proposal.`",
+      "reasoning": "Textbook mode selection among modes the skill itself offers (Variant Shotgun is also offered as option F at SKILL.md:172), which the classification rules list explicitly as NOT duplication. The justification clause `since this stage runs once ever and is the only place in the pipeline that choice is still open` is pipeline-placement knowledge the skill structurally cannot have — confirmed by grep, the skill contains no once-ever or pipeline-stage language. The trailing gloss echoes the skill's one-line definition but functions as the trigger phrase the skill listens for. Keep."
+    },
+    {
+      "claim_id": "design-consultation-6",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:441-447 `**When no design system was bound (the full proposal flow ran):** ... compose the paste-ready prompt from this session's approved decisions ... and save it to `docs/state/tmp/claude-design-system-prompt.md`. Tell the user: paste this into Claude Design (claude.ai/design) to create the system...`",
+      "reasoning": "Every element verified present in the skill: the branch condition (line 441), the word `paste-ready` (line 443), the exact path `docs/state/tmp/claude-design-system-prompt.md` (line 445, and again in the DESIGN.md decisions-log row at line 431), and the hand-to-the-user instruction (lines 445-447). The `no MCP tool can create a design system` rationale is the protocol doc's own section heading and first line: claude-design-mcp-protocol.md:56 `## Manual design-system creation (the one gap MCP can't close)` and :58 `No `mcp__claude-design__*` tool creates a design system — that's a Claude Design UI-only action.` Output paths are normally load-bearing arguments, but this one is hardcoded identically inside the skill, so nothing is being supplied."
+    },
+    {
+      "claim_id": "design-consultation-7",
+      "confirmed": true,
+      "final_class": "contradiction",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:463 `After shipping, suggest: \"Want to see this design system as a working page? Run design-html.\"` — unconditional; `grep -n 'design-html' SKILL.md` returns only lines 45 and 463, and line 45 is about resolution ownership, not the closing suggestion.",
+      "reasoning": "Genuine disagreement, verified from both sides. The skill's Phase 6 closer recommends design-html with no gate on whether Phase 0 actually bound a `claude_design_system_id`, even though the skill knows which branch it took (lines 436 and 441 both branch on exactly that). design-html hard-refuses unbound: /home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md:77-80 `**Missing (no DESIGN.md, or DESIGN.md has no bound system)?** Stop and tell the user to run `design-consultation` first — ... do not proceed unbound.` So in the unbound branch SKILL.md:463 steers the user straight into a refusal. The KICKOFF text is load-bearing compensation and must be KEPT; the fix belongs in the skill (condition line 463 on a bound system)."
+    },
+    {
+      "claim_id": "design-consultation-8",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:255-258 `Follow `@references/claude-design-mcp-protocol.md` in full: ask the model-selection question, then **always** dispatch the actual generation via the Agent tool with the chosen model (`sonnet` / `opus` / `fable`) — never run it inline regardless of which model the current session happens to be.`",
+      "reasoning": "Confirmed as duplication. The three model names and the Sonnet default are fixed at claude-design-mcp-protocol.md:83-86; `Ask this once per skill invocation` is verbatim at :88; the Agent-tool mechanism AND the KICKOFF rationale clause are verbatim at :97-101 (`the Agent tool's `model` parameter is the only mechanism that actually guarantees the chosen model authors the content`). The operator supplies no argument — even the `Either way` branch-independence holds inside the skill, since both the bound branch (line 61, `go straight to Phase 5`) and the unbound branch reach Phase 5, and the protocol scopes the question to `[b]efore the first `mcp__claude-design__*` call in a given skill invocation` (:80). SEVERITY DOWNGRADED from high to medium: it is one sentence re-deriving one hard rule plus its justification — the same shape and blast radius as claims 3, 4 and 6, not worse. Systemic: design-html:84-85 carries the same rule."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "asset": "secure-code-guardian",
+  "verdicts": [
+    {
+      "claim_id": "secure-code-guardian-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 629-632 (inside fenced block 628-633): \"Also apply: secure-code-guardian (this track touches auth / input handling / crypto), fullstack-guardian (this feature spans frontend and backend together), refactoring-specialist (this track touches existing code), guard (this track touches prod / shared / destructive surface). Skip any that do not apply.\" — verified verbatim at those line numbers. Skill quote verified at plugins/dev-kit-core/skills/secure-code-guardian/SKILL.md line 3: \"description: Use when implementing authentication/authorization, securing user input, or preventing OWASP Top 10 vulnerabilities — including custom security implementations such as hashing passwords with bcrypt/argon2, sanitizing SQL queries with parameterized statements, configuring CORS/CSP headers, validating input with Zod, and setting up JWT tokens.\"",
+      "reasoning": "This is the step-8 orchestrator dispatch prompt deciding, per track, which of four candidate guard skills (secure-code-guardian, fullstack-guardian, refactoring-specialist, guard) to inject into that specific track's brief — a routing/gating decision the skill itself cannot make since it has no visibility into which track it is being loaded for or what surface that track touches. This matches the rubric's explicit non-duplication example verbatim: 'Conditional gating the operator must judge (\"only if this project has UI\")' and the sibling clause about picking among the skill's own trigger conditions is exactly the kind of judgment call step 8 has to make before dispatch, not a restatement of the skill's internal methodology, checklist, or template. The parenthetical ('auth / input handling / crypto') is a compressed pointer to the skill's own description so the orchestrator can pattern-match quickly — it doesn't restate the skill's Core Workflow (threat model/design/implement/validate/document), its Constraints (MUST/MUST NOT lists), or its Validation Checkpoints, none of which appear anywhere in the KICKOFF text. So this survives as load-bearing, with low severity reflecting that the overlap in wording is real but incidental to the routing function. I did not find any KICKOFF text elsewhere that restates the skill's actual methodology, gates, or output template, so there is no basis to reclassify this as redundant-restatement, contradiction, stale-drift, or unenforced-gap."
+    }
+  ]
+}

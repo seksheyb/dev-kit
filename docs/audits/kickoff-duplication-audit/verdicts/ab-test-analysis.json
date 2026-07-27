@@ -1,0 +1,13 @@
+{
+  "asset": "ab-test-analysis",
+  "verdicts": [
+    {
+      "claim_id": "ab-test-analysis-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 1345-1347: \"Run these in order, each feeding the next: ab-test-analysis on any experiment this milestone ran, then cohort-analysis on retention and behavior by cohort, then growth-loops on which loops actually compounded.\" verified verbatim against KICKOFF.md at that range. Skill's own scope statement, SKILL.md line 17: \"Statistically principled A/B test interpretation and ship/no-ship decisions. Correctly interpret experiment results, catch common analysis errors, and act on data without falling for statistical traps.\" verified verbatim.",
+      "reasoning": "Read the full ab-test-analysis SKILL.md (112 lines): it covers p-value interpretation, effect size, the ship/no-ship decision framework, segmented analysis, common analysis errors, Bayesian/Frequentist/Sequential testing, and output format. Nothing in the skill references cohort-analysis or growth-loops, nor does it know it is step 15 of a milestone-closing sequence that feeds an assumption-bank update at step 1. The KICKOFF sentence is cross-skill sequencing/orchestration ('run these in order, each feeding the next') plus a data-flow instruction (feed the assumption bank recorded at step 1) that only the operator prompt can supply -- the skill has no visibility into sibling skills or milestone-level state. Per the classification rules this is exactly 'Ordering / parallelism across skills' and 'Which other artifact to feed in as context', both explicitly load-bearing, not duplicated methodology. No contradiction, no stale drift, and no unenforced-gap claim is being made here (the skill correctly does not claim to know about sequencing). Severity is low since it is a short scheduling clause, not a large restated block. The original claim's classification (load-bearing-parameter, low) is correct and survives adjudication."
+    }
+  ]
+}

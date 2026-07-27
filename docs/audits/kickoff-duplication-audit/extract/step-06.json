@@ -1,0 +1,43 @@
+{
+  "step": "06",
+  "title": "Phase specs",
+  "line_range": [401, 481],
+  "blocks": [
+    {
+      "block_index": 0,
+      "line_range": [404, 420],
+      "verbatim_text": "Dispatch the framework-selector agent first — it settles the framework and is the first writer\nof SPEC/AI-SPEC.md. Pass it SPEC/AI-SPEC.md as ai_spec_path explicitly — its listed default is\na placeholder path it cannot resolve itself. Tell it to read PHASE/RESEARCH.md first — its\n`## Standard Stack` and `## Don't Hand-Roll` sections — plus PHASE/CONTEXT.md, to skip every\ninterview question those already answer, and never to recommend a framework RESEARCH.md's\nPackage Legitimacy Audit flagged [SLOP]. It runs a ≤6-question interview. When ai_spec_path\ndoes not exist it creates AI-SPEC.md with the full section skeleton — §1, §1b, §2, §3, §4,\n§4b, §5–§7 — so later agents fill their own sections against that numbering, and it writes §2\n(framework) itself. Nothing in this chain is yours to hand-write: §2 is framework-selector's,\nand §1 (critical failure modes) is authored downstream in this same step by domain-researcher,\nwhich eval-planner then reads and confirms. It also returns a FRAMEWORK_RECOMMENDATION block:\nprimary, alternative, system_type, model_provider, eval_concerns, hard_constraints,\nexisting_ecosystem. Keep system_type, framework and model_provider from that block — §2 now\ncarries them too, but the dispatches below pass them as required inputs in the prompt, so the\nreturned block is where you take them from.",
+      "assets_invoked": ["framework-selector"],
+      "surrounding_prose": "Header for the whole step: '## 6. Phase specs — (conditional)'. Immediately above this block: '(only if this phase builds an AI/LLM system needing an eval contract)' — this entire AI chain (this block and the three that follow) only runs conditionally on the phase involving an AI/LLM system needing an eval contract. This is the first block in that chain; framework-selector is dispatched first because it creates AI-SPEC.md's skeleton and writes §2, and other agents depend on its FRAMEWORK_RECOMMENDATION output (system_type, framework, model_provider) as required inputs to their own dispatches."
+    },
+    {
+      "block_index": 1,
+      "line_range": [423, 432],
+      "verbatim_text": "Use the ai-researcher agent to write SPEC/AI-SPEC.md §3–§4b: framework quick reference,\nimplementation guidance, and AI systems best practices. Give it the framework name and version,\nthe system_type and the model_provider framework-selector just returned, the phase name and\ngoal, SPEC/AI-SPEC.md as ai_spec_path, PHASE/CONTEXT.md and PHASE/RESEARCH.md. Tell it to check\nRESEARCH.md before re-fetching anything step 5 already verified — a package version, a\nsupply-chain flag, a pitfall for this same framework. Skip this block and §3–§4b stay empty,\nwhich also starves eval-planner: it reads §3–4 for the Pydantic patterns behind its testable\ncriteria.",
+      "assets_invoked": ["ai-researcher"],
+      "surrounding_prose": "Preceded by '(only if this phase builds an AI/LLM system needing an eval contract — after the block above)' — conditional on the same AI/eval-contract gate, and ordered to run after the framework-selector block since it consumes framework name/version, system_type and model_provider from framework-selector's returned block. Note: skipping this block leaves §3–§4b empty, which also starves the downstream eval-planner block (it reads §3–4 for Pydantic patterns behind testable criteria) — a load-bearing dependency note."
+    },
+    {
+      "block_index": 2,
+      "line_range": [435, 444],
+      "verbatim_text": "Use the domain-researcher agent for the real-world evaluation criteria in this domain — it\nwrites SPEC/AI-SPEC.md §1 (critical failure modes — the sharpest 3–5 domain failure modes\npromoted to system level, informed by §2's system_type) and §1b (the domain rubric\ningredients); eval-planner reads and confirms §1 downstream. Give it the system_type from\nframework-selector, the phase name and goal from docs/milestones/<M>/ROADMAP.md,\nSPEC/AI-SPEC.md as ai_spec_path, PHASE/CONTEXT.md, docs/milestones/<M>/REQUIREMENTS.md and\nPHASE/RESEARCH.md — and tell it not to re-derive the domain-adjacent findings step 5 already\nsurfaced.",
+      "assets_invoked": ["domain-researcher"],
+      "surrounding_prose": "Preceded by '(only if this phase builds an AI/LLM system needing an eval contract — after the block above)' — same conditional gate, ordered after the ai-researcher block. This block is where §1 (critical failure modes) is actually authored, referenced back in block 0's prose ('§1 ... is authored downstream in this same step by domain-researcher'). eval-planner (next block) reads and confirms §1 and §1b downstream."
+    },
+    {
+      "block_index": 3,
+      "line_range": [447, 457],
+      "verbatim_text": "Use the eval-planner agent to write SPEC/AI-SPEC.md §5–§7 and nothing else: §5 evaluation\nstrategy (eval dimensions with rubrics, tooling with its install command, reference-dataset\nspec, CI/CD eval command), §6 guardrails (online guardrails plus the offline flywheel), §7\nproduction monitoring. It does not author §1's failure modes — domain-researcher does; it reads\nand confirms them — and it owns neither §2 nor §3–§4b. Give it the system_type, framework and\nmodel_provider from framework-selector (system_type is what selects the eval dimensions, so\nwithout it the rubrics degrade to generic ones), the phase name and goal, SPEC/AI-SPEC.md as\nai_spec_path, PHASE/CONTEXT.md, docs/milestones/<M>/REQUIREMENTS.md and PHASE/RESEARCH.md. It\nruns last because it reads §1, §1b, §2 and §3–4 — every section the three blocks above produced.",
+      "assets_invoked": ["eval-planner"],
+      "surrounding_prose": "Preceded by '(only if this phase builds an AI/LLM system needing an eval contract — after the block above)' — same conditional gate, last in the AI chain since it depends on all prior sections (§1, §1b, §2, §3–4). Immediately after this block, separate prose (not inside a fence) clarifies: 'The rubrics written here are audited once the system exists, not now — eval-planner designs them, eval-auditor is the pair that later checks them against what actually got built. Step 11 carries that dispatch.' This introduces eval-auditor as a distinct, later-invoked asset (step 11), not invoked in this step."
+    },
+    {
+      "block_index": 4,
+      "line_range": [464, 474],
+      "verbatim_text": "Use the ui-researcher agent to write PHASE/UI-SPEC.md. Hand it a required_reading list of\ndocs/global/design/DESIGN.md (when step 4 produced one), PHASE/CONTEXT.md, PHASE/RESEARCH.md and\ndocs/milestones/<M>/REQUIREMENTS.md — it maps DESIGN.md's declared tokens onto this phase's\ncontract instead of re-asking. Then the ui-checker agent validates it against the 6 quality\ndimensions; give it PHASE/UI-SPEC.md plus that same DESIGN.md / CONTEXT.md / RESEARCH.md set,\nbecause DESIGN.md is the authority its spacing, typography and color dimensions check against\nand CONTEXT.md's locked and deferred decisions are what it checks the spec for contradictions\nof. It BLOCKs on undeclared drift from DESIGN.md as well as the usual checks. A BLOCKED verdict\nhalts planning until it is fixed.",
+      "assets_invoked": ["ui-researcher", "ui-checker"],
+      "surrounding_prose": "Preceded by '(only if this phase has UI work)' — a separate conditional gate from the AI/eval-contract chain, independent of it. DESIGN.md is conditionally referenced ('when step 4 produced one'). A BLOCKED verdict from ui-checker halts planning until fixed — load-bearing gate language. After this block, prose (not inside a fence) states: '(if this phase has both AI and UI work, run the two chains concurrently — they share no files. Each chain is internally sequential: every block in the AI chain reads a section the block above it wrote, and the UI checker needs the spec the UI researcher wrote.)' This is the final prose before the step boundary '---' at line 480, followed by '## 7. Plan the phase' at line 482 (out of this slice's range)."
+    }
+  ],
+  "notes": "All five fences in the range are fully contained within lines 401-481; no fence is cut by the slice boundary. Rejected non-asset category-noun phrases per the trap list do not appear in this slice's text (no occurrences of 'the lane skill', 'the core skills', 'the bare command', or 'as the test-design skill' in lines 401-481). eval-auditor is mentioned in surrounding prose (line 460) as a downstream asset for step 11, not as an asset invoked by any block in this step, so it is not listed in any block's assets_invoked."
+}

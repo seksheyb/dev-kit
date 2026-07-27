@@ -1,0 +1,223 @@
+{
+  "asset": "document-release",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-release/SKILL.md",
+  "claim_count": 6,
+  "claims": [
+    {
+      "local_id": "document-release-2",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "14",
+      "kickoff_line_range": [
+        1234,
+        1236
+      ],
+      "kickoff_quote": "Build the shipped-vs-documented coverage map against SPEC/spec.md's US-xxx story bank as well as the diff, so a requirement never touched at all still gets flagged.",
+      "skill_quote": "**Promised but never touched** \u2014 a distinct, new category: a `US-xxx` story that appears in *neither* the diff nor the existing docs.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-release/SKILL.md",
+      "skill_line": 152,
+      "reasoning": "Step 1.5 item 5 (lines 144-158) is a dedicated section that does exactly this: it looks for the spec at `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`, globs and disambiguates by feature slug or branch name, reads its `US-xxx` user stories, and defines the 'promised but never touched' category verbatim as the thing the KICKOFF asks for. KICKOFF line 16 defines `SPEC/` = `docs/milestones/<M>/specs/<NNN>-<slug>/`, so the path is the same path, not a redirection \u2014 the invocation is not even supplying a non-default location. The only marginal addition is the `US-xxx` motivation, which the skill also gives ('it's a signal the story wasn't implemented on this branch').",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "document-release",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-release/SKILL.md",
+      "raised_by": [
+        "document-release"
+      ],
+      "locations": [
+        [
+          1234,
+          1236
+        ]
+      ],
+      "steps": [
+        "14"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "document-release-1"
+    },
+    {
+      "local_id": "document-release-3",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "14",
+      "kickoff_line_range": [
+        1236,
+        1237
+      ],
+      "kickoff_quote": "Sync each doc against the diff, check the architecture diagrams for drift,",
+      "skill_quote": "4. **Architecture diagram drift detection.** If `docs/global/architecture/ARCHITECTURE.md` (or any doc) contains ASCII diagrams or Mermaid blocks, extract entity names (modules, services, data flows) from the diagrams and cross-reference against the diff. Flag any diagram entities that were renamed, split, removed, or moved in the code.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-release/SKILL.md",
+      "skill_line": 137,
+      "reasoning": "Both halves are the skill's own unconditional methodology, not operator parameters. 'Sync each doc against the diff' is Step 2's opening instruction verbatim in substance (line 168: 'Read each documentation file and cross-reference it against the diff.'), and diagram drift is a numbered sub-step of Step 1.5 plus an Important Rule at line 403 ('Diagram drift is advisory'). Neither is optional or mode-selected in the skill, so naming them adds nothing.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "document-release",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-release/SKILL.md",
+      "raised_by": [
+        "document-release"
+      ],
+      "locations": [
+        [
+          1236,
+          1237
+        ]
+      ],
+      "steps": [
+        "14"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "document-release-2"
+    },
+    {
+      "local_id": "document-release-1",
+      "class": "redundant-restatement",
+      "severity": "high",
+      "step": "14",
+      "kickoff_line_range": [
+        1237,
+        1238
+      ],
+      "kickoff_quote": "and polish the CHANGELOG entry that already exists \u2014 whether ship wrote it or I did on the manual path. Polish the voice only, never rewrite or regenerate it.",
+      "skill_quote": "**CRITICAL \u2014 NEVER CLOBBER CHANGELOG ENTRIES.** This step polishes voice. It does NOT rewrite, replace, or regenerate content.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-release/SKILL.md",
+      "skill_line": 234,
+      "reasoning": "The skill states this rule three separate times in near-identical words \u2014 the front-matter NEVER list (line 38: 'Overwrite, replace, or regenerate CHANGELOG entries \u2014 polish wording only, preserve all content'), Step 5's CRITICAL banner (line 234), and the Important Rules footer (line 396: 'Never clobber CHANGELOG. Polish wording only. Never delete, replace, or regenerate entries.'). The KICKOFF sentence adds no constraint the skill does not already enforce as its loudest hard rule. This is the single most redundant sentence in the invocation.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "document-release",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-release/SKILL.md",
+      "raised_by": [
+        "document-release"
+      ],
+      "locations": [
+        [
+          1237,
+          1238
+        ]
+      ],
+      "steps": [
+        "14"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "high"
+      ],
+      "claim_id": "document-release-3"
+    },
+    {
+      "local_id": "document-release-6",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "14",
+      "kickoff_line_range": [
+        1237,
+        1238
+      ],
+      "kickoff_quote": "\u2014 whether ship wrote it or I did on the manual path.",
+      "skill_quote": "If CHANGELOG was not modified in this branch: skip this step.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-release/SKILL.md",
+      "skill_line": 245,
+      "reasoning": "This clause tells the operator that step 14 is unconditional across both the automated (ship) and manual (step 13) paths \u2014 upstream-state context the skill has no way to know. It is the join between the manual-path block at KICKOFF 1209-1231 and this invocation, and it exists precisely because the skill silently skips Step 5 when CHANGELOG is untouched. Keep it.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "document-release",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-release/SKILL.md",
+      "raised_by": [
+        "document-release"
+      ],
+      "locations": [
+        [
+          1237,
+          1238
+        ]
+      ],
+      "steps": [
+        "14"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "document-release-4"
+    },
+    {
+      "local_id": "document-release-5",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "14",
+      "kickoff_line_range": [
+        1238,
+        1239
+      ],
+      "kickoff_quote": "Run from the feature branch with the PR still open;",
+      "skill_quote": "You are running the document-release workflow. It runs **after code ships** (committed, PR exists or about to exist) but **before the PR merges**.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-release/SKILL.md",
+      "skill_line": 15,
+      "reasoning": "This is cross-step scheduling the guide legitimately owns \u2014 it places step 14 before whatever merges the branch, which the skill cannot know. It is also genuinely load-bearing because the skill states the precondition only as prose and never enforces it (grep for 'merged'/'PR still open'/'open PR' across SKILL.md returns only the description line), and the description at line 10 actually pulls the other way: 'Proactively suggest after a PR is merged or code is shipped.' The KICKOFF constraint disambiguates that.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "document-release",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-release/SKILL.md",
+      "raised_by": [
+        "document-release"
+      ],
+      "locations": [
+        [
+          1238,
+          1239
+        ]
+      ],
+      "steps": [
+        "14"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "document-release-5"
+    },
+    {
+      "local_id": "document-release-4",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "14",
+      "kickoff_line_range": [
+        1239,
+        1239
+      ],
+      "kickoff_quote": "it aborts on the base branch because it needs the unmerged diff.",
+      "skill_quote": "1. Check the current branch. If on the base branch, **abort**: \"You're on the base branch. Run from a feature branch.\"",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-release/SKILL.md",
+      "skill_line": 72,
+      "reasoning": "The abort is a hard gate the skill enforces itself in Step 1 pre-flight; restating it in the guide re-derives an already-enforced gate. It is low severity rather than medium because the clause is written as operator-facing explanation of a failure mode (why the run would die), not as an instruction to the agent \u2014 but the behavior itself is fully covered.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "document-release",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-release/SKILL.md",
+      "raised_by": [
+        "document-release"
+      ],
+      "locations": [
+        [
+          1239,
+          1239
+        ]
+      ],
+      "steps": [
+        "14"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "document-release-6"
+    }
+  ]
+}

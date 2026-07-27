@@ -1,0 +1,79 @@
+{
+  "asset": "cloud-architect",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/cloud-architect/SKILL.md",
+  "claim_count": 2,
+  "claims": [
+    {
+      "local_id": "cloud-architect-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "13",
+      "kickoff_line_range": [
+        1108,
+        1108
+      ],
+      "kickoff_quote": "2. terraform-engineer, with cloud-architect where the topology itself is in question",
+      "skill_quote": "2. **Design** \u2014 Select services, design topology, plan data architecture",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/cloud-architect/SKILL.md",
+      "skill_line": 21,
+      "reasoning": "This is conditional gating plus pairing: the operator must judge whether the topology is actually in question, and cloud-architect is invoked as a secondary alongside terraform-engineer. The skill knows how to design topology but cannot know it is a conditional co-pilot in a five-skill infra lane. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "cloud-architect",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/cloud-architect/SKILL.md",
+      "raised_by": [
+        "cloud-architect"
+      ],
+      "locations": [
+        [
+          1108,
+          1108
+        ]
+      ],
+      "steps": [
+        "13"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "cloud-architect-1"
+    },
+    {
+      "local_id": "cloud-architect-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "13",
+      "kickoff_line_range": [
+        1108,
+        1109
+      ],
+      "kickoff_quote": "the IaC\n   and any migrations this milestone's waves imply.",
+      "skill_quote": "5. **Migration** \u2014 Apply 6Rs framework, define waves, validate connectivity before cutover",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/cloud-architect/SKILL.md",
+      "skill_line": 23,
+      "reasoning": "Surface-level word overlap on 'waves' and 'migrations', but the referent differs: the skill's waves are migration waves it defines itself (also detailed in references/gcp.md:455-459 and references/aws.md:275 '6Rs'), while KICKOFF's 'this milestone's waves' are the dev-kit milestone execution waves that scope the work. This is project scoping the skill cannot know, not a restatement of its methodology. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "cloud-architect",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/cloud-architect/SKILL.md",
+      "raised_by": [
+        "cloud-architect"
+      ],
+      "locations": [
+        [
+          1108,
+          1109
+        ]
+      ],
+      "steps": [
+        "13"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "cloud-architect-2"
+    }
+  ]
+}

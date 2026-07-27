@@ -1,0 +1,331 @@
+{
+  "asset": "framework-selector",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+  "claim_count": 9,
+  "claims": [
+    {
+      "local_id": "framework-selector-7",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "06",
+      "kickoff_line_range": [
+        405,
+        406
+      ],
+      "kickoff_quote": "Dispatch the framework-selector agent first \u2014 it settles the framework and is the first writer of SPEC/AI-SPEC.md.",
+      "skill_quote": "You run first in the AI chain, so you own the AI-SPEC.md skeleton.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "skill_line": 131,
+      "reasoning": "Ordering across the four agents in this step is the orchestrator's job; the skill can assert it runs first but cannot make the operator dispatch it first. Cross-skill sequencing is load-bearing by rule \u2014 keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "framework-selector",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "raised_by": [
+        "framework-selector"
+      ],
+      "locations": [
+        [
+          405,
+          406
+        ]
+      ],
+      "steps": [
+        "06"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "framework-selector-1"
+    },
+    {
+      "local_id": "framework-selector-6",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "06",
+      "kickoff_line_range": [
+        406,
+        407
+      ],
+      "kickoff_quote": "Pass it SPEC/AI-SPEC.md as ai_spec_path explicitly \u2014 its listed default is a placeholder path it cannot resolve itself.",
+      "skill_quote": "- `ai_spec_path`: path to AI-SPEC.md \u2014 default `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`. You run first in the AI chain, so this file will normally not exist yet \u2014 you create it.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "skill_line": 16,
+      "reasoning": "The skill's declared default contains unresolved `<M>` / `<NNN>-<slug>` placeholders it has no way to expand, and the header note at line 8 explicitly says the orchestrator supplies concrete paths. Supplying the resolved path is the invocation's argument \u2014 keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "framework-selector",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "raised_by": [
+        "framework-selector"
+      ],
+      "locations": [
+        [
+          406,
+          407
+        ]
+      ],
+      "steps": [
+        "06"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "framework-selector-2"
+    },
+    {
+      "local_id": "framework-selector-1",
+      "class": "redundant-restatement",
+      "severity": "high",
+      "step": "06",
+      "kickoff_line_range": [
+        407,
+        410
+      ],
+      "kickoff_quote": "Tell it to read PHASE/RESEARCH.md first \u2014 its `## Standard Stack` and `## Don't Hand-Roll` sections \u2014 plus PHASE/CONTEXT.md, to skip every interview question those already answer, and never to recommend a framework RESEARCH.md's Package Legitimacy Audit flagged [SLOP].",
+      "skill_quote": "**Check for RESEARCH.md first:** if `PHASE/RESEARCH.md` already exists (written by Stage 5's `phase-researcher`), read its `## Standard Stack` and `## Don't Hand-Roll` sections before running the interview \u2014 it may have already identified a relevant library or a \"don't hand-roll this\" recommendation for this same phase. Skip any interview question it already answers, and don't recommend a framework its Package Legitimacy Audit flagged `[SLOP]`.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "skill_line": 32,
+      "reasoning": "This is a near-verbatim paraphrase of the skill's own <project_context> rule, down to the two named RESEARCH.md section headings, the skip-answered-questions instruction, and the [SLOP] prohibition. CONTEXT.md skipping is also already in the skill at line 36. Nothing here is an invocation argument the skill could not know.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "framework-selector",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "raised_by": [
+        "framework-selector"
+      ],
+      "locations": [
+        [
+          407,
+          410
+        ]
+      ],
+      "steps": [
+        "06"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "high"
+      ],
+      "claim_id": "framework-selector-3"
+    },
+    {
+      "local_id": "framework-selector-4",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "06",
+      "kickoff_line_range": [
+        410,
+        410
+      ],
+      "kickoff_quote": "It runs a \u22646-question interview.",
+      "skill_quote": "Use a single AskUserQuestion call with \u2264 6 questions.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "skill_line": 36,
+      "reasoning": "The \u22646-question cap is the skill's own hard rule, stated in <role> (line 12), in <interview> (line 36) and as a success criterion (line 234). The KICKOFF sentence is purely descriptive and selects no mode or parameter.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "framework-selector",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "raised_by": [
+        "framework-selector"
+      ],
+      "locations": [
+        [
+          410,
+          410
+        ]
+      ],
+      "steps": [
+        "06"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "framework-selector-4"
+    },
+    {
+      "local_id": "framework-selector-2",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "06",
+      "kickoff_line_range": [
+        410,
+        413
+      ],
+      "kickoff_quote": "When ai_spec_path does not exist it creates AI-SPEC.md with the full section skeleton \u2014 \u00a71, \u00a71b, \u00a72, \u00a73, \u00a74, \u00a74b, \u00a75\u2013\u00a77 \u2014 so later agents fill their own sections against that numbering, and it writes \u00a72 (framework) itself.",
+      "skill_quote": "You run first in the AI chain, so you own the AI-SPEC.md skeleton. If `ai_spec_path` does not exist, create it with every section heading in place \u2014 later agents fill their own sections and must not have to invent numbering:",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "skill_line": 131,
+      "reasoning": "The skill states the conditional, the rationale ('must not have to invent numbering'), the literal skeleton with all nine headings (lines 133-161), and repeats it as a success-criteria checkbox at line 238. The KICKOFF re-enumerates the section numbering the skill's own template fixes \u2014 restated output structure.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "framework-selector",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "raised_by": [
+        "framework-selector"
+      ],
+      "locations": [
+        [
+          410,
+          413
+        ]
+      ],
+      "steps": [
+        "06"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "framework-selector-5"
+    },
+    {
+      "local_id": "framework-selector-8",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "06",
+      "kickoff_line_range": [
+        413,
+        415
+      ],
+      "kickoff_quote": "Nothing in this chain is yours to hand-write: \u00a72 is framework-selector's, and \u00a71 (critical failure modes) is authored downstream in this same step by domain-researcher, which eval-planner then reads and confirms.",
+      "skill_quote": "Do not write any other section \u2014 Sections 1/1b belong to `domain-researcher`, 3\u20134b to `ai-researcher`, 5\u20137 to `eval-planner`. Leave their placeholders untouched.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "skill_line": 194,
+      "reasoning": "The skill line constrains the AGENT's writes; the KICKOFF sentence constrains the ORCHESTRATOR's own writes ('nothing in this chain is yours to hand-write'). That prohibition exists nowhere in the agent file and cannot \u2014 it addresses a different actor. Keep, though the \u00a7-to-agent ownership map inside it is a mild echo of line 194.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "framework-selector",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "raised_by": [
+        "framework-selector"
+      ],
+      "locations": [
+        [
+          413,
+          415
+        ]
+      ],
+      "steps": [
+        "06"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "framework-selector-6"
+    },
+    {
+      "local_id": "framework-selector-3",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "06",
+      "kickoff_line_range": [
+        415,
+        417
+      ],
+      "kickoff_quote": "It also returns a FRAMEWORK_RECOMMENDATION block: primary, alternative, system_type, model_provider, eval_concerns, hard_constraints, existing_ecosystem.",
+      "skill_quote": "FRAMEWORK_RECOMMENDATION:\n  primary: {framework name and version}",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "skill_line": 201,
+      "reasoning": "The skill's <output_format> block (lines 200-211) fixes the return contract and every field name the KICKOFF re-lists. Only the following sentence ('Keep system_type, framework and model_provider') is load-bearing; enumerating all seven fields restates the skill's own template.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "framework-selector",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "raised_by": [
+        "framework-selector"
+      ],
+      "locations": [
+        [
+          415,
+          417
+        ]
+      ],
+      "steps": [
+        "06"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "framework-selector-7"
+    },
+    {
+      "local_id": "framework-selector-5",
+      "class": "contradiction",
+      "severity": "low",
+      "step": "06",
+      "kickoff_line_range": [
+        417,
+        417
+      ],
+      "kickoff_quote": "Keep system_type, framework and model_provider from that block",
+      "skill_quote": "  primary: {framework name and version}",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "skill_line": 202,
+      "reasoning": "The returned FRAMEWORK_RECOMMENDATION block has no field named `framework` \u2014 the framework name is carried in `primary`. `framework` is the \u00a72 body label (line 169), not a block key. An orchestrator harvesting literally by the KICKOFF's field names will miss it; the KICKOFF itself lists the correct key `primary` two lines earlier, so the two sentences disagree.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "framework-selector",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "raised_by": [
+        "framework-selector"
+      ],
+      "locations": [
+        [
+          417,
+          417
+        ]
+      ],
+      "steps": [
+        "06"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "framework-selector-8"
+    },
+    {
+      "local_id": "framework-selector-9",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "06",
+      "kickoff_line_range": [
+        417,
+        419
+      ],
+      "kickoff_quote": "\u00a72 now carries them too, but the dispatches below pass them as required inputs in the prompt, so the returned block is where you take them from.",
+      "skill_quote": "This is the same content you return to the orchestrator, persisted so downstream agents (`ai-researcher` for Sections 3\u20134b, `eval-planner` for tooling defaults in Sections 5\u20137) can read it rather than re-deriving it:",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "skill_line": 163,
+      "reasoning": "Which of two redundant channels (the returned block vs. \u00a72 of the file) the orchestrator should read values from, and that those values become required inputs to later dispatches, is pure inter-skill data flow. The skill cannot know how downstream dispatch prompts are built. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "framework-selector",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "raised_by": [
+        "framework-selector"
+      ],
+      "locations": [
+        [
+          417,
+          419
+        ]
+      ],
+      "steps": [
+        "06"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "framework-selector-9"
+    }
+  ]
+}

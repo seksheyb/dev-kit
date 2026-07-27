@@ -1,0 +1,36 @@
+{
+  "step": "04",
+  "title": "Design system",
+  "line_range": [294, 343],
+  "blocks": [
+    {
+      "block_index": 0,
+      "line_range": [299, 316],
+      "verbatim_text": "Use the context-restore skill to reload the last checkpoint. Then use the design-consultation\nskill to establish the design system for <product> and write docs/global/design/DESIGN.md —\naesthetic, typography, color, layout, spacing, motion. Delivery is always Claude Design, so\nstop and tell me if the claude-design MCP is unavailable rather than falling back to local\nfiles. Resolve the design-system binding first: if a design system already fits, bind its id\nas claude_design_system_id and skip the aesthetic questions entirely. If none fits and you want\nto compare competing directions before committing — worth doing here, since this stage runs\nonce ever and is the only place in the pipeline that choice is still open — ask for \"Variant\nshotgun\" mode to generate several full directions side by side. Otherwise, compose\nthe paste-ready system-creation prompt to docs/state/tmp/claude-design-system-prompt.md and\nhand it to me — no MCP tool can create a design system, so that step is mine, not yours. Stop\nthere in that case: do NOT go on to design-html, which refuses to run unbound and would just\ntell me to come back here. Only if a system was already bound, continue to design-html for the\nreference implementation. Either way, you will ask once which model performs the Claude Design\ngeneration work — Sonnet (default), Opus, or Fable — and dispatch it via the Agent tool's model\noverride, since that dispatch is the only thing that actually honors the choice.",
+      "assets_invoked": ["context-restore", "design-consultation", "design-html"],
+      "surrounding_prose": "Section header: '4. Design system — (only if this project has UI and docs/global/design/DESIGN.md does not exist)'. Immediately before the block: 'Runs once ever, not per phase. Delivery is always Claude Design — there is no local-file fallback anywhere in this stage.' After the block, a conditioning note before the next block: '(only if design-consultation generated a system-creation prompt instead of binding an existing system)' — gating the following operator-side step."
+    },
+    {
+      "block_index": 1,
+      "line_range": [325, 331],
+      "verbatim_text": "The Claude Design system id is <uuid>. Store it as claude_design_system_id in\ndocs/global/design/DESIGN.md. Now use the design-html skill for the first time against that bound\nsystem — the block above deliberately stopped short of it, because design-html refuses to run\nunbound — so the reference implementation is built from the system's real tokens rather than\nproposed values. Every downstream design step reads that id and stops if it is absent.",
+      "assets_invoked": ["design-html"],
+      "surrounding_prose": "Preceded by: '**This step is yours, not the agent's.** Open `docs/state/tmp/claude-design-system-prompt.md`, paste it into Claude Design at claude.ai/design, create the system, and copy the id it gives you back. Then paste:' — this is an operator-manual (non-Claude-Code) action performed before pasting this block back into Claude Code."
+    },
+    {
+      "block_index": 2,
+      "line_range": [333, 336],
+      "verbatim_text": "Use the context-save skill to checkpoint this boundary — what is done, what got decided, and\nwhat is next.",
+      "assets_invoked": ["context-save"],
+      "surrounding_prose": "No explicit conditioning prose beyond the preceding block; follows immediately after the design-html binding block, before the /clear block."
+    },
+    {
+      "block_index": 3,
+      "line_range": [338, 340],
+      "verbatim_text": "/clear",
+      "assets_invoked": [],
+      "surrounding_prose": "Final block of the step, followed by a horizontal rule '---' marking the end of Step 4. No assets invoked — a bare slash command to clear context."
+    }
+  ],
+  "notes": "All four fences fall entirely within the 294-343 slice; none are cut in half. Rejected non-asset phrases per the trap list: none of the four listed trap lines (604, 611, 793, 944) fall in this range, so none applied here, but note 'the design system for <product>' phrase in block 0 refers to the product's design system (a docs/global/design/DESIGN.md artifact), not an asset — not recorded as invoked. 'Claude Design' and 'claude-design MCP' are a product/tool name, not a skill/agent/command asset per the strict definition, so not included in assets_invoked."
+}

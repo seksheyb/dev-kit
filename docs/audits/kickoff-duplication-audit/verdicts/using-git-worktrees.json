@@ -1,0 +1,29 @@
+{
+  "asset": "using-git-worktrees",
+  "verdicts": [
+    {
+      "claim_id": "using-git-worktrees-1",
+      "confirmed": false,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md line 104-106: '## Step 2: Project Setup\n\nAuto-detect and run appropriate setup:' (npm/cargo/pip/go install logic follows); line 123-125: '## Step 3: Verify Clean Baseline\n\nRun tests to ensure workspace starts clean:'. KICKOFF.md lines 566-567: 'Then use the using-git-worktrees skill to isolate this wave's workspace, install deps, and confirm a clean baseline.'",
+      "reasoning": "Quote and skill line verified as claimed. But the eight-word clause 'install deps, and confirm a clean baseline' is an outcome descriptor, not a restatement of the skill's methodology: it never names the auto-detection logic (npm/cargo/pip/go branching), the specific test command selection, or the failure-handling branch ('If tests fail: report, ask'). Any engineer would phrase the goal of invoking a setup-and-baseline skill this way without having read SKILL.md — 'install deps' and 'run a clean baseline' are generic domain vocabulary, not this skill's distinctive checklist (unlike EARS-format rules or ID-allocation schemes elsewhere in this audit, which really are re-derivations of skill-specific taxonomy). This reads as ordinary invocation-purpose framing needed because the KICKOFF paragraph chains four skills together and must say why each is being called, not as the guide independently re-deriving Step 2/Step 3's internal mechanics. The claim's own reasoning concedes it is 'a compact three-word gloss, not a full methodology restatement' — which undercuts classifying it as duplication at all. Refuted: too thin to meet the bar; treated as load-bearing framing rather than redundant-restatement, though logged at low severity since the gloss does happen to name the skill's two step titles and a future rewrite of Step 2/3 could technically drift out of sync with it."
+    },
+    {
+      "claim_id": "using-git-worktrees-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md line 14: '**Note for orchestrator skills** (e.g. `sprint-execution`): this isolates *your own* workspace — the one you write state/roadmap files from and merge subagent work into — not the per-subagent isolation you set up separately via `isolation=\"worktree\"` on each Task/Agent dispatch. Different layer, same underlying mechanism.'",
+      "reasoning": "Verified verbatim at line 14. The skill only knows it isolates the caller's own workspace generically — it has no knowledge of being invoked third in a specific four-skill chain (context-restore -> using-git-worktrees -> sprint-execution -> test-driven-development), nor that the workspace being isolated corresponds to 'this wave' in a multi-wave phase execution. That ordering constraint and the wave-scoping label are invocation-specific arguments the skill cannot supply itself, so the KICKOFF text is load-bearing, not duplicative. Confirmed as load-bearing; keep."
+    },
+    {
+      "claim_id": "using-git-worktrees-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md line 14: '**Note for orchestrator skills** (e.g. `sprint-execution`): this isolates *your own* workspace — ... not the per-subagent isolation you set up separately via `isolation=\"worktree\"` on each Task/Agent dispatch. Different layer, same underlying mechanism.'",
+      "reasoning": "Verified verbatim. The KICKOFF clause 'dispatches one subagent per track, each in its own git worktree, runs its own two-stage review gates ... and merges centrally' describes sprint-execution's per-subagent isolation layer, which using-git-worktrees's own line 14 explicitly disclaims as a separate layer from the orchestrator's own workspace isolation ('Different layer, same underlying mechanism'). Because the skill itself draws this boundary, the KICKOFF text is not restating using-git-worktrees's methodology (Steps 0-3) at all — it is describing a different skill's (sprint-execution's) behavior that happens to reuse the same git-worktree mechanism, and the two texts are consistent rather than contradictory. Confirmed as load-bearing and correctly attributed to sprint-execution's accounting rather than a duplication finding against this asset."
+    }
+  ]
+}

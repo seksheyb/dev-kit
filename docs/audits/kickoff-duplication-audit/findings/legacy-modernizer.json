@@ -1,0 +1,99 @@
+{
+  "asset": "legacy-modernizer",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/legacy-modernizer/SKILL.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/legacy-modernizer/references/system-assessment.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/legacy-modernizer/references/migration-strategies.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/legacy-modernizer/references/refactoring-patterns.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/legacy-modernizer/references/strangler-fig-pattern.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/legacy-modernizer/references/legacy-testing.md"
+  ],
+  "claims": [
+    {
+      "local_id": "legacy-modernizer-1",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "00",
+      "kickoff_line_range": [67, 69],
+      "kickoff_quote": "Then use the legacy-modernizer skill against that recovered picture: dependency map, service boundaries, risk register, and an incremental migration plan with a rollback trigger and owner per phase.",
+      "skill_quote": "1. **Assess system** — Analyze codebase, dependencies, risks, and business constraints. Produce a dependency map and risk register before proceeding.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/legacy-modernizer/SKILL.md",
+      "skill_line": 19,
+      "reasoning": "The deliverable list is the skill's own step-1/step-2 output, not an invocation argument. Line 19 already mandates the dependency map and risk register, and the frontmatter description (line 3) says the skill 'identifies service boundaries, produces dependency maps and migration roadmaps'. The operator is re-deriving the skill's internal methodology.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "legacy-modernizer-2",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "00",
+      "kickoff_line_range": [68, 69],
+      "kickoff_quote": "an incremental migration plan with a rollback trigger and owner per phase",
+      "skill_quote": "   - *Validation checkpoint:* Confirm each phase has a defined rollback trigger and owner.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/legacy-modernizer/SKILL.md",
+      "skill_line": 23,
+      "reasoning": "Near-verbatim duplication of the skill's own step-2 validation checkpoint — same two nouns ('rollback trigger', 'owner') under the same per-phase scope. The skill enforces this as a gate; the guide restating it adds nothing the skill would not do unprompted.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "legacy-modernizer-3",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [71, 73],
+      "kickoff_quote": "strangler fig or branch by abstraction; a big-bang rewrite is not on the menu, legacy-modernizer itself prohibits it",
+      "skill_quote": "- Big bang rewrites or replacements",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/legacy-modernizer/SKILL.md",
+      "skill_line": 117,
+      "reasoning": "The guide re-states a hard MUST NOT DO the skill already enforces (line 117), and the two named alternatives are exactly the two patterns the skill's frontmatter (line 3) and refactoring-patterns.md §'Branch by Abstraction' already scope it to. The clause is self-aware ('legacy-modernizer itself prohibits it'), so it reads as explanatory colour rather than instruction — low severity, but it is duplicated rule text.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "legacy-modernizer-4",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [69, 73],
+      "kickoff_quote": "Fold the dependency map and the service boundaries into the Legacy SDD, and record the migration-strategy choice — strangler fig or branch by abstraction — as its own ADR in that same bank.",
+      "skill_quote": "- Document all migration decisions and rationale",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/legacy-modernizer/SKILL.md",
+      "skill_line": 112,
+      "reasoning": "The skill mandates documenting migration decisions but is entirely agnostic about destination — its Output Templates (lines 125-132) name loose deliverables, never SDD/ADR files or dev-kit's canonical doc paths. Routing output into docs/global/architecture/SDD.md and an ADR bank is invocation argument, not duplicated methodology. KEEP.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "legacy-modernizer-5",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [73, 76],
+      "kickoff_quote": "Assessment and plan only at this stage: no facades, adapters, characterization tests, or monitoring code, because step 8 builds those and step 3's roadmap is what sequences the migration phases.",
+      "skill_quote": "When implementing modernization, provide:\n1. Assessment summary (risks, dependencies, approach)\n2. Migration plan (phases, rollback strategy, metrics)\n3. Implementation code (facades, adapters, new services)\n4. Test coverage (characterization, integration, e2e)\n5. Monitoring setup (metrics, alerts, dashboards)",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/legacy-modernizer/SKILL.md",
+      "skill_line": 127,
+      "reasoning": "The skill's default output contract is all five items and its workflow runs steps 3-5 (safety net, migrate, validate) unprompted; left alone at step 0 it would emit facade and characterization-test code. Capping it to items 1-2 is a scope selection the skill cannot make for itself, and the pipeline rationale (step 8 / step 3) is knowledge the skill has no access to. KEEP.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "legacy-modernizer-6",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [55, 60],
+      "kickoff_quote": "Add \"dev-kit-backend@dev-kit\": true to .claude/settings.json's enabledPlugins and confirm it loaded — the block below needs its legacy-modernizer skill, and step 2 is too late to enable it.",
+      "skill_quote": "name: legacy-modernizer",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/legacy-modernizer/SKILL.md",
+      "skill_line": 2,
+      "reasoning": "Plugin-lane availability and ordering relative to step 2 are properties of the pipeline, not of the skill — nothing in SKILL.md or its references mentions plugin enablement. Pure orchestration argument. KEEP.",
+      "systemic": false,
+      "other_locations": [[30, 35]]
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

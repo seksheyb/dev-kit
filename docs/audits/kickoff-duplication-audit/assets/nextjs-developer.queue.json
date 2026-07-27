@@ -1,0 +1,43 @@
+{
+  "asset": "nextjs-developer",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/nextjs-developer/SKILL.md",
+  "claim_count": 1,
+  "claims": [
+    {
+      "local_id": "nextjs-developer-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [
+        604,
+        612
+      ],
+      "kickoff_quote": "For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it \u2014 python-pro / fastapi-expert / django-expert / postgres-pro / api-designer for backend work, react-expert / nextjs-developer / typescript-pro / vue-expert for web, swift-expert / kotlin-specialist / flutter-expert / react-native-expert for mobile ... Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills.",
+      "skill_quote": "description: \"Use when building Next.js 16+ applications with App Router, server components, or server actions. ... Triggers on: Next.js, Next.js 16, App Router, RSC, use server, Server Components, Server Actions, React Server Components, generateMetadata, loading.tsx, Turbopack, Next.js deployment, Vercel, Next.js performance.\"",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/nextjs-developer/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "The only KICKOFF mention of nextjs-developer is cross-skill routing: it tells the orchestrator which lane skill owns a track's surface and to hand that assignment down in the track brief. That is selection among sibling skills plus a dispatch/ownership convention \u2014 information no individual skill can carry about itself, since a skill's own description only declares its own triggers. Nothing in the block restates the skill's Core Workflow, Constraints, or output template.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "nextjs-developer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/nextjs-developer/SKILL.md",
+      "raised_by": [
+        "nextjs-developer"
+      ],
+      "locations": [
+        [
+          604,
+          612
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "nextjs-developer-1"
+    }
+  ]
+}

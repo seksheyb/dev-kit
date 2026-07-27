@@ -1,0 +1,77 @@
+{
+  "asset": "planner",
+  "verdicts": [
+    {
+      "claim_id": "planner-1",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "agents/planner.md:29-34 — \"**Authoring method — you author plans with the `writing-plans` skill.** That skill (`plugins/dev-kit-core/skills/writing-plans/SKILL.md`) is the single source of truth for the plan-authoring discipline and the canonical `<task>` format ... Invoke it (or read it as your reference) and apply it to author each plan's tasks.\" Confirmed verbatim at lines 29-34.",
+      "reasoning": "Quote verified at the claimed line. The agent hard-wires the coupling in both directions: it names writing-plans as its single source of truth for authoring AND instructs itself to invoke it. writing-plans/SKILL.md:84-86 states the same coupling from the other side (\"In the pipeline, the `planner` agent additionally emits YAML frontmatter ... those are the plan-set wiring the agent owns\"). Naming both assets in the operator prompt therefore adds no selection the planner does not already make. Severity low: harmless emphasis, not a behavior change."
+    },
+    {
+      "claim_id": "planner-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "agents/planner.md:1073 — \"The filename MUST follow the exact pattern: `<NN>-<MM>-PLAN.md`\" (verified; sits under the heading \"**CRITICAL — File naming convention (enforced):**\" at line 1071, with correct examples at 1079-1082, four rejected wrong forms at 1085-1088, and \"Full write path: `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`\" at line 1090). \"with waves and tracks\" is covered by agents/planner.md:35 (\"multi-plan wave/track decomposition\") and the `<step name=\"assign_waves\">` algorithm at lines 1011-1030.",
+      "reasoning": "Output paths are normally load-bearing arguments, but the exception applies here: KICKOFF passes no resolved values — it repeats the same unfilled `<NN>-<MM>-PLAN.md` template the agent enforces under a CRITICAL/enforced heading, and the concrete `<NN>` comes from the orchestrator's dispatch prompt per line 16, not from this sentence. Verified there is no additional constraint in the KICKOFF form (no directory override — `PHASE/` is the agent's own shorthand, defined at planner.md:16). \"waves and tracks\" likewise restates the agent's self-declared scope and its wave-assignment step. Low severity — a one-line echo, not a competing spec."
+    },
+    {
+      "claim_id": "planner-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "agents/planner.md:356 — \"**Prefer vertical slices** (User feature: model+API+UI) over horizontal layers (all models → all APIs → all UIs). Vertical = parallel. Horizontal = sequential. Use horizontal only when a shared foundation is genuinely required — and name the slices it unblocks; see `@references/vertical-slice.md` for the acceptance test and the anti-patterns to reject.\" Verified verbatim. The all-or-nothing form is scoped to MVP_MODE: line 303 opens \"**When `MVP_MODE` is enabled (passed by the plan-phase orchestrator):**\" and line 324 reads \"**Mode is all-or-nothing per phase** (PRD decision Q1).\"",
+      "reasoning": "The claim survives on its own terms. The agent states vertical slicing as a preference with an explicit escape hatch (\"Use horizontal only when a shared foundation is genuinely required\"), and only makes it absolute inside the MVP_MODE block. KICKOFF hardening that preference into a \"mandate\" is emphasis of something the agent leaves conditional — the rubric's load-bearing case. Keep it; low severity because the underlying methodology and its acceptance test are fully carried by the agent and @references/vertical-slice.md, so the KICKOFF word does no teaching."
+    },
+    {
+      "claim_id": "planner-4",
+      "confirmed": true,
+      "final_class": "unenforced-gap",
+      "final_severity": "high",
+      "evidence": "agents/planner.md:834 (the phase-bootstrap Read list) — \"`Glob`/`ls` the phase directory (`PHASE/` = `docs/milestones/<M>/phases/<NN>-<slug>/`), then `Read` `docs/milestones/<M>/ROADMAP.md`, `docs/milestones/<M>/REQUIREMENTS.md`, and any existing `CONTEXT.md`/`RESEARCH.md`/`PLAN.md` already inside that phase directory.\" And agents/planner.md:975-977, `<step name=\"gather_phase_context\">`: \"cat \\\"$phase_dir\\\"/CONTEXT.md 2>/dev/null   # From phase discovery\" / \"cat \\\"$phase_dir\\\"/RESEARCH.md 2>/dev/null   # Research output\" / \"cat \\\"$phase_dir\\\"/DISCOVERY.md 2>/dev/null  # From mandatory discovery\". Both enumerations omit PATTERNS.md.",
+      "reasoning": "I hunted before confirming. `grep -rn \"PATTERNS\" agents/planner.md references/ skills/writing-plans/` returns exactly one hit — references/doc-sitemap.md:81, a directory-tree line, not a read instruction. `grep -rn -iE \"analog|excerpt|pattern map\" agents/planner.md references/planning/ skills/writing-plans/` returns only planner.md:1215 (\"no benefit to reading more analogs of the same pattern\" — a stop-reading rule) and writing-plans/SKILL.md:110 (\"code excerpts belong in referenced source files or an <interfaces> block\"). Neither is a PATTERNS.md ingest rule. The two context-loading steps enumerate their phase artifacts explicitly and drop this one. The gap is a broken documented contract, not a nicety: agents/pattern-mapper.md:67 states \"Your PATTERNS.md is consumed by `planner`\" and pattern-mapper.md:72 states \"`## Pattern Assignments` | Each plan's action section references the analog file and excerpts\" — the exact behavior KICKOFF has to hand-wire. The only planner-side mechanism that could carry it is references/planning/mandatory-initial-read.md (\"If the prompt contains a `<required_reading>` block, you MUST use the `Read` tool to load every file listed there\"), which is precisely a prompt-supplied dependency, i.e. it makes the KICKOFF text load-bearing rather than redundant. KEEP the KICKOFF text; fix belongs in gather_phase_context. High severity — an upstream agent's entire output is silently dropped. One nuance for the owner: KICKOFF says \"cite ... code excerpts in each task's action section\" while writing-plans/SKILL.md:110 forbids pasted fenced code blocks in `<action>`; citing/referencing excerpts is consistent with pattern-mapper.md:72, so this is not a contradiction, but the wording should stay on \"reference\", not \"paste\"."
+    },
+    {
+      "claim_id": "planner-5",
+      "confirmed": true,
+      "final_class": "unenforced-gap",
+      "final_severity": "high",
+      "evidence": "agents/planner.md:834 — the phase-bootstrap Read list names only ROADMAP.md, REQUIREMENTS.md and \"any existing `CONTEXT.md`/`RESEARCH.md`/`PLAN.md` already inside that phase directory\"; agents/planner.md:975-977 — gather_phase_context cats only CONTEXT.md, RESEARCH.md, DISCOVERY.md. Neither names UI-SPEC.md or AI-SPEC.md.",
+      "reasoning": "Absence verified by a full sweep of the planner's @-reference chain, not just exact-phrase grep: `grep -rn -E \"UI-SPEC|AI-SPEC|UI_SPEC\" agents/planner.md references/planning/ references/vertical-slice.md references/complexity-signals.md references/summary-template.md references/native-equivalents.md references/thinking-models/ skills/writing-plans/` returns zero hits. Hits elsewhere in references/ (doc-sitemap.md:73/82/127/164, ai/evals.md, ui-spec-template.md) are all in files the planner never loads — planner.md's only doc-sitemap citation (line 16) is for path shorthand. Both documents are canonical pipeline artifacts (doc-sitemap.md:164 `UI-SPEC.md` → `PHASE/UI-SPEC.md`; doc-sitemap.md:127 `AI-SPEC.md` → `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`), and AI-SPEC.md is doubly out of reach because it lives under `specs/`, outside the `$phase_dir` the loader globs at all. Nothing tells the planner to make tasks implement those contracts. KEEP the KICKOFF text. High severity: for UI and AI-lane phases the plan can be authored in full ignorance of the spec it must implement."
+    },
+    {
+      "claim_id": "planner-6",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "agents/planner.md:620 — \"Check for the latest `cso` posture report under `docs/milestones/<M>/reports/security/*.json`, if present (from Stage 0's onboarding audit, or a prior phase's Stage 12 `--diff` run) — start dispositions from findings it already surfaced for this scope rather than re-deriving from zero. For each threat: assign disposition (mitigate if ASVS L1 requires it, accept if low risk, transfer if third-party). Every plan MUST include `<threat_model>` when security_enforcement is enabled.\" Verified verbatim at line 620.",
+      "reasoning": "Near-verbatim duplication on every axis: same directory, same Stage-0-baseline provenance, same ordering constraint (before assigning dispositions), and the same distinctive closing phrase \"rather than re-deriving from zero\". The `<threat_model>` requirement is independently mandated at line 620 and re-checked in the completion checklist at lines 1240-1242 (\"`<threat_model>` present with STRIDE register (when `security_enforcement` enabled)\" / \"Every threat has a disposition\"), with the register template at lines 467-480. No parameter, path, or condition in the KICKOFF sentence is absent from the agent. Medium severity — a full behavioral rule restated, so it is a genuine divergence risk if either copy is edited."
+    },
+    {
+      "claim_id": "planner-7",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "agents/planner.md:888 — \"Query the graph for phase-relevant dependency context (single query per D-06) via the `graphify` skill, using the keyword that best captures the phase goal.\" Verified verbatim, inside `<step name=\"load_graph_context\">` (lines 877-899), which opens with `ls docs/state/graphs/graph.json 2>/dev/null` (line 881), checks staleness (line 886), and at lines 893-896 enumerates the uses: \"Which modules/files are semantically related to this phase's domain / Which subsystems may be affected by changes in this phase / Cross-document relationships that inform task ordering and wave structure.\"",
+      "reasoning": "The agent owns a dedicated step that does exactly what KICKOFF asks, down to the same path literal `docs/state/graphs/graph.json` and the same single-query discipline. The only KICKOFF additions are a cross-reference (\"the same way step 5 did\") and a negative (\"rather than re-reading the tree\"), neither of which supplies a parameter, a mode, or a condition the agent lacks — and the step already degrades gracefully (\"If no results or graph.json absent, continue without graph context\", line 898). Medium severity for the same divergence-risk reason as planner-6."
+    },
+    {
+      "claim_id": "planner-8",
+      "confirmed": false,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "references/complexity-signals.md:3-4 — \"The signal names, model axis, and effort axis that every plan-producing skill/agent emits and every gate/executor consumes.\" Same file, line 29 \"## Model Axis\" / line 31 \"Derived from the signals above — pick by task nature:\" with the haiku/sonnet/opus table; line 43 \"## Effort Axis\" with the low/medium/high table; line 57 \"## Track-Level Aggregation\" / line 60 \"track's declared model/effort is the **highest** of any task/bug in it — one `opus`/`high` item pulls the whole track up.\" This file is pulled into the planner's chain at agents/planner.md:514 (\"the canonical vocabulary in `@references/complexity-signals.md`\").",
+      "reasoning": "The claim is an ABSENCE assertion (\"nothing in the planner or its references tells it to declare a per-track model and effort\") and it fails on hunting. complexity-signals.md is @-referenced by the planner and (a) names plan-producing agents as the emitters of the model and effort axes, (b) gives the derivation rule for each axis, and (c) defines Track-Level Aggregation in terms of \"the track's declared model/effort\" — which presupposes the declaration and states how to compute it. Coverage by a chain reference counts. The claim's own counter-quote (planner.md:516-517, \"are what `gate-plan-review` and `sprint-execution` use to validate or select model/effort; emit them honestly rather than deriving model/effort first and back-filling signals to match\") does not say \"do not declare\" — it forbids back-filling signals to a pre-chosen tier, a different rule. REFUTED as an unenforced-gap; the KICKOFF clause is at most a restatement of a contract the chain already carries, so low severity. Residual note for the owner, which is a different finding than the one claimed: the planner declares at lines 36-37 that it owns `## Parallel Execution Map`, but no file in dev-kit-core defines that section's format — `grep -rn \"Execution Map\"` returns only consumers (gate-plan-review.md:34/52 scoring its `Model`/`Effort` columns, sprint-execution/SKILL.md:39/118) plus writing-plans/SKILL.md:86 deferring to the planner, and the planner's own PLAN.md template (lines 415-494) omits the section entirely. That is a template gap, not a missing instruction."
+    },
+    {
+      "claim_id": "planner-9",
+      "confirmed": false,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "agents/planner.md:354 — \"**Example:** A→C, B→D, C+D→E, E→F(checkpoint). Waves: {A,B} → {C,D} → {E} → {F}.\" (verified verbatim; the agent's only dependency-graph rendering, and it is inline ASCII). `grep -rn -i \"diagram\\|mermaid\" agents/planner.md references/planning/ references/vertical-slice.md references/complexity-signals.md references/summary-template.md references/thinking-models/planning.md skills/writing-plans/` returns zero hits — the absence itself is verified.",
+      "reasoning": "The factual half survives: nothing in the planner or its chain names the `diagram` skill, and the KICKOFF sentence must be KEPT. But the classification does not. `unenforced-gap` is defined as the guide asserting behavior the skill fails to enforce *of its own* — the planner nowhere claims to render a dependency diagram, and its plan format has no slot for one, so it is not failing its own contract; no downstream consumer requires a rendered graph either (`grep -rn \"Execution Map\"` shows gate-plan-review and sprint-execution read Model/Effort columns and `complexity:` blocks, not a diagram). Naming a second skill to invoke alongside the agent is textbook operator tool-wiring, which the rubric puts squarely on the load-bearing side (\"which other artifact to feed in\", \"mode selection\"). Refuted as a skill defect; keep the text as a load-bearing parameter, low severity."
+    }
+  ]
+}

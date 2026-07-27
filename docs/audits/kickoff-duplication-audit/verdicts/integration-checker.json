@@ -1,0 +1,61 @@
+{
+  "asset": "integration-checker",
+  "verdicts": [
+    {
+      "claim_id": "integration-checker-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "Skill L8: \"A set of completed phases has been submitted for cross-phase integration audit. Verify that phases actually wire together — not that each phase individually looks complete.\" KICKOFF L901: \"*(skip on the milestone's first phase — nothing is cross-phase yet)*\"",
+      "reasoning": "Verified both quotes exist verbatim at the cited lines. Grepped the full agent file for 'first phase|skip|only one phase|single phase|no-op' and found only an unrelated hit at L375 ('exist in a single phase' — a Requirements Integration Map template line, not a gating condition). The agent has no notion of its position within a milestone's phase sequence and cannot decide to no-op itself; this gate is the orchestrator's precondition for whether to dispatch at all. KEEP — load-bearing, not duplication."
+    },
+    {
+      "claim_id": "integration-checker-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "Skill L3 (frontmatter description): \"Verifies cross-phase integration and E2E user flows — checks that exports are actually imported and called, API routes have consumers, protected routes check auth, and full flows (form → handler → DB → display) complete without breaks, not just that each phase individually looks complete.\" KICKOFF L903-905: \"Dispatch the integration-checker agent to confirm the cross-phase flows still connect end-to-end — every export actually imported and called, every API route with a real consumer, sensitive routes auth-protected, full flows tracing through without a break.\"",
+      "reasoning": "Confirmed both quotes verbatim at the cited lines/ranges. The four-item checklist (exports imported+called, API routes have consumers, sensitive routes auth-protected, flows trace without a break) is a near word-for-word paraphrase of the agent's own frontmatter description and directly duplicates the agent's Step 2 (L106, Verify Export Usage), Step 3 (L136, Verify API Coverage), Step 4 (L181, Verify Auth Protection), and Step 5 (L207, Verify E2E Flows), reinforced by <core_principle> L39-50. None of the four items name a project-specific value; only the bare dispatch verb carries information the skill lacks. CONFIRMED as duplication."
+    },
+    {
+      "claim_id": "integration-checker-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "Skill L8 (same role-opening sentence as claim 1; no other sentence about run conditions exists). KICKOFF L905-906: \"Run it whether or not verify found gaps\"",
+      "reasoning": "Quote verified verbatim, split across L905/L906 as claimed. Grepped the agent for 'verif(y|ier)|gaps_found|VERIFICATION\\.md' — every hit (L8,10,23,37,106,108,136,181,207,214,237,268) is the agent's own internal 'verify X' step language; the agent has zero knowledge of the sibling /dev-kit-core:verify command, its gaps_found status, or VERIFICATION.md. This is cross-asset sequencing the skill cannot own. KEEP."
+    },
+    {
+      "claim_id": "integration-checker-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "Skill L14: \"**Critical mindset:** Individual phases can pass while the system fails. A component can exist without being imported. An API can exist without being called. Focus on connections, not existence.\" KICKOFF L906-907: \"a phase with full in-phase coverage tells you nothing about whether it is wired to the phases around it.\"",
+      "reasoning": "Both quotes verified verbatim at the cited lines. This clause is the rationale for the (load-bearing) 'run it regardless of verify's result' gate, but the rationale itself is a paraphrase of the skill's own <role> critical-mindset sentence and is reinforced almost identically at <critical_rules> L382 ('Check connections, not existence. Files existing is phase-level. Files connecting is integration-level.'). It supplies no parameter the skill lacks — it just re-teaches why in-phase completeness doesn't imply integration. CONFIRMED as duplication, low severity since it is one motivating clause riding along with a load-bearing gate rather than an instruction to the agent."
+    },
+    {
+      "claim_id": "integration-checker-5",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "Skill L16: \"**Artifact paths are configurable.** Defaults below use `docs/milestones/<M>/phases/<NN>-<slug>/` for phase summaries — use whatever paths the dispatch prompt provides.\" (default reiterated at L84: `for summary in docs/milestones/*/phases/*/*-SUMMARY.md; do`). KICKOFF L909-912: \"the completed phase directories in this milestone by path (every phase up to and including <NN>, not just this one), the key exports each one declares in its PHASE/<NN>-<MM>-SUMMARY.md, and the requirement bank — SPEC/spec.md's US-xxx story IDs with their descriptions and the phase each is assigned to.\"",
+      "reasoning": "Verified both quotes verbatim. The skill's own default path (`docs/milestones/<M>/phases/<NN>-<slug>/...SUMMARY.md`) differs from this project's actual convention (`PHASE/<NN>-<MM>-SUMMARY.md`, `SPEC/spec.md`), and the skill explicitly says to use whatever the dispatch prompt provides — meaning this text IS the substitution the skill is waiting for. The cumulative-scope instruction ('every phase up to and including <NN>, not just this one') also sharpens the skill's vaguer <inputs> bullet ('Phase directories in milestone scope', L56) with a concrete boundary the skill cannot infer on its own. KEEP — these are invocation arguments, not restated methodology."
+    },
+    {
+      "claim_id": "integration-checker-6",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "Skill L71-72 (<inputs> block): \"- MUST map each integration finding to affected requirement IDs where applicable\" / \"- Requirements with no cross-phase wiring MUST be flagged in the Requirements Integration Map\"; reinforced by the output template's Requirements Integration Map table (L368-375) and success_criteria items (L404-405). KICKOFF L912-915: \"That last one is not optional: it has to map every integration finding to the requirement IDs it affects and produce a Requirements Integration Map flagging any requirement with no cross-phase wiring, and it cannot do either without the ID list.\"",
+      "reasoning": "Verified both quotes verbatim at the cited lines. The KICKOFF sentence re-derives the skill's own two MUST bullets almost clause-for-clause ('map...to affected requirement IDs' / 'flagged in the Requirements Integration Map'), and the obligation is independently hard-coded in the skill's output template and success checklist. The 'is not optional' framing adds emphasis but no new fact, path, or parameter — the skill already treats both as mandatory with no escape hatch. CONFIRMED as duplication."
+    },
+    {
+      "claim_id": "integration-checker-7",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "Skill L65-67 (<inputs> block): \"**Expected Connections:**\" / \"- Which phases should connect to which\" / \"- What each phase provides vs. consumes\"; the agent is separately instructed to build this map itself at Step 1 (L77-104, 'Build Export/Import Map' / 'Build provides/consumes map'). KICKOFF L915-916: \"Also say which phases you expect to connect to which, and what each provides versus consumes.\"",
+      "reasoning": "Verified both quotes verbatim at the cited lines. This is a near-verbatim echo of the skill's own <inputs> 'Expected Connections' bullet pair, down to the exact phrase order ('which phases should connect to which', 'provides vs. consumes'). Unlike the path/scope text in the same paragraph (claim 5), this sentence names no actual phase, export, or provider/consumer pair — it carries zero project-specific value, and the skill's Step 1 already directs the agent to derive this same provides/consumes map from the SUMMARYs on its own. CONFIRMED as duplication."
+    }
+  ]
+}

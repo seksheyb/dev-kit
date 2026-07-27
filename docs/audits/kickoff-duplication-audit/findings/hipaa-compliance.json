@@ -1,0 +1,51 @@
+{
+  "asset": "hipaa-compliance",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/hipaa-compliance/SKILL.md",
+  "references_read": [],
+  "claims": [
+    {
+      "local_id": "hipaa-compliance-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [1052, 1055],
+      "kickoff_quote": "*(only if regulated data or industry is in scope — GDPR/HIPAA/PCI/SOC2)*\nUse the compliance-auditor agent against the applicable regime, and the matching product-lane\nskill for framework detail — gdpr-ccpa-compliance or hipaa-compliance.",
+      "skill_quote": "description: Use when building a healthcare product that must comply with HIPAA — determining Business Associate status, handling PHI, implementing Security Rule safeguards, or preparing BAAs and breach response plans.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/hipaa-compliance/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "The conditioning line and the 'gdpr-ccpa-compliance or hipaa-compliance' choice are exactly the two things the skill cannot know: whether regulated data is in scope for THIS milestone, and which of two sibling regimes matches. The skill's own description states its trigger conditions but a skill cannot gate its own non-invocation, and it cannot arbitrate against a sibling skill. Pairing it with the compliance-auditor agent is cross-asset orchestration, which is always the operator's job.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "hipaa-compliance-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [1057, 1059],
+      "kickoff_quote": "what categories of personal or regulated data\nthis milestone touches, and which jurisdictions the users and the data sit in. Point it at any\nprior audit history and existing control or policy docs too.",
+      "skill_quote": "PHI = Any health information that identifies (or could identify) an individual.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/hipaa-compliance/SKILL.md",
+      "skill_line": 44,
+      "reasoning": "The skill defines what PHI IS (the 18 identifiers, line 47) but has no way to know which of those categories this particular milestone actually touches, where users sit, or where prior audit artifacts live. These are project-specific inputs and prior-artifact pointers — the canonical load-bearing category. Recorded for the denominator, not as a hit.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "hipaa-compliance-3",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [1055, 1057],
+      "kickoff_quote": "Hand the auditor all\nthree of the things it establishes before it can map law to controls, rather than letting it\nguess them: which regulations actually apply",
+      "skill_quote": "- HIPAA applicability assessment (Covered Entity vs. Business Associate vs. neither)",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/hipaa-compliance/SKILL.md",
+      "skill_line": 125,
+      "reasoning": "Of the 'three things', the first — which regulations actually apply — is the declared first deliverable of the very skill being dispatched alongside the auditor, and the skill devotes a whole section to deriving it ('Who Does HIPAA Apply To?', line 19; 'Determine if the vendor is a Business Associate', line 113). Requiring the operator to hand applicability in as a pre-established input restates a determination this skill exists to produce. Severity is low because the instruction is addressed to the compliance-auditor agent rather than to hipaa-compliance, so the overlap is partial rather than a straight duplication of this skill's methodology.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

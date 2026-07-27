@@ -1,0 +1,99 @@
+{
+  "asset": "rag-architect",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/skills/rag-architect/SKILL.md",
+  "claim_count": 2,
+  "claims": [
+    {
+      "local_id": "rag-architect-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [
+        604,
+        612
+      ],
+      "kickoff_quote": "For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it \u2014 ... rag-architect / prompt-engineer / ml-pipeline for AI work, ... Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills.",
+      "skill_quote": "description: Designs and implements production-grade RAG systems by chunking documents, generating embeddings, configuring vector stores, building hybrid search pipelines, applying reranking, and evaluating retrieval quality. Use when building RAG systems, vector databases, or knowledge-grounded AI applications requiring semantic search, document retrieval, context augmentation, similarity search, or embedding-based indexing.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/skills/rag-architect/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "The only mention of rag-architect in all of KICKOFF is a routing decision: which lane skill gets assigned to which track's brief, conditioned on which plugins the operator actually enabled at step 2. That is the invocation's argument, not a restatement of the skill's own content. The skill's description names the same surface (RAG / vector search / AI work) so there is no drift, but the skill cannot know the track decomposition or the enabled-plugin set, so the guide text must be KEPT.",
+      "systemic": true,
+      "other_locations": [],
+      "asset": "rag-architect",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/skills/rag-architect/SKILL.md",
+      "raised_by": [
+        "fastapi-expert",
+        "ml-pipeline",
+        "prompt-engineer",
+        "rag-architect"
+      ],
+      "locations": [
+        [
+          603,
+          611
+        ],
+        [
+          603,
+          624
+        ],
+        [
+          604,
+          612
+        ],
+        [
+          611,
+          612
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [
+        "fastapi-expert::fastapi-expert-2",
+        "ml-pipeline::ml-pipeline-1",
+        "prompt-engineer::prompt-engineer-1",
+        "rag-architect::rag-architect-1"
+      ],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "rag-architect-1"
+    },
+    {
+      "local_id": "rag-architect-2",
+      "class": "unenforced-gap",
+      "severity": "medium",
+      "step": "08",
+      "kickoff_line_range": [
+        616,
+        620
+      ],
+      "kickoff_quote": "They already ran at step 6: the framework, model provider and build methodology are settled and live in SPEC/AI-SPEC.md, with step 5's PHASE/RESEARCH.md as the phase-level companion. AI tracks build against that choice here \u2014 read both files, do not re-open the selection, and if the stack is genuinely wrong go back to step 6 rather than deciding it inside a track.",
+      "skill_quote": "Closest sentences found, both of which push the OPPOSITE way: line 20 '2. **Vector Store Design** \u2014 Select database, schema design, indexing strategy, sharding approach' and line 168 '- Evaluate multiple embedding models on your domain data before committing'. Greps run over SKILL.md + all 5 references (3663 lines): -niE 'already (chosen|selected|decided)|do not re-?open|existing (choice|decision)|SPEC|AI-SPEC|prior decision|respect the|constrain' \u2014 zero hits expressing deference to an upstream architecture decision (the only 'constrain'/'SPEC' hits are 'memory-constrained', 'ServerlessSpec', 'cost constraints', 'specialized'). references/vector-databases.md and references/embedding-models.md are both framed as selection guides, not as validators of a pre-made choice.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/skills/rag-architect/SKILL.md",
+      "skill_line": 20,
+      "reasoning": "The skill has no concept of a pre-existing, upstream-settled stack decision: its workflow opens by selecting the vector database and mandates re-evaluating embedding models before committing. Left to itself inside a track it would legitimately re-open exactly the selection step 6 already closed. The KICKOFF sentence is therefore compensating for a behavior the skill does not contain anywhere, and must be kept; the real fix is a 'defer to an existing architecture decision if one is supplied' rule in the skill.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "rag-architect",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/skills/rag-architect/SKILL.md",
+      "raised_by": [
+        "rag-architect"
+      ],
+      "locations": [
+        [
+          616,
+          620
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "rag-architect-2"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "asset": "advisor-researcher",
+  "verdicts": [
+    {
+      "claim_id": "advisor-researcher-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 382-383: \"Then fan out one advisor-researcher agent per gray-area\\ndecision, all in one message\" vs skill line 122: \"- Do NOT research beyond the single assigned gray area\" (verified verbatim in /home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/advisor-researcher.md).",
+      "reasoning": "The skill's own anti-pattern only constrains a single already-dispatched instance to stay within its one assigned gray area -- it has no knowledge of how many gray areas exist for this phase, nor that all instances should be dispatched together in one message. Cardinality and parallelism are orchestration-level facts the caller alone holds (the same class of thing as 'dispatch alongside X' in the classification guide). Not duplication; correctly load-bearing."
+    },
+    {
+      "claim_id": "advisor-researcher-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 383-384: \"each given its gray area's name and description, the phase context\\nfrom the roadmap, brief project context, and the same calibration tier\" vs skill line 48 (part of the <input> block, lines 45-52): \"- `<gray_area>` -- area name and description\".",
+      "reasoning": "The skill's <input> block declares placeholders it expects (<gray_area>, <phase_context>, <project_context>, <calibration_tier>) but cannot itself supply concrete sources for them. KICKOFF naming the concrete provenance -- 'from the roadmap' for phase context, and explicitly reusing 'the same calibration tier' already fixed earlier at KICKOFF line 368 for cross-agent consistency -- is argument-filling for the invocation, not a restatement of the skill's own methodology. Verified as load-bearing, not duplication."
+    },
+    {
+      "claim_id": "advisor-researcher-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md lines 384-385: \"and each returning a\\n5-column options table (Option / Pros / Cons / Complexity / Recommendation)\" vs skill line 80 (<output_format> template): \"| Option | Pros | Cons | Complexity | Recommendation |\" and re-armored at skill line 124: \"- Do NOT add columns beyond the 5-column format (Option, Pros, Cons, Complexity, Recommendation)\".",
+      "reasoning": "The exact column count and column names are fixed twice inside the skill itself -- once as the mandatory <output_format> template (line 80) and once as an explicit anti-pattern guard (line 124). The operator cannot alter this shape by omitting it from the dispatch prompt; the skill enforces it unconditionally regardless of what the caller says. Spelling out the same five column names in KICKOFF adds no parameter and matches the 'restates output format the skill's template already fixes' duplication criterion exactly."
+    },
+    {
+      "claim_id": "advisor-researcher-4",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 385-386: \"fold those tables\\nback into RESEARCH.md.\" vs skill line 8: \"> Note: this agent reads and writes no files itself -- `<phase_context>` arrives inline in the dispatch prompt, and the returned table is folded by the caller into artifacts such as `docs/milestones/<M>/phases/<NN>-<slug>/RESEARCH.md` or `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`.\"",
+      "reasoning": "The skill's note deliberately leaves the fold-destination open ('artifacts such as ... RESEARCH.md or ... PLAN.md') because the same agent is reused across multiple call sites (e.g. plan-phase folding into a PLAN.md, phase-discovery folding into RESEARCH.md). KICKOFF committing to RESEARCH.md specifically for this step-05 call is the caller's concrete choice among the skill's stated options, i.e. an invocation argument, not a restatement of skill behavior."
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "asset": "specify",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/specify/SKILL.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/specify/references/ears-syntax.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/specify/references/clarification-pass.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/specify/references/mode-b-interrogation.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/specify/references/pre-discovery-subagents.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/specify/spec-template.md"
+  ],
+  "claims": [
+    {
+      "local_id": "specify-1",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "01",
+      "kickoff_line_range": [147, 147],
+      "kickoff_quote": "WHAT and WHY only, never HOW.",
+      "skill_quote": "The spec captures **WHAT** users need and **WHY** — never HOW to\nimplement it.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/specify/SKILL.md",
+      "skill_line": 10,
+      "reasoning": "Near-verbatim restatement of the skill's opening thesis sentence, which the skill further enforces under MUST NOT DO (line 261, 'Produce an implementation TODO checklist or task breakdown. That's HOW, not WHAT/WHY') and in the quality checklist ('No implementation details (languages, frameworks, APIs)', line 171). The operator prompt adds no parameter the skill lacks.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "specify-2",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "01",
+      "kickoff_line_range": [147, 148],
+      "kickoff_quote": "Interview from PM Hat (value/goals/success metrics/priority) and Dev Hat (feasibility/security/edge cases/error handling) as you go, and",
+      "skill_quote": "- **PM Hat**: user value, business goals, success metrics, priority\n- **Dev Hat**: technical feasibility, security, performance, edge cases, error handling",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/specify/SKILL.md",
+      "skill_line": 35,
+      "reasoning": "The skill dedicates a whole '## Two Lenses' section to this, with the identical parenthetical contents, and the 'as you go' instruction is exactly the skill's own line 32-33 ('don't ask all the PM questions, then all the Dev questions; weave them'). Both hats and the weaving rule are also re-invoked at step 7.2 ('Extract key concepts from description (PM Hat + Dev Hat)', line 122).",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "specify-3",
+      "class": "redundant-restatement",
+      "severity": "high",
+      "step": "01",
+      "kickoff_line_range": [149, 150],
+      "kickoff_quote": "use EARS format for every conditional functional requirement — plain MUST statements are fine for simple, unconditional ones.",
+      "skill_quote": "Each requirement must be testable. Use EARS format for anything conditional —\n       see `references/ears-syntax.md`. Plain `MUST` statements are fine for simple,\n       unconditional requirements.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/specify/SKILL.md",
+      "skill_line": 136,
+      "reasoning": "This is an almost word-for-word copy of the skill's own execution-flow step 5, and the rule is triply enforced elsewhere in the skill: the reference table routes to `references/ears-syntax.md` (line 73), the MUST DO constraint list repeats it (line 252, 'Use EARS format for conditional functional requirements'), the generated quality checklist checks it (line 182), and the Done When gate checks it (line 287). The KICKOFF sentence adds nothing.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "specify-4",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "01",
+      "kickoff_line_range": [150, 151],
+      "kickoff_quote": "Allocate US-xxx story IDs globally — never re-mint an ID for a story that already carries one.",
+      "skill_quote": "**IDs are never renumbered or reused** — even if a story is later deleted, split, or\n     reordered within its spec, its number is retired, not recycled.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/specify/SKILL.md",
+      "skill_line": 105,
+      "reasoning": "The skill's step 3 is titled '**Assigning US-xxx IDs (global allocation)**' (line 98) and spells out the global glob across all milestones, the highest-number rule, and the never-reuse rule in more detail than the KICKOFF line. This is the skill re-teaching its own dedicated ID-allocation section — the textbook redundant case named in the audit brief.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "specify-5",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "01",
+      "kickoff_line_range": [151, 151],
+      "kickoff_quote": "Run your Clarification Pass before handing it back.",
+      "skill_quote": "Either mode ends by running the **Clarification Pass** — load\n`references/clarification-pass.md` — before the spec is considered done.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/specify/SKILL.md",
+      "skill_line": 61,
+      "reasoning": "The Clarification Pass is unconditional in the skill: stated in the description frontmatter, in the overview (lines 13-16), as 'Load When: Always' in the reference table (line 72), and as a Done When gate (line 288). The KICKOFF is not selecting an optional mode — it restates a gate the skill already enforces on every run.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "specify-6",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "01",
+      "kickoff_line_range": [146, 146],
+      "kickoff_quote": "Use the specify skill to write SPEC/spec.md and SPEC/checklists/requirements.md from the",
+      "skill_quote": "Create `docs/milestones/<M>/specs/<NNN>-<slug>/` and copy `spec-template.md` (from this\n     skill's directory) into it as `spec.md` — this is `SPEC_FILE`",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/specify/SKILL.md",
+      "skill_line": 94,
+      "reasoning": "Output paths are normally load-bearing arguments, but here the operator cannot supply any of the variable parts: KICKOFF line 16 defines `SPEC/` as exactly `docs/milestones/<M>/specs/<NNN>-<slug>/`, and the skill derives `<M>`, `<NNN>` and `<slug>` itself (lines 20-24, 80-96). The checklist path is likewise fixed by the skill at line 159-160 ('Generate a checklist file at `docs/milestones/<M>/specs/<NNN>-<slug>/checklists/requirements.md`'), and both outputs are unconditional. Low severity because naming the two deliverables still orients the operator.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "specify-7",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "01",
+      "kickoff_line_range": [146, 147],
+      "kickoff_quote": "from the approved design.",
+      "skill_quote": "Given the feature description, do this:",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/specify/SKILL.md",
+      "skill_line": 78,
+      "reasoning": "KEEP. The skill takes 'the feature description' as an opaque input and has no knowledge of the pipeline's preceding brainstorming session; the KICKOFF supplies the upstream artifact and the sequencing gate ('Once the design is approved:', line 143). This is exactly the 'which other artifact to feed in as context' + ordering case the brief classifies as load-bearing.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

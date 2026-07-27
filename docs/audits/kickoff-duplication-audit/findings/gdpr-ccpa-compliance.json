@@ -1,0 +1,37 @@
+{
+  "asset": "gdpr-ccpa-compliance",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/gdpr-ccpa-compliance/SKILL.md",
+  "references_read": [],
+  "claims": [
+    {
+      "local_id": "gdpr-ccpa-compliance-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [1052, 1055],
+      "kickoff_quote": "*(only if regulated data or industry is in scope — GDPR/HIPAA/PCI/SOC2)*\nUse the compliance-auditor agent against the applicable regime, and the matching product-lane skill for framework detail — gdpr-ccpa-compliance or hipaa-compliance.",
+      "skill_quote": "Privacy compliance methodology covering GDPR (EU) and CCPA/CPRA (California). Understand obligations, implement compliant data practices, and close compliance gaps before they become violations.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/gdpr-ccpa-compliance/SKILL.md",
+      "skill_line": 17,
+      "reasoning": "This is conditional gating plus selection between two sibling skills (gdpr-ccpa-compliance vs hipaa-compliance) based on the applicable regime, and pairing with the compliance-auditor agent. The skill can state its own regime coverage but cannot know whether regulated data is in scope for this milestone or which sibling skill the operator should reach for. Keep.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "gdpr-ccpa-compliance-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [1055, 1059],
+      "kickoff_quote": "Hand the auditor all three of the things it establishes before it can map law to controls, rather than letting it guess them: which regulations actually apply, what categories of personal or regulated data this milestone touches, and which jurisdictions the users and the data sit in. Point it at any prior audit history and existing control or policy docs too.",
+      "skill_quote": "Confirm which state laws apply to the target user base — don't assess against CCPA alone.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/gdpr-ccpa-compliance/SKILL.md",
+      "skill_line": 101,
+      "reasoning": "The sentence names inputs the operator must supply to the compliance-auditor AGENT (regimes in scope, data categories, jurisdictions, prior audit history, existing policy docs) — these are dispatch arguments and project facts, not this skill's methodology. The skill's nearest overlap (line 101, and the 'Who It Applies To' thresholds at lines 66-71) tells the reader to determine applicability but cannot supply the project-specific answers or the paths to prior audit artifacts. Keep as load-bearing.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

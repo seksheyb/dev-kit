@@ -1,0 +1,61 @@
+{
+  "asset": "eval-auditor",
+  "verdicts": [
+    {
+      "claim_id": "eval-auditor-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "eval-auditor.md:11 — \"**Artifact paths are configurable; defaults follow the doc-path contract:** AI-SPEC.md at `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`, SUMMARY.md files at `PHASE/<NN>-<MM>-SUMMARY.md`, EVAL-REVIEW.md output at `PHASE/reviews/EVAL-REVIEW.md` — where `PHASE` = `docs/milestones/<M>/phases/<NN>-<slug>/`. The orchestrator may override any of these.\" (verified verbatim at line 11; input contract repeats the same defaults at lines 39-42)",
+      "reasoning": "Survives. The quoted skill sentence exists exactly as claimed at line 11 and explicitly declares the paths overridable by the orchestrator, so naming the target phase, the AI-SPEC.md input and the `PHASE/reviews/EVAL-REVIEW.md` output is the invocation supplying its arguments, not restating methodology. The clause 'the retroactive pair to step 6's eval-planner' is cross-step scheduling the agent cannot know from its own file (nothing in eval-auditor.md or references/ai/evals.md names eval-planner or step 6). Only mild echo: 'retroactive' also appears in the frontmatter description at line 3, and 'Audit what AI-SPEC.md planned against what the code actually does' paraphrases the role question at line 8 — enough to justify low severity but not enough to reclassify, since the sentence cannot be deleted without losing the phase target and output path."
+    },
+    {
+      "claim_id": "eval-auditor-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "eval-auditor.md:27 — \"Every planned eval dimension must resolve to COVERED, PARTIAL (WARNING), or MISSING (BLOCKER).\" Reinforced at line 3 (frontmatter: \"Scores each eval dimension as COVERED/PARTIAL/MISSING\"), the score_dimensions table at lines 81-85, the output template at line 130, and success criterion line 173 (\"Every planned dimension scored (COVERED/PARTIAL/MISSING)\").",
+      "reasoning": "Survives. The three-value taxonomy is fixed in five separate places inside the skill, including a mandatory success-criteria checkbox and the EVAL-REVIEW.md table column. KICKOFF line 839-840's 'scoring every planned eval dimension COVERED / PARTIAL / MISSING' selects nothing — there is no alternative scoring vocabulary the operator could pick — so it is a taxonomy re-teach, matching the 'restates output format the skill's template already fixes' rule. Severity low: the words are cheap and harmless, and drift risk is the only real cost."
+    },
+    {
+      "claim_id": "eval-auditor-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "eval-auditor.md:15 — \"**FORCE stance:** Assume the eval strategy was not implemented until codebase evidence proves otherwise. Your starting hypothesis: AI-SPEC.md documents intent; the code does something different or less. Surface every gap.\"",
+      "reasoning": "Survives, and it is the strongest finding on this asset. KICKOFF 841-842 reads 'Assume the eval strategy was not implemented until codebase evidence proves otherwise: AI-SPEC.md documents intent, and the code often does something less' — the first clause is word-for-word identical to line 15's second sentence, and the second clause is line 15's third sentence with 'different or' dropped and 'often' inserted. This sits inside the skill's own <adversarial_stance> block, which is unconditional on every dispatch; the prompt cannot be selecting a mode because the skill offers no non-FORCE mode. Pure duplication of the skill's internal posture. High severity is warranted: it is the largest verbatim block in the invocation, and the paraphrase already drifted ('often does something less' vs 'does something different or less'), which is exactly the failure duplication invites."
+    },
+    {
+      "claim_id": "eval-auditor-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "eval-auditor.md:25 — \"- **BLOCKER** — an eval dimension is MISSING or a guardrail is unimplemented; AI system must not ship to production\"",
+      "reasoning": "Survives. KICKOFF 842-843's 'A MISSING dimension or an unimplemented guardrail is a BLOCKER' names the same two triggers, in the same order, with the same nouns, as the skill's 'Required finding classification' block at line 25 — the prompt merely inverts subject and predicate. This is the skill re-deriving its own severity taxonomy, which the skill already enforces on every run. Medium rather than high because it is one clause rather than a full stance block, and it carries no drifted content."
+    },
+    {
+      "claim_id": "eval-auditor-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "eval-auditor.md:18 — \"- Marking PARTIAL instead of MISSING because \\\"some tests exist\\\" — partial coverage of a critical eval dimension is MISSING until the gap is quantified\"",
+      "reasoning": "Survives. The quoted skill line exists at line 18 as the first entry under 'Common failure modes — how eval auditors go soft' (line 17), and it quotes the identical stock phrase 'some tests exist' that KICKOFF line 843 uses. The skill also names the inverse anti-pattern at line 22 ('Downgrading MISSING to PARTIAL to soften the report'), so the guardrail is stated twice inside the skill before the prompt says it a third time. Nothing invocation-specific is added. Medium."
+    },
+    {
+      "claim_id": "eval-auditor-6",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "eval-auditor.md:20 — \"- Crediting AI-SPEC.md documentation as implementation evidence\"",
+      "reasoning": "Survives. Verified as the third bullet of the skill's failure-modes list at line 20, with the same subject (AI-SPEC.md text/documentation) and the same object (implementation evidence) as KICKOFF 843-844's 'do not credit the AI-SPEC.md text itself as implementation evidence'. The skill's FORCE stance at line 15 independently forces codebase evidence over spec text, so the prompt is re-teaching a rule enforced twice over. Medium."
+    },
+    {
+      "claim_id": "eval-auditor-7",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "eval-auditor.md:150 — \"## Remediation Plan\" (template heading, followed by lines 152-159 'Must fix before production' / 'Should fix soon' / 'Nice to have'). Absence side verified: `grep -n \"re-run|rerun|re-audit|implementation pass|route|remediat\"` over eval-auditor.md returns only lines 3, 87 and 178 — all about writing remediation guidance into the report, never about routing it anywhere or re-running the audit. The declared reference `references/ai/evals.md` (dev-kit-data-ai/references/ai/evals.md, 157 lines) contains zero matches for re-run, re-audit, implementation pass, blocker, remediation, COVERED, MISSING or PARTIAL.",
+      "reasoning": "Survives. The skill emits a Remediation Plan and stops there — it has no concept of a downstream consumer, of a remediation route, or of being re-run after a fix pass. KICKOFF 844-847 supplies exactly that pipeline wiring ('it has no route of its own... carry every MISSING dimension and unimplemented guardrail... into the implementation pass further down this step, and re-run this audit once that pass has landed'), which is cross-step orchestration the agent cannot know. Load-bearing, must be kept. One nit worth recording but not sufficient to reclassify: the guide calls Remediation Plan 'the section EVAL-REVIEW.md ends on', but the skill's template ends on '## Files Found' at line 161, with Remediation Plan at 150 — the description is imprecise, though the section it points the operator to does exist and is the right one to harvest."
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "asset": "accessibility-tester",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/accessibility-tester.md",
+  "claim_count": 3,
+  "claims": [
+    {
+      "local_id": "accessibility-tester-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [
+        1007,
+        1007
+      ],
+      "kickoff_quote": "Then dispatch the accessibility-tester agent; it only reads.",
+      "skill_quote": "Do not fix code unless the dispatcher asks \u2014 report and recommend.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/accessibility-tester.md",
+      "skill_line": 28,
+      "reasoning": "This clause echoes the skill's own no-fix rule, but its function in context is operational, not pedagogical: it is placed right after the design-reviewer paragraph which explicitly flags that design-reviewer 'writes that baseline file, so it is not read-only and does not share a browser with the others' \u2014 i.e. it tells the orchestrator this agent has no such exclusivity/commit constraints and can be sequenced freely. That is ordering/parallelism information the rubric explicitly carves out as load-bearing, not duplication, even though the underlying fact also happens to appear in the skill's Output section.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "accessibility-tester",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/accessibility-tester.md",
+      "raised_by": [
+        "accessibility-tester"
+      ],
+      "locations": [
+        [
+          1007,
+          1007
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "accessibility-tester-1"
+    },
+    {
+      "local_id": "accessibility-tester-1",
+      "class": "load-bearing-parameter",
+      "severity": "medium",
+      "step": "12",
+      "kickoff_line_range": [
+        1007,
+        1009
+      ],
+      "kickoff_quote": "Then dispatch the accessibility-tester agent; it only reads. Give it its conformance target explicitly \u2014 WCAG 2.1 AA unless this project committed to something stricter \u2014 so it is not inferring the bar it is grading against.",
+      "skill_quote": "Establish the application structure, target audience, and compliance target (default WCAG 2.1 AA).",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/accessibility-tester.md",
+      "skill_line": 10,
+      "reasoning": "The skill already defaults to WCAG 2.1 AA when no target is given, so the bare value overlaps with the skill's own default. But the operative clause \u2014 'unless this project committed to something stricter' \u2014 is project-specific knowledge (whether this particular project's requirements exceed the default) that the skill has no way to know on its own; this is exactly the conditional-gating-the-operator-must-judge case the rubric calls out as load-bearing, not duplication.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "accessibility-tester",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/accessibility-tester.md",
+      "raised_by": [
+        "accessibility-tester"
+      ],
+      "locations": [
+        [
+          1007,
+          1009
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "accessibility-tester-2"
+    },
+    {
+      "local_id": "accessibility-tester-3",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [
+        1009,
+        1010
+      ],
+      "kickoff_quote": "This is a gate: tell me plainly whether it passed, because a failing scorecard blocks the ship.",
+      "skill_quote": "State the conformance level achieved and any residual limitations.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/accessibility-tester.md",
+      "skill_line": 28,
+      "reasoning": "The skill's own output contract is a severity-sorted findings report plus a stated conformance level \u2014 a narrative, not a binary verdict. Casting that as a pass/fail gate that blocks the ship is a milestone-workflow decision the reusable skill deliberately has no opinion on (it doesn't know it's being used as a ship gate at all), so this is orchestration-level framing load-bearing to KICKOFF's process, not a restatement of the skill's own methodology. Searched the file for gate/pass/fail/scorecard/block terminology (grep for 'pass', 'fail', 'gate', 'scorecard', 'block') and found none, confirming the gate framing originates entirely from KICKOFF.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "accessibility-tester",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/accessibility-tester.md",
+      "raised_by": [
+        "accessibility-tester"
+      ],
+      "locations": [
+        [
+          1009,
+          1010
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "accessibility-tester-3"
+    }
+  ]
+}

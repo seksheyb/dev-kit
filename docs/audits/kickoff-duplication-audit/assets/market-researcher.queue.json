@@ -1,0 +1,259 @@
+{
+  "asset": "market-researcher",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+  "claim_count": 7,
+  "claims": [
+    {
+      "local_id": "market-researcher-3",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "01",
+      "kickoff_line_range": [
+        166,
+        166
+      ],
+      "kickoff_quote": "Use the market-researcher agent to write docs/milestones/<M>/research/MARKET.md.",
+      "skill_quote": "Write to `docs/milestones/<M>/research/MARKET.md` (canonical location per `references/doc-sitemap.md`; orchestrator supplies the concrete path):",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "skill_line": 92,
+      "reasoning": "The path literally matches the skill's canonical location, but the skill explicitly delegates the concrete path to the orchestrator \u2014 both at line 92 and in the top note at line 8 ('artifact paths ... are supplied by the orchestrator as concrete paths'). The <M> substitution is per-milestone and only the operator knows it. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "market-researcher",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "raised_by": [
+        "market-researcher"
+      ],
+      "locations": [
+        [
+          166,
+          166
+        ]
+      ],
+      "steps": [
+        "01"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "market-researcher-1"
+    },
+    {
+      "local_id": "market-researcher-4",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "01",
+      "kickoff_line_range": [
+        166,
+        167
+      ],
+      "kickoff_quote": "Name its focus \u2014 market-sizing, competitive, or trends",
+      "skill_quote": "- `focus`: market-sizing | competitive | trends (optional, see above)",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "skill_line": 22,
+      "reasoning": "Mode selection among modes the skill itself offers \u2014 explicitly listed as load-bearing by the audit rules. The enum values have to be spelled out for the operator to pick one. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "market-researcher",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "raised_by": [
+        "market-researcher"
+      ],
+      "locations": [
+        [
+          166,
+          167
+        ]
+      ],
+      "steps": [
+        "01"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "market-researcher-2"
+    },
+    {
+      "local_id": "market-researcher-1",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "01",
+      "kickoff_line_range": [
+        167,
+        169
+      ],
+      "kickoff_quote": "with none given it runs a lighter combined pass over all three and flags which one deserves a dedicated follow-up",
+      "skill_quote": "If no `focus` is provided, run a combined scan: a lighter pass over all three lenses, flagging which lens deserves a dedicated follow-up run.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "skill_line": 18,
+      "reasoning": "This is a near-verbatim restatement of the agent's own default-mode behavior, which the agent already declares in <role> line 18 and again in its frontmatter description line 3 ('omitting it runs a combined scan') and in its output template line 110 ('which focus deserves a dedicated run next'). The operator does not need to be told what the agent does when a parameter is omitted \u2014 omitting the parameter is the whole instruction. Naming the three focus values IS load-bearing (mode selection); the explanation of the no-focus fallback is not.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "market-researcher",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "raised_by": [
+        "market-researcher"
+      ],
+      "locations": [
+        [
+          167,
+          169
+        ]
+      ],
+      "steps": [
+        "01"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "market-researcher-3"
+    },
+    {
+      "local_id": "market-researcher-5",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "01",
+      "kickoff_line_range": [
+        168,
+        169
+      ],
+      "kickoff_quote": "and give it docs/global/project/PROJECT.md and SPEC/spec.md as project context",
+      "skill_quote": "- Project context: PROJECT.md / REQUIREMENTS.md if present (read for product domain, target users, and constraints) \u2014 canonically `docs/global/project/PROJECT.md` / `docs/milestones/<M>/REQUIREMENTS.md`",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "skill_line": 23,
+      "reasoning": "Which artifacts to feed in is an invocation argument. Note that `SPEC/spec.md` does NOT appear anywhere in the agent file (case-insensitive grep for 'spec' across the whole agent file returns zero hits), so the operator is supplying a context file outside the agent's declared input set \u2014 strictly load-bearing. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "market-researcher",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "raised_by": [
+        "market-researcher"
+      ],
+      "locations": [
+        [
+          168,
+          169
+        ]
+      ],
+      "steps": [
+        "01"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "market-researcher-4"
+    },
+    {
+      "local_id": "market-researcher-2",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "01",
+      "kickoff_line_range": [
+        169,
+        170
+      ],
+      "kickoff_quote": "as project context for domain, target users, and constraints",
+      "skill_quote": "- Project context: PROJECT.md / REQUIREMENTS.md if present (read for product domain, target users, and constraints) \u2014 canonically `docs/global/project/PROJECT.md` / `docs/milestones/<M>/REQUIREMENTS.md`",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "skill_line": 23,
+      "reasoning": "The trailing rationale clause is a word-for-word copy of the parenthetical in the agent's <input> block. Which files to hand in is load-bearing (see claim 4); why the agent reads them is the agent's own business and already fixed in its input contract. Low severity \u2014 it is one clause, not a methodology dump.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "market-researcher",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "raised_by": [
+        "market-researcher"
+      ],
+      "locations": [
+        [
+          169,
+          170
+        ]
+      ],
+      "steps": [
+        "01"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "market-researcher-5"
+    },
+    {
+      "local_id": "market-researcher-6",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "01",
+      "kickoff_line_range": [
+        170,
+        170
+      ],
+      "kickoff_quote": "There is no REQUIREMENTS.md to hand it yet; step 3 creates that.",
+      "skill_quote": "- Project context: PROJECT.md / REQUIREMENTS.md if present (read for product domain, target users, and constraints)",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "skill_line": 23,
+      "reasoning": "Pipeline sequencing state the agent cannot know. The agent's input contract already tolerates a missing REQUIREMENTS.md via 'if present', so this sentence is addressed to the operator (do not go hunting for a file that does not exist yet), not to the agent. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "market-researcher",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "raised_by": [
+        "market-researcher"
+      ],
+      "locations": [
+        [
+          170,
+          170
+        ]
+      ],
+      "steps": [
+        "01"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "market-researcher-6"
+    },
+    {
+      "local_id": "market-researcher-7",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "01",
+      "kickoff_line_range": [
+        170,
+        171
+      ],
+      "kickoff_quote": "Dispatch it alongside the assumption-mapping run above \u2014 different files, no ordering between them.",
+      "skill_quote": "You are dispatched by the orchestrator/pipeline with a `focus` value:",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "skill_line": 13,
+      "reasoning": "Cross-asset parallelism, which by definition lives in the guide and not in either agent \u2014 the agent only knows it is dispatched by an orchestrator. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "market-researcher",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "raised_by": [
+        "market-researcher"
+      ],
+      "locations": [
+        [
+          170,
+          171
+        ]
+      ],
+      "steps": [
+        "01"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "market-researcher-7"
+    }
+  ]
+}

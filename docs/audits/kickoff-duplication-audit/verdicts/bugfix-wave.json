@@ -1,0 +1,157 @@
+{
+  "asset": "bugfix-wave",
+  "verdicts": [
+    {
+      "claim_id": "bugfix-wave-19",
+      "confirmed": true,
+      "final_class": "unenforced-gap",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:58-62 \"1. **The orchestrator must not hold the source branch checked out.** Git allows one checkout per branch, so a track pushing into a checked-out branch is rejected with `! [remote rejected] (branch is currently checked out)`. That is git declining, not agent flakiness. Phase 2 has the orchestrator `git checkout --detach` before dispatching, which frees the ref.\" — and the Edge Case at SKILL.md:559-560 \"**Subagent reports `Merged: no` with \\\"branch is currently checked out\\\"**: you skipped the `git checkout --detach` in Phase 2, so every track in that wave hit the same wall.\"",
+      "reasoning": "Absence verified, not assumed. I re-ran the hunt myself: `ls` confirms the skill has NO references/ subdirectory (only SKILL.md, 602 lines); grep -iE 'elsewhere|another|other worktree|other session|pre-?flight|precondition|worktree list|checked out' over SKILL.md returns lines 47, 53, 58, 60, 289, 372, 378, 382, 386, 388, 412, 489, 559, 564, 583 and every one is either (a) the ORCHESTRATOR's own checkout, whose only prescribed remedy is `git checkout --detach` (58-62, 288-291), (b) a TRACK's inability to check out the branch (372, 382, 388), or (c) post-hoc worktree inventory after cleanup/failure (489, 583). The skill's precondition list is explicitly 'The two git preconditions' (line 53) and neither is 'no external session holds the ref'. Line 372 says the branch 'may be checked out elsewhere' but that is prose addressed to the track explaining why it must push rather than check out — it prescribes no orchestrator pre-flight and no remedy. Decisive: the Edge Case at 559-560 misattributes ANY 'branch is currently checked out' rejection to the orchestrator having skipped its own detach, which is exactly wrong when a second session holds the ref — `--detach` would not free it and the operator would be sent chasing a non-cause. The workflow script is no better: bugfix-wave.workflow.mjs:26-30 and :180 say only 'the orchestrator MUST NOT hold `sourceBranch` checked out'. The KICKOFF's pre-flight confirmation is therefore load-bearing and must be KEPT; the trailing rationale clause ('the fix tracks merge themselves into it, and git rejects a merge into a branch that is checked out elsewhere') does echo lines 58-61, but the operative instruction is uncovered."
+    },
+    {
+      "claim_id": "bugfix-wave-7",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:42-44 \"- **Source branch** — the branch the round starts from. Always named explicitly in the Workflow args. **Never hardcoded to `main`**; if the round runs on a working branch, that branch is the source and the merge target.\"",
+      "reasoning": "Verified verbatim at 42-44. The skill actively refuses to infer this value — 'Always named explicitly', 'Never hardcoded to main' — so both the findings.json path and the <branch> value are required arguments the caller alone can supply. Canonical load-bearing-parameter shape. KEEP."
+    },
+    {
+      "claim_id": "bugfix-wave-6",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:5-9 (frontmatter description) \"groups them into independent tracks with no file conflicts, organizes tracks into dependency-ordered waves, then dispatches every wave through a single Workflow run — one subagent per track, each working in its own git worktree and branch, merging itself back into the source branch when done.\" — reinforced at SKILL.md:45-47 \"Every track gets **its own worktree and its own branch cut from the source branch**. A track **commits, merges itself into the source branch, and returns.**\"",
+      "reasoning": "Verified at 5-9 and 45-47. The KICKOFF sentence carries no path, placeholder, mode or ordering constraint — it is a three-clause gloss of the skill's own frontmatter description, and it sits inside the pasted ```text``` block so the model reads it. That is the skill describing itself back to itself. Low severity: one sentence, and it does orient a human reader of the guide, but it is safely cuttable."
+    },
+    {
+      "claim_id": "bugfix-wave-1",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:179-180 \"Mode 2 (`findings.json` input): **required for every entry**. Mode 1: **recommended** when the finding represents a class.\" — and SKILL.md:87-88 \"- The structural-fix mandate in §1.5 is **required** for every entry — find all instances of the class, fix them all in one commit per class, and add a regression guard.\"",
+      "reasoning": "Verified at 179-180 and 87-88. SKILL.md:71 (\"Detect which one you've been given before Phase 1\") plus SKILL.md:79-82 make handing over a findings.json path *itself* the Mode-2 trigger, and Mode 2 makes the mandate required with no operator judgment involved. So 'required for every findings.json entry, so hold it to that' restates a conditional the skill resolves automatically from the very input this step supplies. Not the 'emphasis of something the skill makes optional' exception — the skill makes it mandatory, not optional. Severity lowered to low: it is a single lead-in clause; the substantive duplication is claims 2-5."
+    },
+    {
+      "claim_id": "bugfix-wave-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "SKILL.md:184-190 \"1. **Identify the class** — name the underlying defect type (e.g. \\\"missing zod validation at edge function boundary\\\" ...). Not just \\\"bug at line 42\\\".  2. **Find every instance** — grep, ripgrep, AST-walk, or read the relevant subsystem. The `lead_file` in `findings.json` is a starting point, not the only target.  3. **Fix all instances in one commit per class** ...\" — plus SKILL.md:217 \"**One commit per fix.** Each bug (Mode 1) or class (Mode 2) gets exactly one atomic commit.\" and SKILL.md:229 \"**Verify before committing (3 tiers):**\"",
+      "reasoning": "Verified line-by-line. 'name the underlying class of defect rather than the line that got flagged' = §1.5 step 1 including its own 'Not just \"bug at line 42\"' contrast; 'find and fix every instance of that class' = steps 2-3; 'in one atomic verified commit' = §1.6's 'One commit per fix' (217) and 'Verify before committing' (229). The skill also bakes all of it into the subagent prompt template it renders itself, at SKILL.md:404-407 and 417-420. This is the skill's central methodology section re-derived in the operator prompt — the textbook redundant-restatement, and high severity because it re-teaches a whole numbered procedure the skill both documents and propagates into every dispatched subagent."
+    },
+    {
+      "claim_id": "bugfix-wave-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:191-198 \"4. **Add a regression guard** — at least one of:\\n   - A test (unit / contract / integration / E2E) that fails if the class re-appears\\n   - A lint rule (ESLint, custom AST rule, semgrep)\\n   - A type-level constraint (branded types, exhaustive unions, generics)\\n   - A CI check (schema diff, bundle audit, RLS test job)\\n\\n   Pure documentation is not a regression guard. The guard must mechanically prevent or detect re-introduction.\"",
+      "reasoning": "Verified at 191-198. The KICKOFF's four-item list is the skill's taxonomy in the skill's own order (test / lint rule / type-level constraint / CI check), and 'Prose in a doc is not a guard' is line 197 compressed. The skill enforces the same rule twice more without operator help: in the rendered subagent prompt at SKILL.md:408-409 and as a hard validation gate at SKILL.md:528-529 ('`regression_guard` non-empty and is a mechanical guard ... not pure documentation'). Re-teaching a taxonomy the skill dedicates a subsection to is duplication by definition."
+    },
+    {
+      "claim_id": "bugfix-wave-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:175-177 \"A **point fix** changes only the flagged location and leaves other instances of the same class intact. Point fixes are cheaper short-term and worse long-term — the same defect re-appears in the next review round.\"",
+      "reasoning": "Verified at 175-177. Both halves of the KICKOFF sentence are already there: the definition ('changes only the flagged location') and the consequence ('the same defect re-appears in the next review round'). I checked specifically whether the KICKOFF adds loop-specific framing the skill lacks — it does not; the skill's own sentence is already phrased in terms of review rounds, and SKILL.md:32-34 and 317-320 show the skill was written knowing it sits inside an adversarial review loop. Nothing survives cutting."
+    },
+    {
+      "claim_id": "bugfix-wave-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:207-210 \"If a class genuinely cannot be fixed structurally (e.g. one of the instances requires a breaking API change scheduled for a later sprint), the track records it as **unresolved** in the close handover with a one-line rationale. The orchestrator surfaces unresolved classes to the caller.\"",
+      "reasoning": "Verified at 207-210 — same trigger ('genuinely cannot be fixed structurally'), same disposition ('unresolved'), same artifact ('one-line rationale'). Enforced three more times without operator help: the close-handover template field at SKILL.md:442 ('Unresolved classes: {class name — one-line rationale} | none'), aggregation at SKILL.md:521, and the Phase 4.2 gate at SKILL.md:531-532 which forces a failing class to 'move ... to `unresolved` with an explicit rationale'. The only wording not literally in the skill is the negative gloss 'not quietly downgraded to a point fix', which is emphasis on a rule 531-532 already mechanically enforces."
+    },
+    {
+      "claim_id": "bugfix-wave-8",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:536-538 \"The caller specifies the output path (or asks you to derive it from the input findings.json path). Write JSON matching the schema referenced by the caller (typically `docs/global/process/SCHEMAS.md` — the `fixes.json` shape).\" — and SKILL.md:89-90 \"you **must** emit a `fixes.json` summary at a caller-supplied path (see Phase 4).\"",
+      "reasoning": "Verified at 536-538 and 89-90. Phase 4.3 explicitly delegates the output path to the caller, so `PHASE/reviews/round-<n>/fixes.json` is the invocation's argument — the skill cannot invent it. The justifying clause is knowledge of code-review-gate's `PHASE/reviews/round-*/fixes.json` glob and its previously_seen_class / stop_loop contract, which lives in a different asset and is invisible to bugfix-wave. The only overlapping sliver is 'its Phase 4 must emit', restating line 89-90 — too small to act on. KEEP."
+    },
+    {
+      "claim_id": "bugfix-wave-10",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:335-337 \"**The Workflow cannot clean up after itself.** It has no filesystem or git access. Reconciling `unmerged`, worktree removal, branch deletion (Phase 3) and `fixes.json` (Phase 4) all run in your turn after it returns.\"",
+      "reasoning": "Verified at 335-337 — the claim, the cause ('no filesystem or git access') and the consequence ('run in your turn after it returns') are all the skill's own, and the workflow script repeats them at bugfix-wave.workflow.mjs:37 and :293. The KICKOFF clause adds nothing beyond re-deriving the same causal chain. Severity lowered to low because it is a short subordinate clause functioning as the rationale for the genuinely load-bearing placement instruction adjudicated in bugfix-wave-9; cutting it alone leaves that instruction unexplained, so it is the weakest candidate for excision in this block."
+    },
+    {
+      "claim_id": "bugfix-wave-9",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:459-461 \"Tracks merge themselves, so most work is already on the source branch when the Workflow returns. This phase reconciles what did not land. It runs **once, after the whole run** — not between waves.\"",
+      "reasoning": "Verified at 459-461, and I checked hard for a contradiction because that is the obvious refutation route. There is none: the skill's 'once, after the whole run — not between waves' scopes Phase 3 within a single bugfix-wave invocation (waves are the skill's internal unit), while the KICKOFF pins that Phase-3 turn to a position in the OUTER six-round review loop — after each round's invocation rather than after all six. Rounds are not waves, and the skill has no representation of the outer loop at all, so it cannot express this constraint. Ordering across a composition of skills is explicitly load-bearing. KEEP."
+    },
+    {
+      "claim_id": "bugfix-wave-11",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:478-480 \"3. **Verify every branch is in.** For all of `branches`, `git log <source-branch>..<branch> --oneline` must come back **empty**. A track's `Merged:` field is a self-report; this check is the evidence. Do not clean up until it passes.\"",
+      "reasoning": "Verified at 478-480 — identical down to the git invocation and the word 'empty'. The skill also issues the same command in Phase 3.1 steps 1 and 2 (SKILL.md:468-469, 476) and in Edge Cases (SKILL.md:577). No parameter is introduced: <branch> is the already-supplied source branch and <track-branch> is the skill's own `branches` return value (SKILL.md:330-333). Severity medium rather than high — the block-level transcription is real but is accounted for across claims 11-17 individually, so scoring this single bullet as high would double-count."
+    },
+    {
+      "claim_id": "bugfix-wave-12",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:469-472 \"For each: `git log <source-branch>..<branch> --oneline` to see what is missing, then merge it. If it conflicts, resolve centrally: you hold the bug list, the track partition and the cross-track context that no single track has.\"",
+      "reasoning": "Verified at 469-472 — 'resolve centrally' and 'cross-track context that no single track has' are word-for-word; 'the findings list' is just 'the bug list' renamed for Mode 2. Phase 3.1 step 1 already instructs exactly this. The guide's version is also strictly lossier: it drops the skill's follow-on rule at 471-472 ('Two tracks making genuinely contradictory choices is a partition defect — surface it rather than picking a side')."
+    },
+    {
+      "claim_id": "bugfix-wave-13",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:66-67 \"A track that loses every retry leaves its branch unmerged and says so. **That is an expected outcome, not a failure** — Phase 3 exists to catch it.\"",
+      "reasoning": "Verified at 66-67, including the bolded 'expected outcome, not a failure'. I confirmed the third copy myself: bugfix-wave.workflow.mjs:116 describes the handover's merged field as '... exhausted its retries, or aborted on another track's file reports false — that is an expected outcome, not a failure to hide.' Three copies of one assurance; the guide's is the removable one, and it introduces no parameter or ordering constraint."
+    },
+    {
+      "claim_id": "bugfix-wave-14",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:473-477 \"2. **Check `dropped`.** A track that returned no handover is not a completed track, and a missing handover is never an empty one. Its branch may hold commits that are merged, partly merged, or not merged at all — per §1.6 every per-fix commit is self-contained, so inspect with `git log <source-branch>..<branch>` and merge what landed. Treat its remaining bugs as unfixed: re-dispatch or report them.\"",
+      "reasoning": "Verified at 473-477, and the skill states it a third time in Edge Cases at SKILL.md:573-579 ('a missing handover is never an empty one ... Never let a `dropped` track be counted as coverage'), with the workflow script emitting the same warning at bugfix-wave.workflow.mjs:242. The KICKOFF sentence is a strictly weaker copy — it drops the re-dispatch option the skill offers at 477 and 577-578."
+    },
+    {
+      "claim_id": "bugfix-wave-15",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:480 \"Do not clean up until it passes.\" — reinforced at SKILL.md:488 \"6. **Delete branches**: `git branch -d <branch>` (`-D` only after step 3 passed).\"",
+      "reasoning": "Verified at 480 and 488. Same gate, same sequential position (after the git-log-empty verification of step 3, before worktree removal in step 5), and the skill hard-orders Phase 3.1 steps 3 → 5 → 6 to enforce it, with an extra explicit guard on `-D`. Low severity — it is a single short clause."
+    },
+    {
+      "claim_id": "bugfix-wave-16",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "SKILL.md:481-482 \"4. **Re-attach**: `git checkout <source-branch>`. If dirty files linger from worktree cross-talk, `git checkout -- <files>` first.\" — plus SKILL.md:288-291 \"**Free the source branch first.** Before dispatching, run `git checkout --detach` in the main working tree. Tracks cannot push into a branch that is checked out ... Re-check-out the source branch in Phase 3, after the run.\" and SKILL.md:337-338 \"note you are still on a detached HEAD until you re-check-out the source branch there.\"",
+      "reasoning": "Verified all four clauses against the skill. Re-attach command and the dirty-file remedy: 481-482, verbatim including `git checkout -- <files>`. The detach and its rationale ('tracks cannot push into a branch that is checked out'): 288-291, echoed at 58-62. The detached-HEAD warning: 337-338 and 465 ('You are still on a **detached HEAD** from Phase 2. Stay there until step 4.'). Four lines of guide text against zero new information; the only non-duplicated fragment is 'every remaining round runs on a detached HEAD', which is the outer-loop restatement of a consequence the skill already spells out per-invocation. High severity — this is the single largest verbatim transcription in the invocation."
+    },
+    {
+      "claim_id": "bugfix-wave-17",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:483-488 \"5. **Clean up worktrees**: for each agent worktree:\\n   ```\\n   git worktree unlock .claude/worktrees/<id> 2>/dev/null\\n   git worktree remove .claude/worktrees/<id> --force 2>/dev/null\\n   ```\\n6. **Delete branches**: `git branch -d <branch>` (`-D` only after step 3 passed).\"",
+      "reasoning": "Verified at 483-488 — Phase 3.1 steps 5 and 6 in exactly the order the guide bullet asserts, with the actual commands the guide omits. The 'Only then' precedence is likewise already carried by SKILL.md:480 and the `-D` guard at 488. So the guide bullet is a lossy paraphrase of a sequence the skill fully specifies. Severity low: one short bullet, and it is harmless rather than misleading."
+    },
+    {
+      "claim_id": "bugfix-wave-18",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:489 \"7. **Confirm none remain**: `git worktree list | grep -c agent` should return 0.\" — and SKILL.md:481 \"4. **Re-attach**: `git checkout <source-branch>`.\"",
+      "reasoning": "Verified at 481 and 489: both assertions ('back on <branch>', 'no agent worktrees remain') are Phase 3.1 steps 4 and 7. I tested the strongest refutation — that a post-loop sweep is a different scope than one invocation's Phase 3, and therefore load-bearing ordering the skill cannot own. It does not hold: the KICKOFF's own step 3b already forces both checks at the end of every round, and on the loop-exit path (stop_loop true at step 2) no bugfix-wave ran that round, so the previous round's 3b already left the tree in the asserted state. Cutting the sentence is therefore safe, which makes it duplication rather than a gap. Low severity — it is a cheap belt-and-braces sweep."
+    }
+  ]
+}

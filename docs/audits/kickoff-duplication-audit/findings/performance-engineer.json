@@ -1,0 +1,93 @@
+{
+  "asset": "performance-engineer",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/performance-engineer.md",
+  "references_read": [],
+  "claims": [
+    {
+      "local_id": "performance-engineer-1",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "15",
+      "kickoff_line_range": [1304, 1315],
+      "kickoff_quote": "Measure first — no optimizing on a hunch.",
+      "skill_quote": "Measure first — never optimize on a hunch.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/performance-engineer.md",
+      "skill_line": 24,
+      "reasoning": "This is a near-verbatim copy of the skill's own Method-section opening rule. The skill already states this as its first hard rule, so the operator restating it adds no new information and is boilerplate.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "performance-engineer-2",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "15",
+      "kickoff_line_range": [1304, 1315],
+      "kickoff_quote": "Establish the baseline and profile the running system, then eliminate the single biggest bottleneck, re-measure, and iterate",
+      "skill_quote": "Measure the baseline; profile the running system... then optimize the single biggest bottleneck, re-measure, and iterate.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/performance-engineer.md",
+      "skill_line": 11,
+      "reasoning": "This spells out the skill's own internal loop, combining 'When invoked' step 2 (line 11: 'Measure the baseline; profile the running system') with the Method section's 'establish a baseline, then optimize the single biggest bottleneck, re-measure, and iterate' (line 24). The operator is re-deriving methodology the skill already fixes step-by-step.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "performance-engineer-3",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "15",
+      "kickoff_line_range": [1304, 1315],
+      "kickoff_quote": "the usual suspects are N+1 queries, pool exhaustion, cache misses, synchronous blocking, and memory leaks",
+      "skill_quote": "Watch for the usual patterns: N+1 queries, memory leaks, pool exhaustion, cache misses, synchronous blocking, inefficient algorithms, resource contention.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/performance-engineer.md",
+      "skill_line": 24,
+      "reasoning": "The skill already enumerates this exact checklist of common bottleneck patterns in its Method section; the operator restates five of the seven items verbatim (omitting 'inefficient algorithms' and 'resource contention'). Severity is low because it is a partial subset restatement rather than a full re-teaching, but it is still domain content the skill owns.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "performance-engineer-4",
+      "class": "redundant-restatement",
+      "severity": "high",
+      "step": "15",
+      "kickoff_line_range": [1304, 1315],
+      "kickoff_quote": "with before and after numbers — response time, throughput, resource use — the bottlenecks found, the fixes applied, and the evidence validating each gain, plus the alert thresholds that keep the gains from regressing",
+      "skill_quote": "baseline vs. after numbers (response time, throughput, resource use), the bottlenecks found, the fixes applied, and validation evidence... monitoring/alert thresholds so gains don't regress.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/performance-engineer.md",
+      "skill_line": 27,
+      "reasoning": "The skill's Output section already fixes the exact report field list (before/after numbers, response time/throughput/resource use, bottlenecks, fixes, validation evidence, alert thresholds). The KICKOFF text re-lists every one of these fields nearly word-for-word, which is the report's template/section structure the skill's Output section already dictates.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "performance-engineer-5",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "15",
+      "kickoff_line_range": [1304, 1315],
+      "kickoff_quote": "Write docs/global/ops/monitoring/performance-report.md",
+      "skill_quote": "Write `docs/global/ops/monitoring/performance-report.md`:",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/performance-engineer.md",
+      "skill_line": 27,
+      "reasoning": "Although the skill already fixes this exact path, the KICKOFF context (per brief surrounding_prose) coordinates this step against a sibling monitoring-expert step writing under the same docs/global/ops/monitoring/ directory without overlapping — restating the path here serves cross-step directory-collision avoidance at the orchestration level, so it is judged load-bearing rather than pure restatement.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "performance-engineer-6",
+      "class": "redundant-restatement",
+      "severity": "high",
+      "step": "15",
+      "kickoff_line_range": [1304, 1315],
+      "kickoff_quote": "If the bottleneck turns out to be infra-wide or capacity-related rather than app-level, hand the dashboard and capacity follow-through to monitoring-expert rather than continuing to profile app code.",
+      "skill_quote": "If the bottleneck is infra-wide or capacity-related rather than app-code-level, hand dashboard/capacity follow-through to `monitoring-expert` (infra lane) instead of continuing app-level profiling.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/performance-engineer.md",
+      "skill_line": 27,
+      "reasoning": "This is a near word-for-word restatement of the skill's own handoff/gating rule at the end of its Output section — same condition (infra-wide/capacity-related), same target agent (monitoring-expert), same instruction (stop app-level profiling). The skill already enforces this itself, so the operator text adds nothing new.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

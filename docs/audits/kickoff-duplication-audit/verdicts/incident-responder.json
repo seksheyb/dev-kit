@@ -1,0 +1,37 @@
+{
+  "asset": "incident-responder",
+  "verdicts": [
+    {
+      "claim_id": "incident-responder-1",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "Skill lines 10-13 'When invoked': '1. Establish the incident type... 2. Triage and classify severity... 3. Contain, investigate, and recover... 4. Run root-cause analysis and produce a blameless postmortem with tracked action items.' Plus line 27: 'Write it to `docs/global/ops/postmortems/<date>-<slug>.md`'.",
+      "reasoning": "Verified the KICKOFF quote exists verbatim at lines 1355-1356 of KICKOFF.md. The phase sequence (triage, contain, preserve evidence, diagnose, recover, postmortem) is exactly the skill's own 'When invoked' checklist restated in different words, and the output path docs/global/ops/postmortems/ is hardcoded in the skill (lines 3, 27, 30), not a caller-supplied parameter or variant. Nothing in this sentence is information the skill couldn't derive from its own text."
+    },
+    {
+      "claim_id": "incident-responder-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "Skill line 18: '**Preserve evidence** (especially for security incidents): logs, system snapshots, network captures, memory dumps, config backups, audit trails, and a precise timeline. Contain without destroying forensic state.' Reinforced by line 7: 'Optimize for low MTTD/MTTA/MTTR without sacrificing evidence integrity.'",
+      "reasoning": "Verified KICKOFF quote exists verbatim at lines 1356-1357. The rule 'containment never comes at the cost of evidence integrity — preserve first, then clean up' is a restatement of the skill's own explicit gate ('Contain without destroying forensic state') and its top-line priority statement. This is the skill's internal hard rule re-derived in the operator prompt, not a new constraint."
+    },
+    {
+      "claim_id": "incident-responder-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "Skill line 24: 'For incidents with regulatory exposure (breach notification, data incidents), track disclosure deadlines and loop in legal/compliance early — see the compliance-auditor agent for framework-specific obligations.'",
+      "reasoning": "Verified KICKOFF quote exists verbatim at lines 1359-1361. The trigger condition (regulatory exposure / breach notification / personal or regulated data), the named downstream agent (compliance-auditor), and the timing ('early', not at postmortem time) are all already present in the skill's own text. Normally naming a downstream agent is load-bearing context-passing, but here the skill already hard-wires this exact handoff and timing, so the KICKOFF sentence adds no information the skill doesn't already carry."
+    },
+    {
+      "claim_id": "incident-responder-4",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "Full skill file (30 lines) read in entirety — no mention of 'discovery', 'disclosure clock', or when disclosure-deadline timers start anywhere in the file (checked lines 1-31, including the regulatory-exposure sentence at line 24 which only says to 'track disclosure deadlines' without specifying the trigger event).",
+      "reasoning": "Hunted specifically for this fact across the whole skill file since it is adjacent to a confirmed duplication (claim 3) and could easily be miscategorized either way. The specific domain fact — that disclosure clocks start at discovery rather than at the fix — and the instruction to proactively surface the applicable regime and its clock to the operator while the incident is still open, appear nowhere in the skill. This is genuine load-bearing operator guidance the skill cannot know or enforce on its own."
+    }
+  ]
+}

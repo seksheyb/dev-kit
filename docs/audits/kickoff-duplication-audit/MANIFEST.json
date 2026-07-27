@@ -1,0 +1,2446 @@
+{
+  "phase_complete": "compile-claims",
+  "total_invocations": 153,
+  "unique_assets": 119,
+  "unresolved": [],
+  "dropped_trap_phrases": [],
+  "assets": [
+    {
+      "name": "ab-test-analysis",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/ab-test-analysis/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 111,
+      "has_references": false,
+      "steps": [
+        "15"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/ab-test-analysis.md"
+    },
+    {
+      "name": "accessibility-tester",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/accessibility-tester.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 28,
+      "has_references": false,
+      "steps": [
+        "12"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/accessibility-tester.md"
+    },
+    {
+      "name": "advisor-researcher",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/advisor-researcher.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 129,
+      "has_references": false,
+      "steps": [
+        "05"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/advisor-researcher.md"
+    },
+    {
+      "name": "ai-researcher",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/ai-researcher.md",
+      "invocation_count": 2,
+      "complexity": "medium",
+      "file_lines": 138,
+      "has_references": false,
+      "steps": [
+        "06",
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/ai-researcher.md"
+    },
+    {
+      "name": "analyze",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/analyze/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 202,
+      "has_references": false,
+      "steps": [
+        "07"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/analyze.md"
+    },
+    {
+      "name": "api-designer",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/api-designer/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 217,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/api-designer.md"
+    },
+    {
+      "name": "architecture-designer",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/architecture-designer/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 120,
+      "has_references": true,
+      "steps": [
+        "02"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/architecture-designer.md"
+    },
+    {
+      "name": "assumption-mapping",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/assumption-mapping/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 80,
+      "has_references": false,
+      "steps": [
+        "01"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/assumption-mapping.md"
+    },
+    {
+      "name": "assumptions-analyzer",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/assumptions-analyzer.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 109,
+      "has_references": false,
+      "steps": [
+        "05"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/assumptions-analyzer.md"
+    },
+    {
+      "name": "brainstorming",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/brainstorming/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 250,
+      "has_references": false,
+      "steps": [
+        "01"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/brainstorming.md"
+    },
+    {
+      "name": "bugfix-wave",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/bugfix-wave/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 602,
+      "has_references": false,
+      "steps": [
+        "10"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/bugfix-wave.md"
+    },
+    {
+      "name": "chaos-engineer",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/chaos-engineer/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 182,
+      "has_references": true,
+      "steps": [
+        "15"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/chaos-engineer.md"
+    },
+    {
+      "name": "cloud-architect",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/cloud-architect/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 216,
+      "has_references": true,
+      "steps": [
+        "13"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/cloud-architect.md"
+    },
+    {
+      "name": "code-documenter",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 147,
+      "has_references": true,
+      "steps": [
+        "14"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/code-documenter.md"
+    },
+    {
+      "name": "code-review-gate",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/code-review-gate.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 479,
+      "has_references": false,
+      "steps": [
+        "10"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/code-review-gate.md"
+    },
+    {
+      "name": "code-review-protocol",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-review-protocol/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 320,
+      "has_references": false,
+      "steps": [
+        "10"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/code-review-protocol.md"
+    },
+    {
+      "name": "codebase-mapper",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/codebase-mapper.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 869,
+      "has_references": false,
+      "steps": [
+        "05"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/codebase-mapper.md"
+    },
+    {
+      "name": "cohort-analysis",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/cohort-analysis/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 103,
+      "has_references": false,
+      "steps": [
+        "15"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/cohort-analysis.md"
+    },
+    {
+      "name": "compliance-auditor",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/compliance-auditor.md",
+      "invocation_count": 2,
+      "complexity": "medium",
+      "file_lines": 25,
+      "has_references": false,
+      "steps": [
+        "12",
+        "15"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/compliance-auditor.md"
+    },
+    {
+      "name": "constitution",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/constitution/SKILL.md",
+      "invocation_count": 2,
+      "complexity": "medium",
+      "file_lines": 100,
+      "has_references": false,
+      "steps": [
+        "00",
+        "00"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/constitution.md"
+    },
+    {
+      "name": "content-qa",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/content-qa/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 63,
+      "has_references": true,
+      "steps": [
+        "14"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/content-qa.md"
+    },
+    {
+      "name": "context-restore",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/context-restore/SKILL.md",
+      "invocation_count": 6,
+      "complexity": "high",
+      "file_lines": 80,
+      "has_references": false,
+      "steps": [
+        "01",
+        "03",
+        "04",
+        "05",
+        "08",
+        "12"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/context-restore.md"
+    },
+    {
+      "name": "context-save",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/context-save/SKILL.md",
+      "invocation_count": 6,
+      "complexity": "high",
+      "file_lines": 127,
+      "has_references": false,
+      "steps": [
+        "00",
+        "02",
+        "03",
+        "04",
+        "07",
+        "11"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/context-save.md"
+    },
+    {
+      "name": "converge",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/converge/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 261,
+      "has_references": false,
+      "steps": [
+        "11"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/converge.md"
+    },
+    {
+      "name": "cso",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/cso/SKILL.md",
+      "invocation_count": 2,
+      "complexity": "high",
+      "file_lines": 313,
+      "has_references": false,
+      "steps": [
+        "00",
+        "12"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/cso.md"
+    },
+    {
+      "name": "debug",
+      "kind": "command",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/debug.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 9,
+      "has_references": false,
+      "steps": [
+        "09"
+      ],
+      "aliases_merged": [
+        "dev-kit-core:debug"
+      ],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/debug.md"
+    },
+    {
+      "name": "dependency-manager",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/dependency-manager.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 27,
+      "has_references": false,
+      "steps": [
+        "12"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/dependency-manager.md"
+    },
+    {
+      "name": "design-consultation",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-consultation/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 505,
+      "has_references": false,
+      "steps": [
+        "04"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/design-consultation.md"
+    },
+    {
+      "name": "design-handoff",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-handoff/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 113,
+      "has_references": false,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/design-handoff.md"
+    },
+    {
+      "name": "design-html",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "invocation_count": 3,
+      "complexity": "high",
+      "file_lines": 238,
+      "has_references": false,
+      "steps": [
+        "04",
+        "04",
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/design-html.md"
+    },
+    {
+      "name": "design-reviewer",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 306,
+      "has_references": false,
+      "steps": [
+        "12"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/design-reviewer.md"
+    },
+    {
+      "name": "devex-review",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/devex-review/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 249,
+      "has_references": true,
+      "steps": [
+        "12"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/devex-review.md"
+    },
+    {
+      "name": "devops-engineer",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/devops-engineer/SKILL.md",
+      "invocation_count": 2,
+      "complexity": "medium",
+      "file_lines": 144,
+      "has_references": true,
+      "steps": [
+        "08",
+        "13"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/devops-engineer.md"
+    },
+    {
+      "name": "diagram",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/diagram/SKILL.md",
+      "invocation_count": 2,
+      "complexity": "medium",
+      "file_lines": 61,
+      "has_references": false,
+      "steps": [
+        "02",
+        "07"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/diagram.md"
+    },
+    {
+      "name": "dispatching-parallel-agents",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/dispatching-parallel-agents/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 171,
+      "has_references": false,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/dispatching-parallel-agents.md"
+    },
+    {
+      "name": "django-expert",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/django-expert/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 160,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/django-expert.md"
+    },
+    {
+      "name": "doc-classifier",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/doc-classifier.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 160,
+      "has_references": false,
+      "steps": [
+        "00"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/doc-classifier.md"
+    },
+    {
+      "name": "doc-synthesizer",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/doc-synthesizer.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 206,
+      "has_references": false,
+      "steps": [
+        "00"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/doc-synthesizer.md"
+    },
+    {
+      "name": "doc-verifier",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/doc-verifier.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 201,
+      "has_references": false,
+      "steps": [
+        "14"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/doc-verifier.md"
+    },
+    {
+      "name": "docker-expert",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/docker-expert/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 230,
+      "has_references": true,
+      "steps": [
+        "13"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/docker-expert.md"
+    },
+    {
+      "name": "document-generate",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-generate/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 166,
+      "has_references": false,
+      "steps": [
+        "14"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/document-generate.md"
+    },
+    {
+      "name": "document-release",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/document-release/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 406,
+      "has_references": false,
+      "steps": [
+        "14"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/document-release.md"
+    },
+    {
+      "name": "domain-researcher",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/domain-researcher.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 178,
+      "has_references": false,
+      "steps": [
+        "06"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/domain-researcher.md"
+    },
+    {
+      "name": "eval-auditor",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/eval-auditor.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 179,
+      "has_references": false,
+      "steps": [
+        "11"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/eval-auditor.md"
+    },
+    {
+      "name": "eval-planner",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/eval-planner.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 158,
+      "has_references": false,
+      "steps": [
+        "06"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/eval-planner.md"
+    },
+    {
+      "name": "fastapi-expert",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/fastapi-expert/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 185,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/fastapi-expert.md"
+    },
+    {
+      "name": "finishing-a-development-branch",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/finishing-a-development-branch/SKILL.md",
+      "invocation_count": 2,
+      "complexity": "medium",
+      "file_lines": 241,
+      "has_references": false,
+      "steps": [
+        "08",
+        "13"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/finishing-a-development-branch.md"
+    },
+    {
+      "name": "fintech-engineer",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/fintech-engineer/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 221,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/fintech-engineer.md"
+    },
+    {
+      "name": "flutter-expert",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-mobile/skills/flutter-expert/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 136,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/flutter-expert.md"
+    },
+    {
+      "name": "framework-selector",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/agents/framework-selector.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 242,
+      "has_references": false,
+      "steps": [
+        "06"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/framework-selector.md"
+    },
+    {
+      "name": "fullstack-guardian",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/fullstack-guardian/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 105,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/fullstack-guardian.md"
+    },
+    {
+      "name": "gate-automation",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-automation.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 81,
+      "has_references": false,
+      "steps": [
+        "11"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/gate-automation.md"
+    },
+    {
+      "name": "gate-plan-review",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-plan-review.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 113,
+      "has_references": false,
+      "steps": [
+        "07"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/gate-plan-review.md"
+    },
+    {
+      "name": "gate-reverse-engineer",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-reverse-engineer.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 36,
+      "has_references": false,
+      "steps": [
+        "00"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/gate-reverse-engineer.md"
+    },
+    {
+      "name": "gdpr-ccpa-compliance",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/gdpr-ccpa-compliance/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 123,
+      "has_references": false,
+      "steps": [
+        "12"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/gdpr-ccpa-compliance.md"
+    },
+    {
+      "name": "graphify",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/graphify/SKILL.md",
+      "invocation_count": 3,
+      "complexity": "high",
+      "file_lines": 1497,
+      "has_references": false,
+      "steps": [
+        "00",
+        "00",
+        "05"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/graphify.md"
+    },
+    {
+      "name": "growth-loops",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/growth-loops/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 95,
+      "has_references": false,
+      "steps": [
+        "15"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/growth-loops.md"
+    },
+    {
+      "name": "guard",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/guard/SKILL.md",
+      "invocation_count": 2,
+      "complexity": "medium",
+      "file_lines": 109,
+      "has_references": false,
+      "steps": [
+        "08",
+        "13"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/guard.md"
+    },
+    {
+      "name": "health",
+      "kind": "command",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/health.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 9,
+      "has_references": false,
+      "steps": [
+        "15"
+      ],
+      "aliases_merged": [
+        "dev-kit-core:health"
+      ],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/health.md"
+    },
+    {
+      "name": "hipaa-compliance",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/hipaa-compliance/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 129,
+      "has_references": false,
+      "steps": [
+        "12"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/hipaa-compliance.md"
+    },
+    {
+      "name": "incident-responder",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/incident-responder.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 30,
+      "has_references": false,
+      "steps": [
+        "15"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/incident-responder.md"
+    },
+    {
+      "name": "integration-checker",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/integration-checker.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 408,
+      "has_references": false,
+      "steps": [
+        "11"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/integration-checker.md"
+    },
+    {
+      "name": "kotlin-specialist",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-mobile/skills/kotlin-specialist/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 147,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/kotlin-specialist.md"
+    },
+    {
+      "name": "kubernetes-specialist",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/kubernetes-specialist/SKILL.md",
+      "invocation_count": 2,
+      "complexity": "medium",
+      "file_lines": 241,
+      "has_references": true,
+      "steps": [
+        "08",
+        "13"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/kubernetes-specialist.md"
+    },
+    {
+      "name": "land-and-deploy",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/land-and-deploy/SKILL.md",
+      "invocation_count": 2,
+      "complexity": "medium",
+      "file_lines": 205,
+      "has_references": false,
+      "steps": [
+        "13",
+        "14"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/land-and-deploy.md"
+    },
+    {
+      "name": "learn",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/learn/SKILL.md",
+      "invocation_count": 3,
+      "complexity": "high",
+      "file_lines": 101,
+      "has_references": false,
+      "steps": [
+        "08",
+        "10",
+        "11"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/learn.md"
+    },
+    {
+      "name": "legacy-modernizer",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/legacy-modernizer/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 137,
+      "has_references": true,
+      "steps": [
+        "00"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/legacy-modernizer.md"
+    },
+    {
+      "name": "license-engineer",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/license-engineer/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 79,
+      "has_references": false,
+      "steps": [
+        "12"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/license-engineer.md"
+    },
+    {
+      "name": "market-researcher",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/market-researcher.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 129,
+      "has_references": false,
+      "steps": [
+        "01"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/market-researcher.md"
+    },
+    {
+      "name": "mcp-developer",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/mcp-developer/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 143,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/mcp-developer.md"
+    },
+    {
+      "name": "ml-pipeline",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/skills/ml-pipeline/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 158,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/ml-pipeline.md"
+    },
+    {
+      "name": "monitoring-expert",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/monitoring-expert/SKILL.md",
+      "invocation_count": 3,
+      "complexity": "high",
+      "file_lines": 176,
+      "has_references": true,
+      "steps": [
+        "13",
+        "15",
+        "15"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/monitoring-expert.md"
+    },
+    {
+      "name": "nextjs-developer",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/nextjs-developer/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 146,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/nextjs-developer.md"
+    },
+    {
+      "name": "nyquist-auditor",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/nyquist-auditor.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 196,
+      "has_references": false,
+      "steps": [
+        "11"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/nyquist-auditor.md"
+    },
+    {
+      "name": "pattern-mapper",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/pattern-mapper.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 337,
+      "has_references": false,
+      "steps": [
+        "05"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/pattern-mapper.md"
+    },
+    {
+      "name": "payment-integration",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-specialized/skills/payment-integration/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 218,
+      "has_references": false,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/payment-integration.md"
+    },
+    {
+      "name": "penetration-tester",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/penetration-tester.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 33,
+      "has_references": false,
+      "steps": [
+        "12"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/penetration-tester.md"
+    },
+    {
+      "name": "performance-engineer",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/performance-engineer.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 27,
+      "has_references": false,
+      "steps": [
+        "15"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/performance-engineer.md"
+    },
+    {
+      "name": "phase-researcher",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/phase-researcher.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 906,
+      "has_references": false,
+      "steps": [
+        "05"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/phase-researcher.md"
+    },
+    {
+      "name": "plan-review",
+      "kind": "command",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/plan-review.md",
+      "invocation_count": 3,
+      "complexity": "high",
+      "file_lines": 22,
+      "has_references": false,
+      "steps": [
+        "07",
+        "07",
+        "07"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/plan-review.md"
+    },
+    {
+      "name": "planner",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/planner.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 1256,
+      "has_references": false,
+      "steps": [
+        "07"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/planner.md"
+    },
+    {
+      "name": "playwright-expert",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/playwright-expert/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 169,
+      "has_references": true,
+      "steps": [
+        "11"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/playwright-expert.md"
+    },
+    {
+      "name": "postgres-pro",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/postgres-pro/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 152,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/postgres-pro.md"
+    },
+    {
+      "name": "project-researcher",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/project-researcher.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 636,
+      "has_references": false,
+      "steps": [
+        "03"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/project-researcher.md"
+    },
+    {
+      "name": "prompt-engineer",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/skills/prompt-engineer/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 134,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/prompt-engineer.md"
+    },
+    {
+      "name": "python-pro",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/python-pro/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 177,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/python-pro.md"
+    },
+    {
+      "name": "qa",
+      "kind": "command",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/qa.md",
+      "invocation_count": 2,
+      "complexity": "medium",
+      "file_lines": 9,
+      "has_references": false,
+      "steps": [
+        "10",
+        "10"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/qa.md"
+    },
+    {
+      "name": "rag-architect",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-data-ai/skills/rag-architect/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 195,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/rag-architect.md"
+    },
+    {
+      "name": "react-expert",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/react-expert/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 149,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/react-expert.md"
+    },
+    {
+      "name": "react-native-expert",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-mobile/skills/react-native-expert/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 187,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/react-native-expert.md"
+    },
+    {
+      "name": "refactoring-specialist",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/refactoring-specialist/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 88,
+      "has_references": false,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/refactoring-specialist.md"
+    },
+    {
+      "name": "research-synthesizer",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/research-synthesizer.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 248,
+      "has_references": false,
+      "steps": [
+        "03"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/research-synthesizer.md"
+    },
+    {
+      "name": "retro",
+      "kind": "command",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/retro.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 9,
+      "has_references": false,
+      "steps": [
+        "15"
+      ],
+      "aliases_merged": [
+        "dev-kit-core:retro"
+      ],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/retro.md"
+    },
+    {
+      "name": "review",
+      "kind": "command",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/review.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 9,
+      "has_references": false,
+      "steps": [
+        "10"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/review.md"
+    },
+    {
+      "name": "roadmapper",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/roadmapper.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 729,
+      "has_references": false,
+      "steps": [
+        "03"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/roadmapper.md"
+    },
+    {
+      "name": "sdd-review-cto",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sdd-review-cto/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 199,
+      "has_references": false,
+      "steps": [
+        "02"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/sdd-review-cto.md"
+    },
+    {
+      "name": "secure-code-guardian",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/secure-code-guardian/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 191,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/secure-code-guardian.md"
+    },
+    {
+      "name": "security-audit",
+      "kind": "command",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/security-audit.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 9,
+      "has_references": false,
+      "steps": [
+        "12"
+      ],
+      "aliases_merged": [
+        "dev-kit-core:security-audit"
+      ],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/security-audit.md"
+    },
+    {
+      "name": "ship",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/ship/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 218,
+      "has_references": false,
+      "steps": [
+        "13"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/ship.md"
+    },
+    {
+      "name": "spec-miner",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/spec-miner/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 111,
+      "has_references": true,
+      "steps": [
+        "00"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/spec-miner.md"
+    },
+    {
+      "name": "spec-review-cpo",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/spec-review-cpo/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 273,
+      "has_references": true,
+      "steps": [
+        "01"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/spec-review-cpo.md"
+    },
+    {
+      "name": "specify",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/specify/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 290,
+      "has_references": true,
+      "steps": [
+        "01"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/specify.md"
+    },
+    {
+      "name": "sprint-execution",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/sprint-execution/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 219,
+      "has_references": false,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/sprint-execution.md"
+    },
+    {
+      "name": "sre-engineer",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/sre-engineer/SKILL.md",
+      "invocation_count": 2,
+      "complexity": "medium",
+      "file_lines": 188,
+      "has_references": true,
+      "steps": [
+        "13",
+        "15"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/sre-engineer.md"
+    },
+    {
+      "name": "swift-expert",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-mobile/skills/swift-expert/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 167,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/swift-expert.md"
+    },
+    {
+      "name": "terraform-engineer",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-infra/skills/terraform-engineer/SKILL.md",
+      "invocation_count": 2,
+      "complexity": "medium",
+      "file_lines": 143,
+      "has_references": true,
+      "steps": [
+        "08",
+        "13"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/terraform-engineer.md"
+    },
+    {
+      "name": "test-driven-development",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/test-driven-development/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 371,
+      "has_references": false,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/test-driven-development.md"
+    },
+    {
+      "name": "test-master",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/test-master/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 92,
+      "has_references": true,
+      "steps": [
+        "11"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/test-master.md"
+    },
+    {
+      "name": "the-fool",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/the-fool/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 120,
+      "has_references": true,
+      "steps": [
+        "01"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/the-fool.md"
+    },
+    {
+      "name": "typescript-pro",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/typescript-pro/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 145,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/typescript-pro.md"
+    },
+    {
+      "name": "ui-auditor",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/ui-auditor.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 462,
+      "has_references": false,
+      "steps": [
+        "10"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/ui-auditor.md"
+    },
+    {
+      "name": "ui-checker",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/ui-checker.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 311,
+      "has_references": false,
+      "steps": [
+        "06"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/ui-checker.md"
+    },
+    {
+      "name": "ui-researcher",
+      "kind": "agent",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/ui-researcher.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 414,
+      "has_references": false,
+      "steps": [
+        "06"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/ui-researcher.md"
+    },
+    {
+      "name": "using-git-worktrees",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/using-git-worktrees/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 204,
+      "has_references": false,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/using-git-worktrees.md"
+    },
+    {
+      "name": "verification-before-completion",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/verification-before-completion/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 138,
+      "has_references": false,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/verification-before-completion.md"
+    },
+    {
+      "name": "verify",
+      "kind": "command",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/verify.md",
+      "invocation_count": 2,
+      "complexity": "medium",
+      "file_lines": 9,
+      "has_references": false,
+      "steps": [
+        "11",
+        "11"
+      ],
+      "aliases_merged": [
+        "dev-kit-core:verify"
+      ],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/verify.md"
+    },
+    {
+      "name": "vue-expert",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/vue-expert/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "low",
+      "file_lines": 100,
+      "has_references": true,
+      "steps": [
+        "08"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/vue-expert.md"
+    },
+    {
+      "name": "writing-plans",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/writing-plans/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "medium",
+      "file_lines": 176,
+      "has_references": false,
+      "steps": [
+        "07"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/writing-plans.md"
+    },
+    {
+      "name": "writing-skills",
+      "kind": "skill",
+      "file_path": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/writing-skills/SKILL.md",
+      "invocation_count": 1,
+      "complexity": "high",
+      "file_lines": 737,
+      "has_references": false,
+      "steps": [
+        "15"
+      ],
+      "aliases_merged": [],
+      "brief_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/writing-skills.md"
+    }
+  ],
+  "queue": [
+    {
+      "asset": "ab-test-analysis",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/ab-test-analysis.queue.json"
+    },
+    {
+      "asset": "accessibility-tester",
+      "claim_count": 3,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/accessibility-tester.queue.json"
+    },
+    {
+      "asset": "advisor-researcher",
+      "claim_count": 4,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/advisor-researcher.queue.json"
+    },
+    {
+      "asset": "ai-researcher",
+      "claim_count": 5,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/ai-researcher.queue.json"
+    },
+    {
+      "asset": "analyze",
+      "claim_count": 6,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/analyze.queue.json"
+    },
+    {
+      "asset": "api-designer",
+      "claim_count": 0,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/api-designer.queue.json"
+    },
+    {
+      "asset": "architecture-designer",
+      "claim_count": 5,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/architecture-designer.queue.json"
+    },
+    {
+      "asset": "assumption-mapping",
+      "claim_count": 3,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/assumption-mapping.queue.json"
+    },
+    {
+      "asset": "assumptions-analyzer",
+      "claim_count": 3,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/assumptions-analyzer.queue.json"
+    },
+    {
+      "asset": "brainstorming",
+      "claim_count": 6,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/brainstorming.queue.json"
+    },
+    {
+      "asset": "bugfix-wave",
+      "claim_count": 19,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/bugfix-wave.queue.json"
+    },
+    {
+      "asset": "chaos-engineer",
+      "claim_count": 4,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/chaos-engineer.queue.json"
+    },
+    {
+      "asset": "cloud-architect",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/cloud-architect.queue.json"
+    },
+    {
+      "asset": "code-documenter",
+      "claim_count": 6,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/code-documenter.queue.json"
+    },
+    {
+      "asset": "code-review-gate",
+      "claim_count": 12,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/code-review-gate.queue.json"
+    },
+    {
+      "asset": "code-review-protocol",
+      "claim_count": 4,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/code-review-protocol.queue.json"
+    },
+    {
+      "asset": "codebase-mapper",
+      "claim_count": 6,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/codebase-mapper.queue.json"
+    },
+    {
+      "asset": "cohort-analysis",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/cohort-analysis.queue.json"
+    },
+    {
+      "asset": "compliance-auditor",
+      "claim_count": 3,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/compliance-auditor.queue.json"
+    },
+    {
+      "asset": "constitution",
+      "claim_count": 8,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/constitution.queue.json"
+    },
+    {
+      "asset": "content-qa",
+      "claim_count": 3,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/content-qa.queue.json"
+    },
+    {
+      "asset": "context-restore",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/context-restore.queue.json"
+    },
+    {
+      "asset": "context-save",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/context-save.queue.json"
+    },
+    {
+      "asset": "converge",
+      "claim_count": 12,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/converge.queue.json"
+    },
+    {
+      "asset": "cso",
+      "claim_count": 9,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/cso.queue.json"
+    },
+    {
+      "asset": "debug",
+      "claim_count": 6,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/debug.queue.json"
+    },
+    {
+      "asset": "dependency-manager",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/dependency-manager.queue.json"
+    },
+    {
+      "asset": "design-consultation",
+      "claim_count": 8,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/design-consultation.queue.json"
+    },
+    {
+      "asset": "design-handoff",
+      "claim_count": 6,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/design-handoff.queue.json"
+    },
+    {
+      "asset": "design-html",
+      "claim_count": 8,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/design-html.queue.json"
+    },
+    {
+      "asset": "design-reviewer",
+      "claim_count": 11,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/design-reviewer.queue.json"
+    },
+    {
+      "asset": "devex-review",
+      "claim_count": 7,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/devex-review.queue.json"
+    },
+    {
+      "asset": "devops-engineer",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/devops-engineer.queue.json"
+    },
+    {
+      "asset": "diagram",
+      "claim_count": 3,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/diagram.queue.json"
+    },
+    {
+      "asset": "dispatching-parallel-agents",
+      "claim_count": 4,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/dispatching-parallel-agents.queue.json"
+    },
+    {
+      "asset": "django-expert",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/django-expert.queue.json"
+    },
+    {
+      "asset": "doc-classifier",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/doc-classifier.queue.json"
+    },
+    {
+      "asset": "doc-synthesizer",
+      "claim_count": 5,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/doc-synthesizer.queue.json"
+    },
+    {
+      "asset": "doc-verifier",
+      "claim_count": 8,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/doc-verifier.queue.json"
+    },
+    {
+      "asset": "docker-expert",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/docker-expert.queue.json"
+    },
+    {
+      "asset": "document-generate",
+      "claim_count": 8,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/document-generate.queue.json"
+    },
+    {
+      "asset": "document-release",
+      "claim_count": 6,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/document-release.queue.json"
+    },
+    {
+      "asset": "domain-researcher",
+      "claim_count": 5,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/domain-researcher.queue.json"
+    },
+    {
+      "asset": "eval-auditor",
+      "claim_count": 7,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/eval-auditor.queue.json"
+    },
+    {
+      "asset": "eval-planner",
+      "claim_count": 7,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/eval-planner.queue.json"
+    },
+    {
+      "asset": "fastapi-expert",
+      "claim_count": 0,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/fastapi-expert.queue.json"
+    },
+    {
+      "asset": "finishing-a-development-branch",
+      "claim_count": 7,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/finishing-a-development-branch.queue.json"
+    },
+    {
+      "asset": "fintech-engineer",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/fintech-engineer.queue.json"
+    },
+    {
+      "asset": "flutter-expert",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/flutter-expert.queue.json"
+    },
+    {
+      "asset": "framework-selector",
+      "claim_count": 9,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/framework-selector.queue.json"
+    },
+    {
+      "asset": "fullstack-guardian",
+      "claim_count": 0,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/fullstack-guardian.queue.json"
+    },
+    {
+      "asset": "gate-automation",
+      "claim_count": 8,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/gate-automation.queue.json"
+    },
+    {
+      "asset": "gate-plan-review",
+      "claim_count": 5,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/gate-plan-review.queue.json"
+    },
+    {
+      "asset": "gate-reverse-engineer",
+      "claim_count": 5,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/gate-reverse-engineer.queue.json"
+    },
+    {
+      "asset": "gdpr-ccpa-compliance",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/gdpr-ccpa-compliance.queue.json"
+    },
+    {
+      "asset": "growth-loops",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/growth-loops.queue.json"
+    },
+    {
+      "asset": "guard",
+      "claim_count": 8,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/guard.queue.json"
+    },
+    {
+      "asset": "health",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/health.queue.json"
+    },
+    {
+      "asset": "hipaa-compliance",
+      "claim_count": 3,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/hipaa-compliance.queue.json"
+    },
+    {
+      "asset": "incident-responder",
+      "claim_count": 4,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/incident-responder.queue.json"
+    },
+    {
+      "asset": "integration-checker",
+      "claim_count": 7,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/integration-checker.queue.json"
+    },
+    {
+      "asset": "kotlin-specialist",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/kotlin-specialist.queue.json"
+    },
+    {
+      "asset": "kubernetes-specialist",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/kubernetes-specialist.queue.json"
+    },
+    {
+      "asset": "land-and-deploy",
+      "claim_count": 9,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/land-and-deploy.queue.json"
+    },
+    {
+      "asset": "learn",
+      "claim_count": 5,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/learn.queue.json"
+    },
+    {
+      "asset": "legacy-modernizer",
+      "claim_count": 5,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/legacy-modernizer.queue.json"
+    },
+    {
+      "asset": "license-engineer",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/license-engineer.queue.json"
+    },
+    {
+      "asset": "market-researcher",
+      "claim_count": 7,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/market-researcher.queue.json"
+    },
+    {
+      "asset": "mcp-developer",
+      "claim_count": 0,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/mcp-developer.queue.json"
+    },
+    {
+      "asset": "ml-pipeline",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/ml-pipeline.queue.json"
+    },
+    {
+      "asset": "monitoring-expert",
+      "claim_count": 4,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/monitoring-expert.queue.json"
+    },
+    {
+      "asset": "nextjs-developer",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/nextjs-developer.queue.json"
+    },
+    {
+      "asset": "nyquist-auditor",
+      "claim_count": 8,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/nyquist-auditor.queue.json"
+    },
+    {
+      "asset": "pattern-mapper",
+      "claim_count": 6,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/pattern-mapper.queue.json"
+    },
+    {
+      "asset": "payment-integration",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/payment-integration.queue.json"
+    },
+    {
+      "asset": "penetration-tester",
+      "claim_count": 3,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/penetration-tester.queue.json"
+    },
+    {
+      "asset": "performance-engineer",
+      "claim_count": 6,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/performance-engineer.queue.json"
+    },
+    {
+      "asset": "phase-researcher",
+      "claim_count": 5,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/phase-researcher.queue.json"
+    },
+    {
+      "asset": "plan-review",
+      "claim_count": 9,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/plan-review.queue.json"
+    },
+    {
+      "asset": "planner",
+      "claim_count": 9,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/planner.queue.json"
+    },
+    {
+      "asset": "playwright-expert",
+      "claim_count": 4,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/playwright-expert.queue.json"
+    },
+    {
+      "asset": "postgres-pro",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/postgres-pro.queue.json"
+    },
+    {
+      "asset": "project-researcher",
+      "claim_count": 7,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/project-researcher.queue.json"
+    },
+    {
+      "asset": "prompt-engineer",
+      "claim_count": 0,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/prompt-engineer.queue.json"
+    },
+    {
+      "asset": "python-pro",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/python-pro.queue.json"
+    },
+    {
+      "asset": "qa",
+      "claim_count": 11,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/qa.queue.json"
+    },
+    {
+      "asset": "rag-architect",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/rag-architect.queue.json"
+    },
+    {
+      "asset": "react-expert",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/react-expert.queue.json"
+    },
+    {
+      "asset": "react-native-expert",
+      "claim_count": 0,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/react-native-expert.queue.json"
+    },
+    {
+      "asset": "refactoring-specialist",
+      "claim_count": 0,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/refactoring-specialist.queue.json"
+    },
+    {
+      "asset": "research-synthesizer",
+      "claim_count": 3,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/research-synthesizer.queue.json"
+    },
+    {
+      "asset": "retro",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/retro.queue.json"
+    },
+    {
+      "asset": "review",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/review.queue.json"
+    },
+    {
+      "asset": "roadmapper",
+      "claim_count": 9,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/roadmapper.queue.json"
+    },
+    {
+      "asset": "sdd-review-cto",
+      "claim_count": 9,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/sdd-review-cto.queue.json"
+    },
+    {
+      "asset": "secure-code-guardian",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/secure-code-guardian.queue.json"
+    },
+    {
+      "asset": "security-audit",
+      "claim_count": 3,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/security-audit.queue.json"
+    },
+    {
+      "asset": "ship",
+      "claim_count": 8,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/ship.queue.json"
+    },
+    {
+      "asset": "spec-miner",
+      "claim_count": 3,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/spec-miner.queue.json"
+    },
+    {
+      "asset": "spec-review-cpo",
+      "claim_count": 8,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/spec-review-cpo.queue.json"
+    },
+    {
+      "asset": "specify",
+      "claim_count": 7,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/specify.queue.json"
+    },
+    {
+      "asset": "sprint-execution",
+      "claim_count": 9,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/sprint-execution.queue.json"
+    },
+    {
+      "asset": "sre-engineer",
+      "claim_count": 4,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/sre-engineer.queue.json"
+    },
+    {
+      "asset": "swift-expert",
+      "claim_count": 0,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/swift-expert.queue.json"
+    },
+    {
+      "asset": "terraform-engineer",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/terraform-engineer.queue.json"
+    },
+    {
+      "asset": "test-driven-development",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/test-driven-development.queue.json"
+    },
+    {
+      "asset": "test-master",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/test-master.queue.json"
+    },
+    {
+      "asset": "the-fool",
+      "claim_count": 4,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/the-fool.queue.json"
+    },
+    {
+      "asset": "typescript-pro",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/typescript-pro.queue.json"
+    },
+    {
+      "asset": "ui-auditor",
+      "claim_count": 13,
+      "has_high_severity": true,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/ui-auditor.queue.json"
+    },
+    {
+      "asset": "ui-checker",
+      "claim_count": 7,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/ui-checker.queue.json"
+    },
+    {
+      "asset": "ui-researcher",
+      "claim_count": 5,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/ui-researcher.queue.json"
+    },
+    {
+      "asset": "using-git-worktrees",
+      "claim_count": 3,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/using-git-worktrees.queue.json"
+    },
+    {
+      "asset": "verification-before-completion",
+      "claim_count": 2,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/verification-before-completion.queue.json"
+    },
+    {
+      "asset": "verify",
+      "claim_count": 9,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/verify.queue.json"
+    },
+    {
+      "asset": "vue-expert",
+      "claim_count": 1,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/vue-expert.queue.json"
+    },
+    {
+      "asset": "writing-plans",
+      "claim_count": 7,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/writing-plans.queue.json"
+    },
+    {
+      "asset": "writing-skills",
+      "claim_count": 4,
+      "has_high_severity": false,
+      "queue_path": "/tmp/claude-1000/-home-ubuntu-skillsproject-dev-kit/b28a16b6-c5b3-4190-af62-3717515a1f09/scratchpad/kickoff-audit/assets/writing-skills.queue.json"
+    }
+  ],
+  "dedup_stats": {
+    "claims_in": 605,
+    "claims_out": 539,
+    "merged": 38,
+    "collapsed_boilerplate": 47,
+    "dropped_no_evidence": 0,
+    "dropped_graphify": 0,
+    "assets_with_claims": 110,
+    "files_read": 118,
+    "capped_notes": [
+      [
+        "code-review-protocol",
+        "Nothing dropped for length. Deliberately out of scope: KICKOFF lines 701-753 (code-review-gate round-mode inputs, engine=codex defaulting and registry fallback, bugfix-wave structural-fix mandate, fixes.json path, git reconciliation in step 3b, hard-cap wording, learn skill). Those are the contracts of code-review-gate, bugfix-wave and learn \u2014 separate assets with their own owners in this audit \u2014 and claiming them here would double-count. The engine-fallback text at 706-709 is genuinely covered by references/independent-review.md lines 42 and 71, which this skill links at line 12, but code-review-gate is that text's primary owner."
+      ]
+    ]
+  },
+  "notes": "605 raw claims from 118 findings files -> 539 merged claims. 0 dropped for missing skill quote; 0 graphify claims present (graphify excluded by user instruction). 36 claims merged across assets, 2 merged within an asset, 47 claims carry >1 KICKOFF location (systemic boilerplate collapsed). Nothing was capped or truncated. 8 assets (api-designer, fastapi-expert, fullstack-guardian, mcp-developer, prompt-engineer, react-native-expert, refactoring-specialist, swift-expert) had every raw claim absorbed as a duplicate into another asset queue; they get a zero-claim queue file naming where their claims are verified. Merge rule: same class + near-identical normalized quote, requiring either overlapping KICKOFF line ranges or >=40 normalized chars of shared text. Claims of DIFFERENT class on the same KICKOFF text were deliberately NOT merged (17 such collisions) since a redundant-restatement verdict and a load-bearing-parameter verdict on one sentence are competing findings the verifier must see separately. Owner of a merged claim = highest severity asserted, then most specific skill quote, then alphabetical."
+}

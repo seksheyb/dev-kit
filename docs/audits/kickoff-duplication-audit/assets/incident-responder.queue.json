@@ -1,0 +1,160 @@
+{
+  "asset": "incident-responder",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/incident-responder.md",
+  "claim_count": 4,
+  "claims": [
+    {
+      "local_id": "incident-responder-1",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "15",
+      "kickoff_line_range": [
+        1354,
+        1364
+      ],
+      "kickoff_quote": "Use the incident-responder agent: triage, contain, preserve evidence, diagnose, recover, then write the blameless postmortem to docs/global/ops/postmortems/.",
+      "skill_quote": "1. Establish the incident type, affected systems, current status, recent changes, and blast radius.\n2. Triage and classify severity; identify the incident commander and communication channels.\n3. Contain, investigate, and recover \u2014 documenting throughout.\n4. Run root-cause analysis and produce a blameless postmortem with tracked action items.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/incident-responder.md",
+      "skill_line": 10,
+      "reasoning": "The KICKOFF sentence lists the exact same phase sequence (triage -> contain -> diagnose/recover -> postmortem) that the agent's own 'When invoked' checklist already fixes, and also restates the postmortem output directory (docs/global/ops/postmortems/) that the skill hard-codes at line 27/30, not a caller-supplied alternate path. Nothing here is an argument the skill couldn't know on its own.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "incident-responder",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/incident-responder.md",
+      "raised_by": [
+        "incident-responder"
+      ],
+      "locations": [
+        [
+          1354,
+          1364
+        ]
+      ],
+      "steps": [
+        "15"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "incident-responder-1"
+    },
+    {
+      "local_id": "incident-responder-2",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "15",
+      "kickoff_line_range": [
+        1354,
+        1364
+      ],
+      "kickoff_quote": "Containment never comes at the cost of evidence integrity \u2014 preserve first, then clean up.",
+      "skill_quote": "**Preserve evidence** (especially for security incidents): logs, system snapshots, network captures, memory dumps, config backups, audit trails, and a precise timeline. Contain without destroying forensic state.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/incident-responder.md",
+      "skill_line": 18,
+      "reasoning": "This re-derives a hard rule the skill already states in its own words ('Contain without destroying forensic state'), reinforced by the top-line goal at line 7 ('without sacrificing evidence integrity'). The KICKOFF is not adding a new constraint, just re-teaching the skill's own gate.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "incident-responder",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/incident-responder.md",
+      "raised_by": [
+        "incident-responder"
+      ],
+      "locations": [
+        [
+          1354,
+          1364
+        ]
+      ],
+      "steps": [
+        "15"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "incident-responder-2"
+    },
+    {
+      "local_id": "incident-responder-3",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "15",
+      "kickoff_line_range": [
+        1354,
+        1364
+      ],
+      "kickoff_quote": "If this incident has regulatory exposure \u2014 a security breach, or any incident touching personal or regulated data \u2014 hand off to the compliance-auditor agent for the framework-specific breach-notification obligations, and do it early rather than at postmortem time.",
+      "skill_quote": "For incidents with regulatory exposure (breach notification, data incidents), track disclosure deadlines and loop in legal/compliance early \u2014 see the compliance-auditor agent for framework-specific obligations.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/incident-responder.md",
+      "skill_line": 24,
+      "reasoning": "The skill already names the same trigger condition (regulatory exposure / breach notification), the same target agent (compliance-auditor), and the same timing ('early'). Naming a downstream agent would normally be load-bearing context-passing, but here the skill text already contains this exact routing, so the KICKOFF sentence is restating rather than supplying new information.",
+      "systemic": true,
+      "other_locations": [],
+      "asset": "incident-responder",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/incident-responder.md",
+      "raised_by": [
+        "compliance-auditor",
+        "incident-responder"
+      ],
+      "locations": [
+        [
+          1354,
+          1364
+        ],
+        [
+          1359,
+          1361
+        ]
+      ],
+      "steps": [
+        "15"
+      ],
+      "merged_from": [
+        "compliance-auditor::compliance-auditor-4",
+        "incident-responder::incident-responder-3"
+      ],
+      "contributing_severities": [
+        "low",
+        "medium"
+      ],
+      "claim_id": "incident-responder-3"
+    },
+    {
+      "local_id": "incident-responder-4",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "15",
+      "kickoff_line_range": [
+        1354,
+        1364
+      ],
+      "kickoff_quote": "Disclosure deadlines start running from discovery, not from the fix, so surface the applicable regime and its clock to me while the incident is still open.",
+      "skill_quote": "For incidents with regulatory exposure (breach notification, data incidents), track disclosure deadlines and loop in legal/compliance early \u2014 see the compliance-auditor agent for framework-specific obligations.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/incident-responder.md",
+      "skill_line": 24,
+      "reasoning": "The specific fact that disclosure clocks start at discovery rather than at fix time, and the instruction to surface the applicable regime/clock directly to the operator, are not present anywhere in the skill file. This is genuinely new domain guidance the skill cannot know on its own, so it is load-bearing rather than duplicated, even though it sits adjacent to the redundant compliance-auditor sentence above.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "incident-responder",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/incident-responder.md",
+      "raised_by": [
+        "incident-responder"
+      ],
+      "locations": [
+        [
+          1354,
+          1364
+        ]
+      ],
+      "steps": [
+        "15"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "incident-responder-4"
+    }
+  ]
+}

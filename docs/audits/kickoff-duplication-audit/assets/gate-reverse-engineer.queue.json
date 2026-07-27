@@ -1,0 +1,204 @@
+{
+  "asset": "gate-reverse-engineer",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-reverse-engineer.md",
+  "claim_count": 5,
+  "claims": [
+    {
+      "local_id": "gate-reverse-engineer-4",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        62,
+        62
+      ],
+      "kickoff_quote": "*(only if the repo has undocumented existing code)*",
+      "skill_quote": "Use when a codebase is existing, undocumented, or poorly documented and has no SDD/PRD to plan against \u2014 reverse-engineers design intent, tech stack, and business requirements from the code itself.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-reverse-engineer.md",
+      "skill_line": 3,
+      "reasoning": "This is conditional gating the KICKOFF operator must judge before dispatching the block at all (does this repo qualify?), which the rules explicitly carve out as load-bearing rather than duplication, even though it paraphrases the agent's own frontmatter trigger condition \u2014 the operator cannot evaluate that condition from the agent file alone since the agent is not yet invoked to read its own description at gating time.",
+      "systemic": true,
+      "other_locations": [],
+      "asset": "gate-reverse-engineer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-reverse-engineer.md",
+      "raised_by": [
+        "gate-reverse-engineer",
+        "spec-miner"
+      ],
+      "locations": [
+        [
+          62,
+          62
+        ],
+        [
+          63,
+          76
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [
+        "gate-reverse-engineer::gate-reverse-engineer-4",
+        "spec-miner::spec-miner-2"
+      ],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "gate-reverse-engineer-1"
+    },
+    {
+      "local_id": "gate-reverse-engineer-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        65,
+        66
+      ],
+      "kickoff_quote": "then the gate-reverse-engineer agent to promote that into a\nLegacy SDD at docs/global/architecture/SDD.md,",
+      "skill_quote": "Write to `docs/global/architecture/SDD.md` (Design Recovery \u2014 prefix its content \"Legacy SDD\" if the file is new).",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-reverse-engineer.md",
+      "skill_line": 24,
+      "reasoning": "This is the output-file argument for the invocation, and it matches the agent's own template exactly. Per the classification rules, output file paths are the invocation's arguments, not restated methodology, so this stays load-bearing even though the values agree.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "gate-reverse-engineer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-reverse-engineer.md",
+      "raised_by": [
+        "gate-reverse-engineer"
+      ],
+      "locations": [
+        [
+          65,
+          66
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "gate-reverse-engineer-2"
+    },
+    {
+      "local_id": "gate-reverse-engineer-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        66,
+        66
+      ],
+      "kickoff_quote": "a Legacy PRD at docs/global/requirements/PRD.md,",
+      "skill_quote": "Write to `docs/global/requirements/PRD.md` (Requirement Recovery \u2014 prefix its content \"Legacy PRD\" if the file is new).",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-reverse-engineer.md",
+      "skill_line": 25,
+      "reasoning": "Second output-path argument, again an exact match to the agent's own stated target file. Classified load-bearing per the explicit carve-out for output file paths/target filenames.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "gate-reverse-engineer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-reverse-engineer.md",
+      "raised_by": [
+        "gate-reverse-engineer"
+      ],
+      "locations": [
+        [
+          66,
+          66
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "gate-reverse-engineer-3"
+    },
+    {
+      "local_id": "gate-reverse-engineer-3",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        67,
+        67
+      ],
+      "kickoff_quote": "and retrospective ADRs at docs/global/architecture/adr/NNNN-<slug>.md.",
+      "skill_quote": "Generate ADRs at `docs/global/architecture/adr/NNNN-<slug>.md` for detected technology choices.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-reverse-engineer.md",
+      "skill_line": 26,
+      "reasoning": "Third output-path/naming-convention argument (NNNN-<slug> ADR numbering); matches the agent's own convention exactly. Load-bearing per the output-path carve-out.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "gate-reverse-engineer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-reverse-engineer.md",
+      "raised_by": [
+        "gate-reverse-engineer"
+      ],
+      "locations": [
+        [
+          67,
+          67
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "gate-reverse-engineer-4"
+    },
+    {
+      "local_id": "gate-reverse-engineer-5",
+      "class": "load-bearing-parameter",
+      "severity": "medium",
+      "step": "00",
+      "kickoff_line_range": [
+        73,
+        75
+      ],
+      "kickoff_quote": "Assessment and plan only at this stage: no facades, adapters, characterization\ntests, or monitoring code, because step 8 builds those and step 3's roadmap is what sequences\nthe migration phases.",
+      "skill_quote": "1. **Identify the Tech Stack**... 2. **Draft Legacy SDD**... 3. **Draft Legacy PRD**... 4. **Identify \"Locked Patterns\"**: Create retrospective ADRs for existing choices",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-reverse-engineer.md",
+      "skill_line": 11,
+      "reasoning": "This is cross-step sequencing information (referencing step 8 and step 3 by number) that the agent file cannot itself contain, since it has no notion of its position in the larger KICKOFF pipeline. The agent's own 'Your Goal' list already confines it to four documentation deliverables (tech stack ID, Legacy SDD, Legacy PRD, ADRs) with nothing about facades/adapters/tests/monitoring code, so the KICKOFF text is consistent with \u2014 not a restatement of \u2014 the skill, and is load-bearing ordering/gating info per the rules.",
+      "systemic": true,
+      "other_locations": [],
+      "asset": "gate-reverse-engineer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/gate-reverse-engineer.md",
+      "raised_by": [
+        "gate-reverse-engineer",
+        "legacy-modernizer"
+      ],
+      "locations": [
+        [
+          73,
+          75
+        ],
+        [
+          73,
+          76
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [
+        "gate-reverse-engineer::gate-reverse-engineer-5",
+        "legacy-modernizer::legacy-modernizer-5"
+      ],
+      "contributing_severities": [
+        "low",
+        "medium"
+      ],
+      "claim_id": "gate-reverse-engineer-5"
+    }
+  ]
+}

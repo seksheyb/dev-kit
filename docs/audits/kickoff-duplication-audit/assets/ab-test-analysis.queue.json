@@ -1,0 +1,57 @@
+{
+  "asset": "ab-test-analysis",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/ab-test-analysis/SKILL.md",
+  "claim_count": 1,
+  "claims": [
+    {
+      "local_id": "ab-test-analysis-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "15",
+      "kickoff_line_range": [
+        1345,
+        1347
+      ],
+      "kickoff_quote": "Run these in order, each feeding the next: ab-test-analysis on any experiment this milestone ran, then cohort-analysis on retention and behavior by cohort, then growth-loops on which loops actually compounded.",
+      "skill_quote": "Statistically principled A/B test interpretation and ship/no-ship decisions. Correctly interpret experiment results, catch common analysis errors, and act on data without falling for statistical traps.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/ab-test-analysis/SKILL.md",
+      "skill_line": 17,
+      "reasoning": "The skill's own scope is a single experiment's statistical analysis; it says nothing about sequencing itself before cohort-analysis or growth-loops. This is cross-skill ordering the operator supplies, which the classification rules explicitly treat as load-bearing rather than restated methodology.",
+      "systemic": true,
+      "other_locations": [],
+      "asset": "ab-test-analysis",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-product/skills/ab-test-analysis/SKILL.md",
+      "raised_by": [
+        "ab-test-analysis",
+        "cohort-analysis",
+        "growth-loops"
+      ],
+      "locations": [
+        [
+          1343,
+          1351
+        ],
+        [
+          1345,
+          1346
+        ],
+        [
+          1345,
+          1347
+        ]
+      ],
+      "steps": [
+        "15"
+      ],
+      "merged_from": [
+        "ab-test-analysis::ab-test-analysis-2",
+        "cohort-analysis::cohort-analysis-1",
+        "growth-loops::growth-loops-1"
+      ],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "ab-test-analysis-1"
+    }
+  ]
+}

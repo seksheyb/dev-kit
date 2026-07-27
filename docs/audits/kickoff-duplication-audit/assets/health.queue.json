@@ -1,0 +1,79 @@
+{
+  "asset": "health",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/health.md",
+  "claim_count": 2,
+  "claims": [
+    {
+      "local_id": "health-1",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "15",
+      "kickoff_line_range": [
+        1299,
+        1299
+      ],
+      "kickoff_quote": "A weighted 0-10 codebase-quality dashboard with trend history.",
+      "skill_quote": "Expected output: a weighted 0-10 quality dashboard with per-category scores, the trend vs prior runs, and impact-ranked recommendations.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/health.md",
+      "skill_line": 9,
+      "reasoning": "The KICKOFF sentence just re-describes the command's own documented output ('weighted 0-10 ... with trend') in near-identical terms. It carries no information the operator needed to supply \u2014 the command already fixes this output shape \u2014 so it is narrative restatement rather than a load-bearing instruction. Severity is low because it is a single throwaway scene-setting clause, not a re-derivation of methodology.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "health",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/health.md",
+      "raised_by": [
+        "health"
+      ],
+      "locations": [
+        [
+          1299,
+          1299
+        ]
+      ],
+      "steps": [
+        "15"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "health-1"
+    },
+    {
+      "local_id": "health-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "15",
+      "kickoff_line_range": [
+        1299,
+        1302
+      ],
+      "kickoff_quote": "That is the codebase half of \"operate\" \u2014 the next two blocks are the *running-system* half, and they are the reason step 13 set up SLOs. Run them in this order; both write under `docs/global/ops/monitoring/`, so do not overlap them.",
+      "skill_quote": "`$ARGUMENTS` is unused; the agent auto-detects the project's health stack (or reads `## Health Stack` from CLAUDE.md).\n\nDispatch `agents/health-reporter`.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/health.md",
+      "skill_line": 5,
+      "reasoning": "This sentence sequences /health relative to the performance-engineer and sre-engineer/monitoring-expert dispatches that follow it in the same KICKOFF step, and flags a shared output directory those two (not health) must not collide on. The health command has no notion of sibling dispatches or run order \u2014 it only knows to detect the stack and hand off to health-reporter \u2014 so this is legitimate cross-skill ordering context the operator must supply, not duplicated methodology. Note: 'both'/'them' refer to the next two blocks, not to health itself, so there is no contradiction with health-reporter's actual write target (docs/state/baselines/health-history.jsonl, health-reporter.md line 41).",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "health",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/commands/health.md",
+      "raised_by": [
+        "health"
+      ],
+      "locations": [
+        [
+          1299,
+          1302
+        ]
+      ],
+      "steps": [
+        "15"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "health-2"
+    }
+  ]
+}

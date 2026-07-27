@@ -1,0 +1,115 @@
+{
+  "asset": "spec-miner",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/spec-miner/SKILL.md",
+  "claim_count": 3,
+  "claims": [
+    {
+      "local_id": "spec-miner-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        63,
+        76
+      ],
+      "kickoff_quote": "Use the spec-miner skill to reverse-engineer the observed requirements from this codebase in EARS format into SPEC/spec.md",
+      "skill_quote": "Save the mined specification to `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md` \u2014 pick the next available `<NNN>` and a `<slug>` naming the system or feature under analysis.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/spec-miner/SKILL.md",
+      "skill_line": 98,
+      "reasoning": "'SPEC/' is the documented pipeline shorthand (per docs/gwd-pipeline-on-devkit.md's legend) for docs/milestones/<M>/specs/<NNN>-<slug>/, exactly the path the skill's own Output Templates section specifies. The KICKOFF text supplies the concrete milestone-scoped destination the skill cannot itself know (which milestone, which <NNN>/<slug>) \u2014 a load-bearing argument, not a restated instruction, and not a contradiction despite the differing notation.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "spec-miner",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/spec-miner/SKILL.md",
+      "raised_by": [
+        "spec-miner"
+      ],
+      "locations": [
+        [
+          63,
+          76
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "spec-miner-1"
+    },
+    {
+      "local_id": "spec-miner-3",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        63,
+        76
+      ],
+      "kickoff_quote": "reverse-engineer the observed requirements from this codebase in EARS format into SPEC/spec.md",
+      "skill_quote": "4. **Document** - Write observed requirements in EARS format",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/spec-miner/SKILL.md",
+      "skill_line": 38,
+      "reasoning": "EARS is spec-miner's only, non-optional output convention (reinforced by its own 'EARS Format Quick Reference' section at lines 57-68 and a dedicated references/ears-format.md file) \u2014 the skill will always produce EARS-format observations regardless of whether the caller says so. Naming the format here isn't selecting among modes the skill offers (there is only one), so it restates a fixed default rather than supplying new information. Kept at low severity since it's a single descriptive phrase, not a restated multi-step methodology.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "spec-miner",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/spec-miner/SKILL.md",
+      "raised_by": [
+        "spec-miner"
+      ],
+      "locations": [
+        [
+          63,
+          76
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "spec-miner-2"
+    },
+    {
+      "local_id": "spec-miner-4",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "00",
+      "kickoff_line_range": [
+        63,
+        76
+      ],
+      "kickoff_quote": "then the gate-reverse-engineer agent to promote that into a Legacy SDD at docs/global/architecture/SDD.md, a Legacy PRD at docs/global/requirements/PRD.md, and retrospective ADRs at docs/global/architecture/adr/NNNN-<slug>.md",
+      "skill_quote": "This is the same canonical spec path the `specify` skill writes, so downstream planning skills read either origin identically.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/spec-miner/SKILL.md",
+      "skill_line": 100,
+      "reasoning": "This clause sequences spec-miner's output into a different agent's job (gate-reverse-engineer promoting the mined spec into SDD/PRD/ADRs) \u2014 cross-skill ordering and hand-off targets are explicitly load-bearing per the classification rules, not something spec-miner's own file could specify since spec-miner has no knowledge of gate-reverse-engineer. The skill's own text (acknowledging downstream planning skills consume its output) supports that this hand-off is intentional orchestration rather than restated internal behavior.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "spec-miner",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/spec-miner/SKILL.md",
+      "raised_by": [
+        "spec-miner"
+      ],
+      "locations": [
+        [
+          63,
+          76
+        ]
+      ],
+      "steps": [
+        "00"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "spec-miner-3"
+    }
+  ]
+}

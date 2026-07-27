@@ -1,0 +1,69 @@
+{
+  "asset": "document-generate",
+  "verdicts": [
+    {
+      "claim_id": "document-generate-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:142-144 — \"voice, bullets kept where they aid scanning). Invoke `content-qa` against each generated / document rather than re-checking voice by hand here — this step does not restate a thinner / version of that pass.\" (claim said line 141; the sentence starts on 142 — off-by-one, substance unaffected)",
+      "reasoning": "KICKOFF 1179-1181 verified verbatim. The skill delegates the voice gate to content-qa but nowhere mentions doc-verifier, release, or de-slop (grep: no hit for `doc-verifier` anywhere in the 166-line SKILL.md, which has no references/ dir). The step-14 sequencing constraint (prose → code-level docs → release → de-slop → verify, and the reason content-qa cannot run in parallel with the verifier) is cross-skill orchestration the skill cannot hold. Keep."
+    },
+    {
+      "claim_id": "document-generate-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:3 — \"description: Diataxis documentation generator — researches the code thoroughly, then writes tutorials (learning-oriented), how-to guides (task-oriented), reference docs (information-oriented), and explanations (understanding-oriented) for a feature, module, or whole project.\"",
+      "reasoning": "KICKOFF 1183-1187 verified verbatim. Independently grepped SKILL.md for `code-documenter`, `docstring`, `jsdoc`, `openapi`, `asyncapi` — zero hits. The skill scopes itself to the four quadrants and has no knowledge that a second, non-overlapping doc skill exists or that running only one leaves half the doc set unwritten. Pure orchestration knowledge. Keep."
+    },
+    {
+      "claim_id": "document-generate-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:20 — \"Determine what to document: a specific target (feature, module, file) if one was named; the full project otherwise; or the specific gap list if invoked from a post-release doc-sync workflow.\"",
+      "reasoning": "Verified exactly at line 20. Step 0 offers three mutually exclusive scope modes and the skill cannot know which one applies; \"sync the prose doc set to what actually shipped\" selects the post-release doc-sync mode and scopes it to this milestone's diff. This is mode selection among modes the skill itself offers — explicitly load-bearing under the classification rules. Keep."
+    },
+    {
+      "claim_id": "document-generate-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:10-14 — \"You follow the **Diataxis framework** — four quadrants, each serving a different reader need:\" followed by \"- **Tutorial** — learning-oriented… - **How-to** — task-oriented… - **Reference** — information-oriented… - **Explanation** — understanding-oriented…\"",
+      "reasoning": "KICKOFF 1190-1191 verified verbatim. Spelling out the four quadrant names re-teaches the skill's own taxonomy, which is fixed twice over — in the frontmatter description (line 3) and in the opening section (lines 10-14) — and structurally in Step 2's partitioning table (67-75) and Steps 3-6, one per quadrant. The names carry no invocation-specific information. The quantifier phrase \"the four Diataxis quadrants\" does carry a surface boundary against code-documenter (see claim 5), so the removable residue is the colon-list \"tutorial, how-to, reference, explanation\", not the whole clause — hence medium, not high."
+    },
+    {
+      "claim_id": "document-generate-5",
+      "confirmed": false,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:65 — \"Decide which quadrants each entity needs. Not every entity needs all four.\" (verified exactly at line 65)",
+      "reasoning": "REFUTED. The two sentences do not operate at the same level, so there is no contradiction. KICKOFF's \"all four Diataxis quadrants\" is a doc-SET surface boundary, and the immediately preceding prose at 1183-1187 says so explicitly: \"`document-generate` writes the four Diataxis quadrants and nothing else; it does not touch docstrings or API specs… Running only one leaves half the doc set unwritten.\" It is delimiting document-generate's surface against code-documenter's, not overriding Step 2's per-ENTITY partitioning (\"which quadrants each entity needs\"). Nothing in the prompt tells the skill to mark every entity Yes in all four columns, and the skill will partition as designed with no conflict. The claim reads the phrase out of its immediate context."
+    },
+    {
+      "claim_id": "document-generate-6",
+      "confirmed": false,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:35-36 — \"The relevant `spec.md` (`docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`) — the \"why\" / and the user-facing requirements (`US-xxx` stories) the target was built to satisfy.\" (verified at 35-36)",
+      "reasoning": "REFUTED, and the claim's factual premise is false. KICKOFF.md:15-17 defines the shorthand up front: \"**Paths** are `docs/SITEMAP.md`'s. Two shorthands used below: `PHASE/` = `docs/milestones/<M>/phases/<NN>-<slug>/` and `SPEC/` = `docs/milestones/<M>/specs/<NNN>-<slug>/`, where `<M>` is the milestone (`v1`, `v2`, …).\" So `SPEC/spec.md` expands to exactly `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md` — character-for-character the skill's own path. There is no drift, no divergent layout, and the skill would not \"look in a directory that does not hold the spec.\" Since the path is identical to one the skill already hardcodes as canonical, naming it in the prompt is at most mild restatement (subsumed by claim 7), not a stale-drift finding."
+    },
+    {
+      "claim_id": "document-generate-7",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:32-40 — \"**Read the project's planning artifacts first — canonical sources, not a fallback.** If / this project has a `docs/milestones/` tree, read whichever of these exist for the target / before anything else:\" then the three bullets naming `spec.md` (35), `docs/global/architecture/SDD.md` and its ADRs `docs/global/architecture/adr/` (37-38), and `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md` (39-40)",
+      "reasoning": "KICKOFF 1191-1192 verified verbatim. The prompt's three-item source list is the same three items in the same role — and the skill already marks them canonical rather than fallback, and repeats the rule at line 160. Combined with claim 6 (the `SPEC/` shorthand resolves to the skill's own path), nothing in the enumeration is unknowable to the skill. The only residue is the plural \"phase PLAN files\" against the skill's singular \"the relevant plan\", a nuance too thin to carry the sentence."
+    },
+    {
+      "claim_id": "document-generate-8",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "SKILL.md:93-98 — \"Sourcing Trade-offs and Alternatives considered: if `docs/global/architecture/SDD.md` and its / ADRs cover the decision in question, pull both sections directly from there first — an ADR's / \"Consequences\"/trade-offs and \"Alternatives Considered\" fields are already written in exactly / the shape this quadrant wants; quote or closely paraphrase rather than re-deriving from / scratch. Only fall back to grepping comments (`NOTE:`, `DESIGN:`, `WHY:`) or git history when / no SDD.md/ADR exists for that decision.\" Reinforced at SKILL.md:160 — \"- **Planning artifacts are canonical, not a fallback.** When spec.md, SDD.md/ADRs, or PLAN.md exist, they state intent, requirements, and trade-offs directly — prefer reading them over reconstructing the same information from code, comments, or git history.\"",
+      "reasoning": "KICKOFF 1192-1194 verified verbatim. The prompt sentence is a near-paraphrase of the skill's Step 4 sourcing paragraph, preserving the same two named fields (trade-offs, alternatives-considered), the same preferred source (the ADR), and the same rejected fallback pair (code comments, git history). The skill states it three times — Step 1.2's rationale at 42-46, Step 4 at 93-98, and the hard rule at 160. This is the skill's own methodology restated, and it is three of the invocation's five lines. High."
+    }
+  ]
+}

@@ -1,0 +1,312 @@
+{
+  "asset": "design-html",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+  "claim_count": 8,
+  "claims": [
+    {
+      "local_id": "design-html-3",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "04",
+      "kickoff_line_range": [
+        311,
+        312
+      ],
+      "kickoff_quote": "Stop there in that case: do NOT go on to design-html, which refuses to run unbound and would just tell me to come back here.",
+      "skill_quote": "1. Check `DESIGN.md` (`docs/global/design/DESIGN.md`) for `claude_design_system_id`. **Missing (no DESIGN.md, or DESIGN.md has no bound system)?** Stop and tell the user to run `design-consultation` first \u2014 do not call `list_design_systems` yourself, do not ask which system applies, do not proceed unbound.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "skill_line": 77,
+      "reasoning": "Three separate KICKOFF sentences across two invocations re-derive design-html's unbound gate, which the skill enforces itself at SKILL.md:77-80 and which the shared protocol states again at claude-design-mcp-protocol.md:41-44 ('Absent ... stop and tell the user to run `design-consultation` first'). The flow-control half ('Stop there in that case') is legitimate operator sequencing; the justifying clauses describing what design-html would do are the skill's own hard rule pasted into the guide. Low severity because it reads as rationale for the routing decision rather than instruction, and it is accurate (no drift).",
+      "systemic": true,
+      "other_locations": [
+        [
+          328,
+          329
+        ],
+        [
+          330,
+          330
+        ]
+      ],
+      "asset": "design-html",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "raised_by": [
+        "design-html"
+      ],
+      "locations": [
+        [
+          311,
+          312
+        ],
+        [
+          328,
+          329
+        ],
+        [
+          330,
+          330
+        ]
+      ],
+      "steps": [
+        "04"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "design-html-1"
+    },
+    {
+      "local_id": "design-html-7",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "04",
+      "kickoff_line_range": [
+        312,
+        313
+      ],
+      "kickoff_quote": "Only if a system was already bound, continue to design-html for the reference implementation.",
+      "skill_quote": "Detect what design context exists, in this order:",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "skill_line": 55,
+      "reasoning": "This is chaining and conditional gating the skill cannot supply: design-html has no notion of a pipeline 'stage 4', of running immediately after design-consultation in the same turn, or of a one-time 'reference implementation' purpose. SKILL.md Step 0 only detects mockup/plan/freeform input modes and never mentions being chained off design-consultation. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-html",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "raised_by": [
+        "design-html"
+      ],
+      "locations": [
+        [
+          312,
+          313
+        ]
+      ],
+      "steps": [
+        "04"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "design-html-2"
+    },
+    {
+      "local_id": "design-html-8",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "04",
+      "kickoff_line_range": [
+        326,
+        327
+      ],
+      "kickoff_quote": "The Claude Design system id is <uuid>. Store it as claude_design_system_id in docs/global/design/DESIGN.md.",
+      "skill_quote": "**Read, don't resolve, the design system binding.** This skill does not decide which design system to use \u2014 `design-consultation` is the only skill that resolves or binds `claude_design_system_id`",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "skill_line": 72,
+      "reasoning": "The uuid is an operator-supplied value produced by a manual Claude Design UI action no MCP tool can perform (protocol.md:58 'No `mcp__claude-design__*` tool creates a design system \u2014 that's a Claude Design UI-only action'). design-html explicitly refuses to resolve or write the binding, so the guide must carry both the value and the write instruction. Keep verbatim.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-html",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "raised_by": [
+        "design-html"
+      ],
+      "locations": [
+        [
+          326,
+          327
+        ]
+      ],
+      "steps": [
+        "04"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "design-html-3"
+    },
+    {
+      "local_id": "design-html-10",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [
+        635,
+        635
+      ],
+      "kickoff_quote": "*(only if this phase ships UI)*",
+      "skill_quote": "3. **Freeform** \u2014 nothing found. Ask the user to describe what they want, and for a screen name.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "skill_line": 66,
+      "reasoning": "Conditional gating the operator must judge \u2014 the skill has no way to know whether the current phase ships UI, and its freeform fallback would happily invent a screen if invoked on a backend-only phase. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-html",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "raised_by": [
+        "design-html"
+      ],
+      "locations": [
+        [
+          635,
+          635
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "design-html-4"
+    },
+    {
+      "local_id": "design-html-5",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [
+        637,
+        638
+      ],
+      "kickoff_quote": "as Claude Design .dc.html deliverables against the bound claude_design_system_id",
+      "skill_quote": "The deliverable itself is always `.dc.html` (Claude Design's Design Components format, built in Step 3) regardless of the target codebase's frontend framework \u2014 framework-native translation, if needed, happens later at Step 5 when the finished design gets copied into the codebase.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "skill_line": 123,
+      "reasoning": "The output format is fixed by the skill unconditionally ('always `.dc.html` ... regardless of the target codebase's frontend framework'), so naming it in the prompt is not selecting among options \u2014 there are none. The 'against the bound claude_design_system_id' half is likewise the skill's own Step 0 gate (SKILL.md:77-80). Low severity: it costs a clause and reads as orientation rather than instruction.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-html",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "raised_by": [
+        "design-html"
+      ],
+      "locations": [
+        [
+          637,
+          638
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "design-html-5"
+    },
+    {
+      "local_id": "design-html-1",
+      "class": "contradiction",
+      "severity": "medium",
+      "step": "08",
+      "kickoff_line_range": [
+        637,
+        639
+      ],
+      "kickoff_quote": "Use design-html to build this phase's actual screens as Claude Design .dc.html deliverables against the bound claude_design_system_id \u2014 step 4 built the one-time reference implementation, not these, and this invocation gets its own screen-scoped project.",
+      "skill_quote": "- **One page per invocation.** For multi-page designs, run once per page.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "skill_line": 235,
+      "reasoning": "KICKOFF directs a single design-html invocation to produce this phase's screens (plural) inside one screen-scoped project, but the skill's hard rule is one page per invocation, repeated in the opening paragraph (line 14: 'One page per invocation.') and as an Important Rule at line 235. Grepping KICKOFF for 'design-html', 'per screen', 'once per page' returns only lines 311, 312, 327, 328, 637 \u2014 nowhere does the guide tell the operator to re-invoke once per screen, so the operator following step 8 literally will violate the skill's own constraint. The mismatch is compounded by the singular 'its own screen-scoped project' in the same sentence.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-html",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "raised_by": [
+        "design-html"
+      ],
+      "locations": [
+        [
+          637,
+          639
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "design-html-6"
+    },
+    {
+      "local_id": "design-html-9",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [
+        638,
+        639
+      ],
+      "kickoff_quote": "step 4 built the one-time reference implementation, not these",
+      "skill_quote": "1. **Approved mockup** \u2014 a design image (PNG/screenshot) the user approved, e.g. from a design-consultation variant-shotgun session. Check `.claude/design/screens.json` (a local index this skill maintains \u2014 see Step 5 \u2014 mapping screen name \u2192 Claude Design project id, since the actual deliverable lives entirely in Claude Design, not on disk) for a prior entry matching this screen name. If found, ask: evolve it (apply changes on top, preserving custom edits made live in the Claude Design editor) or start fresh from the mockup?",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "skill_line": 57,
+      "reasoning": "The skill's screens.json lookup would let a step-8 run mistake the step-4 reference build for a prior entry to evolve; nothing in SKILL.md distinguishes a 'one-time reference implementation' from a phase screen. This cross-step disambiguation is pipeline knowledge only the guide has. Keep.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-html",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "raised_by": [
+        "design-html"
+      ],
+      "locations": [
+        [
+          638,
+          639
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "design-html-7"
+    },
+    {
+      "local_id": "design-html-6",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [
+        639,
+        639
+      ],
+      "kickoff_quote": "and this invocation gets its own screen-scoped project",
+      "skill_quote": "2. Check `DESIGN.md` for `claude_design_project_id` \u2014 that's design-consultation's own demo/preview project. Don't build this screen into it; this skill's screens get their own project(s), bound to the same `claude_design_system_id`.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "skill_line": 81,
+      "reasoning": "The skill already refuses to build into design-consultation's project and already gives each screen its own project (SKILL.md:81-83, restated at SKILL.md:138-139 'a screen typically gets its own project, distinct from design-consultation's demo project'). The guide's clause restates that internal rule. The neighbouring clause distinguishing step 4's reference build from step 8's screens IS load-bearing pipeline knowledge and should be kept.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-html",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/design-html/SKILL.md",
+      "raised_by": [
+        "design-html"
+      ],
+      "locations": [
+        [
+          639,
+          639
+        ]
+      ],
+      "steps": [
+        "08"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "design-html-8"
+    }
+  ]
+}

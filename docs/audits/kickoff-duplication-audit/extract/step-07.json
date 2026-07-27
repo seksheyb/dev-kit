@@ -1,0 +1,64 @@
+{
+  "step": "07",
+  "title": "Plan the phase",
+  "line_range": [482, 563],
+  "blocks": [
+    {
+      "block_index": 0,
+      "line_range": [484, 497],
+      "verbatim_text": "Use the writing-plans skill and the planner agent to produce PHASE/<NN>-<MM>-PLAN.md with\nwaves and tracks. Keep the vertical-slice mandate. Read PHASE/PATTERNS.md and cite its per-file\nanalog and code excerpts in each task's action section — the planner does not load it\nautomatically, so unless you pass it here step 5's pattern mapping never reaches the plan. Same\nfor step 6's specs: read PHASE/UI-SPEC.md and SPEC/AI-SPEC.md when that step produced them and\nmake the plan's tasks implement those contracts, because the planner does not load either one on\nits own. Its <threat_model> step should consult docs/milestones/<M>/reports/security/ (step 0's baseline)\nbefore assigning threat dispositions rather than re-deriving them from zero, and it should query\ndocs/state/graphs/graph.json for dependency context the same way step 5 did, rather than\nre-reading the tree. Declare complexity signals (files — complete, including files the track\ncreates — plus novelty/logic/ambiguity/tests) plus model and effort on every track. Use the\ndiagram skill for the wave/track dependency graph.",
+      "assets_invoked": ["writing-plans", "planner", "diagram"],
+      "surrounding_prose": "This is the opening block of step 7, under heading '## 7. Plan the phase'. No conditioning prose precedes it in this slice; it directly follows the section heading."
+    },
+    {
+      "block_index": 1,
+      "line_range": [499, 501],
+      "verbatim_text": "/dev-kit-core:plan-review PHASE/<NN>-<MM>-PLAN.md",
+      "assets_invoked": ["plan-review"],
+      "surrounding_prose": "Followed by: 'The command takes the plan path — pass it, or it has to guess which plan, and a phase can have several. Named with no lenses it runs all four — `eng`, `design`, `devex`, `goal-backward` — and fans them out in parallel as a workflow; the `design` and `devex` lenses self-report \"not applicable\" when the plan has no UI or developer-facing surface. Fix what it flags before going on. It does **not** run the gate below; that is a separate dispatch.' Then a 'Review tier.' subsection states: 'All four lenses is the maximum-rigor setting. The everyday **minimum bar** is `gate-plan-review` + the `goal-backward` lens — name that lens and you get only it:' which introduces the next block."
+    },
+    {
+      "block_index": 2,
+      "line_range": [512, 514],
+      "verbatim_text": "/dev-kit-core:plan-review PHASE/<NN>-<MM>-PLAN.md goal-backward",
+      "assets_invoked": ["plan-review"],
+      "surrounding_prose": "This is the 'minimum bar' example, introduced by: 'The everyday **minimum bar** is `gate-plan-review` + the `goal-backward` lens — name that lens and you get only it:' (note: this sentence names 'gate-plan-review' as part of the minimum bar description, but the actual command example that follows only passes the `goal-backward` lens argument). Followed by: 'Escalate by naming lenses explicitly. Add the `eng` lens — the engineering-quality lens, the one that catches structural and implementation-risk problems — for new architecture, a security/payments/auth surface, or anything touching >15 files:' which introduces the next block."
+    },
+    {
+      "block_index": 3,
+      "line_range": [520, 522],
+      "verbatim_text": "/dev-kit-core:plan-review PHASE/<NN>-<MM>-PLAN.md eng goal-backward",
+      "assets_invoked": ["plan-review"],
+      "surrounding_prose": "Followed by: 'Naming lenses suppresses the all-four default, so the example above runs only those two. When the escalated phase also has UI or a developer-facing surface, name `design`/`devex` too — or just use the bare no-lens form above to run all four. Set the default once in the project's `CLAUDE.md` rather than deciding per phase.' This closing prose precedes the next fenced block, which is a distinct dispatch (gate-plan-review agent) described as 'a separate dispatch' from plan-review per block 1's prose."
+    },
+    {
+      "block_index": 4,
+      "line_range": [530, 542],
+      "verbatim_text": "Dispatch the gate-plan-review agent, passing all five of its inputs, not just the plan:\nplan_path = PHASE/<NN>-<MM>-PLAN.md, sdd_path = docs/global/architecture/SDD.md, adr_dir =\ndocs/global/architecture/adr/ (the ADR bank itself, not its parent directory), spec_path =\nSPEC/spec.md, graphify_path = docs/state/graphs/GRAPH_REPORT.md (or the literal string \"none\" if\nno graph was built). Two of its six review dimensions are SDD Alignment and ADR Gaps, and both\nare dead without sdd_path and adr_dir — it hands the review engine those paths to read, never\ninlined content. This is a gate, not advice. It runs a deterministic complexity check against\nevery track's declared model and effort, then dispatches an independent **non-Claude** review\nengine (Gemini → Codex → Claude fallback order). Report back gate_passed, next_action, and which\nengine actually ran — if it fell back to Claude, say so plainly, because a claude-on-claude gate\nis a weaker gate. Wave 1 does not start until gate_passed is true.",
+      "assets_invoked": ["gate-plan-review"],
+      "surrounding_prose": "Immediately preceded by 'Set the default once in the project's `CLAUDE.md` rather than deciding per phase.' No further prose between this block and the next block; the next block (analyze skill) begins immediately after this fence closes at line 542, separated only by a blank line."
+    },
+    {
+      "block_index": 5,
+      "line_range": [544, 551],
+      "verbatim_text": "Use the analyze skill for a read-only cross-artifact audit before any code exists: SPEC/spec.md\n↔ PHASE/<NN>-<MM>-PLAN.md ↔ docs/global/project/constitution.md. Load every plan file for this\nphase and treat their <task> blocks as one combined task set. Produce a requirement-to-task\ncoverage table. Any conflict with a constitution MUST principle is CRITICAL and needs the spec\nor the plan adjusted, never the principle reinterpreted. Change nothing — report, and offer a\nremediation plan only if I approve it.",
+      "assets_invoked": ["analyze"],
+      "surrounding_prose": "No prose sentence directly precedes or follows this block within the slice other than blank lines; it sits between the gate-plan-review block (above) and the context-save block (below)."
+    },
+    {
+      "block_index": 6,
+      "line_range": [553, 556],
+      "verbatim_text": "Use the context-save skill to checkpoint this boundary — what is done, what got decided, and\nwhat is next.",
+      "assets_invoked": ["context-save"],
+      "surrounding_prose": "No prose directly precedes or follows other than blank lines; sits between the analyze block above and the /clear block below."
+    },
+    {
+      "block_index": 7,
+      "line_range": [558, 560],
+      "verbatim_text": "/clear",
+      "assets_invoked": [],
+      "surrounding_prose": "Final block of step 7, followed by a horizontal rule '---' marking the end of the step's section. No asset is invoked — /clear is a built-in CLI session command, not a skill/agent/command asset."
+    }
+  ],
+  "notes": "All fences in the 482-563 range are fully contained within the slice; none are cut in half. Block 1's surrounding prose contains a naming inconsistency in the source guide itself (calls the minimum bar 'gate-plan-review + goal-backward' but the command shown only passes 'goal-backward' as a lens argument to plan-review) — flagged verbatim for the later audit phase, not resolved here."
+}

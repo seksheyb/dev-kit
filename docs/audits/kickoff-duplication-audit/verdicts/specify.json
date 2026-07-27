@@ -1,0 +1,61 @@
+{
+  "asset": "specify",
+  "verdicts": [
+    {
+      "claim_id": "specify-1",
+      "confirmed": false,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:94-95 — \"Create `docs/milestones/<M>/specs/<NNN>-<slug>/` and copy `spec-template.md` (from this\\n     skill's directory) into it as `spec.md` — this is `SPEC_FILE`\"; SKILL.md:158-159 — \"a. **Create Spec Quality Checklist**: Generate a checklist file at\\n   `docs/milestones/<M>/specs/<NNN>-<slug>/checklists/requirements.md` with these\" (the claim cited 159-160 for the checklist; the actual anchor line is 158)",
+      "reasoning": "REFUTED. The quoted skill sentences do exist at the claimed lines, and it is true that the skill derives <M>/<NNN>/<slug> itself and produces both files unconditionally. But that does not make the KICKOFF text redundant methodology. The adjudication brief explicitly puts \"output file paths, target filenames, directory conventions\" in the load-bearing bucket as the invocation's arguments, without an exception for paths the skill can also derive. `SPEC/` is a guide-level shorthand defined once at KICKOFF:15-17 and reused across every step of the guide, not a re-teaching of the skill's internal file-location rule. Naming the two deliverables is what lets the operator verify the run produced what the step owes downstream; strip it and the prompt degrades to \"Use the specify skill from the approved design.\" This is incidental overlap of a path string, not duplication of the skill's methodology, gate, or template."
+    },
+    {
+      "claim_id": "specify-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md:78 — \"Given the feature description, do this:\" (Mode A opener). Grep for design/brainstorm/approved across SKILL.md and all four references/ files returns only SKILL.md:262, 282, 290 — all about the *spec* being approved downstream, never about an upstream approved design document as input.",
+      "reasoning": "CONFIRMED as load-bearing — KEEP. The skill's only declared input is an opaque \"feature description\" (line 78; also line 121 \"Parse the user's feature description\"). Nothing in SKILL.md or in references/mode-b-interrogation.md, clarification-pass.md, ears-syntax.md or pre-discovery-subagents.md tells the skill that a brainstorming/design artifact from the preceding KICKOFF block is the thing to specify from. \"from the approved design\" supplies the upstream context artifact, and the gating prose at KICKOFF:143 (\"Once the design is approved:\") supplies the ordering constraint — both are exactly the cases the brief classifies as load-bearing."
+    },
+    {
+      "claim_id": "specify-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:10-11 — \"The spec captures **WHAT** users need and **WHY** — never HOW to\\nimplement it.\" Reinforced at SKILL.md:171 (\"- [ ] No implementation details (languages, frameworks, APIs)\") and SKILL.md:261-262 (\"**Produce an implementation TODO checklist or task breakdown.** That's HOW, not\\n  WHAT/WHY\", under MUST NOT DO).",
+      "reasoning": "CONFIRMED. The quote is verbatim at the claimed line. \"WHAT and WHY only, never HOW.\" is a near word-for-word copy of the skill's opening thesis, and the rule is separately enforced as a MUST NOT DO constraint and as a generated-checklist item. No parameter, path, mode, condition or ordering rides on this sentence — it is pure re-derivation of a hard rule the skill already owns. Medium rather than high: it is one short clause, and it duplicates a principle rather than an operational gate."
+    },
+    {
+      "claim_id": "specify-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:35-36 — \"- **PM Hat**: user value, business goals, success metrics, priority\\n- **Dev Hat**: technical feasibility, security, performance, edge cases, error handling\", under the dedicated \"## Two Lenses\" heading at line 30. The weaving rule is SKILL.md:32-33 — \"don't ask all\\nthe PM questions, then all the Dev questions; weave them\". Re-invoked in the execution flow at SKILL.md:123 — \"Extract key concepts from description (PM Hat + Dev Hat)\" (the claim cited 122; actual is 123).",
+      "reasoning": "CONFIRMED. Both parentheticals in the KICKOFF track the skill's own bullet contents item-for-item (KICKOFF drops \"performance\" from the Dev Hat list, which is a lossy copy, not added information), and \"as you go\" is precisely the skill's weaving instruction at lines 32-33. The skill devotes a named section to this and re-invokes both hats inside the execution flow. Re-teaching a taxonomy the skill dedicates a section to is the textbook redundant case. The one-line offset on the secondary citation does not touch the primary evidence."
+    },
+    {
+      "claim_id": "specify-5",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "SKILL.md:136-138 — \"Each requirement must be testable. Use EARS format for anything conditional —\\n       see `references/ears-syntax.md`. Plain `MUST` statements are fine for simple,\\n       unconditional requirements.\" Also SKILL.md:73 (reference-table row routing to `references/ears-syntax.md`), SKILL.md:252 (\"- Use EARS format for conditional functional requirements\", under MUST DO), SKILL.md:182 (\"- [ ] Conditional requirements use EARS format (When/While/Where + shall)\"), SKILL.md:287 (\"- [ ] Functional requirements use EARS format where conditional...\", under Done When).",
+      "reasoning": "CONFIRMED, and the strongest finding on this asset. Every cited line exists exactly as claimed. The KICKOFF sentence is a paraphrase-free copy of execution-flow step 5 down to the second clause (\"plain MUST statements are fine for simple, unconditional ones\" vs \"Plain `MUST` statements are fine for simple, unconditional requirements\"). The rule is enforced in four independent places in the skill — a reference file, a MUST DO constraint, a generated checklist item, and a Done When gate — plus it has its own references/ears-syntax.md. High severity: it is the longest duplicated span in the invocation (two full lines of the six-line prompt) and it re-teaches a domain format the skill dedicates a reference file to."
+    },
+    {
+      "claim_id": "specify-6",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md:105-107 — \"**IDs are never renumbered or reused** — even if a story is later deleted, split, or\\n     reordered within its spec, its number is retired, not recycled. This keeps US-xxx a\\n     stable cross-spec key for roadmap/traceability tooling.\" Under the step heading SKILL.md:98 — \"3. **Assigning US-xxx IDs (global allocation)**:\", with the global glob rule at SKILL.md:99-100 (\"Glob every `spec.md` across all milestones (`docs/milestones/*/specs/*/spec.md`), not\\n     just this feature\") and the highest-number rule at 101-103.",
+      "reasoning": "CONFIRMED. Both halves of the KICKOFF clause map onto the skill: \"Allocate US-xxx story IDs globally\" → the step-3 heading and the cross-milestone glob at 99-103; \"never re-mint an ID for a story that already carries one\" → the never-renumbered/never-reused rule at 105-107. The skill states both in strictly more detail than the guide (it also covers the US-001 cold start at 104 and the Pillar field at 108-109). This is the guide re-teaching a dedicated ID-allocation section of the skill, carrying no parameter the skill lacks."
+    },
+    {
+      "claim_id": "specify-7",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "SKILL.md:61-62 — \"Either mode ends by running the **Clarification Pass** — load\\n`references/clarification-pass.md` — before the spec is considered done.\" Also SKILL.md:72 (reference-table Load When column: \"Always, once a spec draft exists — this is the final phase of every run\"), SKILL.md:13-16 (overview), the frontmatter description at line 3, and the Done When gate at SKILL.md:288.",
+      "reasoning": "CONFIRMED, after testing the strongest counter-argument. SKILL.md:288 and references/clarification-pass.md:14-15 (\"If the user explicitly states they are skipping this pass (e.g., exploratory spike), you\\nmay proceed, but must warn that downstream rework risk increases\") do contain a skip path, which would make the KICKOFF sentence \"emphasis of something the skill makes optional\" and therefore load-bearing. It does not survive: the skip fires only when the user *explicitly asks* to skip. Running the pass is the skill's default on every run (lines 61-62, 72). An operator prompt that says \"run it\" is asserting the default, not overriding an option, so it adds nothing. Severity dropped to low from the claimed medium: it is a single short clause, and unlike specify-5 it duplicates a gate rather than a multi-line method block."
+    }
+  ]
+}

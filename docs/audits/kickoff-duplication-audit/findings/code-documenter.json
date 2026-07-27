@@ -1,0 +1,102 @@
+{
+  "asset": "code-documenter",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/SKILL.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/references/python-docstrings.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/references/typescript-jsdoc.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/references/api-docs-fastapi-django.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/references/api-docs-nestjs-express.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/references/coverage-reports.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/references/documentation-systems.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/references/interactive-api-docs.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/references/user-guides-tutorials.md"
+  ],
+  "claims": [
+    {
+      "local_id": "code-documenter-1",
+      "class": "contradiction",
+      "severity": "medium",
+      "step": "14",
+      "kickoff_line_range": [1200, 1202],
+      "kickoff_quote": "docstrings on every function and class this milestone added or changed, in this project's existing convention (Google/NumPy/Sphinx for Python, JSDoc/TSDoc for JS/TS)",
+      "skill_quote": "- Ask for format preference before starting",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/SKILL.md",
+      "skill_line": 120,
+      "reasoning": "The skill makes asking the user for the docstring format a MUST DO (line 120) and makes assuming it a MUST NOT DO ('Assume docstring format without asking', line 130), reinforced by workflow step 1 'Discover - Ask for format preference and exclusions' (line 25). The KICKOFF prompt instead directs the agent to infer the format from the project's existing convention, with no human turn — a direct behavioral disagreement in an autonomous pipeline. The guide text is needed (the pipeline cannot stop to ask), so the fix belongs in the skill: it should permit inference from an existing codebase convention.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "code-documenter-2",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "14",
+      "kickoff_line_range": [1203, 1204],
+      "kickoff_quote": "Validate every example you write by actually compiling or running it — an example that does not run is a defect, not documentation.",
+      "skill_quote": "5. **Validate** - Test all code examples compile/run:",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/SKILL.md",
+      "skill_line": 29,
+      "reasoning": "The skill already fixes this as a numbered workflow phase with per-language commands (lines 29-33: doctest/pytest, tsc --noEmit, redocly lint) and a failure loop ('If validation fails: fix examples and re-validate'), plus MUST DO 'Test code examples in documentation' (line 125) and MUST NOT 'Write inaccurate or untested documentation' (line 132). The KICKOFF sentence re-derives the skill's own hard rule and adds no parameter; it is emphasis at best.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "code-documenter-3",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "14",
+      "kickoff_line_range": [1201, 1202],
+      "kickoff_quote": "(Google/NumPy/Sphinx for Python, JSDoc/TSDoc for JS/TS)",
+      "skill_quote": "Covers Google/NumPy/Sphinx docstrings, JSDoc/TSDoc, OpenAPI/Swagger and AsyncAPI specs, and doc-portal setup (Docusaurus, MkDocs, VitePress, Redoc, Swagger UI).",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "The parenthetical enumerates exactly the format taxonomy the skill's own description, Quick-Reference Examples (lines 38-100) and reference table (lines 108-109) already own. It is a menu restatement, not a mode selection — the KICKOFF does not pick one, it lists all of them. The load-bearing half of the sentence ('this project's existing convention') is covered separately by claim 1.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "code-documenter-4",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "14",
+      "kickoff_line_range": [1200, 1203],
+      "kickoff_quote": "docstrings on every function and class this milestone added or changed ... and the OpenAPI or AsyncAPI spec for any endpoint or event it added or changed",
+      "skill_quote": "- Document all public functions/classes",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/SKILL.md",
+      "skill_line": 122,
+      "reasoning": "The skill's default scope is the whole codebase's public surface; the KICKOFF narrows it to the current milestone's delta and simultaneously widens it past 'public' to every function and class. That scope restriction is the invocation's argument and cannot be known by the skill. Keep. Note only the mild tension with 'public' in line 122.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "code-documenter-5",
+      "class": "load-bearing-parameter",
+      "severity": "medium",
+      "step": "14",
+      "kickoff_line_range": [1204, 1205],
+      "kickoff_quote": "Do not re-open the Diataxis pages document-generate just wrote; those are its surface, not yours.",
+      "skill_quote": "| User Guides & Tutorials | `references/user-guides-tutorials.md` | Getting started, tutorials, troubleshooting, FAQs |",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/SKILL.md",
+      "skill_line": 115,
+      "reasoning": "The skill genuinely does cover prose guides and tutorials (reference table line 115; Output Formats items 3 and 4, lines 141-142), so without this fence it would legitimately overwrite the sibling skill's output. The boundary is a pipeline-level division of labour the skill cannot know. Keep verbatim.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "code-documenter-6",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "14",
+      "kickoff_line_range": [1196, 1200],
+      "kickoff_quote": "*(skip only if this milestone shipped no code-level public surface — no new or changed functions, classes, HTTP endpoints, or published events)*\nNow use the code-documenter skill for the half document-generate does not cover",
+      "skill_quote": "Applies to any task involving code documentation, API specs, or developer-facing guides.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/code-documenter/SKILL.md",
+      "skill_line": 21,
+      "reasoning": "Conditional gating and sequencing relative to document-generate are operator judgements about pipeline state; the skill's 'When to Use' is self-scoped and cannot express 'skip when this milestone shipped no code surface'. Keep.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

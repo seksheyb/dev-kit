@@ -1,0 +1,45 @@
+{
+  "asset": "gate-reverse-engineer",
+  "verdicts": [
+    {
+      "claim_id": "gate-reverse-engineer-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md:62 italic condition '*(only if the repo has undocumented existing code)*' gates whether the whole block (lines 63-76) is dispatched at all. Skill: gate-reverse-engineer.md:3 (frontmatter description) 'Use when a codebase is existing, undocumented, or poorly documented and has no SDD/PRD to plan against — reverse-engineers design intent, tech stack, and business requirements from the code itself.'",
+      "reasoning": "Verified both quotes exist verbatim at the cited lines. The KICKOFF condition is the operator-facing dispatch gate deciding whether to invoke this agent block at all — a judgment call the operator must make before the agent ever runs, not a restatement of the agent's internal methodology. Per the rubric, conditional gating the operator must judge is explicitly load-bearing even where it paraphrases the agent's own trigger description. Survives."
+    },
+    {
+      "claim_id": "gate-reverse-engineer-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md:65-66 'then the gate-reverse-engineer agent to promote that into a\\nLegacy SDD at docs/global/architecture/SDD.md,'. Skill: gate-reverse-engineer.md:24 'Write to `docs/global/architecture/SDD.md` (Design Recovery — prefix its content \"Legacy SDD\" if the file is new).'",
+      "reasoning": "Both quotes verified verbatim at the cited lines/positions. This is an output file path — explicitly carved out by the rubric as the invocation's argument, not duplicated methodology, regardless of the fact that the path happens to match the agent's own stated default target. Survives."
+    },
+    {
+      "claim_id": "gate-reverse-engineer-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md:66 'a Legacy PRD at docs/global/requirements/PRD.md,'. Skill: gate-reverse-engineer.md:25 'Write to `docs/global/requirements/PRD.md` (Requirement Recovery — prefix its content \"Legacy PRD\" if the file is new).'",
+      "reasoning": "Verified verbatim at cited lines. Second output-path argument; same reasoning as claim 2 — output file paths are the invocation's arguments per the rubric, not restated methodology. Survives."
+    },
+    {
+      "claim_id": "gate-reverse-engineer-4",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md:67 'and retrospective ADRs at docs/global/architecture/adr/NNNN-<slug>.md.' Skill: gate-reverse-engineer.md:26 'Generate ADRs at `docs/global/architecture/adr/NNNN-<slug>.md` for detected technology choices.'",
+      "reasoning": "Verified verbatim at cited lines. Third output-path/naming-convention argument (NNNN-<slug> numbering); load-bearing per the same output-path carve-out. Survives."
+    },
+    {
+      "claim_id": "gate-reverse-engineer-5",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md:73-75 'Assessment and plan only at this stage: no facades, adapters, characterization\\ntests, or monitoring code, because step 8 builds those and step 3's roadmap is what sequences\\nthe migration phases.' Skill (gate-reverse-engineer.md, full 36-line file, 'Your Goal' list at lines 12-15): '1. Identify the Tech Stack ... 2. Draft Legacy SDD ... 3. Draft Legacy PRD ... 4. Identify \"Locked Patterns\": Create retrospective ADRs for existing choices' — no mention anywhere in the file of facades, adapters, characterization tests, or monitoring code, and no reference to its own position in a numbered pipeline.",
+      "reasoning": "Read the entire agent file (36 lines, no references/ chain — has_references: no) and grepped for facade/adapter/characterization/monitoring/roadmap/step: none appear. The agent's own goal list confines it to four deliverables (tech stack ID, Legacy SDD, Legacy PRD, ADRs) and says nothing about withholding implementation artifacts, nor could it know it is 'step 00' relative to a 'step 8' or 'step 3' elsewhere in KICKOFF's pipeline. This is cross-step sequencing/scope-limiting information the agent cannot originate on its own — load-bearing, not duplication. (Note: corrected the queue's cited skill_line from 11, which is the '## Your Goal' header, to 12-15, the actual numbered list — the substance of the claim is unaffected.) Survives at medium severity given it's a real behavioral constraint preventing premature implementation work."
+    }
+  ]
+}

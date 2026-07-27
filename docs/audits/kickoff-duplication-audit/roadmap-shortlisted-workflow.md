@@ -193,4 +193,126 @@ scoped as a dev-kit-only sweep (Milestone 1) plus one confirmed cut in devkit-pi
 
 **Status:** not scoped into a milestone yet. Candidate to fold into `ROADMAP.md`
 Milestone 1 (the sweep) once the full lane roster is verified, with the KICKOFF cut
-riding along in Milestone 5.
+riding along in Milestone 5. **Unblocked as of the M2 fix wave** — this item needed a
+constitution that greenfield projects actually fill, which `ROADMAP.md` 2.1 shipped
+(greenfield elicitation pass + named template slots). Nothing gates it now.
+
+---
+
+## 4. Milestone 3 as a per-asset sweep — fold the path axis and the consumer axis into one pass
+
+**Where:** `ROADMAP.md` Milestone 3 ("ids in, paths out"), plus item 1 above. The two
+sweeps together cover **23 distinct assets**; both sitemap copies
+(`plugins/dev-kit-core/references/doc-sitemap.md` and
+`plugins/dev-kit-data-ai/references/doc-sitemap.md`) are the contract they resolve against.
+
+**Why this belongs here:** M3 is not one change, it is the same question asked at every
+asset — exactly the shape a per-asset workflow runs well, and exactly the shape a
+hand-written milestone description hides.
+
+**The two axes are disjoint — measured, not assumed.** Grepping for M3's delegation
+language (`caller specifies`, `orchestrator supplies`, `provided in your prompt`, …)
+returns **11 assets**: `debugger`, `design-reviewer`, `doc-verifier`,
+`integration-checker`, `market-researcher`, `project-researcher`, `qa`, `retro`,
+`ui-auditor`, `verifier`, `bugfix-wave`. Grepping for item 1's named-consumer language
+returns a **different 12**: `code-review-gate`, `codebase-mapper`, `doc-classifier`,
+`doc-synthesizer`, `pattern-mapper`, `phase-researcher`, `planner`,
+`research-synthesizer`, `roadmapper`, `ui-researcher`, `doc-conflict-engine`,
+`architecture-designer`. **Overlap: zero.** No asset carries both defects, so neither item
+covers the other — but one visit per asset can ask both questions for almost the price of
+one.
+
+**Proposed fix — a single per-asset pass asking a combined checklist.** At each asset:
+
+1. **Path axis (M3):** does it accept a path the caller must supply? Flip it to derive the
+   default from `references/doc-sitemap.md` + ids (`<M>`/`<NN>`/`<branch>`/round `n`),
+   accepting an explicit path only as an override. Model to copy: `converge`, which already
+   derives SPEC/PLAN/VERIFICATION/CONSTITUTION from `<NN>` alone.
+2. **Consumer axis (item 1):** does it name a specific downstream skill/agent? Replace with
+   a consumer-agnostic output-format contract; keep the "be concrete, not abstract" quality
+   bar, drop the named-consumer table.
+3. **Constitution axis (item 3):** for `scope: implementation` lane skills, does its own
+   workflow author tests in an order that conflicts with a Test-First constitution?
+4. **Known open defects:** `ROADMAP.md` 1.2, 1.4, 1.7, 1.13–1.15 and 2.12–2.20 are all
+   single-asset items — resolve them on the same visit rather than in separate waves.
+5. **Where the sitemap is silent** (e.g. `PHASE/reviews/round-<n>/`), extend the sitemap.
+   The contract grows; the guide does not.
+6. **Emit, per asset, the KICKOFF lines the fix makes cuttable** — see item 5 for why this
+   output is the point.
+
+**The existing machinery is already the right shape.** `workflow.js` in this folder is
+asset-sharded: `MANIFEST.json` holds **119 unique assets / 153 invocations**, and every
+asset entry already carries a `steps` array naming the KICKOFF steps that invoke it. The
+combined checklist above is a change to what each shard *asks*, not to how the workflow is
+built. (Mind the documented regex trap: `the [a-z0-9-]+ (skill|agent|command)` over-matches
+prose.)
+
+**Explicitly not in this pass:** retiring `PRD.md` (item 2). That is **one** contract
+decision propagated outward, not a question to ask 119 times — and it must be sequenced
+against this sweep, since both mutate `doc-sitemap.md` in opposite directions (this pass
+*extends* it; item 2 *deletes a row from* it). Item 2 also still depends on `ROADMAP.md` 1.4.
+
+**Status:** ready to scope as a workflow. Supersedes `ROADMAP.md` Milestone 3 as currently
+worded, which describes the sweep but not its per-asset shape or its overlap with item 1.
+
+---
+
+## 5. Milestone 4/5 as a per-step assembly — and why the drafted rewrites must be re-derived
+
+**Where:** `../devkit-pipeline/KICKOFF.md` (separate sibling repo), the 16 step prompts,
+and the seven drafts in `rewrites/`.
+
+**Problem — this is the one thing that is *not* asset-shaped.** A per-asset sweep cannot
+produce step rewrites, because the asset↔step mapping is genuinely many-to-many:
+**step 08 alone pulls 37 assets**, while `context-restore` appears in **6 different steps**
+(01, 03, 04, 05, 08, 12) and `context-save` in 6 (00, 02, 03, 04, 07, 11). 21 of 119 assets
+are invoked by more than one step. You cannot write step 08's prompt by visiting one asset,
+and you cannot finish `context-save` by visiting one step. Folding M4 into the item-4 sweep
+would mean asking a per-step question at a per-asset shard.
+
+**Second problem — five of the seven drafts are already stale, and one is factually wrong.**
+Extracting the `## Trimmed` block (the text that would actually ship) from each draft:
+
+| Draft | Path strings surviving in the replacement prompt |
+|---|---|
+| `step02-sdd-review-cto` | `docs/global/architecture/SDD.md`, `.../adr/` |
+| `step07-planner-handoff` | `PHASE/<NN>-<MM>-PLAN.md`, `PHASE/PATTERNS.md`, `PHASE/UI-SPEC.md`, `SPEC/AI-SPEC.md` |
+| `step10-bugfix-wave-merge-loop` | `PHASE/reviews/round-<n>/fixes.json` |
+| `step10-qa-tiers-and-preconditions` | `docs/global/process/TESTING.md` |
+| `step10-ui-auditor-scoring` | `PHASE/reviews/UI-REVIEW.md` |
+| `step11-converge-sweep` | none |
+| `step15-closeout-methodology` | none |
+
+Item 4's exit criterion is "no KICKOFF prompt needs to contain a path string." Shipping
+these five first means shipping prompts that item 4 is designed to make unnecessary, then
+rewriting them again.
+
+Worse, `step07-planner-handoff`'s trimmed text asserts: *"The planner does **not** load
+PATTERNS.md automatically… the planner does not load either one on its own."* That is now
+**false** — `ROADMAP.md` 1.1 shipped, and `agents/planner.md:1074-1075` reads `PATTERNS.md`
+and `UI-SPEC.md`, `:1079` resolves `ai_spec_path`, `:1081` declares all of them
+conditional-and-skippable. Roughly half that draft exists to compensate for a gap that no
+longer exists; shipping it as drafted would put a false statement into KICKOFF.
+
+**Proposed fix — a second, per-step pass that consumes item 4's output.**
+
+1. Item 4 emits, per asset, the KICKOFF lines its fix made cuttable, tagged with the
+   `steps` array `MANIFEST.json` already carries.
+2. **Regroup those candidates by step** — mechanical, no judgement.
+3. Write each step's prompt against the *post-flip* assets, to the six-category end-state
+   contract in `ROADMAP.md`. Because every step is being rewritten against changed assets
+   anyway, **Milestones 4 and 5 collapse into this single activity** — the seven drafts stop
+   being deliverables and become prior art on what is cuttable for their steps.
+4. **`step11-converge-sweep` and `step15-closeout-methodology` can still ship early** — no
+   paths, no stale premises. They are the down payment; the other five wait for item 4.
+5. Preserve the C4 lesson: where one asset is invoked N times, the *timing* sentence differs
+   per site and stays; only the description collapses to the invocation line. This is
+   precisely why the regroup is per-step and not per-asset.
+
+**Broader implication:** the ordering is forced, not stylistic. You cannot know how thin a
+step's prompt can get until you know what its assets resolve for themselves — and the five
+path-carrying drafts plus one false premise are what that ordering being reversed already
+produced.
+
+**Status:** ready to scope as a workflow, but **strictly after item 4**, and in the
+`devkit-pipeline` repo. Supersedes `ROADMAP.md` Milestones 4 and 5 as separate milestones.

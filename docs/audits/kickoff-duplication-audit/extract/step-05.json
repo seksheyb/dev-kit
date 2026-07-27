@@ -1,0 +1,36 @@
+{
+  "step": "05",
+  "title": "Phase discovery",
+  "line_range": [344, 400],
+  "blocks": [
+    {
+      "block_index": 0,
+      "line_range": [352, 359],
+      "verbatim_text": "Use the graphify skill to build docs/state/graphs/graph.json over this repo before anything in\nthis step or step 7 queries it. Step 0's two graph builds are both gated — one on a doc corpus\nhaving just been ingested, one on the repo already having code — so a true-greenfield milestone\narrives here with no graph at all and every graph query below silently degrades into a fresh\ntree read. If a graph.json already exists but predates this phase's code, run `--update` for an\nincremental re-extract rather than a full rebuild.",
+      "assets_invoked": ["graphify"],
+      "surrounding_prose": "Section header 'Part B — the per-phase loop': 'Repeat steps 5–11 for every phase in ROADMAP.md. PHASE/ below is that phase's directory.' Then '## 5. Phase discovery' followed by a conditioning line directly above this block: '*(only if docs/state/graphs/graph.json does not exist and this milestone has shipped code — i.e. from phase 2 onward on a greenfield project)*' — this is a gate on whether the block runs at all. No prose appears between this block and the next; they are separated only by a blank line."
+    },
+    {
+      "block_index": 1,
+      "line_range": [361, 375],
+      "verbatim_text": "Use the context-restore skill to reload the last checkpoint. Then dispatch five agents in one\nmessage for phase <NN>: four codebase-mapper agents, one per focus area (tech / arch / quality /\nconcerns) — name the focus area in each dispatch, it is the only input they take — which write\ntheir maps to docs/global/codebase/*.md, the canonical project-wide location, not into PHASE/;\nplus one assumptions-analyzer, given the phase number and name, the phase goal from ROADMAP.md,\nthe locked decisions from earlier phases, the codebase hints you already have, and the\ncalibration tier. These five are safe concurrently because they write different files AND read\nnothing each other produces. pattern-mapper is deliberately NOT in this fan-out: it reads\nPHASE/CONTEXT.md and PHASE/RESEARCH.md, neither of which exists yet, so it gets its own block\nbelow. Fold the assumptions and the phase-relevant findings from those maps into\nPHASE/CONTEXT.md. The arch and concerns mappers should query the graph at\ndocs/state/graphs/graph.json before exploring fresh, and so should you, rather than re-reading\nthe tree.",
+      "assets_invoked": ["context-restore", "codebase-mapper", "assumptions-analyzer"],
+      "surrounding_prose": "No prose lines between this block and the previous or next block — just a blank line separator on each side. The block itself explains its own ordering rationale (pattern-mapper excluded because its inputs, PHASE/CONTEXT.md and PHASE/RESEARCH.md, don't exist yet) and instructs folding outputs into PHASE/CONTEXT.md."
+    },
+    {
+      "block_index": 2,
+      "line_range": [377, 387],
+      "verbatim_text": "Use the phase-researcher agent to write PHASE/RESEARCH.md — how to actually implement this\nphase, including a don't-hand-roll list, common pitfalls, and its package-legitimacy gate\n(catches hallucinated/typosquatted dependencies before planning). Give it the phase number and\nname, the phase description/goal, this phase's requirement IDs, the constraints, and\nPHASE/RESEARCH.md as its output path. Then fan out one advisor-researcher agent per gray-area\ndecision, all in one message, each given its gray area's name and description, the phase context\nfrom the roadmap, brief project context, and the same calibration tier, and each returning a\n5-column options table (Option / Pros / Cons / Complexity / Recommendation); fold those tables\nback into RESEARCH.md.",
+      "assets_invoked": ["phase-researcher", "advisor-researcher"],
+      "surrounding_prose": "No prose between this block and the ones adjacent to it beyond blank-line separators. The block is self-contained: it names its own inputs (phase number/name, description/goal, requirement IDs, constraints, output path) and describes folding advisor-researcher's per-gray-area options tables back into RESEARCH.md."
+    },
+    {
+      "block_index": 3,
+      "line_range": [389, 397],
+      "verbatim_text": "Now that PHASE/CONTEXT.md and PHASE/RESEARCH.md both exist, dispatch the pattern-mapper agent —\nit extracts the list of files this phase will create or modify from those two documents and\nwrites PHASE/PATTERNS.md, mapping each file to its closest existing analog with concrete code\nexcerpts to copy. Give it the phase number and name, the phase directory PHASE/, the\nPHASE/CONTEXT.md path and the PHASE/RESEARCH.md path — those two files are its entire upstream,\nso dispatching it any earlier yields an empty or invented PATTERNS.md. Step 7's planner does not\nload PATTERNS.md on its own, so it has to be handed to it explicitly there.",
+      "assets_invoked": ["pattern-mapper"],
+      "surrounding_prose": "Opens with its own ordering condition 'Now that PHASE/CONTEXT.md and PHASE/RESEARCH.md both exist' — explicit dependency on the two prior blocks' outputs. Also flags forward to step 7: 'Step 7's planner does not load PATTERNS.md on its own, so it has to be handed to it explicitly there' — a load-bearing note for a later step, not this one. Followed by a horizontal rule '---' at line 399 closing out step 5 / this slice."
+    }
+  ],
+  "notes": "All four fences in the assigned range 344-400 are fully contained within the slice; none are cut in half. Line 340's fence (a bare ``` closing a prior step 4 block) falls just before line 344 and was excluded as out-of-range/out-of-step. Rejected non-asset phrases per the trap table were checked against this slice's text (graphify skill, context-restore skill, codebase-mapper/assumptions-analyzer/phase-researcher/advisor-researcher/pattern-mapper agents) — all of these are genuine hyphenated asset identifiers actually invoked, not category nouns, so all were kept as assets_invoked."
+}

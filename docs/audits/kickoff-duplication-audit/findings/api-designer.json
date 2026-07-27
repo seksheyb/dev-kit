@@ -1,0 +1,43 @@
+{
+  "asset": "api-designer",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/api-designer/SKILL.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/api-designer/references/rest-patterns.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/api-designer/references/openapi.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/api-designer/references/versioning.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/api-designer/references/pagination.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/api-designer/references/error-handling.md"
+  ],
+  "claims": [
+    {
+      "local_id": "api-designer-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [604, 612],
+      "kickoff_quote": "For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it — python-pro / fastapi-expert / django-expert / postgres-pro / api-designer for backend work, ... Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills. Tell me the track-to-lane mapping before you dispatch.",
+      "skill_quote": "description: Use when designing REST or GraphQL APIs, creating OpenAPI specifications, or planning API architecture. Invoke for resource modeling, versioning strategies, pagination patterns, error handling standards.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/api-designer/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "The only KICKOFF mention of api-designer is lane routing: which track surface gets which skill, gated on which plugins the operator enabled at step 2. The skill's frontmatter states its own trigger conditions but cannot know the wave's track decomposition or the enabled-plugin set, so this is an invocation argument, not a restatement. Nothing of the skill's methodology (core workflow, MUST/MUST NOT constraints, OpenAPI template, output checklist) is echoed in KICKOFF.",
+      "systemic": false,
+      "other_locations": []
+    },
+    {
+      "local_id": "api-designer-2",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [614, 616],
+      "kickoff_quote": "Every name above is a skill, and the track subagent loads its own assigned skill itself. framework-selector and ai-researcher are **agents**, not skills — a track subagent cannot load either one, so never put them in a track's skill slot.",
+      "skill_quote": "name: api-designer",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-backend/skills/api-designer/SKILL.md",
+      "skill_line": 2,
+      "reasoning": "This sentence classifies api-designer (with the rest of the lane list) as a skill loadable by a track subagent, versus agents that are not. That is dispatch-mechanics knowledge about the surrounding orchestration, which no individual SKILL.md can carry; the file only declares its own name/kind. Load-bearing, keep.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

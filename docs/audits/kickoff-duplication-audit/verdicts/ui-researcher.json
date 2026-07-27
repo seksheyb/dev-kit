@@ -1,0 +1,45 @@
+{
+  "asset": "ui-researcher",
+  "verdicts": [
+    {
+      "claim_id": "ui-researcher-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md:463 \"*(only if this phase has UI work)*\" gates the whole ui-researcher/ui-checker block. Skill role line (ui-researcher.md:19): \"You are a UI researcher. You answer \\\"What visual and interaction contracts does this phase need?\\\" and produce a single UI-SPEC.md that the planner and executor consume.\" Grepped the whole file for any self-gate on whether the current phase has UI work at all (\"no ui\", \"has UI\", \"frontend phase\", \"skip if\") — the only gates present are shadcn_gate (component-tooling detection, ui-researcher.md:156-177) and the third-party registry vetting gate (line 207+), neither of which decides whether the phase needs a UI spec in the first place.",
+      "reasoning": "Confirmed as load-bearing-parameter. The skill has no mechanism to decide for itself whether the dispatching phase involves UI work — it assumes it was invoked because the answer is yes. That decision lives entirely with the orchestrator/operator reading ROADMAP.md, which is exactly the kind of conditional gating the audit rules class as NOT duplication."
+    },
+    {
+      "claim_id": "ui-researcher-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md:465 \"Use the ui-researcher agent to write PHASE/UI-SPEC.md.\" Skill (ui-researcher.md:259): \"Write to: `$PHASE_DIR/UI-SPEC.md` (i.e. `docs/milestones/<M>/phases/<NN>-<slug>/UI-SPEC.md`)\" — verified verbatim at that line.",
+      "reasoning": "Confirmed. Naming the output artifact for a dispatch step is the invocation's argument, per the audit's explicit rule that output paths/filenames are load-bearing parameters, not duplicated methodology. The skill hard-codes the same path itself, so the KICKOFF mention is confirmatory of which dispatch/output this step is, not a restatement of methodology."
+    },
+    {
+      "claim_id": "ui-researcher-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md:465-467 \"Hand it a required_reading list of docs/global/design/DESIGN.md (when step 4 produced one), PHASE/CONTEXT.md, PHASE/RESEARCH.md and docs/milestones/<M>/REQUIREMENTS.md\". Skill (ui-researcher.md:24): \"If the prompt contains a `<required_reading>` block, you MUST use the `Read` tool to load every file listed there before performing any other actions. This is your primary context.\"",
+      "reasoning": "Confirmed. The skill defines its mandatory-read contract in terms of a `<required_reading>` block the invocation must populate — it cannot self-supply the list of files. Verified the four paths are also echoed in the agent's own <upstream_input> table (lines 73, 83, 91, 98) and the DESIGN.md conditional is checked by the skill's own Step 2 probe `ls docs/global/design/DESIGN.md` (line 288), so the enumeration is derivable in principle, but the prompt still must actually carry it for the mandatory-read gate to fire. This is the invocation's argument, not a re-teaching of methodology."
+    },
+    {
+      "claim_id": "ui-researcher-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "KICKOFF.md:467-468 \"it maps DESIGN.md's declared tokens onto this phase's contract instead of re-asking\". Skill states the identical rule repeatedly: ui-researcher.md:81 \"If `DESIGN.md` exists but a category above is ambiguous for this phase (e.g. which semantic color is \\\"the\\\" accent), ask only that narrow mapping question — never re-ask for raw values DESIGN.md already declared.\"; line 105 \"If upstream artifacts answer a design contract question, do NOT re-ask it. Pre-populate the contract and confirm.\"; line 183 \"**DESIGN.md outranks the defaults below for Spacing/Typography/Color** — if it exists, these three categories become a mapping exercise ... not a fresh decision.\"; line 393 (success_criteria checklist) \"DESIGN.md checked at `docs/global/design/DESIGN.md` — if present, Spacing/Typography/Color pre-populated from it, not re-asked\". All four lines verified present as quoted.",
+      "reasoning": "Confirmed as redundant-restatement, not load-bearing. This KICKOFF clause carries no parameter, path, or operator judgment — it simply re-derives the skill's own internal methodology (DESIGN.md-as-authority, mapping not re-deriving) which the skill already states as a hard rule in at least four separate places including its own success-criteria gate. Nothing the operator decides changes based on this clause; removing it changes nothing about what ui-researcher does, since the skill enforces the same behavior unconditionally on its own. Medium severity is appropriate given the direct, five-times-over duplication of a named methodology rule."
+    },
+    {
+      "claim_id": "ui-researcher-5",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md:468-469 \"Then the ui-checker agent validates it against the 6 quality dimensions; give it PHASE/UI-SPEC.md plus that same DESIGN.md / CONTEXT.md / RESEARCH.md set\". Skill (ui-researcher.md:113, in <downstream_consumer> table): \"| `ui-checker` | Validates against 6 design quality dimensions |\"",
+      "reasoning": "Confirmed as load-bearing-parameter, not a finding against ui-researcher specifically. This clause is cross-asset dispatch ordering (\"Then the ui-checker agent...\", which files to hand it) — exactly the ordering/context-selection category the audit rules mark as NOT duplication. The '6 quality dimensions' phrase is echoed in ui-researcher's own downstream_consumer table (line 113) purely as documentation of who consumes its output and how, not as methodology ui-researcher itself performs or enforces; the actual owner of any redundancy in that phrase is ui-checker's own spec/checklist, which is out of scope for this asset's audit."
+    }
+  ]
+}

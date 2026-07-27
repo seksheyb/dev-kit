@@ -1,0 +1,31 @@
+{
+  "asset": "vue-expert",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/vue-expert/SKILL.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/vue-expert/references/build-tooling.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/vue-expert/references/components.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/vue-expert/references/composition-api.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/vue-expert/references/mobile-hybrid.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/vue-expert/references/nuxt.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/vue-expert/references/state-management.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/vue-expert/references/typescript.md"
+  ],
+  "claims": [
+    {
+      "local_id": "vue-expert-1",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [603, 624],
+      "kickoff_quote": "For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it — python-pro / fastapi-expert / django-expert / postgres-pro / api-designer for backend work, react-expert / nextjs-developer / typescript-pro / vue-expert for web, swift-expert / kotlin-specialist / flutter-expert / react-native-expert for mobile, rag-architect / prompt-engineer / ml-pipeline for AI work, terraform-engineer / kubernetes-specialist / devops-engineer for infra, payment-integration / fintech-engineer / mcp-developer for specialized domains. Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills. Tell me the track-to-lane mapping before you dispatch.",
+      "skill_quote": "Builds Vue 3 components with Composition API patterns, configures Nuxt 4 SSR/SSG projects, sets up Pinia stores, scaffolds Quasar/Capacitor mobile apps, implements PWA features, and optimises Vite builds. Use when creating Vue 3 applications with Composition API, writing reusable composables, managing state with Pinia, building hybrid mobile apps with Quasar or Capacitor, configuring service workers, or tuning Vite configuration and TypeScript integration.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-web/skills/vue-expert/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "The KICKOFF text merely names vue-expert as the lane skill to dispatch for 'web' track work, alongside react-expert/nextjs-developer/typescript-pro, and leaves all Vue-specific methodology (Composition API rules, Pinia, Nuxt, Vapor Mode, validation/test loop) entirely to the skill itself. This is an orchestration-level routing decision (which lane skill covers which track surface), not a restatement of the skill's internal workflow or constraints, so it is load-bearing rather than duplicative.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

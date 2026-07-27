@@ -1,0 +1,30 @@
+{
+  "checked": 22,
+  "passed": 22,
+  "failures": [],
+  "note": "Task description claims KICKOFF.md lines 605-612 name 25 lane skills, but only 22 distinct names actually appear in that range: python-pro, fastapi-expert, django-expert, postgres-pro, api-designer, react-expert, nextjs-developer, typescript-pro, vue-expert, swift-expert, kotlin-specialist, flutter-expert, react-native-expert, rag-architect, prompt-engineer, ml-pipeline, terraform-engineer, kubernetes-specialist, devops-engineer, payment-integration, fintech-engineer, mcp-developer. All 22 verified as skills (SKILL.md under skills/) in the plugin implied by their lane grouping: backend->dev-kit-backend, web->dev-kit-web, mobile->dev-kit-mobile, AI->dev-kit-data-ai, infra->dev-kit-infra, specialized->dev-kit-specialized.",
+  "details": [
+    {"name": "python-pro", "lane": "backend", "plugin": "dev-kit-backend", "path": "dev-kit-backend/skills/python-pro/SKILL.md", "ok": true},
+    {"name": "fastapi-expert", "lane": "backend", "plugin": "dev-kit-backend", "path": "dev-kit-backend/skills/fastapi-expert/SKILL.md", "ok": true},
+    {"name": "django-expert", "lane": "backend", "plugin": "dev-kit-backend", "path": "dev-kit-backend/skills/django-expert/SKILL.md", "ok": true},
+    {"name": "postgres-pro", "lane": "backend", "plugin": "dev-kit-backend", "path": "dev-kit-backend/skills/postgres-pro/SKILL.md", "ok": true},
+    {"name": "api-designer", "lane": "backend", "plugin": "dev-kit-backend", "path": "dev-kit-backend/skills/api-designer/SKILL.md", "ok": true},
+    {"name": "react-expert", "lane": "web", "plugin": "dev-kit-web", "path": "dev-kit-web/skills/react-expert/SKILL.md", "ok": true},
+    {"name": "nextjs-developer", "lane": "web", "plugin": "dev-kit-web", "path": "dev-kit-web/skills/nextjs-developer/SKILL.md", "ok": true},
+    {"name": "typescript-pro", "lane": "web", "plugin": "dev-kit-web", "path": "dev-kit-web/skills/typescript-pro/SKILL.md", "ok": true},
+    {"name": "vue-expert", "lane": "web", "plugin": "dev-kit-web", "path": "dev-kit-web/skills/vue-expert/SKILL.md", "ok": true},
+    {"name": "swift-expert", "lane": "mobile", "plugin": "dev-kit-mobile", "path": "dev-kit-mobile/skills/swift-expert/SKILL.md", "ok": true},
+    {"name": "kotlin-specialist", "lane": "mobile", "plugin": "dev-kit-mobile", "path": "dev-kit-mobile/skills/kotlin-specialist/SKILL.md", "ok": true},
+    {"name": "flutter-expert", "lane": "mobile", "plugin": "dev-kit-mobile", "path": "dev-kit-mobile/skills/flutter-expert/SKILL.md", "ok": true},
+    {"name": "react-native-expert", "lane": "mobile", "plugin": "dev-kit-mobile", "path": "dev-kit-mobile/skills/react-native-expert/SKILL.md", "ok": true},
+    {"name": "rag-architect", "lane": "AI", "plugin": "dev-kit-data-ai", "path": "dev-kit-data-ai/skills/rag-architect/SKILL.md", "ok": true},
+    {"name": "prompt-engineer", "lane": "AI", "plugin": "dev-kit-data-ai", "path": "dev-kit-data-ai/skills/prompt-engineer/SKILL.md", "ok": true},
+    {"name": "ml-pipeline", "lane": "AI", "plugin": "dev-kit-data-ai", "path": "dev-kit-data-ai/skills/ml-pipeline/SKILL.md", "ok": true},
+    {"name": "terraform-engineer", "lane": "infra", "plugin": "dev-kit-infra", "path": "dev-kit-infra/skills/terraform-engineer/SKILL.md", "ok": true},
+    {"name": "kubernetes-specialist", "lane": "infra", "plugin": "dev-kit-infra", "path": "dev-kit-infra/skills/kubernetes-specialist/SKILL.md", "ok": true},
+    {"name": "devops-engineer", "lane": "infra", "plugin": "dev-kit-infra", "path": "dev-kit-infra/skills/devops-engineer/SKILL.md", "ok": true},
+    {"name": "payment-integration", "lane": "specialized", "plugin": "dev-kit-specialized", "path": "dev-kit-specialized/skills/payment-integration/SKILL.md", "ok": true},
+    {"name": "fintech-engineer", "lane": "specialized", "plugin": "dev-kit-specialized", "path": "dev-kit-specialized/skills/fintech-engineer/SKILL.md", "ok": true},
+    {"name": "mcp-developer", "lane": "specialized", "plugin": "dev-kit-specialized", "path": "dev-kit-specialized/skills/mcp-developer/SKILL.md", "ok": true}
+  ]
+}

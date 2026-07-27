@@ -1,0 +1,34 @@
+{
+  "asset": "fullstack-guardian",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/fullstack-guardian/SKILL.md",
+  "references_read": [
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/fullstack-guardian/references/design-template.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/fullstack-guardian/references/security-checklist.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/fullstack-guardian/references/error-handling.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/fullstack-guardian/references/common-patterns.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/fullstack-guardian/references/backend-patterns.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/fullstack-guardian/references/frontend-patterns.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/fullstack-guardian/references/integration-patterns.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/fullstack-guardian/references/api-design-standards.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/fullstack-guardian/references/architecture-decisions.md",
+    "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/fullstack-guardian/references/deliverables-checklist.md"
+  ],
+  "claims": [
+    {
+      "local_id": "fullstack-guardian-1",
+      "class": "load_bearing_parameter",
+      "severity": "low",
+      "step": "08",
+      "kickoff_line_range": [628, 633],
+      "kickoff_quote": "Also apply: secure-code-guardian (this track touches auth / input handling / crypto), fullstack-guardian (this feature spans frontend and backend together), refactoring-specialist (this track touches existing code), guard (this track touches prod / shared / destructive surface). Skip any that do not apply.",
+      "skill_quote": "Use when implementing features across frontend and backend, building REST APIs with corresponding UI, connecting frontend components to backend endpoints, creating end-to-end data flows from database to UI, or implementing CRUD operations with UI forms.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/skills/fullstack-guardian/SKILL.md",
+      "skill_line": 3,
+      "reasoning": "The parenthetical is a conditional gate the operator must judge per-track ('does this track's feature span both frontend and backend?') — it mirrors the skill's own trigger description almost verbatim but does not restate any internal methodology, checklist, or output format. This is exactly the 'conditional gating the operator must judge' category, not restatement, so it is load-bearing rather than redundant.",
+      "systemic": false,
+      "other_locations": []
+    }
+  ],
+  "consistency": "",
+  "capped": ""
+}

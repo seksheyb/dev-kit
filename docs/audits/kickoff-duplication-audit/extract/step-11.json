@@ -1,0 +1,78 @@
+{
+  "step": "11",
+  "title": "Verify the goal",
+  "line_range": [821, 968],
+  "blocks": [
+    {
+      "block_index": 0,
+      "line_range": [827, 830],
+      "verbatim_text": "/dev-kit-core:verify the goal and success criteria of phase <NN> as written in its PHASE\ndirectory — not the working diff",
+      "assets_invoked": ["dev-kit-core:verify"],
+      "surrounding_prose": "Precedes the block: 'Pass the phase goal explicitly. Bare, this command defaults to \"the current change's stated goal\" and grades the working diff; the gate here is the phase's goal, which the diff is only evidence for.' Follows the block: 'Writes PHASE/VERIFICATION.md via the verifier agent — goal-backward, not task-completion. Its Step 6d structures any requirement lacking real automated coverage as a validation_gaps list, which is what gates the nyquist dispatch below.'"
+    },
+    {
+      "block_index": 1,
+      "line_range": [837, 848],
+      "verbatim_text": "Dispatch the eval-auditor agent against this phase — the retroactive pair to step 6's\neval-planner. Audit what SPEC/AI-SPEC.md planned against what the code actually does, scoring\nevery planned eval dimension COVERED / PARTIAL / MISSING, and write PHASE/reviews/EVAL-REVIEW.md.\nAssume the eval strategy was not implemented until codebase evidence proves otherwise: AI-SPEC.md\ndocuments intent, and the code often does something less. A MISSING dimension or an unimplemented\nguardrail is a BLOCKER — do not soften one to PARTIAL because some tests exist, and do not credit\nthe AI-SPEC.md text itself as implementation evidence. A BLOCKER here is remediation work, not a\nreport line: it has no route of its own, so carry every MISSING dimension and unimplemented\nguardrail — with the Remediation Plan section EVAL-REVIEW.md ends on — into the implementation\npass further down this step, and re-run this audit once that pass has landed.",
+      "assets_invoked": ["eval-auditor"],
+      "surrounding_prose": "Preceding conditional gate: '(only if this phase built an AI/LLM system with an eval contract from step 6)'. This block references step 6's eval-planner as the forward pair, and references AI-SPEC.md and PHASE/reviews/EVAL-REVIEW.md as artifacts. It notes findings must be carried into 'the implementation pass further down this step' and that this audit should be re-run once that pass lands."
+    },
+    {
+      "block_index": 2,
+      "line_range": [859, 865],
+      "verbatim_text": "Read VERIFICATION.md's Human Verification Required section and give me the list: for each item,\nwhat to do, what should happen, and why it could not be checked programmatically. I will run\nthem by hand and report back. Do not treat human_needed as a pass, do not mark the phase\nverified, and do not proceed to the next phase until I have confirmed each item or told you\nwhich ones failed.",
+      "assets_invoked": [],
+      "surrounding_prose": "Preceding conditional gate: '(only if verify came back human_needed)'. Preceded by explanation of the three verdicts: 'It returns one of three verdicts, not two, and only one of them is self-explanatory. passed is a pass. gaps_found is not a soft warning and not a note for later: it means a stated truth FAILED, an artifact is missing or is a stub, or a key link is not wired — the phase goal is not achieved. It has a remediation route, below, and the phase is not verified until that route has run and a re-verify comes back clean. The third is human_needed, which means every automated check passed but something could not be verified programmatically. It is *not* a pass — passed is only valid when the human verification section is empty.' This block invokes no asset; it is a manual read-and-report instruction directly to the assistant."
+    },
+    {
+      "block_index": 3,
+      "line_range": [867, 879],
+      "verbatim_text": "Use the converge skill for phase <NN>. Assess the present-state code — no git, no diffing, no\nhistory — against SPEC/spec.md, every PLAN file for this phase, and\ndocs/global/project/constitution.md, treating PHASE/VERIFICATION.md's gaps as pre-confirmed\nevidence. Sweep every FR, SC, AC and constitution MUST, then append each missing / partial /\ncontradicts / unrequested gap as a new traceable <task> block under a \"## Phase N:\nConvergence\" header at the END of the plan file. Never rewrite or renumber an existing task.\nConstitution-violation remediation comes first. This is the exhaustive requirement-level sweep\nthe verifier deliberately does not attempt — the two are complementary, so do not skip it just\nbecause verify came back passed. converge itself writes no application code — appending the\ntasks is the whole of its job, and completing them is an implementation pass. Tell me how many\ntasks it appended and to which plan file.",
+      "assets_invoked": ["converge"],
+      "surrounding_prose": "No explicit conditional gate precedes this block in the prose (it appears to run unconditionally after the human_needed branch, complementary to verify regardless of its verdict — text states 'do not skip it just because verify came back passed'). Followed by a conditional block for what to do if converge appended tasks or verify returned gaps_found."
+    },
+    {
+      "block_index": 4,
+      "line_range": [883, 899],
+      "verbatim_text": "Those appended tasks and those gaps are not done work — nothing downstream builds them. Go back\nto step 8 and run the sprint-execution pass again, scoped to exactly this: the \"## Phase N:\nConvergence\" section converge appended at the end of PHASE/<NN>-<MM>-PLAN.md, plus every gap\nVERIFICATION.md lists, plus any BLOCKER in PHASE/reviews/EVAL-REVIEW.md if step 11 produced one.\nNothing else — do not re-execute already-completed tasks, and keep the constitution-violation\nremediation tasks first, in the order converge wrote them. Same contract as step 8: test-first,\none wave per run, merge verified mechanically. Take **keep** at the finishing-a-development-\nbranch menu again.\n\nThen re-run /dev-kit-core:verify on the same phase goal. The verifier auto-detects the existing\nPHASE/VERIFICATION.md and enters RE-VERIFICATION MODE — full three-level checks on the items\nthat failed, a quick regression check on the ones that already passed — so this second pass is\ncheap. Repeat this remediation-then-re-verify cycle until verify comes back passed or\nhuman_needed. A phase does not leave step 11 on gaps_found; if the same gaps survive two\ncycles, stop and escalate to me rather than opening a third.",
+      "assets_invoked": ["dev-kit-core:verify"],
+      "surrounding_prose": "Preceding conditional gate: '(only if converge appended a ## Phase N: Convergence section, or verify came back gaps_found)'. This block references step 8's sprint-execution pass and the finishing-a-development-branch menu as prior/external processes it re-invokes ('run the sprint-execution pass again', 'Take keep at the finishing-a-development-branch menu again') rather than as assets invoked by this text block itself — it directs the operator back to step 8, not to run a new command inline here except re-running /dev-kit-core:verify explicitly. Note: text has a typo/rendering quirk 'PHASE/<NN>-<MM>-PLAN.md' etc. Ends with an escalation rule: stop after two failed remediation cycles rather than opening a third."
+    },
+    {
+      "block_index": 5,
+      "line_range": [902, 917],
+      "verbatim_text": "Dispatch the integration-checker agent to confirm the cross-phase flows still connect\nend-to-end — every export actually imported and called, every API route with a real consumer,\nsensitive routes auth-protected, full flows tracing through without a break. Run it whether or\nnot verify found gaps: a phase with full in-phase coverage tells you nothing about whether it is\nwired to the phases around it.\n\nIt needs context it cannot discover on its own, so give it all of it: the completed phase\ndirectories in this milestone by path (every phase up to and including <NN>, not just this one),\nthe key exports each one declares in its PHASE/<NN>-<MM>-SUMMARY.md, and the requirement bank —\nSPEC/spec.md's US-xxx story IDs with their descriptions and the phase each is assigned to. That\nlast one is not optional: it has to map every integration finding to the requirement IDs it\naffects and produce a Requirements Integration Map flagging any requirement with no cross-phase\nwiring, and it cannot do either without the ID list. Also say which phases you expect to connect\nto which, and what each provides versus consumes.",
+      "assets_invoked": ["integration-checker"],
+      "surrounding_prose": "Preceding conditional gate: '(skip on the milestone's first phase — nothing is cross-phase yet)'. Explicitly instructed to run 'whether or not verify found gaps'. Requires operator to supply context the agent cannot discover: completed phase directory paths, key exports from each SUMMARY.md, and SPEC/spec.md's US-xxx story IDs — described as non-optional inputs."
+    },
+    {
+      "block_index": 6,
+      "line_range": [920, 932],
+      "verbatim_text": "Dispatch the nyquist-auditor agent with verify's validation_gaps passed as <gaps>: one real\nbehavioral test per uncovered requirement, targeting the hardest edge rather than a trivially\npassing one, reporting FILLED / ESCALATED / justified-SKIP for each. Include the\n<required_reading> block it treats as a mandatory initial read — this phase's PLAN.md file(s),\nits SUMMARY.md file(s), and this PHASE/VERIFICATION.md — because without it the agent writes\ntests against a requirement list it has no context for. Implementation files are **read-only**\nto it: it may only add or change test files and fixtures, and a gap it cannot close because the\nimplementation is wrong is an ESCALATE, never a fix. Hand every ESCALATED item back to step 8 as\nimplementation work — it is a real defect, not a testing shortfall. This one waits its turn\nrather than running beside integration-checker — it adds test files, and integration-checker's\nimport/export census has to be taken against a tree that is holding still.",
+      "assets_invoked": ["nyquist-auditor"],
+      "surrounding_prose": "Preceding conditional gate: '(only if verify reported validation gaps — and only after integration-checker has returned)'. Notes this dispatch must run sequentially after integration-checker (not concurrently), because nyquist-auditor adds test files and integration-checker's import/export census needs a static tree. ESCALATED items are routed back to step 8 as implementation work, not treated as a testing shortfall."
+    },
+    {
+      "block_index": 7,
+      "line_range": [937, 952],
+      "verbatim_text": "Use the gate-automation agent for phase <NN>, passing the phase directory and the phase's\nintegration branch. Have it determine the automation surface from the repo rather than\nassuming one — Playwright for web, Maestro for mobile, both when the project spans both, and\ntrust repo evidence over the **Requirement Scope:** line in CLAUDE.md if they disagree. For each primary flow it\nidentifies in the sprint diff it authors a golden-path flow, plus a critical-edge flow where\nthe feature has a real failure mode, invoking playwright-expert for web or test-master for\nMaestro as the test-design skill. It then runs the new flows locally and checks whether an\non-demand E2E CI job exists, discovering the workflow from .github/workflows/ rather than\nguessing a job name.\n\nReport back with the JSON at PHASE/reports/automation/authoring-report.json — flows_added,\nmissing_coverage with a reason per item, local_pass, ci_label_run, gate_passed. I want to know\nspecifically whether the flows were executed locally or merely written, and if the project has\nno E2E CI job yet, say so plainly so I can add one.",
+      "assets_invoked": ["gate-automation", "playwright-expert", "test-master"],
+      "surrounding_prose": "Preceding conditional gate: '(only if this phase added or changed primary user flows — flows an end user actually touches. Internal refactors, schema migrations, codegen and infra changes are excluded, and skipping is the correct outcome for a phase that only did those.)' Note: the phrase 'as the test-design skill' in this block is a role label for whichever of playwright-expert/test-master is invoked (per the CRITICAL TRAP guidance for line 944), not itself an asset name — both playwright-expert and test-master ARE real invoked assets here, selected conditionally by platform (web vs Maestro/mobile)."
+    },
+    {
+      "block_index": 8,
+      "line_range": [954, 958],
+      "verbatim_text": "Use the context-save skill to checkpoint this boundary — what is done, what got decided, and\nwhat is next. If verification surfaced a convention or a recurring gap pattern that\ngeneralizes beyond this phase, also record it with the learn skill before the checkpoint.",
+      "assets_invoked": ["context-save", "learn"],
+      "surrounding_prose": "No explicit conditional gate; appears to run at the end of the step regardless. Conditional clause inside the block itself: the learn skill is invoked only 'if verification surfaced a convention or a recurring gap pattern that generalizes beyond this phase', and must run 'before the checkpoint' (i.e. before context-save)."
+    },
+    {
+      "block_index": 9,
+      "line_range": [960, 962],
+      "verbatim_text": "/clear",
+      "assets_invoked": [],
+      "surrounding_prose": "No prose gate around this bare command block. Followed by the step's closing instruction: '**Back to step 5 for the next phase.** When every phase in ROADMAP.md is done, continue to Part C.' /clear is a built-in CLI command, not a named skill/agent asset."
+    }
+  ],
+  "notes": "All ten fenced blocks in the 821-968 range are fully contained within the slice; no fence is cut at the boundary. Block 4's text references '/dev-kit-core:verify' as a re-invocation and also references step 8's sprint-execution pass and the finishing-a-development-branch menu by name as things the operator returns to, not new assets loaded by this block's own dispatch beyond the explicit verify re-run. Block 7 line 944 contains the trap phrase 'as the test-design skill' per the task's worked example — recorded as NOT an asset name itself, only a role label; the real assets invoked (gate-automation, playwright-expert, test-master) are listed separately."
+}

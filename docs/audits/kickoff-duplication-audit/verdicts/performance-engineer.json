@@ -1,0 +1,53 @@
+{
+  "asset": "performance-engineer",
+  "verdicts": [
+    {
+      "claim_id": "performance-engineer-1",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "performance-engineer.md:24 — \"Measure first — never optimize on a hunch. Design load/stress/spike/soak scenarios, establish a baseline, then optimize the single biggest bottleneck, re-measure, and iterate.\"",
+      "reasoning": "Verified on disk: line 24 opens the Method section with \"Measure first — never optimize on a hunch.\" The KICKOFF text at line 1305-1306 says \"Measure first — no optimizing on a hunch.\" — the same hard rule with only a grammatical inflection changed. This is the skill's own first Method rule, not a parameter, path, mode selection, or condition the operator must supply. It carries no information the agent lacks. Confirmed as redundant-restatement. Medium rather than high because it is a single short clause, though it does carry drift risk if the skill's rule is ever reworded."
+    },
+    {
+      "claim_id": "performance-engineer-2",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "performance-engineer.md:11 — \"2. Measure the baseline; profile the running system.\"  AND  performance-engineer.md:24 — \"...establish a baseline, then optimize the single biggest bottleneck, re-measure, and iterate.\"",
+      "reasoning": "Both halves verified on disk. The claim's skill_quote is a stitched composite across two lines (11 and 24) rather than one sentence at line 11, and it is filed under skill_line 11 — sloppy, but the elision is marked and the claim's own reasoning names both lines correctly, so the substance holds. KICKOFF line 1306-1307 (\"Establish the baseline and profile the running system, then eliminate the single biggest bottleneck, re-measure, and iterate\") reproduces the skill's numbered When-invoked step 2 plus the Method loop, verb for verb apart from optimize→eliminate. This is the skill's internal methodology loop, which the rubric puts squarely in redundant-restatement. No ordering, gating, or parameter content rides along. Confirmed."
+    },
+    {
+      "claim_id": "performance-engineer-3",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "low",
+      "evidence": "performance-engineer.md:24 — \"Watch for the usual patterns: N+1 queries, memory leaks, pool exhaustion, cache misses, synchronous blocking, inefficient algorithms, resource contention.\"",
+      "reasoning": "Verified verbatim at line 24. KICKOFF line 1307-1308 gives \"the usual suspects are N+1 queries, pool exhaustion, cache misses, synchronous blocking, and memory leaks\" — five of the skill's seven items, same domain checklist, even the same framing noun (\"usual patterns\" / \"usual suspects\"). This is domain content the skill dedicates a sentence to, so it is redundant-restatement, not incidental phrasing. I considered whether the operator's narrower list is a deliberate scoping instruction (look only at these five); nothing in the surrounding prose at lines 1299-1302 supports that reading — the block is generic over \"what this milestone shipped\" — so it is a partial echo, not a scope narrowing. Low severity: subset restatement, cheap to delete."
+    },
+    {
+      "claim_id": "performance-engineer-4",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "performance-engineer.md:27 — \"Write `docs/global/ops/monitoring/performance-report.md`: baseline vs. after numbers (response time, throughput, resource use), the bottlenecks found, the fixes applied, and validation evidence. Include capacity-planning notes and monitoring/alert thresholds so gains don't regress.\"",
+      "reasoning": "Verified on disk; the claim's elided quote is faithful and both fragments sit on line 27. KICKOFF lines 1309-1311 re-list every field the skill's Output section already fixes — before/after numbers, the same three parenthetical metrics in the same order (response time, throughput, resource use), bottlenecks found, fixes applied, validating evidence, and alert thresholds phrased with the same rationale (\"keep the gains from regressing\" / \"so gains don't regress\"). That is the output template/section structure the skill owns, which the rubric names as redundant-restatement. High severity: it is the largest verbatim block in the invocation and it duplicates the report contract, so any future edit to the skill's Output section silently desyncs the guide. Note the adjacent sentence \"A report without before/after numbers is not a performance pass\" is emphasis of a requirement the skill already implies, but it is outside this claim's quote and was not adjudicated here."
+    },
+    {
+      "claim_id": "performance-engineer-5",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "performance-engineer.md:27 — \"Write `docs/global/ops/monitoring/performance-report.md`: baseline vs. after numbers...\"",
+      "reasoning": "The path is indeed hardcoded in the skill at line 27, so on a naive reading it is duplicated. But the rubric is explicit that output file paths and target filenames are the invocation's arguments and classify as load-bearing-parameter. The cross-step coordination the claim invokes is real and I verified it in KICKOFF at lines 1301-1302: \"Run them in this order; both write under `docs/global/ops/monitoring/`, so do not overlap them.\" The operator needs the concrete path visible to honor that non-overlap instruction against the following sre-engineer/monitoring-expert block. Keep. Low severity — this is a KEEP verdict, not a defect."
+    },
+    {
+      "claim_id": "performance-engineer-6",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "high",
+      "evidence": "performance-engineer.md:27 — \"If the bottleneck is infra-wide or capacity-related rather than app-code-level, hand dashboard/capacity follow-through to `monitoring-expert` (infra lane) instead of continuing app-level profiling.\"",
+      "reasoning": "Verified verbatim as the final sentence of line 27. KICKOFF lines 1312-1314 reproduce it with the same trigger condition (infra-wide or capacity-related vs. app-level), the same handoff target (monitoring-expert), the same payload (dashboard and capacity follow-through), and the same stop instruction (rather than continuing to profile app code). I tested the strongest counter-argument — that cross-skill handoff is orchestration and therefore load-bearing under the ordering/parallelism carve-out. It fails: the carve-out covers dispatch ordering the operator decides up front, whereas this condition can only be evaluated by the agent mid-run, after profiling, and the skill already encodes that exact conditional gate itself. So it is the skill's own hard rule restated, per the rubric. High severity: three lines of near-verbatim gate text with a named downstream agent, the highest drift risk in the block."
+    }
+  ]
+}

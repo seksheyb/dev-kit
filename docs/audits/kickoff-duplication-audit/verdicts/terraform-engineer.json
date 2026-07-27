@@ -1,0 +1,21 @@
+{
+  "asset": "terraform-engineer",
+  "verdicts": [
+    {
+      "claim_id": "terraform-engineer-1",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 604-612 (step 08): \"For each track in this wave, name the lane skill that owns its surface in the track's brief and have the implementer use it — ... terraform-engineer / kubernetes-specialist / devops-engineer for infra ... Pick from the plugins we actually enabled; a track with no matching lane just uses the core skills. Tell me the track-to-lane mapping before you dispatch.\" verified verbatim. Skill's own description at SKILL.md line 3: \"Use when implementing infrastructure as code with Terraform across AWS, Azure, or GCP. Invoke for module development ..., state management ..., provider configuration, multi-environment workflows, and infrastructure testing.\"",
+      "reasoning": "This KICKOFF text is orchestrator-side routing logic: which lane skill a per-track subagent should load, gated on the operator's step-2 plugin-enablement choices and the current wave's track decomposition, plus an explicit reporting requirement ('tell me the track-to-lane mapping before you dispatch'). None of that is knowable from inside the skill file — the skill only describes when a Terraform task fits it, not how a multi-track wave should be routed to it versus its sibling infra skills. This is a parameter/condition supplied by the invocation, not a restatement of the skill's internal methodology, gates, or templates. Confirmed as load-bearing; the guide text should be kept."
+    },
+    {
+      "claim_id": "terraform-engineer-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "KICKOFF.md lines 1108-1109 (step 13): \"2. terraform-engineer, with cloud-architect where the topology itself is in question — the IaC and any migrations this milestone's waves imply.\" verified verbatim. Skill frontmatter at SKILL.md line 12: \"related-skills: cloud-architect, devops-engineer, kubernetes-specialist\" — confirmed this is the ONLY appearance of 'cloud-architect' anywhere in the skill; grepped the full SKILL.md and its references/ directory (state-management.md, and other reference files) for 'cloud-architect' and for 'topology' — zero body-text hits for either term anywhere in the terraform-engineer skill or its references chain.",
+      "reasoning": "The skill lists cloud-architect only as inert frontmatter metadata ('related-skills'); it contains no body guidance anywhere (verified by exhaustive grep of SKILL.md and references/) telling the agent when a topology question is significant enough to pull in cloud-architect — that judgment call ('where the topology itself is in question') is supplied entirely by the KICKOFF text and cannot be derived from the skill. The scoping to 'this milestone's waves' is likewise an invocation-time argument. The word 'migrations' does echo the skill's own 'State Migration' section (references/state-management.md:269, 'Document state migration procedures' at line 374), but that overlap is about Terraform state migration specifically, not the topology-escalation condition being claimed — so it doesn't turn this into redundant-restatement. Confirmed as load-bearing; the guide text should be kept."
+    }
+  ]
+}

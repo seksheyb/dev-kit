@@ -1,0 +1,29 @@
+{
+  "asset": "assumption-mapping",
+  "verdicts": [
+    {
+      "claim_id": "assumption-mapping-1",
+      "confirmed": true,
+      "final_class": "redundant-restatement",
+      "final_severity": "medium",
+      "evidence": "SKILL.md line 3: 'Invoke to surface hidden assumptions, score them by importance and evidence, and design the cheapest experiments to test the riskiest ones first.'; line 19-43 headers 'Value Risk / Usability Risk / Business Viability Risk / Feasibility Risk' (VUBF); line 71 'Score each: Importance (H/M/L) x Evidence (H/M/L)'; line 72 'Rank and identify the top 3-5 to test first'; line 73 'Suggest the cheapest experiment for each'.",
+      "reasoning": "Verified the KICKOFF text verbatim at devkit-pipeline/KICKOFF.md lines 155-162 and the SKILL.md sentences it echoes. The prompt restates the skill's own frontmatter trigger description almost clause-for-clause ('surface what must be true' / 'surface hidden assumptions'; 'scored importance x evidence' / 'score them by importance and evidence'; 'cheapest experiment for the top few' / 'cheapest experiments to test the riskiest ones first'), and also re-lists the VUBF category names the skill dedicates a whole section to (lines 19-43) plus the numbered extraction-process steps (scoring, ranking top 3-5, suggesting cheapest experiment, lines 70-73). This is the skill's own internal methodology and taxonomy re-derived in the operator prompt, not an invocation parameter the skill can't already know -- squarely redundant-restatement. Medium severity because it duplicates a non-trivial chunk of methodology (taxonomy + scoring axis + ranking step), not just a one-word emphasis."
+    },
+    {
+      "claim_id": "assumption-mapping-2",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md Output Format section, lines 75-80: 'Deliver: - Assumption table... - Top 3-5 assumptions to test with specific experiment suggestions - Decision rules: what result validates vs. invalidates each assumption.' Nothing in the 80-line file states who is responsible for executing the resulting experiments.",
+      "reasoning": "Confirmed by reading the full SKILL.md: it defines assumption extraction, scoring, ranking, and experiment suggestions, and stops there -- it never assigns execution responsibility. The KICKOFF clause 'the skill stops at experiment design, and most VUBF tests (fake-door, landing page, interviews) are mine to execute, not yours' is a human/agent task-division instruction the skill has no way to encode about itself (it can't know who is invoking it or what the operator will do with its output). This is load-bearing operator context, not restated methodology, even though the boundary it draws happens to coincide with where the skill's own scope already ends."
+    },
+    {
+      "claim_id": "assumption-mapping-3",
+      "confirmed": true,
+      "final_class": "load-bearing-parameter",
+      "final_severity": "low",
+      "evidence": "SKILL.md line 12 (frontmatter metadata): 'related-skills: ab-test-analysis, backlog-grooming, growth-loops'. No other line in the 80-line file mentions BACKLOG.md, a file path, or a Now/Next/Later/Icebox/Won't-Do taxonomy.",
+      "reasoning": "Read the entire SKILL.md end to end (80 lines, no references/ chain exists for this asset) and confirmed the only mention of backlog-grooming is the bare related-skills tag; there is no output path, no taxonomy, and no validation-gating rule anywhere in the skill. The KICKOFF sentence specifying that validated assumptions (and only validated ones) flow into docs/global/requirements/BACKLOG.md under a specific Now/Next/Later/Icebox/Won't-Do taxonomy is exactly the kind of cross-skill routing/gating information an invocation prompt must supply and a single skill cannot know about a sibling skill's file conventions -- load-bearing, not duplicated."
+    }
+  ]
+}

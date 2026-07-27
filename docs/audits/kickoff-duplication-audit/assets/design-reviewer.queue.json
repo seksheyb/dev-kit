@@ -1,0 +1,421 @@
+{
+  "asset": "design-reviewer",
+  "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+  "claim_count": 11,
+  "claims": [
+    {
+      "local_id": "design-reviewer-6",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [
+        986,
+        986
+      ],
+      "kickoff_quote": "Run these across everything this milestone shipped, and produce scorecards, not prose.",
+      "skill_quote": "**Dual headline scores:** **Design Score {A-F}** (weighted average of all 10 categories) and **AI Slop Score {A-F}** (standalone grade with a pithy verdict).",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "skill_line": 225,
+      "reasoning": "The scorecard-not-prose output shape is already fixed by the skill's Scoring System \u2014 dual A-F headline scores, per-category grades, an explicit grade-computation rule (line 229) and category weights (line 231), plus 'Letter-graded report.' at line 84 for full mode. 'Across everything this milestone shipped' likewise restates line 14's 'milestone-level, whole-surface pass'. Low severity: the sentence is short and also governs the accessibility-tester dispatch later in the same block, so it is not purely this asset's duplication.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-reviewer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "raised_by": [
+        "design-reviewer"
+      ],
+      "locations": [
+        [
+          986,
+          986
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "design-reviewer-1"
+    },
+    {
+      "local_id": "design-reviewer-7",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [
+        986,
+        987
+      ],
+      "kickoff_quote": "First the design-reviewer agent in full/deep mode,",
+      "skill_quote": "- **Full (default):** all pages reachable from homepage (5-8 pages). Full checklist, responsive screenshots, interaction flows. Letter-graded report.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "skill_line": 84,
+      "reasoning": "Mode selection among the five modes the skill itself offers (Full / Quick / Deep / Diff-aware / Regression, lines 84-88) \u2014 the skill cannot know which depth a milestone gate warrants, so the operator must choose. Load-bearing. 'First' is also ordering information relative to the accessibility-tester dispatch. Minor nit: 'full/deep' names two mutually exclusive modes without saying how to pick between them.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-reviewer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "raised_by": [
+        "design-reviewer"
+      ],
+      "locations": [
+        [
+          986,
+          987
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "design-reviewer-2"
+    },
+    {
+      "local_id": "design-reviewer-5",
+      "class": "redundant-restatement",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [
+        987,
+        988
+      ],
+      "kickoff_quote": "with regression mode against docs/state/baselines/design-baseline.json so I get a design-score delta versus the last milestone",
+      "skill_quote": "- **Regression:** run a full audit, then load the previous `docs/state/baselines/design-baseline.json`; compare per-category grade deltas, new findings, resolved findings.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "skill_line": 88,
+      "reasoning": "Selecting regression mode is legitimate mode selection (load-bearing), but the baseline PATH is not a parameter \u2014 the skill hardcodes `docs/state/baselines/design-baseline.json` twice (line 88 read, line 210 write) and offers no way to override it, unlike the output dir which line 12 explicitly declares configurable. The 'so I get a design-score delta' rationale is likewise fixed by the skill (line 287: 'design score delta; AI-slop score delta'). Only the two words 'regression mode' are load-bearing here.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-reviewer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "raised_by": [
+        "design-reviewer"
+      ],
+      "locations": [
+        [
+          987,
+          988
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "design-reviewer-3"
+    },
+    {
+      "local_id": "design-reviewer-8",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [
+        989,
+        990
+      ],
+      "kickoff_quote": "it writes that baseline file, so it is not read-only and does not share a browser with the others.",
+      "skill_quote": "**Local:** `{output_dir}/{date}-{domain}.md`. Write `docs/state/baselines/design-baseline.json` for regression mode:",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "skill_line": 210,
+      "reasoning": "This is scheduling/parallelism guidance for the orchestrator \u2014 that this agent cannot be fanned out concurrently with the read-only reviewers because it writes state and drives its own browser. The skill states the write (line 210) and the browser dependency (line 10) but has no notion of the sibling agents it is dispatched alongside, so the concurrency conclusion is the operator's to draw. Load-bearing.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-reviewer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "raised_by": [
+        "design-reviewer"
+      ],
+      "locations": [
+        [
+          989,
+          990
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "design-reviewer-4"
+    },
+    {
+      "local_id": "design-reviewer-4",
+      "class": "unenforced-gap",
+      "severity": "medium",
+      "step": "12",
+      "kickoff_line_range": [
+        990,
+        991
+      ],
+      "kickoff_quote": "On the first milestone there is no prior baseline to diff against; say so and establish it rather than reporting a delta against nothing.",
+      "skill_quote": "SEARCH EVIDENCE (absence claim). Closest sentence found, line 88: '- **Regression:** run a full audit, then load the previous `docs/state/baselines/design-baseline.json`; compare per-category grade deltas, new findings, resolved findings.' \u2014 it unconditionally assumes a previous baseline exists and gives no branch for its absence. Greps run over the full 306-line file: `grep -niE \"baseline|first milestone|prior|no previous|absent|missing|if.*exists|establish|initial run\"` returned only lines 24, 80, 88, 121, 184, 210, 283, 291 \u2014 line 121 is the unrelated DESIGN.md offer, line 210 is 'Write `docs/state/baselines/design-baseline.json` for regression mode' (write path, not a read guard), line 283 is 'If worse than baseline: WARN prominently', line 291 is the TODOS.md existence check (proving the skill does use `if <file> exists` guards elsewhere, just not here). No synonym for a first-run / bootstrap / no-prior-baseline case appears anywhere in the file.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "skill_line": 88,
+      "reasoning": "Regression mode is specified as an unconditional load-and-diff with no handling for a missing baseline file, yet Phase 9 (line 283) then compares against 'baseline' and Phase 10 (line 287) reports a 'design score delta' \u2014 so on milestone 1 the agent has nothing to diff and the skill gives it no instruction. The KICKOFF text is load-bearing and must be KEPT; the fix belongs in the skill (line 88 should branch: if no prior baseline exists, say so and establish it).",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-reviewer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "raised_by": [
+        "design-reviewer"
+      ],
+      "locations": [
+        [
+          990,
+          991
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "design-reviewer-5"
+    },
+    {
+      "local_id": "design-reviewer-9",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [
+        991,
+        993
+      ],
+      "kickoff_quote": "Give the agent the target URL of the running app explicitly \u2014 <URL> \u2014 instead of letting it fall back to diff-aware port sniffing,",
+      "skill_quote": "- **Diff-aware (automatic on a feature branch with no URL):** analyze `git diff main...HEAD --name-only`, map changed files to affected pages/routes, detect the running app on common local ports (3000, 4000, 8080, 5173), audit only affected pages.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "skill_line": 87,
+      "reasoning": "The URL is the invocation's primary argument (`<URL>` is a placeholder the operator fills) and supplying it deliberately suppresses a default the skill would otherwise auto-trigger \u2014 diff-aware mode fires 'automatic on a feature branch with no URL' and would narrow scope to changed pages only, which is wrong for a whole-milestone gate. Load-bearing on both counts.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-reviewer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "raised_by": [
+        "design-reviewer"
+      ],
+      "locations": [
+        [
+          991,
+          993
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "design-reviewer-6"
+    },
+    {
+      "local_id": "design-reviewer-10",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [
+        993,
+        993
+      ],
+      "kickoff_quote": "plus whatever auth it needs to get past a login,",
+      "skill_quote": "**Auth detection:** if the URL redirects to `/login`, `/signin`, `/auth`, or `/sso`, the site needs authentication \u2014 ask for credentials or cookies before continuing.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "skill_line": 127,
+      "reasoning": "Credentials are per-project data the skill cannot possibly hold, and line 35 already lists 'auth' as a dispatch-prompt parameter to parse. Supplying it up front converts the skill's stop-and-ask (line 127) into an uninterrupted run, which matters for an unattended milestone gate. Load-bearing.",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-reviewer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "raised_by": [
+        "design-reviewer"
+      ],
+      "locations": [
+        [
+          993,
+          993
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "design-reviewer-7"
+    },
+    {
+      "local_id": "design-reviewer-11",
+      "class": "load-bearing-parameter",
+      "severity": "low",
+      "step": "12",
+      "kickoff_line_range": [
+        993,
+        994
+      ],
+      "kickoff_quote": "and have it write its report and screenshots to docs/milestones/<M>/reports/design/.",
+      "skill_quote": "**Artifact paths are configurable.** Defaults below use `docs/milestones/<M>/reports/design/` \u2014 use whatever output directory the dispatch prompt provides.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "skill_line": 12,
+      "reasoning": "Output directory is the invocation's argument by construction \u2014 line 12 explicitly says the skill takes it from the dispatch prompt. Weak nit only: the value passed is byte-identical to the documented default, so the sentence buys nothing here, but the class is load-bearing because the parameter is genuinely the operator's to set (a differently-laid-out project would pass something else).",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-reviewer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "raised_by": [
+        "design-reviewer"
+      ],
+      "locations": [
+        [
+          993,
+          994
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "low"
+      ],
+      "claim_id": "design-reviewer-8"
+    },
+    {
+      "local_id": "design-reviewer-2",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "12",
+      "kickoff_line_range": [
+        996,
+        998
+      ],
+      "kickoff_quote": "Two preconditions, both of which make it stop rather than degrade, so clear them before you dispatch: it drives a live browser, so browser tooling has to be available in this session \u2014 if it is not, it says so and stops, and that is the correct outcome, not a failure.",
+      "skill_quote": "**Browser tooling note:** This agent drives a live browser. Use whatever browser automation is available in the session \u2014 an in-session Browser pane (navigate / computer / read_page / javascript / console tools), Playwright MCP, or a headless-browser CLI. \"Navigate\", \"screenshot\", \"annotated snapshot\", \"run JS\", \"check console\" map to the equivalent commands of whichever tool is present. If no browser tooling is available, say so and stop.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "skill_line": 10,
+      "reasoning": "The skill already declares the browser dependency and the exact stop behavior ('say so and stop'); the KICKOFF re-derives that hard rule almost word for word. The only non-duplicated fragment is the operator-facing framing 'clear them before you dispatch' plus the reassurance that a stop is not a failure \u2014 that reassurance is aimed at the orchestrator's interpretation of the result, which is a thin residue not worth three lines.",
+      "systemic": true,
+      "other_locations": [
+        [
+          998,
+          1000
+        ]
+      ],
+      "asset": "design-reviewer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "raised_by": [
+        "design-reviewer"
+      ],
+      "locations": [
+        [
+          996,
+          998
+        ],
+        [
+          998,
+          1000
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "design-reviewer-9"
+    },
+    {
+      "local_id": "design-reviewer-3",
+      "class": "redundant-restatement",
+      "severity": "medium",
+      "step": "12",
+      "kickoff_line_range": [
+        998,
+        1000
+      ],
+      "kickoff_quote": "And its fix loop makes commits, so the working tree has to be clean \u2014 commit or stash anything outstanding first.",
+      "skill_quote": "**Check for clean working tree** (fix loop makes commits):",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "skill_line": 37,
+      "reasoning": "Verbatim collision on the parenthetical rationale ('fix loop makes commits') and on the remedy list \u2014 skill line 43 says 'If dirty, STOP and ask: commit, stash, or abort', and Important Rule 11 (line 305) repeats 'Clean working tree required.' The skill runs `git status --porcelain` itself in Setup, so the precondition is self-enforcing and the KICKOFF text is restating a gate the skill owns.",
+      "systemic": true,
+      "other_locations": [
+        [
+          996,
+          998
+        ]
+      ],
+      "asset": "design-reviewer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "raised_by": [
+        "design-reviewer"
+      ],
+      "locations": [
+        [
+          996,
+          998
+        ],
+        [
+          998,
+          1000
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "medium"
+      ],
+      "claim_id": "design-reviewer-10"
+    },
+    {
+      "local_id": "design-reviewer-1",
+      "class": "redundant-restatement",
+      "severity": "high",
+      "step": "12",
+      "kickoff_line_range": [
+        1002,
+        1005
+      ],
+      "kickoff_quote": "Have it read every PHASE/reviews/UI-REVIEW.md step 10's ui-auditor wrote this milestone before it starts: contract-conformance findings already scored there are settled, so spend this pass on what only a live cross-page look can see \u2014 consistency across pages, AI-slop, interaction feel, and the fix loop \u2014 rather than re-litigating them.",
+      "skill_quote": "**Division of labor:** this is the milestone-level, whole-surface pass \u2014 dispatched once at milestone close-out, not per phase. Before Phase 1, read each phase's `docs/milestones/<M>/phases/<NN>-<slug>/reviews/UI-REVIEW.md` (from `ui-auditor`) produced during this milestone; treat contract-conformance findings already scored there as settled and don't re-litigate them \u2014 spend the audit on what only a live, cross-page pass can see: consistency across pages, AI-slop, interaction feel, and the fix loop.",
+      "skill_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "skill_line": 14,
+      "reasoning": "This is a near-verbatim paraphrase of the skill's own <role> Division-of-labor paragraph \u2014 same input file, same 'settled / don't re-litigate' rule, and the same four-item list of what to spend the pass on, in the same order. Nothing in the KICKOFF sentence is a parameter the skill cannot derive itself; the skill already fixes the read as a Before-Phase-1 step. This is the single largest block of duplicated text in the invocation (4 of the 25 prompt lines).",
+      "systemic": false,
+      "other_locations": [],
+      "asset": "design-reviewer",
+      "asset_file": "/home/ubuntu/skillsproject/dev-kit/plugins/dev-kit-core/agents/design-reviewer.md",
+      "raised_by": [
+        "design-reviewer"
+      ],
+      "locations": [
+        [
+          1002,
+          1005
+        ]
+      ],
+      "steps": [
+        "12"
+      ],
+      "merged_from": [],
+      "contributing_severities": [
+        "high"
+      ],
+      "claim_id": "design-reviewer-11"
+    }
+  ]
+}

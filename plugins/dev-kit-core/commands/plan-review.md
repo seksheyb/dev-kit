@@ -2,16 +2,16 @@
 description: Lens-based plan review — dispatch the plan-reviewer agent in parallel, one lens each (eng, design, devex, goal-backward).
 ---
 
-Parse `$ARGUMENTS` as: a plan file path, plus optional lens names (`eng`, `design`, `devex`, `goal-backward`). Default to all 4 lenses when none are named.
+Parse `$ARGUMENTS` as: a plan file path, plus optional lens names (`eng`, `design`, `devex`, `goal-backward`). When none are named, default to the project's configured lens set: read `CLAUDE.md` for a `## Plan Review Lenses` section (a list of lens names, one convention shared with `## Health Stack`, `## Testing`, and `## Deploy Configuration` elsewhere in this kit); if present, use exactly those lenses. Otherwise — no `CLAUDE.md`, or no such section — default to all 4 lenses.
 
-There is intentionally **no `ceo`/scope lens** here: scope and product strategy are settled once, before any plan exists, by `spec-review-cpo` (Stage 1) and locked into the spec's Scope Decision Record. These 4 lenses are execution-quality checks only.
+There is intentionally **no `ceo`/scope lens** here: scope and product strategy are settled once, before any plan exists, by `spec-review-cpo` (Stage 1) and locked into the spec's Scope Decision Record. These 4 lenses are execution-quality checks only — a configured `## Plan Review Lenses` may narrow which of the 4 run by default, but can never reintroduce a `ceo` lens.
 
-**2 or more lenses → run the Workflow. Mandatory, not an option** — the default (all 4) is always a Workflow. It fans out one `plan-reviewer` per lens in parallel and consolidates:
+**2 or more lenses → run the Workflow. Mandatory, not an option** — the default set (all 4, or a configured subset of 2+) is always a Workflow. It fans out one `plan-reviewer` per lens in parallel and consolidates:
 
 ```
 Workflow({
   scriptPath: "<dev-kit-core>/references/workflows/plan-review.workflow.mjs",
-  args: { plan: "<plan path>", lenses: ["eng", "design", "devex", "goal-backward"] }
+  args: { plan: "<plan path>", lenses: [...] }  // whichever set was resolved above: explicit $ARGUMENTS, the configured `## Plan Review Lenses`, or the all-4 fallback
 })
 ```
 

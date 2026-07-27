@@ -34,6 +34,22 @@
 [SECTION_2_CONTENT]
 <!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
 
+### Documentation Standard
+<!-- NAMED SLOT — keep this heading text verbatim. Downstream tooling reads it by name: the
+     `code-documenter` skill resolves the project's docstring format from this slot before
+     falling back to sampling the codebase. The subsection may be moved whole under a different
+     `##` section (e.g. Development Workflow) if that reads better for the project, but do not
+     rename, reword, or change the level of the heading. -->
+
+[DOCUMENTATION_STANDARD]
+<!-- Example: Docstring format: Google style for Python, TSDoc for TypeScript. Every exported
+     symbol carries a docstring covering parameters, return value, and raised errors.
+     Documentation exclusions: `vendor/**`, `**/generated/**`.
+     If the project has no documentation standard yet, leave the [DOCUMENTATION_STANDARD] token
+     unreplaced — code-documenter then treats this slot as silent and infers the format from the
+     codebase instead. Do not write "none", "TBD", or "n/a" here; an unreplaced token IS the
+     signal for undecided. -->
+
 ## [SECTION_3_NAME]
 <!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
 

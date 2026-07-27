@@ -55,10 +55,36 @@ hostage. Sources: REPORT.md §1 (D-findings that are skill-side) + §4b HIGH tab
 | 1.6 | `skills/devex-review` | Define pass/fail threshold, emit a verdict; add read-only/no-commit restraint (also §4b MEDIUM). |
 | 1.7 | D2 — 4 lane skills (`python-pro`, `flutter-expert`, `django-expert`, +grep for others) | Reconcile code-first internal workflows with TDD: one line deferring test ordering to `test-driven-development` when co-loaded. |
 | 1.8 | D4 `skills/design-consultation` | Gate the Phase 6 "run design-html" closer on `claude_design_system_id` being bound. |
-| 1.9 | D6 `skills/code-documenter` | Permit convention-based docstring-format inference when running unattended. |
+| 1.9 | D6 `skills/code-documenter` | Remove the interactive "ask for format preference" requirement (`SKILL.md:25,120,129`); resolve docstring format from `docs/global/project/constitution.md` (same default path/fallback pattern as `analyze`/`converge`/`specify` — missing/unfilled constitution is not fatal), then existing codebase convention, then language default. No human turn required. |
 | 1.10 | D3 `agents/codebase-mapper` | Either drop the hard `Today's date:` requirement or make the date self-derivable; stop requiring an input no dispatch convention supplies. |
 | 1.11 | D8/§3.2 `agents/qa.md`, `agents/ui-auditor.md` | qa: none (guide text was wrong, rewrite already fixes it). ui-auditor: kill the "Top 3" template ceiling; wire `needs_human_review` beyond the browser branch. **Blocks the §3.2 cut.** |
 | 1.12 | D9 `commands/verify.md` chain | No asset change needed — KICKOFF's stale mechanism claim dies in Milestone 4. |
+
+**1.9 detail — `code-documenter/SKILL.md` resolution order (unattended-safe, no ask):**
+1. **Constitution** — load `docs/global/project/constitution.md` (default path per the `constitution` skill). If it names a documentation/docstring standard (naturally under an "Additional Constraints" or "Development Workflow" section), that governs.
+2. **Existing codebase convention** — if the constitution is absent, unfilled, or silent on documentation style: scan for existing docstrings/comments and style markers (`numpydoc`/`sphinx` config, `.jsdoc.json`, `typedoc.json`) and match what's already there.
+3. **Language-conventional default** — Google-style for Python, JSDoc for TS/JS — only if neither of the above yields a signal.
+
+Line-level changes: `SKILL.md:25` (Discover step) drops "Ask for format preference" for the tiered lookup above; `SKILL.md:120` (MUST DO) becomes "Determine format preference: constitution → existing convention → language default"; `SKILL.md:129` (MUST NOT DO) drops "without asking" so it no longer forbids the tiered resolution it now requires. Open follow-up: the constitution template has no dedicated docstring-format slot today (freeform prose only) — may need a named field for tier 1 to be reliably machine-checkable; track separately if so.
+
+**1.11 detail — `agents/ui-auditor.md` line-level changes (qa.md needs none):**
+
+1. **Kill the "Top 3" template ceiling (ui-auditor-11, medium — do not ship the §3.2 cut without this).** The skill forbids stopping at 3 issues at `:36` but its own output template only has 3 slots, so it self-contradicts and under-reports. Change all four sites from a fixed 3-slot list to an open, severity-ranked list:
+   - `:20` → "Score each pillar 1-4, identify all priority fixes ranked by severity (do not cap at three)"
+   - `:327` (`## Top 3 Priority Fixes`) → `## Priority Fixes`, with a note "list every BLOCKER and WARNING found, ranked by severity — do not cap at three" and an open-ended numbered list instead of exactly 3 slots
+   - `:426` (`### Top 3 Fixes` in the structured return) → `### Priority Fixes`, same open-list treatment
+   - `:451` (success-criteria checkbox) → "All priority fixes identified and ranked (not capped at three)"
+
+2. **Wire `needs_human_review` beyond the browser branch (ui-auditor-9, low).** `:117` only sets `needs_human_review: true` inside the browser-tooling branch; the CLI-fallback and code-only paths (`:123-154`) have no equivalent, even though `:25` already states the intent generally. Move the flagging language out of `<browser_tooling_approach>` into a mechanism-agnostic spot (e.g. `<audit_pillars>` or `<output_format>`): any finding requiring subjective/visual judgment gets `needs_human_review: true` regardless of whether screenshots came from browser tooling, CLI fallback, or a code-only audit.
+
+Not required for 1.11 but worth doing alongside it: the BLOCKER/WARNING taxonomy declared at `:38-40` never appears in the `<output_format>` template (`:303-359`) — wire severity labels into the findings sections when this file is next touched.
+
+**1.12 detail — D9 `commands/verify.md` chain: why no dev-kit fix applies, and where the deletion actually lands:**
+
+1. **Confirmed no asset defect.** `commands/verify.md:5` says only "default: the current change's stated goal" — it never claims to grade a diff. `agents/verifier.md` is phase-directory-oriented end to end: canonical PHASE dir at `:16`, PLAN/SUMMARY/roadmap loaded at `:84`, Step 0 keyed off `PHASE_DIR/VERIFICATION.md` at `:67`. RE-VERIFICATION.md confirms it: "Zero diff-grading mechanism in verify.md (9 lines) or verifier.md." There is nothing to change in `dev-kit`.
+2. **The defect is 100% guide-side.** `KICKOFF.md:823-825` claims bare `verify` "grades the working diff" — a mechanism that exists nowhere in the chain. The operator instruction that follows (pass the goal explicitly) stays correct; only the stated *reason* for it is fiction — drift that survives edits because the conclusion still looks right (REPORT.md D9).
+3. **Where the deletion actually happens — flag a sequencing gap.** The stale sentence sits inside step 11, but the only drafted Milestone-4 rewrite for that step, `rewrites/step11-converge-sweep.md`, is scoped to KICKOFF lines 867-879 (the converge block) — it does not touch 823-825. So "dies in Milestone 4" is only true if that rewrite's scope is widened to also drop/correct 823-825 before it ships. As drafted today, the stale sentence would survive Milestone 4 untouched and only get caught by Milestone 5's full step-by-step rewrite. When executing Milestone 4 item 2 (step 11), either (a) extend `rewrites/step11-converge-sweep.md` to cover 823-825, or (b) update this roadmap to move 1.12's actual payoff to Milestone 5 and drop the Milestone-4 claim.
+4. **Exit check for 1.12 specifically:** grep the shipped KICKOFF.md for "grades the working diff" — zero hits confirms closure, independent of which milestone actually removed it.
 
 **Exit criterion:** every §4b-HIGH KICKOFF line is reclassified trimmable.
 

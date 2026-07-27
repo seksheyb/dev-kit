@@ -69,6 +69,7 @@ Verification rules:
 - `npm run <script>` / `yarn <script>` / `pnpm run <script>`: read `package.json` and check the `scripts` field. PASS if found, FAIL with `{ ..., expected: "script '<name>' in package.json", actual: "script not found" }` if missing.
 - `node <filepath>`: verify the file exists (same as file path claim).
 - `npx <pkg>`: check if the package appears in `package.json` `dependencies` or `devDependencies`.
+- `git <...>`, and any other command claim not covered by a rule above (e.g. `docker`, `curl`, a bare CLI invocation): filesystem evidence alone cannot settle whether the command is correct — this is a **WARNING** per `<adversarial_stance>`, not a PASS. Record it as UNVERIFIABLE with `reason: "no filesystem-checkable verification rule for this command"`. Never silently drop it and never default it to PASS.
 - Do NOT execute any commands. Existence check only.
 - For multi-line bash blocks, process each line independently. Skip blank lines and comment lines (`#`).
 
@@ -119,15 +120,18 @@ Process the doc line by line, tracking line numbers. For each line: identify con
 **Step 4: Verify each claim**
 Apply the verification method from `<claim_extraction>` for its category:
 - File path claims: Glob (`{project_root}/**/{filename}`) or Read to check existence
-- Command claims: package.json scripts or file existence
+- Command claims: package.json scripts or file existence, except `git`/other uncovered commands — see below
 - API endpoint claims: Grep across source directories
 - Function claims: Grep across source files
 - Dependency claims: package.json dependency fields
 
-Record each result as PASS or `{ line, claim, expected, actual }` for FAIL.
+Record each result as one of three outcomes — every claim resolves to exactly one:
+- **PASS** — filesystem evidence confirms the claim.
+- **FAIL** (BLOCKER) — `{ line, claim, expected, actual }`; filesystem evidence contradicts the claim.
+- **UNVERIFIABLE** (WARNING) — `{ line, claim, reason }`; the claim has no filesystem-checkable verification rule (currently: `git` commands and any other command claim not covered by a `<claim_extraction>` rule). This is distinct from SKIP (Step 5) — the claim WAS extracted and IS in scope, it just can't be settled from filesystem evidence alone.
 
 **Step 5: Aggregate results**
-Count `claims_checked` (excludes skipped), `claims_passed`, `claims_failed`, and build the `failures` array.
+Count `claims_checked` (excludes skipped), `claims_passed`, `claims_failed`, and `claims_unverifiable`; build the `failures` and `unverifiable` arrays. `claims_checked = claims_passed + claims_failed + claims_unverifiable`. **SKIP** (verification infrastructure unavailable — e.g. no `package.json` to check a dependency claim against) is a different case from UNVERIFIABLE: SKIP claims are excluded from `claims_checked` entirely, per `<critical_rules>` #5; UNVERIFIABLE claims are counted and reported, never silently dropped.
 
 **Step 6: Write result JSON**
 Create the output directory if it does not exist (default `docs/state/tmp/`). Write the result to `{output_dir}/verify-{doc_filename}.json` where `{doc_filename}` is the basename of `doc_path` with extension (e.g., `README.md` → `verify-README.md.json`). Use the exact JSON shape from `<output_format>`.
@@ -139,9 +143,10 @@ Write one JSON file per doc with this exact shape:
 ```json
 {
   "doc_path": "README.md",
-  "claims_checked": 12,
+  "claims_checked": 13,
   "claims_passed": 10,
   "claims_failed": 2,
+  "claims_unverifiable": 1,
   "failures": [
     {
       "line": 34,
@@ -155,16 +160,25 @@ Write one JSON file per doc with this exact shape:
       "expected": "script 'test:unit' in package.json",
       "actual": "script not found in package.json"
     }
+  ],
+  "unverifiable": [
+    {
+      "line": 90,
+      "claim": "git rebase --autosquash",
+      "reason": "no filesystem-checkable verification rule for this command"
+    }
   ]
 }
 ```
 
 Fields:
 - `doc_path`: the value from `verify_assignment.doc_path` (verbatim — do not resolve to absolute path)
-- `claims_checked`: integer count of all claims processed (not counting skipped)
+- `claims_checked`: integer count of all claims processed (not counting skipped) — equals `claims_passed + claims_failed + claims_unverifiable`
 - `claims_passed`: integer count of PASS results
 - `claims_failed`: integer count of FAIL results (must equal `failures.length`)
+- `claims_unverifiable`: integer count of UNVERIFIABLE results (must equal `unverifiable.length`) — claims that were extracted and in scope but have no filesystem-checkable verification rule (WARNING tier; see `<verification_process>` Step 4)
 - `failures`: array — empty `[]` if all claims passed
+- `unverifiable`: array — empty `[]` if every claim resolved to PASS or FAIL
 
 After writing the JSON, return this single confirmation to the orchestrator:
 
@@ -177,6 +191,12 @@ If `claims_failed > 0`, append:
 ```
 {claims_failed} failure(s) written to {output_dir}/verify-{doc_filename}.json
 ```
+
+If `claims_unverifiable > 0`, append:
+
+```
+{claims_unverifiable} claim(s) could not be verified from filesystem evidence alone — see {output_dir}/verify-{doc_filename}.json
+```
 </output_format>
 
 <critical_rules>
@@ -184,8 +204,8 @@ If `claims_failed > 0`, append:
 2. NEVER execute arbitrary commands from the doc. For command claims, only verify existence in package.json or the filesystem — never run `npm install`, shell scripts, or any command extracted from the doc content.
 3. NEVER modify the doc file. The verifier is read-only. Only write the result JSON to the output directory.
 4. Apply skip rules BEFORE extraction. Do not extract claims from VERIFY markers, example prefixes, or placeholder paths — apply the rules during extraction.
-5. Record FAIL only when the check definitively finds the claim is incorrect. If verification cannot run (e.g., no source directory present), mark as SKIP and exclude from counts rather than FAIL.
-6. `claims_failed` MUST equal `failures.length`. Validate before writing.
+5. Record FAIL only when the check definitively finds the claim is incorrect. If verification INFRASTRUCTURE is unavailable (e.g., no source directory present to grep for an API endpoint), mark as SKIP and exclude from counts rather than FAIL. If the CLAIM itself has no filesystem-checkable verification rule (e.g. a `git` command, or any command claim not covered by `<claim_extraction>`), mark as UNVERIFIABLE — WARNING tier, per `<adversarial_stance>` — and include it in `claims_checked` and the `unverifiable` array. Never collapse UNVERIFIABLE into SKIP or PASS; an unverifiable claim that goes unreported is exactly the failure mode `<adversarial_stance>`'s WARNING tier exists to prevent.
+6. `claims_failed` MUST equal `failures.length`; `claims_unverifiable` MUST equal `unverifiable.length`. Validate both before writing.
 7. **ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
 </critical_rules>
 
@@ -196,6 +216,7 @@ If `claims_failed > 0`, append:
 - [ ] Each claim verified using filesystem tools only
 - [ ] Result JSON written to `{output_dir}/verify-{doc_filename}.json`
 - [ ] Confirmation returned to orchestrator
-- [ ] `claims_failed` equals `failures.length`
+- [ ] `claims_failed` equals `failures.length`; `claims_unverifiable` equals `unverifiable.length`
+- [ ] Every claim resolved to exactly one of PASS / FAIL / UNVERIFIABLE — none silently dropped as an implicit pass
 - [ ] No modifications made to any doc file
 </success_criteria>

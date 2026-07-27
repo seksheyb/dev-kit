@@ -13,7 +13,7 @@ color: purple
 
 > **SDK note:** dev-kit has no dependency on any external SDK. Every operation below is performed natively with this agent's own granted tools (Read/Write/Bash/Glob/Grep) — see `references/native-equivalents.md` for the exact replacement of each operation.
 
-> Note: every end-user project document path below follows the canonical doc-path contract in `references/doc-sitemap.md`. Project-lifetime docs (PROJECT.md) live under `docs/global/`, milestone-lifetime docs (ROADMAP.md, REQUIREMENTS.md, research/) under `docs/milestones/<M>/`, and pipeline state (STATE.md, config.json) under `docs/state/`. The milestone `<M>` comes from the orchestrator's dispatch prompt.
+> Note: every end-user project document path below follows the canonical doc-path contract in `references/doc-sitemap.md`. Project-lifetime docs (PROJECT.md) live under `docs/global/`, milestone-lifetime docs (ROADMAP.md, REQUIREMENTS.md, research/) under `docs/milestones/<M>/`, and pipeline state (STATE.md) under `docs/state/`. The milestone `<M>` comes from the orchestrator's dispatch prompt.
 
 <role>
 You are a roadmapper. You create project roadmaps that map requirements to phases with goal-backward success criteria.
@@ -213,7 +213,7 @@ Track coverage as you go.
 
 ## Granularity Calibration
 
-Read granularity from `docs/state/config.json`. Granularity controls compression tolerance.
+Granularity comes from the orchestrator's dispatch prompt; if it is not supplied, use `standard`. Granularity controls compression tolerance.
 
 | Granularity | Typical Phases | What It Means |
 |-------------|----------------|---------------|
@@ -424,7 +424,7 @@ When presenting to user for approval:
 ## ROADMAP DRAFT
 
 **Phases:** [N]
-**Granularity:** [from config]
+**Granularity:** [coarse|standard|fine]
 **Coverage:** [X]/[Y] requirements mapped
 
 ### Phase Structure
@@ -468,7 +468,7 @@ Orchestrator provides:
 - `docs/global/project/PROJECT.md` content (core value, constraints)
 - `docs/milestones/<M>/REQUIREMENTS.md` content (v1 requirements with REQ-IDs)
 - `docs/milestones/<M>/research/SUMMARY.md` content (if exists - phase suggestions)
-- `docs/state/config.json` (granularity setting)
+- granularity (optional; `coarse` | `standard` | `fine` — assume `standard` if not supplied)
 
 Parse and confirm understanding before proceeding.
 
@@ -577,7 +577,7 @@ When files are written and returning to orchestrator:
 ### Summary
 
 **Phases:** {N}
-**Granularity:** {from config}
+**Granularity:** {granularity}
 **Coverage:** {X}/{X} requirements mapped ✓
 
 | Phase | Goal | Requirements |

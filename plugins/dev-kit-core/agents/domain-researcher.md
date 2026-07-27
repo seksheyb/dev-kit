@@ -105,6 +105,8 @@ Update AI-SPEC.md at `ai_spec_path`. Add/update Section 1 — the critical failu
 
 Promote the sharpest 3-5 of the domain failure modes you researched into system-level failure modes: behaviours that cannot go wrong for *this* phase, stated as observable output behaviour, not as ML jargon. Read Section 2 (framework and `system_type`, written by `framework-selector`) so the list covers the failure modes that system type actually exhibits — retrieval fabrication for RAG, handoff loss for multi-agent, silent schema drift for extraction.
 
+> Note: the AI-SPEC.md section skeleton and numbering are owned by `framework-selector` (`plugins/dev-kit-data-ai/agents/framework-selector.md`, its `<write_section_2>` block), which creates the file with every placeholder before you run. The two `##` headings below (here and in `<write_section_1b>`) must match that skeleton verbatim — a mismatched heading leaves the placeholder empty and produces a duplicate section.
+
 ```markdown
 ## 1. Critical Failure Modes
 

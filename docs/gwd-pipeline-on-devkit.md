@@ -43,7 +43,7 @@ cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it desc
 | **3** | Research & roadmap | `project-researcher` ×4 → `research-synthesizer` · `roadmapper` | requirements + research → `docs/milestones/<M>/ROADMAP.md` (vertical slices) + `docs/state/STATE.md` |
 | **4** | Design system *(if UI)* | `design-consultation` → `design-html`[^plan-review-design] | product → `docs/global/design/DESIGN.md` |
 | **5** | Phase discovery | `codebase-mapper` ×4 · `assumptions-analyzer` · `phase-researcher` · `advisor-researcher` · `pattern-mapper` · `graphify` (query) | phase → `PHASE/CONTEXT.md`, `PHASE/PATTERNS.md`, `PHASE/RESEARCH.md`, codebase maps |
-| **6** | AI / UI phase specs *(conditional)* | *(AI)* `domain-researcher` → `eval-planner` (data-ai lane) · *(UI)* `ui-researcher` → `ui-checker` | phase → `SPEC/AI-SPEC.md` / `PHASE/UI-SPEC.md` |
+| **6** | AI / UI phase specs *(conditional)* | *(AI)* `framework-selector` → `ai-researcher` → `domain-researcher` → `eval-planner` (data-ai lane) · *(UI)* `ui-researcher` → `ui-checker` | phase → `SPEC/AI-SPEC.md` / `PHASE/UI-SPEC.md` |
 | **7** | Plan the phase | `writing-plans` · `planner` · `plan-review` (cmd) → `plan-reviewer` → 4 lenses (incl. `plan-review-design`) · `gate-plan-review` · `analyze` | context → `PHASE/<NN>-<MM>-PLAN.md` (waves + tracks), reviewed & complexity-gated |
 | **8** | Execute the phase | `using-git-worktrees` · `sprint-execution` · `test-driven-development` · `dispatching-parallel-agents` · `fullstack-guardian`/`secure-code-guardian` · `refactoring-specialist` · `guard` · `design-handoff` (Claude Design → codebase bridge, when UI in scope) · `verification-before-completion` · **lane skills** | plan → code + tests, per-track parallel |
 | **9** | Debug *(as needed)* | `debug` (cmd) → `debugger` ← `systematic-debugging` · `learn` | failure → root-cause fix + regression test |
@@ -106,7 +106,7 @@ dev-kit supplies the assets, not the branch logic.)
 |------|-----------------------|---------------------------|
 | `market-researcher` (S1) | A product-direction / sizing / competitive decision is open | Skip; requirements proceed on existing evidence |
 | **Design system** (S4) | Project has a UI lane **and** no `docs/global/design/DESIGN.md` exists yet | Skip the whole stage — runs **once ever**, never per phase |
-| **AI spec** (S6): `domain-researcher` + `eval-planner` | The phase builds an AI/LLM system needing an eval contract | Skip; no `SPEC/AI-SPEC.md` for this phase |
+| **AI spec** (S6): `framework-selector` → `ai-researcher` → `domain-researcher` → `eval-planner` | The phase builds an AI/LLM system needing an eval contract | Skip; no `SPEC/AI-SPEC.md` for this phase |
 | **UI spec** (S6): `ui-researcher` → `ui-checker` | The phase has UI work | Skip; no `PHASE/UI-SPEC.md`. If run, `ui-checker` **BLOCKED** halts planning until fixed |
 | `plan-review-design` (S7) | The plan has any UI scope | Auto-reports "not applicable", verdict APPROVE, completeness N/A |
 | `plan-review-devex` (S7) | The plan has a developer-facing surface (API/CLI/SDK) | Auto-reports "not applicable", auto-approve N/A |
@@ -308,12 +308,19 @@ Build the context a planner needs, cheaply, before writing tasks.
 
 ### Stage 6 — AI / UI phase specs *(conditional)*
 
-- **AI work:** **`domain-researcher`** *(agent)* researches practitioner evaluation criteria and
-  failure modes into `SPEC/AI-SPEC.md` §1b; the **data-ai lane** then owns the eval contract — **`eval-planner`** designs
-  the strategy/rubrics. Its retroactive pair, **`eval-auditor`**, does **not** run here: it is an audit of an
+- **AI work:** **`framework-selector`** *(agent)* runs first in the AI chain: when `SPEC/AI-SPEC.md` does not exist
+  it creates it with the full section skeleton (§1, 1b, 2, 3, 4, 4b, 5, 6, 7 — each heading carrying its author
+  attribution, which is why later agents fill their own sections and never invent numbering), writes §2 — Framework
+  (system type, framework, model provider, rationale/alternative/constraints), and still returns its
+  `FRAMEWORK_RECOMMENDATION` block to the orchestrator. **`ai-researcher`** then writes §3–§4b (framework quick
+  reference, implementation guidance, best practices); **`domain-researcher`** *(agent)* authors §1 (critical
+  failure modes, promoted from its domain research after reading §2's `system_type`) **and** §1b (domain rubric
+  ingredients); the **data-ai lane** closes the eval contract — **`eval-planner`** writes §5–§7 (evaluation strategy,
+  guardrails, production monitoring), reading and confirming the §1/§1b it does not author. Its retroactive pair,
+  **`eval-auditor`**, does **not** run here: it is an audit of an
   *implemented* phase and its `<input>` takes the phase's `PHASE/<NN>-<MM>-SUMMARY.md` files, which don't exist until
-  Stage 8 — it fires at Stage 11 instead. **`framework-selector`** / **`ai-researcher`** /
-  **`rag-architect`** / **`prompt-engineer`** / **`ml-pipeline`** etc. supply the build methodology. All four of
+  Stage 8 — it fires at Stage 11 instead. **`rag-architect`** / **`prompt-engineer`** / **`ml-pipeline`** etc.
+  supply the build methodology. All four of
   `framework-selector`/`ai-researcher`/`domain-researcher`/`eval-planner` check Stage 5's `PHASE/RESEARCH.md` (if it
   exists) before researching, so this lane never duplicates Stage 5's research or picks an un-reconciled stack for
   the same phase.
@@ -681,7 +688,7 @@ Stage 0/8:
 **Mobile** (`dev-kit-mobile`, 4) — Stage 8; Maestro flows at Stage 11:
 `flutter-expert`, `kotlin-specialist`, `react-native-expert`, `swift-expert`.
 
-**Data/AI** (`dev-kit-data-ai`, 17) — Stage 6 eval contract (`domain-researcher` → `eval-planner`) + Stage 8 build;
+**Data/AI** (`dev-kit-data-ai`, 17) — Stage 6 `AI-SPEC.md` contract (`framework-selector` → `ai-researcher` → `domain-researcher` → `eval-planner`) + Stage 8 build;
 `eval-auditor` at Stage 11:
 `data-analyst`, `data-engineer`, `data-scientist`, `pandas-pro`, `spark-engineer`, `ml-engineer`, `ml-pipeline`,
 `fine-tuning-expert`, `nlp-engineer`, `reinforcement-learning-engineer`, `llm-architect`, `rag-architect`,

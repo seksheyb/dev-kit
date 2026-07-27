@@ -61,102 +61,94 @@ hostage. Sources: REPORT.md §1 (D-findings that are skill-side) + §4b HIGH tab
 | 1.12 | D9 `commands/verify.md` chain | No asset change needed — KICKOFF's stale mechanism claim dies in Milestone 4. | ✅ **Resolved, no action** — confirmed against live files |
 | 1.13 | `agents/{ai-researcher,eval-planner,framework-selector}.md` (dev-kit-data-ai), `agents/domain-researcher.md` (dev-kit-core) | **New — same damage class as 1.3, different root cause.** All four "update `AI-SPEC.md` at `ai_spec_path`", but their `tools:` frontmatter grants `Write` only, not `Edit`. Write is a whole-file overwrite, so each clobbers its siblings' sections **even on the documented sequential chain**. Fix is a tool grant + an explicit read-modify-write contract; spans two plugins including frontmatter. | ⬜ **Open — new, HIGH** |
 | 1.14 | `skills/graphify/SKILL.md:295-301,369-372` | **New — scoping token exists but is never wired to the write.** N chunk subagents are dispatched in one message with byte-identical prompts; `CHUNK_NUM` is substituted only into a human-readable header, never into an output path, and the prompt never tells the subagent to Write at all — yet the collector treats the missing `.graphify_chunk_NN.json` as a read-only-agent-type failure. Same shape as 1.3/1.13. | ⬜ **Open — new** |
+| 1.15 | `agents/ui-auditor.md:38-40` | **Declared severity taxonomy never reaches the output template.** The BLOCKER/WARNING taxonomy declared at `:38-40` does not appear anywhere in the `<output_format>` template (`:303-359`), so findings carry no severity label. Carried over from 1.11's notes, where it was flagged as "worth doing alongside" but was out of that item's scope. Wire severity labels into the findings sections. | ⬜ **Open** |
 
-**Provenance of 1.13/1.14:** both were surfaced by the structural sweeps during the 1.1/1.3
-fix wave, not by the original audit. They are live asset bugs but they hold **no KICKOFF text
-hostage**, so they do **not** gate this milestone's exit criterion below — they are filed here
-because this is the "fix live asset defects" milestone, not because the trim depends on them.
-
-**1.1 note — one contract decision made during the fix, flagged for review.** The
-`## Parallel Execution Map` gap could not be closed without reconciling a granularity
-mismatch: the planner emits **one plan file per track**, but the map's consumers
-(`gate-plan-review`, `sprint-execution`) assume **one plan file carrying many tracks**. The
-shipped resolution puts the map **once per phase, in the lowest-numbered plan**, with a
-one-line pointer in every other plan — duplicating the table into every plan would have
-recreated exactly the duplication this audit exists to remove. This is a contract decision
-rather than a bug fix, so it must be reviewed before the Milestone 4 step-7 planner-handoff
-rewrite ships against it (see Milestone 4 item 2).
-
-**1.9 note — shipped in two passes; the second closed the gap.** The fix wave first landed the
-narrower variant described in `roadmap-shortlisted.md` (a 2-tier unattended branch with the
-interactive ask retained), which did not satisfy this row. A follow-up pass replaced it with
-the 3-tier order specified above. As shipped now:
-- **Tier 1 constitution lookup added** — `docs/global/project/constitution.md` at its canonical
-  default path; when it names a documentation standard, that governs and later tiers are not
-  consulted. Absent / unfilled-template / silent all fall through and are explicitly not fatal,
-  matching how `analyze`, `converge`, and `specify` treat the same file.
-- **The ask is gone, not rescoped.** There is no interactive-vs-unattended split any more —
-  resolution is deterministic, so the skill behaves identically either way and cannot stall.
-  The `### MUST DO` bullet now states the resolution order; `### MUST NOT DO` forbids stalling
-  on a human choice and forbids overriding an explicit constitution standard.
-- **Tier 2 gained explicit style-config detection** (`numpydoc`/`sphinx` settings,
-  `.jsdoc.json`, `typedoc.json`) ahead of docstring sampling; ties fall through to tier 3
-  rather than resolving arbitrarily. Exclusions resolve the same way, so the whole Discover
-  step is unattended-safe rather than just the format half.
-- **Guarded:** `scripts/checks/skill-precondition-guards.sh` Check 2 asserts all three tiers,
-  the fallthrough clause, and that no "ask for format" bullet returns. Verified to fail against
-  both the pre-wave file and the interim 2-tier version.
-- **Still open (unchanged):** the constitution template has no dedicated docstring-format slot
-  (freeform prose only), so tier 1 is human-readable but not machine-checkable. Tracked below.
-
-**1.9 detail — `code-documenter/SKILL.md` resolution order (unattended-safe, no ask):**
-1. **Constitution** — load `docs/global/project/constitution.md` (default path per the `constitution` skill). If it names a documentation/docstring standard (naturally under an "Additional Constraints" or "Development Workflow" section), that governs.
-2. **Existing codebase convention** — if the constitution is absent, unfilled, or silent on documentation style: scan for existing docstrings/comments and style markers (`numpydoc`/`sphinx` config, `.jsdoc.json`, `typedoc.json`) and match what's already there.
-3. **Language-conventional default** — Google-style for Python, JSDoc for TS/JS — only if neither of the above yields a signal.
-
-Line-level changes: `SKILL.md:25` (Discover step) drops "Ask for format preference" for the tiered lookup above; `SKILL.md:120` (MUST DO) becomes "Determine format preference: constitution → existing convention → language default"; `SKILL.md:129` (MUST NOT DO) drops "without asking" so it no longer forbids the tiered resolution it now requires. Open follow-up: the constitution template has no dedicated docstring-format slot today (freeform prose only) — may need a named field for tier 1 to be reliably machine-checkable; track separately if so.
-
-**1.11 detail — `agents/ui-auditor.md` line-level changes (qa.md needs none):**
-
-1. **Kill the "Top 3" template ceiling (ui-auditor-11, medium — do not ship the §3.2 cut without this).** The skill forbids stopping at 3 issues at `:36` but its own output template only has 3 slots, so it self-contradicts and under-reports. Change all four sites from a fixed 3-slot list to an open, severity-ranked list:
-   - `:20` → "Score each pillar 1-4, identify all priority fixes ranked by severity (do not cap at three)"
-   - `:327` (`## Top 3 Priority Fixes`) → `## Priority Fixes`, with a note "list every BLOCKER and WARNING found, ranked by severity — do not cap at three" and an open-ended numbered list instead of exactly 3 slots
-   - `:426` (`### Top 3 Fixes` in the structured return) → `### Priority Fixes`, same open-list treatment
-   - `:451` (success-criteria checkbox) → "All priority fixes identified and ranked (not capped at three)"
-
-2. **Wire `needs_human_review` beyond the browser branch (ui-auditor-9, low).** `:117` only sets `needs_human_review: true` inside the browser-tooling branch; the CLI-fallback and code-only paths (`:123-154`) have no equivalent, even though `:25` already states the intent generally. Move the flagging language out of `<browser_tooling_approach>` into a mechanism-agnostic spot (e.g. `<audit_pillars>` or `<output_format>`): any finding requiring subjective/visual judgment gets `needs_human_review: true` regardless of whether screenshots came from browser tooling, CLI fallback, or a code-only audit.
-
-Not required for 1.11 but worth doing alongside it: the BLOCKER/WARNING taxonomy declared at `:38-40` never appears in the `<output_format>` template (`:303-359`) — wire severity labels into the findings sections when this file is next touched.
-
-**1.12 detail — D9 `commands/verify.md` chain: why no dev-kit fix applies, and where the deletion actually lands:**
-
-1. **Confirmed no asset defect.** `commands/verify.md:5` says only "default: the current change's stated goal" — it never claims to grade a diff. `agents/verifier.md` is phase-directory-oriented end to end: canonical PHASE dir at `:16`, PLAN/SUMMARY/roadmap loaded at `:84`, Step 0 keyed off `PHASE_DIR/VERIFICATION.md` at `:67`. RE-VERIFICATION.md confirms it: "Zero diff-grading mechanism in verify.md (9 lines) or verifier.md." There is nothing to change in `dev-kit`.
-2. **The defect is 100% guide-side.** `KICKOFF.md:823-825` claims bare `verify` "grades the working diff" — a mechanism that exists nowhere in the chain. The operator instruction that follows (pass the goal explicitly) stays correct; only the stated *reason* for it is fiction — drift that survives edits because the conclusion still looks right (REPORT.md D9).
-3. **Where the deletion actually happens — flag a sequencing gap.** The stale sentence sits inside step 11, but the only drafted Milestone-4 rewrite for that step, `rewrites/step11-converge-sweep.md`, is scoped to KICKOFF lines 867-879 (the converge block) — it does not touch 823-825. So "dies in Milestone 4" is only true if that rewrite's scope is widened to also drop/correct 823-825 before it ships. As drafted today, the stale sentence would survive Milestone 4 untouched and only get caught by Milestone 5's full step-by-step rewrite. When executing Milestone 4 item 2 (step 11), either (a) extend `rewrites/step11-converge-sweep.md` to cover 823-825, or (b) update this roadmap to move 1.12's actual payoff to Milestone 5 and drop the Milestone-4 claim.
-4. **Exit check for 1.12 specifically:** grep the shipped KICKOFF.md for "grades the working diff" — zero hits confirms closure, independent of which milestone actually removed it.
+**Provenance of 1.13/1.14/1.15:** all three were surfaced by structural sweeps during the fix
+waves, not by the original audit. They are live asset bugs but hold **no KICKOFF text hostage**,
+so they do **not** gate this milestone's exit criterion.
 
 **Exit criterion:** every §4b-HIGH KICKOFF line is reclassified trimmable.
+*(Shipped items 1.1, 1.3, 1.5, 1.6, 1.8–1.12 — implementation detail lives in the git history
+and in `scripts/checks/`, not here. Two live consequences of that work were carried forward:
+the 1.1 map-placement review gate and the 1.12 deletion-site gap, both now in Milestone 4.)*
 
 ## Milestone 2 — Fix the MEDIUM gap defects (repo: dev-kit)
 
-The §4b MEDIUM entries, as corrected by RE-VERIFICATION.md (one refuted, four narrowed):
+The §4b MEDIUM entries, as corrected by RE-VERIFICATION.md (one refuted, four narrowed).
+**11 of 13 actionable entries shipped**; 2 remain open, 1 stays blocked.
 
-- `skills/bugfix-wave` — add the cross-session preflight covering both leftover worktrees AND
-  leftover same-name track branches (`git checkout -b` fails on those); fix the misdiagnosing
-  Edge Case (`:559-562`).
-- `skills/constitution` — add a real elicitation pass for greenfield repos (the step-0 pipeline
-  design already assumes a "principle interview").
-- `skills/rag-architect` — defer to an upstream AI-SPEC decision instead of re-opening the stack.
-- `agents/design-reviewer` — bootstrap branch: when `design-baseline.json` is absent, run the
-  full audit and write this run as the baseline (today only regression mode writes the file it
-  itself requires).
-- `skills/ship` — one cross-link sentence naming `land-and-deploy` as where merge/deploy lives
-  (the boundary exists there already; ship just never says so).
-- `skills/sprint-execution` — extend the `Merged`-field verification duty (`:180`, `:212`) to
-  the `Tests:`/`Status:` handover fields; the rest of its evidence machinery is real.
-- `agents/incident-responder` — add the disclosure-clock-starts-at-discovery clause to First
-  response (deadline tracking already exists at `:24`); `agents/compliance-auditor` gets the
-  full fix (discovery-start rule + early interim regime artifact).
-- Rest of the list unchanged: brainstorming premise-gate in the standard flow, diagram re-sync
-  duty for embedded fences, plan-review config-sourced default, chaos-engineer incident-derived
-  seeding, test-master Maestro methodology (load-bearing — `gate-automation:42` routes Maestro
-  authoring to it), architecture-designer (`skills/`, not `agents/`) ↔ diagram pairing.
-- ~~`skills/learn` autonomous append path~~ — **REFUTED, dropped**: `SKILL.md:26` already
-  authorizes unattended workflow appends and `debugger.md:276` implements it.
-- `skills/sre-engineer` — **downgraded to optional**: a blocking calibration gate already
-  exists (`SKILL.md:21`); only the reference checklist's one-sidedness remains.
+| # | Asset | Fix | Status |
+|---|---|---|---|
+| 2.1 | `skills/constitution` | Real elicitation pass for greenfield repos (the step-0 pipeline design already assumes a "principle interview"). | ✅ **Done** |
+| 2.2 | `skills/bugfix-wave` | Cross-session preflight covering both leftover worktrees AND leftover same-name track branches (`git checkout -b` fails on those); fix the misdiagnosing Edge Case (`:559-562`). | ✅ **Done** |
+| 2.3 | `skills/ship` | One cross-link sentence naming `land-and-deploy` as where merge/deploy lives (the boundary exists there already; ship just never says so). | ✅ **Done** |
+| 2.4 | `agents/design-reviewer` | Bootstrap branch: when `design-baseline.json` is absent, run the full audit and write this run as the baseline (today only regression mode writes the file it itself requires). | ✅ **Done** |
+| 2.5 | `skills/sprint-execution` | Extend the `Merged`-field verification duty (`:180`, `:212`) to the `Tests:`/`Status:` handover fields; the rest of its evidence machinery is real. | ✅ **Done** |
+| 2.6 | `agents/incident-responder`, `agents/compliance-auditor` | Disclosure-clock-starts-at-discovery clause in First response; compliance-auditor gets the full fix (discovery-start rule + early interim regime artifact). | ✅ **Done** |
+| 2.7 | `skills/test-master` | Maestro methodology — load-bearing, `gate-automation:42` routes Maestro authoring here. | ✅ **Done** |
+| 2.8 | `skills/architecture-designer` ↔ `skills/diagram` | Pairing — architecture-designer delegates mermaid mechanics instead of restating them. | ✅ **Done** |
+| 2.9 | `skills/diagram` | Re-sync duty for embedded fences (the `.mmd` and the embedded copy silently diverge). | ✅ **Done** |
+| 2.10 | `commands/plan-review` | Config-sourced default lens set instead of a hardcoded all-4. | ✅ **Done** |
+| 2.11 | `skills/sre-engineer` | **Downgraded to optional** — the blocking calibration gate already exists (`SKILL.md:21`); only the reference checklist's one-sidedness remained. | ✅ **Done** |
+| 2.12 | `skills/brainstorming` | Premise-gate in the **standard** design flow. | ⬜ **Open — missed by the M2 fix wave** |
+| 2.13 | `skills/chaos-engineer` | Incident-derived experiment seeding. | ⬜ **Open — missed by the M2 fix wave** |
+| 2.14 | `skills/rag-architect` | Defer to an upstream AI-SPEC decision instead of re-opening the stack. | ⛔ **Blocked on 1.13** |
 
-**Exit criterion:** the corrected §4b list is empty; zero KICKOFF lines exist to compensate for an asset.
+~~`skills/learn` autonomous append path~~ — **REFUTED, dropped**: `SKILL.md:26` already
+authorizes unattended workflow appends and `debugger.md:276` implements it.
+
+**2.12 / 2.13 — why these are open.** Both were in the original §4b list but were omitted when
+the actionable set was enumerated for the fix wave, so they were never dispatched. Both
+re-verified as real afterwards:
+- **2.12** — the Premise Challenge block (`brainstorming/SKILL.md:186`, "both postures —
+  mandatory") sits inside the **startup/office-hours mode**, not the standard flow. The standard
+  flow has its own `## Checklist (standard design flow)` (`:32`) and `## The Process` (`:51`),
+  and `:30` says the special modes *feed into* it ("premises → approaches → design"). So the
+  standard flow **assumes premises already exist** and gates nothing itself — a user who enters
+  the standard flow directly never hits a premise challenge.
+- **2.13** — `chaos-engineer` has essentially no incident/postmortem wiring (one incidental hit
+  in `SKILL.md`, twelve in `references/game-days.md`). Meanwhile `incident-responder` writes
+  postmortems to a known path (`docs/global/ops/postmortems/<date>-<slug>.md`) and files runbook
+  updates under `docs/global/ops/runbooks/`. Experiments should be seeded from what has actually
+  broken in this system, not designed from scratch — the producer exists and the consumer
+  ignores it.
+
+**2.14 — blocked, do not start.** The fix creates a read of `AI-SPEC.md`, which **1.13** must
+first make trustworthy: four agents currently whole-file-`Write` that document and clobber each
+other's sections. Deferring to a stack decision that may have been silently overwritten converts
+a duplicated-decision problem into a silently-wrong-decision problem — strictly worse than the
+status quo. Ship 1.13 first.
+
+### Found during Milestone 2 execution (new — not in the original §4b list)
+
+The fix wave's structural sweeps surfaced these. None blocks the M2 exit criterion; all are
+live asset defects worth scheduling.
+
+| # | Asset | Finding |
+|---|---|---|
+| 2.15 | `skills/ship:124` | **Single-cause diagnosis of a multi-cause symptom** — asserts a VERSION/manifest mismatch is "a manual edit". Same class as the bugfix-wave edge case fixed in 2.2; a merge, a failed release script, or a revert produce the identical symptom. |
+| 2.16 | `agents/design-reviewer:14,237` | **Self-reported field consumed as proof** — trusts `ui-auditor`'s `needs_human_review` flagging with no re-check. Note the provenance: this is the flag **1.11 introduced**, so the class we created there already has a known instance. Same class as 2.5. |
+| 2.17 | `skills/writing-plans/plan-document-reviewer-prompt.md:38-49` | **Orphaned asset** — nothing anywhere in `plugins/` references this file. Carries a Class-B defect, but there is no consumer to fix it against; decide whether the file should exist at all before fixing its contents. |
+| 2.18 | 7 skills naming a diagram deliverable | `api-designer:22,205`, `cloud-architect:211`, `microservices-architect:3,155`, `rag-architect:190`, `growth-loops:93`, `network-engineer:143` name "diagram" as a required output but never invoke `skills/diagram`. Weaker than 2.8 (bare deliverable mention, not restated mechanics) — **needs sizing before it is scheduled**, and may be correct as-is. |
+| 2.19 | `skills/healthcare-admin:98,136` | Deadline language with **no regime, no number, and no start event** stated anywhere in the file. Deliberately left unfixed by the 2.6 sweep: correcting it would require inventing regulatory specifics that cannot be sourced from the repo. **Needs domain input, not a code fix.** |
+| 2.20 | Ambiguous instances of the 2.2 / 2.5 classes | `react-native-expert:30,32` and `flutter-expert:125` (single-cause, but remedy-shaped and hedged "Likely Cause"); `cso:263`, `design-consultation:352-355`, `document-release:380-390` (self-report, but each already partly mitigated by a pre-emit quote gate or an explicit "best-effort" caveat). Flagged rather than guessed at — **confirm before touching**. |
+
+**Regression guards added during M2:** `scripts/checks/` now holds 9 run-by-hand scripts
+(`constitution-slot`, `diagram-delegation`, `disclosure-clock`, `orchestration-evidence`,
+`planning-agent`, `review-track`, `skill-pr-promise`, `skill-precondition`,
+`skill-routing-capability`). Each was verified in **both** directions — failing against the
+pre-fix file via `git show`, passing against the fix. Milestone 6 item 5 covers wiring them
+into a runner.
+
+**Sweeps that came back clean** (recorded so they are not re-run): the only genuine dangling
+skill route in the repo was `gate-automation`→`test-master`; `qa.md` and `health-reporter.md`
+do **not** share design-reviewer's unreachable-bootstrap bug (both write their baselines
+unconditionally); `hipaa-compliance:86-88` and `fintech-engineer/references/compliance-kyc.md:37`
+were **already** correctly discovery-anchored; `constitution` was the only asset with the
+"replace every placeholder" elicitation gap.
+
+**Exit criterion:** the corrected §4b list is empty; zero KICKOFF lines exist to compensate for
+an asset. **Currently blocked by 2.12, 2.13, and 2.14.**
 
 ## Milestone 3 — Path-ownership flip: ids in, paths out (repo: dev-kit)
 
@@ -184,14 +176,28 @@ The ~100-line down payment, already drafted in `rewrites/`. Order per REPORT §6
 2. step 15 close-out, step 7 planner handoff, step 10 qa — after Milestone 1 lands (the
    planner-gap warnings in the step-7 rewrite become deletable too once 1.1 ships).
    **Added gate — review the 1.1 Parallel Execution Map contract decision before this ships.**
-   1.1 resolved a granularity mismatch by placing the map once per phase in the lowest-numbered
-   plan (pointer in the rest) rather than in every plan. The step-7 planner-handoff rewrite is
-   drafted against the *old* assumption that a plan file carries many tracks. Confirm the
-   shipped placement is the one you want, then write the rewrite against it — do not let the
-   draft and the asset disagree silently. See the 1.1 note in Milestone 1.
+   1.1 could not close the map gap without reconciling a granularity mismatch: the planner emits
+   **one plan file per track**, but the map's consumers (`gate-plan-review`, `sprint-execution`)
+   assume **one plan file carrying many tracks**. The shipped resolution places the map **once
+   per phase, in the lowest-numbered plan**, with a one-line pointer in every other plan —
+   duplicating the table into every plan would have recreated the duplication this audit exists
+   to remove. That is a contract decision, not a bug fix, and the step-7 planner-handoff rewrite
+   is drafted against the *old* assumption. Confirm the shipped placement is the one you want,
+   then write the rewrite against it — do not let the draft and the asset disagree silently.
 3. step 10 `ui-auditor` — only after 1.11. **Unblocked: 1.11 has shipped.**
 4. step 10 `bugfix-wave` merge loop last, restoring the two cheap insurances the draft names
    (the detached-HEAD consequence clause; the re-attach bullet).
+5. **Carried over from 1.12 — the deletion site does not currently exist in any drafted rewrite.**
+   `KICKOFF.md:823-825` claims bare `verify` "grades the working diff", a mechanism that exists
+   nowhere in the chain (1.12 confirmed the assets are correct; the defect is entirely guide-side).
+   That stale sentence sits in step 11, but the only drafted step-11 rewrite,
+   `rewrites/step11-converge-sweep.md`, is scoped to KICKOFF lines **867-879** and does not touch
+   823-825. So "the stale claim dies in Milestone 4" is **only true if** that rewrite's scope is
+   widened first. As drafted, the sentence survives M4 untouched and is caught only by Milestone
+   5's full rewrite. When executing item 2 above, either (a) extend
+   `rewrites/step11-converge-sweep.md` to cover 823-825, or (b) move 1.12's payoff to Milestone 5
+   and drop the Milestone-4 claim. **Exit check, independent of which milestone removes it:**
+   grep the shipped KICKOFF.md for "grades the working diff" — zero hits confirms closure.
 
 **Exit criterion:** KICKOFF ≈ 1,300 lines and every rewrite's "pair with skill fix" condition
 is satisfied, not skipped.

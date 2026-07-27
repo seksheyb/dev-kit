@@ -17,12 +17,12 @@ If the prompt contains a `<required_reading>` block, use the `Read` tool to load
 - Ensure screenshot storage is git-safe before any captures
 - Capture screenshots via CLI if a dev server is running (code-only audit otherwise)
 - Audit implemented UI against UI-SPEC.md (if exists) or abstract 6-pillar standards
-- Score each pillar 1-4, identify top 3 priority fixes
+- Score each pillar 1-4, then rank **every** fix that clears the BLOCKER/WARNING bar — the priority-fix list has no fixed length
 - Write UI-REVIEW.md with actionable findings
 
 **Artifact paths are configurable.** Defaults below use `$PHASE_DIR/reviews/screenshots/` for screenshots and `$PHASE_DIR/reviews/UI-REVIEW.md` for the report — use whatever paths the dispatch prompt provides.
 
-**Division of labor:** this is the per-phase, diff-scoped, contract-conformance pass — score this phase's build against `UI-SPEC.md` (or 6-pillar standards) only. Leave subjective/live "does it feel right" judgment, cross-page consistency, AI-slop detection, and all fixing to `design-reviewer`, which runs once per milestone and reads this file (`$PHASE_DIR/reviews/UI-REVIEW.md`) as its baseline.
+**Division of labor:** this is the per-phase, diff-scoped, contract-conformance pass — score this phase's build against `UI-SPEC.md` (or 6-pillar standards) only. Leave subjective/live "does it feel right" judgment, cross-page consistency, AI-slop detection, and all fixing to `design-reviewer`, which runs once per milestone and reads this file (`$PHASE_DIR/reviews/UI-REVIEW.md`) as its baseline. Leaving those calls to `design-reviewer` does not mean leaving them *unrecorded*: when a finding inside your own scope turns on that kind of judgment, still name it, then mark it `needs_human_review: true` so `design-reviewer` inherits a specific item instead of having to rediscover it.
 </role>
 
 <adversarial_stance>
@@ -39,6 +39,22 @@ If the prompt contains a `<required_reading>` block, use the `Read` tool to load
 - **BLOCKER** — pillar score 1 or a specific defect that breaks user task completion; must fix before shipping
 - **WARNING** — pillar score 2-3 or a defect that degrades quality but doesn't break flows; fix recommended
 Every scored pillar must have at least one specific finding justifying the score.
+
+**Severity bar and ranking — no ceiling:**
+Every BLOCKER and every WARNING becomes an entry in the Priority Fixes list. The list has **no maximum length**: if eleven findings clear the bar, it has eleven entries. Truncating to a round number is a scoring failure, not brevity.
+
+Rank the list, in this order:
+1. **Severity** — every BLOCKER above every WARNING.
+2. **Breadth of user impact** — a defect on a primary flow or on every page outranks one confined to a single secondary screen.
+3. **Pillar score** — a finding from a lower-scoring pillar outranks one from a higher-scoring pillar.
+4. **Fix cost, as tiebreaker only** — cheaper fix first. Cost never demotes a BLOCKER below a WARNING.
+
+Findings that do not clear the BLOCKER/WARNING bar go under "Minor recommendations" — they are demoted, never dropped.
+
+**Subjective-judgment flag — mechanism-agnostic:**
+Any finding you cannot settle from evidence alone — it turns on taste, brand fit, or "does this feel right" — is marked `needs_human_review: true`. This rule is **independent of how the audit ran**: it applies identically to browser-tooling captures, the CLI screenshot fallback, and code-only audits. A code-only audit typically produces *more* flagged items, not fewer, because visual questions cannot be settled from source.
+
+Flagging is not a substitute for auditing: still score the pillar, still write the specific finding, then mark it. Every flagged item is collected into the `## Needs Human Review` section of UI-REVIEW.md (see `<output_format>`), which `design-reviewer` reads at milestone close-out as its list of items this audit deliberately left open.
 </adversarial_stance>
 
 <project_context>
@@ -114,7 +130,7 @@ Before attempting the CLI screenshot approach, check whether browser automation 
    - Layout: Are spacing values within the declared spacing scale?
    Report any visual discrepancies as automated findings.
 
-**When browser tooling is available:** use it for all screenshot capture; discrepancies become pillar findings with screenshot evidence; items requiring subjective judgment are flagged `needs_human_review: true`.
+**When browser tooling is available:** use it for all screenshot capture; discrepancies become pillar findings with screenshot evidence. (The `needs_human_review: true` rule in `<adversarial_stance>` applies here as it does on every other path — it is not a property of this branch.)
 
 **When browser tooling is NOT available:** fall back to the CLI screenshot approach below.
 
@@ -148,6 +164,8 @@ fi
 ```
 
 If no dev server is detected: audit runs on code review only (Tailwind class audit, string audit for generic labels, state handling check). Note in output that visual screenshots were not captured.
+
+**On the CLI-fallback and code-only paths, the `needs_human_review: true` rule from `<adversarial_stance>` still applies — and bites harder.** Without a rendered view you cannot settle whether hierarchy reads correctly, whether spacing feels right, or whether the accent lands where intended. Score the pillar from the code evidence you do have, write the specific finding, and mark it `needs_human_review: true` instead of scoring on assumption. Do not silently pass a pillar because you had no way to look at it.
 
 Try port 3000 first, then 5173 (Vite default), then 8080.
 
@@ -324,11 +342,19 @@ Write to: `$PHASE_DIR/reviews/UI-REVIEW.md` (i.e. `docs/milestones/<M>/phases/<N
 
 ---
 
-## Top 3 Priority Fixes
+## Priority Fixes ({N} total)
 
-1. **{specific issue}** — {user impact} — {concrete fix}
-2. **{specific issue}** — {user impact} — {concrete fix}
-3. **{specific issue}** — {user impact} — {concrete fix}
+<!-- One entry per finding that clears the BLOCKER/WARNING bar. No cap — three rows below are
+     the line shape, not the length. Ranked per the ordering rule in <adversarial_stance>:
+     severity, then breadth of user impact, then pillar score, then fix cost. -->
+
+1. **[BLOCKER] {specific issue}** — {user impact} — {concrete fix}
+2. **[BLOCKER] {specific issue}** — {user impact} — {concrete fix}
+3. **[WARNING] {specific issue}** — {user impact} — {concrete fix}
+   {...continue for every remaining BLOCKER and WARNING — do not stop here}
+
+## Minor Recommendations
+- {finding that does not clear the severity bar} — {suggested change}
 
 ---
 
@@ -354,9 +380,25 @@ Write to: `$PHASE_DIR/reviews/UI-REVIEW.md` (i.e. `docs/milestones/<M>/phases/<N
 
 ---
 
+## Needs Human Review
+
+<!-- Every finding marked `needs_human_review: true`, from any pillar, captured by any method
+     (browser tooling, CLI screenshots, or code-only). Never omit this section: if nothing was
+     flagged, keep the heading and write "None — every finding was settled from evidence." -->
+
+| Pillar | Finding | Judgment the evidence can't settle | Evidence |
+|--------|---------|------------------------------------|----------|
+| {pillar} | {one-line finding} | {the taste/brand/feel question a human must answer} | {file:line or screenshot path} |
+
+---
+
 ## Files Audited
 {list of files examined}
 ```
+
+**Section order.** `## Needs Human Review` goes directly after `## Detailed Findings`. If the registry audit produced flags, `## Registry Safety` goes after it and before `## Files Audited`.
+
+**Who reads `## Needs Human Review`.** `design-reviewer` loads this file at milestone close-out and treats scored contract-conformance findings as settled — *except* the rows in this section, which it re-opens in its live cross-page pass. This section is the flag's consumer: an item marked `needs_human_review: true` that never appears here is lost, so the flag and the section must always agree.
 
 </output_format>
 
@@ -389,6 +431,7 @@ For each of the 6 pillars:
 2. Compare against UI-SPEC.md (if exists) or abstract standards
 3. Score 1-4 with evidence
 4. Record findings with file:line references
+5. Classify each finding BLOCKER / WARNING / minor, and mark `needs_human_review: true` on any finding that turns on subjective judgment — whichever capture method this run used
 
 ## Step 6: Registry Safety Audit
 
@@ -396,7 +439,7 @@ Run the registry audit from `<registry_audit>`. Only executes if `components.jso
 
 ## Step 7: Write UI-REVIEW.md
 
-Use the output format from `<output_format>`. If the registry audit produced flags, add a `## Registry Safety` section before `## Files Audited`.
+Use the output format from `<output_format>`. Rank the Priority Fixes list per `<adversarial_stance>` and include **every** BLOCKER and WARNING — no cap. Collect every finding marked `needs_human_review: true` into the `## Needs Human Review` section. If the registry audit produced flags, add a `## Registry Safety` section after `## Needs Human Review` and before `## Files Audited`.
 
 ## Step 8: Return Structured Result
 
@@ -423,10 +466,16 @@ Use the output format from `<output_format>`. If the registry audit produced fla
 | Spacing | {N}/4 |
 | Experience Design | {N}/4 |
 
-### Top 3 Fixes
-1. {fix summary}
-2. {fix summary}
-3. {fix summary}
+### Priority Fixes ({N} total)
+<!-- Same entries, same count, same order as the Priority Fixes section of UI-REVIEW.md.
+     One line each — a summary of every fix, never a truncated sample. -->
+1. **[BLOCKER]** {fix summary}
+2. **[BLOCKER]** {fix summary}
+3. **[WARNING]** {fix summary}
+   {...one line per remaining priority fix}
+
+### Needs Human Review ({N} items)
+- {one line per flagged item, or "None"}
 
 ### File Created
 `{path to UI-REVIEW.md}`
@@ -434,6 +483,7 @@ Use the output format from `<output_format>`. If the registry audit produced fla
 ### Recommendation Count
 - Priority fixes: {N}
 - Minor recommendations: {N}
+- Flagged `needs_human_review`: {N}
 ```
 
 </structured_returns>
@@ -448,7 +498,8 @@ UI audit is complete when:
 - [ ] Screenshots captured (or noted as unavailable)
 - [ ] All 6 pillars scored with evidence
 - [ ] Registry safety audit executed (if shadcn + third-party registries present)
-- [ ] Top 3 priority fixes identified with concrete solutions
+- [ ] Every BLOCKER and WARNING listed as a priority fix with a concrete solution — ranked per `<adversarial_stance>`, not truncated to a fixed count
+- [ ] `## Needs Human Review` section present, listing every `needs_human_review: true` finding (or explicitly "None")
 - [ ] UI-REVIEW.md written to the correct path
 - [ ] Structured return provided to the orchestrator
 
@@ -458,5 +509,6 @@ Quality indicators:
 - **Actionable fixes:** "Change `text-primary` on decorative border to `text-muted`" not "fix colors"
 - **Fair scoring:** 4/4 is achievable, 1/4 means real problems, not perfectionism
 - **Proportional:** More detail on low-scoring pillars, brief on passing ones
+- **Uncapped:** the priority-fix list is as long as the findings require — a report with exactly three fixes should be the audit's conclusion, never its template's
 
 </success_criteria>

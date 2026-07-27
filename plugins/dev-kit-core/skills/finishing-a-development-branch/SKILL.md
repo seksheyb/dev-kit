@@ -120,10 +120,51 @@ git branch -d <feature-branch>
 
 #### Option 2: Push and Create PR
 
+**Push is not the whole option — creating the PR is mandatory.** Pushing alone leaves this
+option half-done, and this path can run unattended (e.g. dispatched by `sprint-execution` after
+a clean final review), so there's no human standing by to notice a missing PR.
+
 ```bash
 # Push branch
 git push -u origin <feature-branch>
 ```
+
+Before pushing, eyeball the outgoing diff for credentials (API keys, tokens, private keys) — a
+leaked secret in a pushed commit is an incident, not a cleanup.
+
+**Detect the git hosting platform** (same detection `/ship` uses): remote URL contains
+`github.com` → GitHub; contains `gitlab` → GitLab; otherwise `gh auth status` / `glab auth
+status` succeeding disambiguates.
+
+**Check for an existing open PR/MR first** — don't create a duplicate:
+
+```bash
+gh pr view --json url -q .url 2>/dev/null   # or: glab mr view -F json
+```
+
+If one exists, report its URL and stop here. Otherwise create it:
+
+```bash
+gh pr create --base <base-branch>   # or: glab mr create -b <base-branch>
+```
+
+**Title format:** `<type>: <summary>` (feat/fix/chore/refactor/docs/test), matching the
+convention of the branch's own commits.
+
+**Body:**
+
+```
+## Summary
+<one paragraph, or bullets summarizing the commits: git log <base-branch>..HEAD --oneline>
+
+## Test plan
+- [x] <suite>: tests passing (verified in Step 1)
+```
+
+If neither `gh` nor `glab` is available: print the branch name and remote URL and tell the user
+to open the PR via the web UI — the code is pushed and ready.
+
+**Output the PR/MR URL.** This option is not complete until that URL exists.
 
 **Do NOT clean up worktree** — user needs it alive to iterate on PR feedback.
 
@@ -204,6 +245,12 @@ git worktree prune  # Self-healing: clean up any stale registrations
 - **Problem:** Remove worktree user needs for PR iteration
 - **Fix:** Only cleanup for Options 1 and 4
 
+**Pushing without creating the PR (Option 2)**
+- **Problem:** Branch is pushed but no PR ever opens — silent failure, especially when this
+  skill runs unattended (e.g. dispatched by `sprint-execution`) with no one watching for it
+- **Fix:** Always follow the push with `gh pr create` (or `glab mr create`), checking for an
+  existing open PR first; don't stop until you can output a PR/MR URL
+
 **Deleting branch before removing worktree**
 - **Problem:** `git branch -d` fails because worktree still references the branch
 - **Fix:** Merge first, remove worktree, then delete branch
@@ -239,3 +286,5 @@ git worktree prune  # Self-healing: clean up any stale registrations
 - Clean up worktree for Options 1 & 4 only
 - `cd` to main repo root before worktree removal
 - Run `git worktree prune` after removal
+- For Option 2, actually create the PR (`gh pr create` / `glab mr create`) after pushing —
+  never stop at just the push

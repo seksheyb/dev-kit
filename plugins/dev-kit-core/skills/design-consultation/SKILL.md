@@ -437,6 +437,7 @@ proposal/variant, not just text descriptions):
 Motion) is filled by *summarizing* that system's actual tokens (read via `get_claude_design_prompt`
 / `list_files` / `read_file` on the design-system project), not by inventing new values — DESIGN.md
 becomes a local reference copy of the bound system's decisions, not a competing source of truth.
+DESIGN.md now has `claude_design_system_id` set — design-html's precondition is satisfied.
 
 **When no design system was bound (the full proposal flow ran):** before final confirmation,
 follow `@references/claude-design-mcp-protocol.md`'s "Manual design-system creation" section —
@@ -445,6 +446,8 @@ colors, spacing, motion, seed component templates), show it in chat, and save it
 `docs/state/tmp/claude-design-system-prompt.md`. Tell the user: paste this into Claude Design
 (claude.ai/design) to create the system, then send back the resulting id so it can be stored as
 `claude_design_system_id` here on a future run. Don't block this run's delivery on that step.
+DESIGN.md does **not** have `claude_design_system_id` set at the end of this run — design-html's
+precondition isn't met yet.
 
 **Update CLAUDE.md** (create if missing) — append:
 
@@ -460,7 +463,12 @@ In QA mode, flag any code that doesn't match DESIGN.md.
 explicit user confirmation, then: A) Ship it — write DESIGN.md and CLAUDE.md. B) Change
 something. C) Start over.
 
-After shipping, suggest: "Want to see this design system as a working page? Run design-html."
+After shipping: if `claude_design_system_id` is bound in the DESIGN.md just written (the bound-system
+branch above), suggest "Want to see this design system as a working page? Run design-html." If it
+isn't bound (the manual-creation-prompt branch above), don't suggest design-html — it hard-refuses
+to proceed without a bound system. Instead close with: "Once you've created the design system in
+Claude Design and sent back its id, run design-consultation again to bind it — then design-html is
+ready."
 
 ---
 

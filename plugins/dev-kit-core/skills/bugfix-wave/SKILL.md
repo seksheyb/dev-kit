@@ -305,6 +305,11 @@ git branch --list 'bugfix/w*-track-*'    # or the exact branch names from §1.3
 git branch --list 'worktree-agent-*'     # harness-created, one per isolated worktree
 ```
 
+The first list is the hard-fail: any hit is a name this run is about to try to create. The
+second does not collide with track names, but each entry is a prior session's worktree branch
+and may still carry unmerged commits — classify it the same way below rather than assuming the
+harness tidied up after itself.
+
 **A leftover branch is not automatically safe to delete.** It may hold unmerged fixes from the
 session that crashed, and per §1.6 every commit on it is self-contained and recoverable.
 Classify each one before touching it:
@@ -315,12 +320,15 @@ git log <source-branch>..<branch> --oneline
 
 | Result | Meaning | What to do |
 |---|---|---|
-| **Empty** | Already merged into the source branch — residue only | Safe to remove: `git branch -d <branch>` (plain `-d`, so git refuses if you classified it wrong) |
+| **Empty** | Already merged into the source branch — residue only | Safe to remove: `git branch -d <branch>` |
 | **Non-empty** | Carries unmerged commits from a previous session | **Do not delete and do not reuse the name.** Surface it to the user with the commit list, then either merge it first (Phase 3.1 step 1's procedure) or rename this run's track branch to a name that does not collide |
 
-`git branch --merged <source-branch>` is a faster first pass over many branches and agrees with
-the range check above, but always name the source branch explicitly: bare `--merged` is
-relative to `HEAD`, and on the detached HEAD of §2.2 that is not the branch you mean.
+The `git log` range is the authority here, not `git branch -d`'s own refusal. `-d` measures
+"merged" against **`HEAD`**, not against the source branch — so in a worktree, or on the
+detached HEAD of §2.2, it can refuse a branch that is safe *and* accept one that is not. Same
+caveat on `git branch --merged`, which is a useful first pass over many branches only when you
+name the source branch explicitly (`git branch --merged <source-branch>`); bare, it is
+HEAD-relative and will mislead you the same way.
 
 **Report what you found**, clean or not, in the §2.1 announcement — one line, e.g.
 `preflight: 2 stale worktrees pruned, no branch-name collisions`. A silent preflight is
@@ -661,7 +669,7 @@ the source branch. That path names the blocker:
 
 | `git worktree list` shows the source branch held by | Cause | Remedy |
 |---|---|---|
-| **Your own working tree** | You skipped the `git checkout --detach` in §2.2 — or you re-attached at Phase 3.1 step 4 while a straggler was still pushing. Every track in the wave hits the same wall | Detach again, then reconcile all of them via Phase 3.1 step 1 |
+| **Your own working tree** | Either you skipped the `git checkout --detach` in §2.2 — in which case *every* track in the wave hits the same wall — or you re-attached at Phase 3.1 step 4 while a straggler was still pushing, in which case only the late tracks did. The count of affected tracks tells you which | Detach again, then reconcile the affected tracks via Phase 3.1 step 1 |
 | **The primary worktree** (the main repo working directory — the first line of `git worktree list`) and it is not yours | Legitimate and outside your control: a human, or the parent orchestrator that dispatched you, holds the branch there. Detaching in *your* tree frees nothing | Nothing to repair. Merge every track centrally via Phase 3.1 step 1 and report the run as reconciled, not as an error |
 | **A leftover `.claude/worktrees/agent-*` worktree** | Residue from a crashed prior run — §2.0's preflight is what catches this before dispatch | Remove the stale worktree (Phase 3.1 step 5 commands), then reconcile |
 | **Nothing** — no worktree lists it | The holder was released between the push and your check, or the rejection text was misread. Re-read the track's `Merge note` verbatim before acting | Retry the merge yourself via Phase 3.1 step 1; if it now succeeds, there is nothing else to do |

@@ -430,6 +430,11 @@ must_haves:
   key_links: []             # Critical connections
 ---
 
+## Parallel Execution Map
+<!-- Lowest-numbered plan of the set only. Every other plan carries the pointer line
+     instead: `> Parallel Execution Map: PHASE/<NN>-01-PLAN.md`.
+     Full shape and derivation rules: "Parallel Execution Map" below. -->
+
 <objective>
 [What this plan accomplishes]
 
@@ -515,6 +520,95 @@ the canonical vocabulary in `@references/complexity-signals.md` — `files` (com
 including files the task CREATES), `novelty`, `logic`, `ambiguity`, `tests`. These signals
 are what `gate-plan-review` and `sprint-execution` use to validate or select model/effort;
 emit them honestly rather than deriving model/effort first and back-filling signals to match.
+
+## Parallel Execution Map
+
+Per-plan frontmatter tells one plan its own `wave`, `depends_on` and `files_modified`. The
+`## Parallel Execution Map` is the **plan-set** view of the same data: every track in one table,
+so `gate-plan-review` can score it and `sprint-execution` can dispatch waves from it without
+opening every plan file. It is not optional — a plan set without a map cannot be reviewed or
+dispatched.
+
+**One track = one plan.** This agent produces one PLAN.md per track, so each map row is exactly
+one plan of this phase. Track name = `track-<short-slug>` derived from the plan's objective
+(`track-auth-model`, `track-billing-api`, `track-ui`) — short, subsystem-shaped, unique within
+the phase. `sprint-execution` builds each track's branch name (`sprint/w<N>-<track-name>`) from
+this column, so it must be filesystem-safe: lowercase, hyphens, no spaces or slashes.
+
+**Where it goes.** Emit it **once per phase**, in the lowest-numbered plan of the set
+(`PHASE/<NN>-01-PLAN.md`), between the frontmatter and `<objective>`. Every other plan in the
+set carries exactly one pointer line in the same position:
+
+```markdown
+> Parallel Execution Map: `PHASE/<NN>-01-PLAN.md`
+```
+
+Never copy the table into a second file — two copies drift, and the phase then has no single
+answer to "which tracks run in wave 2". A consumer handed any plan of the set follows the
+pointer. A single-plan phase still emits a real map, with one row.
+
+### Required structure
+
+````markdown
+## Parallel Execution Map
+
+**Orchestrator:** opus / high
+**Integration branch:** main
+**Waves:** 2 · **Tracks:** 3
+
+| Wave | Track | Plan | Depends On | Files Owned | Model | Effort |
+|------|-------|------|------------|-------------|-------|--------|
+| 1 | track-auth-model | 04-01 | none | `src/models/user.ts`, `src/db/schema.ts` | sonnet | medium |
+| 1 | track-billing-api | 04-02 | none | `src/api/billing.ts` | sonnet | medium |
+| 2 | track-auth-ui | 04-03 | 04-01 | `src/components/Login.tsx` | opus | high |
+
+**Track complexity**
+
+- `track-auth-model` — complexity: files: src/models/user.ts, src/db/schema.ts; novelty: low; logic: medium; ambiguity: low; tests: new
+- `track-billing-api` — complexity: files: src/api/billing.ts; novelty: none; logic: low; ambiguity: low; tests: existing
+- `track-auth-ui` — complexity: files: src/components/Login.tsx; novelty: high; logic: medium; ambiguity: high; tests: new
+````
+
+| Column / field | Source | Rule |
+|---|---|---|
+| **Orchestrator** | you | Most capable available model/effort — the orchestrator arbitrates cross-track conflicts and wave gating. Default `opus / high`. |
+| **Integration branch** | dispatch prompt | The branch tracks are cut from and merged back into. Never guess; if the dispatch prompt is silent, state `main`. |
+| **Wave** | plan frontmatter `wave` | Copied verbatim. The map renders `assign_waves`' output; it does not recompute it. |
+| **Track** | you | `track-<short-slug>`, unique within the phase, filesystem-safe. |
+| **Plan** | plan frontmatter `phase`+`plan` | `<NN>-<MM>` — the plan ID, matching the file `PHASE/<NN>-<MM>-PLAN.md`. |
+| **Depends On** | plan frontmatter `depends_on` | Plan IDs, comma-separated, or `none`. Must be identical to the frontmatter list. |
+| **Files Owned** | plan frontmatter `files_modified` | The **complete** list, including files the plan CREATES. Backtick each path. |
+| **Model** / **Effort** | track-level aggregation | The **highest** model and effort of any task in the plan, derived from that task's `<complexity_signals>` via the model and effort axes in `@references/complexity-signals.md`. One `opus`/`high` task pulls the whole track up. Write `inherit` in **Model** only when the track should run on the orchestrator's model. |
+| **Track complexity** | task `<complexity_signals>` | One bullet per track: `files` is the deduplicated union of its tasks' file lists; each enum is the highest value any of its tasks declared. `gate-plan-review` step 0 recomputes Model/Effort from this bullet and fails the gate on a mismatch — so derive the columns from the bullet, never the reverse. |
+
+### Deriving the map
+
+The map is a **rendering plus a consistency gate** over data already computed earlier in the
+execution flow. Do not re-derive waves here — `<step name="assign_waves">` owns that algorithm
+(dependency ordering, then the `files_modified`-overlap bump) and `<step name="group_into_plans">`
+owns plan grouping. Build the map from their output, then check it:
+
+1. **One row per plan**, sorted by wave, then by plan ID. Every plan file the phase produced has
+   a row; every row has a plan file on disk.
+2. **Concurrency claim.** Rows sharing a wave are the claim "these run simultaneously in separate
+   worktrees." That claim is only true when, for every pair of rows in the same wave:
+   - their **Files Owned** sets are disjoint — no path, and no file a track creates, appears in
+     two same-wave rows; and
+   - neither appears in the other's **Depends On**.
+3. **If either check fails, the map is not the thing to fix.** A same-wave file collision or a
+   same-wave dependency means `assign_waves` was applied incorrectly — return to it, bump the
+   later plan to the next wave, update that plan's frontmatter, and re-render. Never resolve a
+   collision by editing the map alone: `sprint-execution` dispatches from the map but each track
+   commits against its own frontmatter, so a map that disagrees with frontmatter silently
+   dispatches two tracks onto the same file.
+4. **Directory-level care.** Two tracks that generate files into the same directory under a
+   pattern (`src/api/*.ts`) do not conflict as long as the concrete paths differ — list the
+   concrete paths, never a glob. A glob in **Files Owned** makes the disjointness check
+   unverifiable and is rejected by the gate.
+5. **Waves are dense and minimal.** Wave numbers start at 1 with no gaps. A plan sits in the
+   earliest wave its dependencies and file ownership allow — pushing an independent plan later
+   costs parallelism for nothing. More than 3 waves in one phase usually means horizontal
+   layering: re-check against `@references/vertical-slice.md` before accepting it.
 
 ## Interface Context for Executors
 
@@ -974,14 +1068,39 @@ If `features.global_learnings` is `true`: for each tag from PLAN.md frontmatter 
 Use `phase_dir` from init context (already loaded in load_project_state).
 
 ```bash
-cat "$phase_dir"/CONTEXT.md 2>/dev/null   # From phase discovery
+cat "$phase_dir"/CONTEXT.md 2>/dev/null    # From phase discovery
 cat "$phase_dir"/RESEARCH.md 2>/dev/null   # Research output
 cat "$phase_dir"/DISCOVERY.md 2>/dev/null  # From mandatory discovery
+cat "$phase_dir"/PATTERNS.md 2>/dev/null   # From pattern-mapper (phases that ran pattern-mapping)
+cat "$phase_dir"/UI-SPEC.md 2>/dev/null    # From ui-researcher (frontend phases)
+cat "$ai_spec_path" 2>/dev/null            # From the AI-integration chain (AI-lane phases)
 ```
+
+`ai_spec_path` is supplied by the orchestrator when this is an AI-lane phase; canonically it is `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`. If the dispatch prompt is silent on it, resolve it yourself with `ls docs/milestones/<M>/specs/*/AI-SPEC.md 2>/dev/null` and take the spec directory matching this phase. If that lists nothing, the phase is not AI-lane.
+
+**Every artifact in this step is conditional.** CONTEXT.md, RESEARCH.md and DISCOVERY.md depend on which upstream stages ran; PATTERNS.md exists only for phases that ran pattern-mapping; UI-SPEC.md only for phases that ran UI design; AI-SPEC.md only for AI-lane phases. An empty result means the producing agent did not run for this phase — skip that artifact and continue planning with the rest. A missing conditional artifact is never an error and never a reason to stop or to ask the orchestrator for it.
 
 **If CONTEXT.md exists (has_context=true from init):** Honor user's vision, prioritize essential features, respect boundaries. Locked decisions — do not revisit.
 
 **If RESEARCH.md exists (has_research=true from init):** Use standard_stack, architecture_patterns, dont_hand_roll, common_pitfalls.
+
+**If PATTERNS.md exists (produced by `pattern-mapper`):** It names, per file this phase creates or modifies, the closest existing analog and the concrete excerpt to copy. Use it as the pattern source of truth for task decomposition:
+- `## File Classification` (role + data flow per file) → group files into plans by role and data flow, so a plan owns one coherent slice rather than a scatter of unrelated roles.
+- `## Pattern Assignments` → every `<action>` for a file listed there names its analog file and line range explicitly ("follow the auth pattern in `src/controllers/users.ts:12-25`"), so the executor never goes hunting for the convention.
+- `## Shared Patterns` → cross-cutting concerns (auth, error handling, logging) become explicit `<action>` requirements in every plan whose files touch them, not an assumption.
+When PATTERNS.md contradicts your own reading of the codebase, PATTERNS.md wins — it was produced by a dedicated read-only pass.
+
+**If UI-SPEC.md exists (produced by `ui-researcher`):** It is the visual and interaction contract for this phase and it **constrains frontend task breakdown** — do not re-derive or renegotiate it:
+- Design tokens and component inventory → the concrete values and component names that go in frontend `<action>` blocks (exact spacing, type scale, token names), and the file list those components imply for `files_modified`.
+- Screen/state coverage (empty, loading, error, populated) → each declared state is planned work, not polish deferred to a later phase; a frontend plan that ships only the happy path is incomplete against the contract.
+- Copywriting → exact strings are copied verbatim into task actions rather than invented at execution time.
+Frontend tasks that would contradict UI-SPEC.md are a planning error: fix the plan, not the spec.
+
+**If AI-SPEC.md exists (produced by the AI-integration chain — `framework-selector`, `ai-researcher`, `domain-researcher`, `eval-planner`):** It is the design contract for this phase's AI system and it **constrains AI and evaluation task breakdown**:
+- §2 Framework (system type, framework, model provider, language) → a locked decision. Plan against that framework; never plan a task that selects or swaps one.
+- §3–4b Framework Quick Reference / Implementation Guidance / AI Systems Best Practices → the syntax, patterns and pitfalls that go directly into implementation `<action>` blocks, in place of re-researching them.
+- §1 Critical Failure Modes and §5 Evaluation Strategy → **eval work is planned work.** Every eval dimension with a rubric in §5 needs a task that implements it, and the reference dataset in §5 needs a task that produces it. An AI phase whose plan set contains implementation tasks but no eval tasks does not satisfy its spec.
+- §6 Guardrails and §7 Production Monitoring → tasks in this phase unless the spec explicitly defers them; they are `must_haves` truths, not future enhancements (see `<scope_reduction_prohibition>`).
 
 **Architectural Responsibility Map sanity check:** If RESEARCH.md has an `## Architectural Responsibility Map`, cross-reference each task against it — fix tier misassignments before finalizing.
 </step>
@@ -1059,8 +1178,18 @@ UNREACHABLE (no path) → revise plan.
 Verify each plan fits context budget: 2-3 tasks, ~50% target. Split if necessary. Check granularity setting.
 </step>
 
+<step name="build_execution_map">
+Build the `## Parallel Execution Map` for the plan set (full shape and derivation rules in the
+plan_format section). Render one row per plan from the wave/depends_on/files_modified already
+assigned, aggregate each track's Model/Effort from its tasks' `<complexity_signals>`, then run
+the same-wave disjointness and dependency checks. Any failure sends you back to `assign_waves` —
+fix the wave assignment and the plan's frontmatter, then re-render. Do not proceed to
+confirmation with a map that disagrees with frontmatter.
+</step>
+
 <step name="confirm_breakdown">
-Present breakdown with wave structure. Wait for confirmation in interactive mode. Auto-approve in yolo mode.
+Present breakdown with wave structure — the `## Parallel Execution Map` built above is that
+presentation. Wait for confirmation in interactive mode. Auto-approve in yolo mode.
 </step>
 
 <step name="write_phase_prompt">
@@ -1089,7 +1218,9 @@ The filename MUST follow the exact pattern: `<NN>-<MM>-PLAN.md`
 
 Full write path: `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`
 
-Include all frontmatter fields.
+Include all frontmatter fields. Write the `## Parallel Execution Map` built in
+`build_execution_map` into the lowest-numbered plan of the set, between its frontmatter and
+`<objective>`; every other plan of the set gets the one-line pointer in that same position.
 </step>
 
 <step name="validate_plan">
@@ -1103,10 +1234,16 @@ Validate each created PLAN.md natively (see `references/native-equivalents.md`):
 **Structure check (native equivalent of `verify.plan-structure "$PLAN_PATH"`):**
 `Grep` the same file for the required task-level tags (`<name>`, `<files>`, `<action>`, `<verify>`, `<done>`) and top-level sections (`<objective>`, `<context>`, `<tasks>`, `<success_criteria>`). Flag missing or out-of-order sections/tags directly in your output — don't silently accept.
 
+**Execution-map check:** `Grep` the plan set for `## Parallel Execution Map`. Exactly one plan
+— the lowest-numbered — must carry the section; every other plan must carry the pointer line
+instead. Then confirm each row's Wave / Depends On / Files Owned match that plan's frontmatter
+verbatim, and that no two same-wave rows share a file.
+
 **If errors exist:** Fix before committing:
 - Missing `<name>` in task → add name element
 - Missing `<action>` → add action element
 - Checkpoint/autonomous mismatch → update `autonomous: false`
+- Map missing, duplicated across plans, or disagreeing with frontmatter → re-run `build_execution_map`
 </step>
 
 <step name="update_roadmap">
@@ -1235,6 +1372,8 @@ Phase planning complete when:
 - [ ] Each task: Type, Files (if auto), Action, Verify, Done
 - [ ] Checkpoints properly structured
 - [ ] Wave structure maximizes parallelism
+- [ ] `## Parallel Execution Map` present in the lowest-numbered plan (pointer line in the rest), rows agreeing with frontmatter, no same-wave file overlap
+- [ ] Conditional upstream artifacts loaded when present (PATTERNS.md, UI-SPEC.md, AI-SPEC.md) and reflected in task actions
 - [ ] PLAN file(s) committed to git
 - [ ] User knows next steps and wave structure
 - [ ] `<threat_model>` present with STRIDE register (when `security_enforcement` enabled)

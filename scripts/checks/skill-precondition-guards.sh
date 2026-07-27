@@ -44,29 +44,46 @@ else
 fi
 
 echo
-echo "== Check 2: code-documenter has an unattended branch for format selection =="
+echo "== Check 2: code-documenter resolves docstring format with no human turn =="
+# Contract (ROADMAP 1.9): format resolves constitution -> existing convention -> language
+# default. There is no "ask the user" branch at all, so the skill is unattended-safe by
+# construction rather than by having a separate unattended mode.
 CD_FILE="plugins/dev-kit-core/skills/code-documenter/SKILL.md"
 if [ ! -f "$CD_FILE" ]; then
   echo "FAIL: $CD_FILE not found"
   fail=1
 else
-  has_unattended_section=0
-  grep -qi "unattended" "$CD_FILE" && has_unattended_section=1
+  cd_fail=0
 
-  # The MUST DO / MUST NOT DO pair must not both be unconditional "ask the user" rules —
-  # each bullet (which may wrap onto a following indented line) must at least mention the
-  # interactive/unattended split. Extract each bullet as the "- ..." line plus any immediately
-  # following indented continuation lines.
-  must_do_bullet="$(awk '/^### MUST DO/{f=1;next} f&&/^### /{exit} f' "$CD_FILE" | awk '/^- /{if(b)exit; b=1} b')"
-  must_not_bullet="$(awk '/^### MUST NOT DO/{f=1;next} f&&/^### /{exit} f' "$CD_FILE" | awk '/^- /{if(b)exit; b=1} b')"
+  # Tier 1 must consult the constitution at its canonical default path.
+  grep -q "docs/global/project/constitution.md" "$CD_FILE" || {
+    echo "FAIL: tier 1 gone — no reference to docs/global/project/constitution.md"; cd_fail=1; }
 
-  if [ "$has_unattended_section" -eq 1 ] \
-     && echo "$must_do_bullet" | grep -qi "unattended" \
-     && echo "$must_not_bullet" | grep -qi "unattended"; then
-    echo "PASS: code-documenter defines an unattended branch and both MUST DO/MUST NOT DO scope to it"
+  # A missing/unfilled constitution must fall through, not abort.
+  grep -qi "unfilled template" "$CD_FILE" || {
+    echo "FAIL: constitution absent/unfilled fallthrough is no longer stated"; cd_fail=1; }
+
+  # Tier 3 must remain the last resort.
+  grep -qi "Language-conventional default" "$CD_FILE" || {
+    echo "FAIL: tier 3 language-conventional default is missing"; cd_fail=1; }
+
+  # The ask must stay dead. Any bullet reinstating "ask for format" is a regression.
+  if grep -Eqi '^[[:space:]]*[-*].*ask (the user )?for format' "$CD_FILE"; then
+    echo "FAIL: an 'ask for format' bullet has been reinstated — 1.9 requires no human turn"
+    cd_fail=1
+  fi
+
+  # MUST DO must state the resolution order; MUST NOT DO must forbid stalling on a human.
+  must_do="$(awk '/^### MUST DO/{f=1;next} f&&/^### /{exit} f' "$CD_FILE")"
+  must_not="$(awk '/^### MUST NOT DO/{f=1;next} f&&/^### /{exit} f' "$CD_FILE")"
+  echo "$must_do" | grep -qi "constitution" || {
+    echo "FAIL: MUST DO no longer names the constitution-first resolution order"; cd_fail=1; }
+  echo "$must_not" | grep -qi "stall" || {
+    echo "FAIL: MUST NOT DO no longer forbids stalling on a human format choice"; cd_fail=1; }
+
+  if [ "$cd_fail" -eq 0 ]; then
+    echo "PASS: code-documenter resolves format constitution -> convention -> default, with no ask"
   else
-    echo "FAIL: code-documenter is missing (or has regressed) its unattended branch, or the"
-    echo "      MUST DO / MUST NOT DO 'ask for format' pair no longer scopes to the interactive case."
     fail=1
   fi
 fi

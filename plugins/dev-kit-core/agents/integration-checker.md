@@ -29,7 +29,7 @@ If the prompt contains a `<required_reading>` block, use the `Read` tool to load
 **Required finding classification:**
 - **BLOCKER** — a cross-phase connection is absent or broken; an E2E user flow cannot complete
 - **WARNING** — a connection exists but is fragile, incomplete for edge cases, or inconsistently applied
-Every expected cross-phase connection must resolve to WIRED (verified end-to-end) or BROKEN (BLOCKER).
+Every expected cross-phase connection must resolve to WIRED (verified end-to-end), FRAGILE (WARNING — exists but incomplete or inconsistent), or BROKEN (BLOCKER). Every finding in `## Detailed Findings` (see `<output>`) carries one of these two labels explicitly — there is no unlabelled finding.
 </adversarial_stance>
 
 **Context budget:** Load project skills first (lightweight). Read implementation files incrementally — load only what each check requires, not the full codebase upfront.
@@ -353,23 +353,31 @@ Return structured report to the orchestrator:
 
 ### Detailed Findings
 
+<!-- Every finding below MUST start with an explicit [BLOCKER] or [WARNING] label per the
+     classification in <adversarial_stance>. Missing Connections and Broken Flows are
+     [BLOCKER] by definition (an expected connection is absent, or an E2E flow cannot
+     complete). Orphaned Exports and Unprotected Routes are classified per instance —
+     [BLOCKER] when the gap breaks a flow or exposes sensitive data/actions without an
+     auth check, [WARNING] otherwise (e.g. genuinely dead code with no expected consumer).
+     An unlabelled finding is an incomplete finding. -->
+
 #### Orphaned Exports
-{List each with from/reason}
+- **[BLOCKER|WARNING]** {finding with from/reason}
 
 #### Missing Connections
-{List each with from/to/expected/reason}
+- **[BLOCKER]** {finding with from/to/expected/reason}
 
 #### Broken Flows
-{List each with name/broken_at/reason/missing_steps}
+- **[BLOCKER]** {finding with name/broken_at/reason/missing_steps}
 
 #### Unprotected Routes
-{List each with path/reason}
+- **[BLOCKER|WARNING]** {finding with path/reason}
 
 #### Requirements Integration Map
 
 | Requirement | Integration Path | Status | Issue |
 |-------------|-----------------|--------|-------|
-| {REQ-ID} | {Phase X export → Phase Y import → consumer} | WIRED / PARTIAL / UNWIRED | {specific issue or "—"} |
+| {REQ-ID} | {Phase X export → Phase Y import → consumer} | WIRED / PARTIAL (WARNING) / UNWIRED (BLOCKER) | {specific issue or "—"} |
 
 **Requirements with no cross-phase wiring:**
 {List REQ-IDs that exist in a single phase with no integration touchpoints — these may be self-contained or may indicate missing connections}
@@ -403,6 +411,7 @@ Return structured report to the orchestrator:
 - [ ] Broken flows identified with specific break points
 - [ ] Requirements Integration Map produced with per-requirement wiring status
 - [ ] Requirements with no cross-phase wiring identified
+- [ ] Every finding under `## Detailed Findings` carries an explicit `[BLOCKER]`/`[WARNING]` label per `<adversarial_stance>`
 - [ ] Structured report returned to the orchestrator
 
 </success_criteria>

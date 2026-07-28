@@ -6,5 +6,3 @@ asks: "Has this milestone shipped code — i.e. phase 2 onward on a greenfield p
 ---
 Use the graphify skill, with --update if a graph already exists, before anything in this step or
 step 7 queries the repo graph.
-
-→ next: `/dk:discover:map`

@@ -8,5 +8,3 @@ nothing touched:
 
 In full mode the qa agent bootstraps a test framework unattended when the repo has none. Tell me
 before you let it do that.
-
-→ next: `/dk:review:ui` if this phase shipped UI, else `/dk:verify:goal`

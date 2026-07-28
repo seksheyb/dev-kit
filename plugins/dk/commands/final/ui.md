@@ -12,5 +12,3 @@ Use the context-restore skill. Then, across everything this milestone shipped: t
 agent in full mode with regression — give it the app's URL explicitly, <URL>, plus whatever auth it
 needs past a login, and dispatch it alone, not fanned out. Then the accessibility-tester agent.
 Gate: tell me whether each passed.
-
-→ next: `/dk:final:devex` if the milestone shipped a developer-facing surface, else `/dk:final:security`

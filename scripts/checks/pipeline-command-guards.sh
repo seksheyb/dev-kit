@@ -93,12 +93,17 @@ done < <(grep -oE '/dk:[a-z0-9-]+:[a-z0-9-]+' "$RUNBOOK" | sort -u)
 [ $g4 -eq 0 ] && note "ok"
 
 # ---------------------------------------------------------------------------
-# Guard 5 — breadcrumbs: every step command names its successor, so the standalone path guides too.
+# Guard 5 — no per-command ordering. Sequencing belongs to RUNBOOK.md and the orchestrator,
+# in one place. Commands once carried a `→ next:` breadcrumb; it was a second copy of the
+# sequence that nothing could verify — guard 4 checks that a referenced command EXISTS, never
+# that the order is still true — so reordering a stage rotted 65 bodies silently. Removed.
+# `/dk:status` and `/dk:runbook` answer "what's next" from the single source instead.
 # ---------------------------------------------------------------------------
-echo "Guard 5: breadcrumbs"
+echo "Guard 5: no per-command ordering"
 g5=0
 while read -r f; do
-  grep -qE '^→ next:' "$f" || { bad "${f#$ROOT/}: no '→ next:' breadcrumb"; g5=1; }
+  grep -qE '^→ next:|^next:' "$f" \
+    && { bad "${f#$ROOT/}: carries its own successor — ordering lives in RUNBOOK.md only"; g5=1; }
 done < <(step_commands)
 [ $g5 -eq 0 ] && note "ok"
 

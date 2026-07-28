@@ -8,5 +8,3 @@ order, each feeding the next: ab-test-analysis on any experiment this milestone 
 cohort-analysis, then growth-loops. Then mark each assumption from step 1 validated, invalidated,
 or still-unknown, writing the result where step 1 recorded them — the input to the next milestone's
 scope.
-
-→ next: `/dk:close:incident` if one is underway, else `/dk:close:milestone`

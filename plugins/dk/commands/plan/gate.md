@@ -10,5 +10,3 @@ governing document, never the roadmap or requirements fallback. Both run before 
 and the gate is not advisory: Wave 1 does not start until it returns `gate_passed: true`.
 
 **Session boundary.**
-
-→ next: `/clear`, then `/dk:build:waves`

@@ -9,5 +9,3 @@ on. Then, only if the repo has code, the cso skill with no flags — the full au
 for this milestone's security baseline. One per turn; neither can be fanned out.
 
 **Session boundary.**
-
-→ next: `/clear`, then `/dk:requirements:brainstorm`

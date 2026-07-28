@@ -5,5 +5,3 @@ gate: always
 Use the specify skill on the approved design above. Then the assumption-mapping skill against that
 spec: stop at experiment design and tell me which experiments I need to run — running them is
 mine, not yours. Only assumptions that come back validated go on to the backlog-grooming skill.
-
-→ next: `/dk:requirements:market` if a product-direction call is open, else `/dk:requirements:scope-gate`

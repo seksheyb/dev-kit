@@ -10,5 +10,3 @@ below, which is a separate dispatch.
 `gate-plan-review` plus `/dev-kit-core:plan-review goal-backward`; all four lenses is maximum
 rigor. Add `eng` for new architecture, a security/payments/auth surface, or anything touching
 >15 files; add `design`/`devex` when the phase also has UI or a developer-facing surface.
-
-→ next: `/dk:plan:gate`

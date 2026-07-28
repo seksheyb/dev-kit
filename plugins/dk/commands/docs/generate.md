@@ -7,5 +7,3 @@ gate: always
 
 Use the document-generate skill in its post-release doc-sync mode, scoped to this milestone's
 delta, not the whole doc surface.
-
-→ next: `/dk:docs:api`

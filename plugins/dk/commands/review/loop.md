@@ -8,5 +8,3 @@ round n: code-review-gate in round mode, round = n, branch = <branch>; then, unl
 stop_loop, bugfix-wave in findings.json mode on round n with <branch> as source, driving its
 merge-and-clean-up to the end inside the loop before round n+1 opens. Read stop_loop and
 next_action rather than re-deriving them, and never open a 7th round.
-
-→ next: `/dk:review:qa`

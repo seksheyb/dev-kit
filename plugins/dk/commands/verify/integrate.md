@@ -8,5 +8,3 @@ asks: "Skip integration-checker on the milestone's first phase; run nyquist-audi
 Dispatch the integration-checker agent for phase <NN>, whether or not verify found gaps. Then, and
 only once it has returned, the nyquist-auditor agent for the same phase, passing verify's
 validation_gaps as <gaps>. Hand every ESCALATED item back to step 8 as build work.
-
-→ next: `/dk:verify:e2e` if this phase changed primary user flows, else back to `/dk:discover:graph-update` for the next phase

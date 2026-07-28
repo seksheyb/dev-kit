@@ -9,5 +9,3 @@ Close milestone <M> out by hand — no dev-kit asset does this: freeze this mile
 historical record, move the position pointer off its last phase and onto the next milestone, and
 tag the merged commit `<M>`. Then read the backlog: if it has Now or Next items, tell me what the
 next milestone would be scoped from; if only Later or Icebox, we are done.
-
-→ next: `/dk:bootstrap:constitution` for milestone <M+1> — milestone 2+ starts over at step 0, not step 1

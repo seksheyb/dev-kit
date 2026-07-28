@@ -8,5 +8,3 @@ converge's appended tasks, every gap verification listed, and any eval-auditor B
 Take **keep** at the finishing-a-development-branch menu again, then re-run /dev-kit-core:verify on
 the same goal until it comes back `passed` or `human_needed`. If the same gaps survive two cycles,
 stop and escalate to me.
-
-→ next: `/dk:verify:integrate`

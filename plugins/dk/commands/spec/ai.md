@@ -10,5 +10,3 @@ domain-researcher and ai-researcher, then eval-planner last. No section of the s
 hand-write — each one belongs to an agent in this chain.
 
 Step 11 carries the `eval-auditor` dispatch that audits these rubrics against what got built.
-
-→ next: `/dk:spec:ui` if this phase also has UI work (the two chains share no files and run concurrently), else `/dk:plan:write`

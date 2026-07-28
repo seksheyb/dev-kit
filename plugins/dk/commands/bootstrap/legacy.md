@@ -9,5 +9,3 @@ Enable the dev-kit-backend plugin first — step 2 is too late. Then the spec-mi
 gate-reverse-engineer to promote what it mined, then legacy-modernizer against that recovered
 picture, recording its migration-strategy choice as an ADR. Assessment and plan only: step 8
 builds it, step 3 sequences it.
-
-→ next: `/dk:bootstrap:ingest-docs`

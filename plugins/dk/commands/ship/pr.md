@@ -9,5 +9,3 @@ exclusive-with: ship:auto
 Use the finishing-a-development-branch skill for this milestone. Take option 2, "Push and create a
 Pull Request" — not option 1, merge: step 14's document-release needs the diff still open, and it
 aborts outright if run from the base branch. Keep the worktree; step 14 still commits docs from it.
-
-→ next: `/dk:docs:generate`

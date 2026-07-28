@@ -22,8 +22,8 @@ body() {
   awk 'BEGIN{n=0} /^---$/{n++; if(n==2) exit; next} n==1 && /^asks:/ {
     sub(/^asks:[ \t]*"?/,""); sub(/"?[ \t]*$/,""); print "*(only if " $0 ")*"
   }' "$1"
-  # everything after the closing --- of the frontmatter, minus the breadcrumb
-  awk 'BEGIN{n=0} /^---$/{n++; next} n>=2' "$1" | grep -vE '^→ next:'
+  # everything after the closing --- of the frontmatter
+  awk 'BEGIN{n=0} /^---$/{n++; next} n>=2' "$1"
 }
 
 # Walk the spine line by line. Each line is emitted as-is; where it references commands, their

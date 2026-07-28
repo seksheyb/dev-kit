@@ -82,7 +82,8 @@ Then pick how you want to drive it:
 | `/dk:run --sleep` | Unattended. Reads gate answers from `.claude/dk-policy.yml`; **stops** at any gate it has no answer for |
 
 Or type the commands yourself — `/dk:requirements:specify`, `/dk:plan:gate 03`,
-`/dk:final:security`. Each ends by naming its successor, so the manual path guides you too.
+`/dk:final:security`. Ordering lives in RUNBOOK.md and nowhere else, so ask `/dk:status`
+what comes next rather than reading it off the command you just ran.
 
 **Every command runs standalone.** Cold session, no state files, out of order — always
 works. The orchestrator is additive, never load-bearing, and

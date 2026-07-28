@@ -9,5 +9,3 @@ context and open questions to each. When all four return, the research-synthesiz
 them, then the roadmapper agent to split milestone <M> into phases.
 
 **Session boundary.**
-
-→ next: `/clear`, then `/dk:design:system` if this project has UI, else `/dk:discover:graph-update`

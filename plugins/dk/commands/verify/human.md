@@ -7,5 +7,3 @@ blocking: true
 Give me the Human Verification Required list. I will run the items by hand and report back. Do not
 treat human_needed as a pass, do not mark the phase verified, and do not proceed to the next phase
 until I have confirmed each item.
-
-→ next: `/dk:verify:converge`, once every item is confirmed

@@ -8,5 +8,3 @@ Use the gate-automation agent for phase <NN> on <branch>, this phase's integrati
 
 **Session boundary** — anything from verification worth recording with the `learn` skill goes in
 first. Then **back to step 5**; when every phase is done, continue to Part C.
-
-→ next: `/clear`, then `/dk:discover:graph-update` for the next phase — or `/dk:final:ui` when every phase is done

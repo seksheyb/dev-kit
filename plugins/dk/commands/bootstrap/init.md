@@ -9,5 +9,3 @@ write `CLAUDE.md`, `.gitignore`, `.claude/settings.json`, `docs/SITEMAP.md` and 
 from the templates — never overwrite a file that already exists, report it instead.
 
 Only `dev-kit-core` is on; step 2 enables the stack lanes.
-
-→ next: `cd` into the project, start a session there, then `/dk:bootstrap:constitution`

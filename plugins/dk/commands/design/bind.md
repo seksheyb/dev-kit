@@ -8,5 +8,3 @@ Use the design-consultation skill again with this id: <uuid>, to bind it. Then d
 reference implementation.
 
 **Session boundary.**
-
-→ next: `/clear`, then `/dk:discover:graph-update`

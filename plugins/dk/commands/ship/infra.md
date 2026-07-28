@@ -8,5 +8,3 @@ never in parallel — each writes config the next depends on: devops-engineer, t
 terraform-engineer with cloud-architect only where the topology itself is open, then whichever of
 kubernetes-specialist / docker-expert matches how this project runs — skip the other rather than
 inventing a use for it — then sre-engineer, then monitoring-expert. Tell me which you ran, and which not.
-
-→ next: `/dk:ship:deploy-setup` if land-and-deploy was never configured here, else `/dk:ship:pr` or `/dk:ship:auto`

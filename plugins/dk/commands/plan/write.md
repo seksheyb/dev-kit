@@ -4,5 +4,3 @@ argument-hint: "[NN]"
 gate: always
 ---
 Use the planner agent for phase <NN>. Then the diagram skill for the wave/track dependency graph.
-
-→ next: `/dk:plan:review`

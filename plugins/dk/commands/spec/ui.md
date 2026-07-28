@@ -9,5 +9,3 @@ spec it produced.
 
 *(if this phase has both AI and UI work, run the two chains concurrently — they share no files.
 Each chain is internally sequential.)*
-
-→ next: `/dk:plan:write`

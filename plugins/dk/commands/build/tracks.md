@@ -7,5 +7,3 @@ have the implementer use it, picking only from the lanes we enabled at step 2. T
 track-to-lane mapping before you dispatch. Also apply, skipping any that do not apply:
 secure-code-guardian (auth / input / crypto), fullstack-guardian (frontend and backend together),
 refactoring-specialist (existing code), guard in safety mode (prod / shared / destructive).
-
-→ next: `/dk:build:ui` if this phase ships UI, else `/dk:review:loop`

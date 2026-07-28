@@ -7,5 +7,3 @@ asks: "Did this phase build an AI/LLM system with an eval contract from step 6?"
 ---
 Dispatch the eval-auditor agent against phase <NN>. Carry every BLOCKER into the remediation pass
 below — it has no route of its own — and re-run this audit once that pass has landed.
-
-→ next: `/dk:verify:converge`

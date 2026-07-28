@@ -9,5 +9,9 @@
         "repo": "seksheyb/dev-kit"
       }
     }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node .claude/hooks/dk-context.js --statusline"
   }
 }

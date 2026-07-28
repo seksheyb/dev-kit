@@ -4,6 +4,10 @@ docs/state/tmp/
 # Local, machine-specific Claude Code settings
 .claude/settings.local.json
 
+# Wiki save queue — a work queue, not a record. The artifacts it points at are
+# committed; the queue itself is per-machine and drains as notes are written.
+.claude/dk-wiki-pending
+
 # OS / editor noise
 .DS_Store
 Thumbs.db

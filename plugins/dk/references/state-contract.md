@@ -36,6 +36,7 @@ verdict: <last command's verdict or ->
 next: "<one-line imperative for the next step; may name a journal file to read>"
 # optional flags, omit when default:
 # graphify: off
+# wiki: off
 ```
 
 **These keys only.** Never add `note`, `findings`, `wave_progress`, `history`, or any narrative
@@ -44,6 +45,12 @@ and stopped doing its job.
 
 `round` is a structured key rather than prose inside `next:` because stage 10's cap is a hard rule —
 "never open a 7th round" — and a limit you must not exceed should not depend on parsing a sentence.
+
+**The two flags are kill switches for the hook layer** (`../hooks/`), which is their only consumer.
+`graphify: off` silences the graph hint and the post-merge refresh nudge; `wiki: off` silences the
+vault ingest nudge and both ends of the wiki save queue. Omit them unless switching a capture layer
+off — absent means on. Nothing else reads them, and no other flag key may be added here: a flag is
+part of the closed key set, so it needs a consumer before it needs a name.
 
 ## `next:` is a pointer, not a payload
 

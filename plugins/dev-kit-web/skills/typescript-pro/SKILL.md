@@ -22,6 +22,8 @@ metadata:
 4. **Optimize build** - Configure project references, incremental compilation, tree shaking; re-run `tsc --noEmit` to confirm zero errors after changes
 5. **Test types** - Confirm type coverage with a tool like `type-coverage`; validate that all public APIs have explicit return types; iterate on steps 3–4 until all checks pass
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

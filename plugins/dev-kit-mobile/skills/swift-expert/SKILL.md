@@ -24,6 +24,8 @@ metadata:
 
 > **Validation checkpoints:** After step 3, run `swift build` to verify compilation. After step 4, run `swift build -warnings-as-errors` to surface actor isolation and Sendable warnings under Swift 6 strict concurrency. After step 5, run `swift test` and confirm all async tests pass.
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

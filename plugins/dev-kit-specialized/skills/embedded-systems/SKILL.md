@@ -25,6 +25,8 @@ Senior embedded systems engineer with deep expertise in microcontroller programm
 5. **Optimize resources** - Minimize code size, RAM usage, power consumption
 6. **Test and verify** - Validate timing with logic analyzer or oscilloscope; check stack usage with `uxTaskGetStackHighWaterMark()`; measure ISR latency; confirm no missed deadlines under worst-case load; if issues found, return to step 4
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

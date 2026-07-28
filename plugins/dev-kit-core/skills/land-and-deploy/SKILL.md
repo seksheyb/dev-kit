@@ -144,7 +144,7 @@ Classify the diff scope (frontend / backend / config / docs) from the changed fi
 - **Auto-deploy platforms (Vercel/Netlify/Render):** wait ~60 seconds for propagation, or poll the production URL until it responds, then verify.
 - **Custom hooks:** run the configured deploy-status command and check its exit code.
 
-Show progress every 2 minutes. Success → record the duration, continue. Failure → ask: A) investigate the deploy logs; B) revert the merge immediately; C) continue to health checks anyway (the failure might be a flaky step). 20-minute timeout → ask whether to keep waiting or skip verification.
+Show progress every 2 minutes. Success → record the duration, continue. Failure → ask: A) investigate the deploy logs; B) revert the merge immediately; C) continue to health checks anyway (the failure might be a flaky step). 20-minute timeout → ask whether to keep waiting or skip verification; if the user skips, record Deploy: TIMEOUT — the outcome is undetermined, not a pass, so never report it as PASSED.
 
 ## Step 7: Post-deploy verification
 
@@ -178,9 +178,10 @@ PR:           #<number> — <title>
 Merged:       <timestamp> (<merge method>, <auto/direct/queue>)
 Merge SHA:    <sha>
 Timing:       CI wait <d> | queue <d> | deploy <d> | verify <d> | total <d>
-Reviews:      <CURRENT / STALE / NOT RUN>  Inline fixes: <n or no>
+Reviews:      <CURRENT / RECENT / STALE / NOT RUN>  Inline fixes: <n or no>
+Tests:        <PASSED / BLOCKER>
 CI:           <PASSED / SKIPPED>
-Deploy:       <PASSED / FAILED / NO WORKFLOW / CI AUTO-DEPLOY>
+Deploy:       <PASSED / FAILED / NO WORKFLOW / CI AUTO-DEPLOY / TIMEOUT>
 Staging:      <VERIFIED / SKIPPED / N/A>
 Verification: <HEALTHY / DEGRADED / SKIPPED / REVERTED>  (scope, console, load time)
 

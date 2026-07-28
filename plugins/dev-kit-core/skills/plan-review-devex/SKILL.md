@@ -13,7 +13,7 @@ DX is UX for developers — but developer journeys are longer, involve multiple 
 
 **Non-interactive execution:** When run by an agent, do not pause for confirmation. Infer the persona, tier target, and mode from evidence; state each inference explicitly in the report; tag genuine either-way calls `DECISION NEEDED`.
 
-**Division of labor:** this reviews the plan's DX *intent*, once per phase, before anything's built. `devex-review` is its build-time mirror — it tests the actual shipped product, live, once per milestone at close-out (not per phase). The persona, TTHW target tier, and DX debt items recorded here become the baseline that `devex-review` measures reality against.
+**Scope:** this reviews the plan's DX *intent*, once per phase, before anything's built — a pre-build review of intent, not a live test of a shipped product. Its output is written as durable, reusable baseline artifacts: a developer persona card, a TTHW target tier, and DX debt items, each specific and evidence-backed enough to serve as a reference point for any later comparison against reality.
 
 **Applicability gate — auto-detect product type first.** From the plan's content: API endpoints/REST/GraphQL/webhooks → **API/Service**; CLI commands/flags/terminal → **CLI Tool**; npm install/import/library/package → **Library/SDK**; deploy/hosting/infrastructure → **Platform**; docs/guides/tutorials → **Documentation**; SKILL.md/agent/MCP → **AI Agent Skill**. If NONE apply, the plan has no developer-facing surface: report "no developer-facing surface; DX review not applicable," verdict APPROVE, completeness N/A, and stop. A product can be multiple types; identify the primary one.
 
@@ -65,8 +65,9 @@ These are the laws. Every recommendation traces back to one of these.
 | 3-4 | Poor. Developers complain. Adoption suffers. |
 | 1-2 | Broken. Abandoned after first attempt. |
 | 0 | Not addressed. No thought given. |
+| CND | Could Not Determine — the evidence needed to judge this pass is genuinely unobtainable (no network access to verify a claim, no live environment to run the getting-started flow, the relevant docs/code are absent from what you can read), not merely thin. Never left blank and never silently rounded to a number. |
 
-**The gap method:** For each score, explain what a 10 looks like for THIS product, then fix toward 10.
+**The gap method:** For each score, explain what a 10 looks like for THIS product, then fix toward 10. `CND` is not a score to fix toward — it is a statement that scoring was not possible; say exactly what evidence would resolve it.
 
 ## TTHW Benchmarks (Time to Hello World)
 
@@ -161,7 +162,7 @@ Each confusion point becomes a candidate finding.
 
 ## The 8 DX Passes
 
-**Anti-skip rule:** Never condense or skip any pass regardless of plan type — DX gaps are where adoption breaks down. Zero findings → record "No issues found," but evaluate it. **Every rating MUST reference evidence from Step 0.** Not "Getting Started: 4/10" but "4/10 because [persona] hits [friction point from 0F] at step 3, and competitor [name from 0C] achieves this in [time]."
+**Anti-skip rule:** Never condense or skip any pass regardless of plan type — DX gaps are where adoption breaks down. Zero findings → record "No issues found," but evaluate it. A pass that genuinely cannot be evaluated (see `CND` in the rubric above) still gets a row — record `CND` and what's missing, never a guessed number and never a silently dropped pass. **Every rating MUST reference evidence from Step 0.** Not "Getting Started: 4/10" but "4/10 because [persona] hits [friction point from 0F] at step 3, and competitor [name from 0C] achieves this in [time]."
 
 ### Pass 1: Getting Started Experience (Zero Friction)
 Rate 0-10: Can a developer go from zero to hello world in under 5 minutes? Evidence: benchmark tier (0C), magical moment vehicle (0D), Install/Hello World friction (0F). Load reference: read the "## Pass 1" section of `references/dx-calibration.md` for gold-standard examples and anti-patterns. Evaluate: installation (one command? no prerequisites?); first run (visible, meaningful output?); sandbox/playground before install?; free tier (no credit card, no sales call)?; quick start copy-paste complete with real output shown?; auth/credential bootstrapping (steps between "I want to try" and "it works")?; magical moment vehicle actually in the plan?; TTHW gap from target tier. FIX TO 10: write the ideal getting-started sequence — exact commands, expected output, time budget per step; target 3 steps or fewer. The Stripe test: can the persona go from "never heard of this" to "it worked" in one terminal session without leaving the terminal?
@@ -200,7 +201,7 @@ Not a scored pass. Load reference: read the "## AI Agent Skill DX Checklist" sec
 * **First-Time Developer Confusion Report** (0G) — annotated with which items were addressed.
 * **"NOT in scope"** — DX improvements considered and deferred, one-line rationale each.
 * **"What already exists"** — existing docs, examples, error handling, and DX patterns to reuse.
-* **DX debt items** — missing error messages, unspecified upgrade paths, doc gaps, missing SDK languages; each with What / Why (concrete developer pain) / Pros / Cons / Context.
+* **DX debt items** — missing error messages, unspecified upgrade paths, doc gaps, missing SDK languages; each with What / Why (concrete developer pain) / **Severity** (BLOCKER / MAJOR / MINOR, assigned per the Lens Verdict severity mapping below — never left blank) / Pros / Cons / Context.
 
 ### DX Scorecard
 ```
@@ -218,6 +219,7 @@ Not a scored pass. Load reference: read the "## AI Agent Skill DX Checklist" sec
                                           code in context / magical moments
                                           — each [covered/gap]
 ```
+Any `Score` cell may read `CND` instead of `__/10` per the Anti-skip rule; exclude `CND` dimensions from the Overall DX average (state which ones and why) rather than averaging them in as a 0 or omitting the row.
 If all passes 8+: "DX plan is solid." Any below 6: flag as critical DX debt with specific adoption impact. TTHW > 10 min: flag as blocking.
 
 ### DX Implementation Checklist
@@ -235,6 +237,8 @@ If all passes 8+: "DX plan is solid." Any below 6: flag as critical DX debt with
 
 ## Lens Verdict
 
-* **Completeness score (0-10):** the Overall DX score from the scorecard.
+* **Completeness score (0-10):** the Overall DX score from the scorecard, computed over the scored (non-`CND`) dimensions.
 * Severity mapping: **BLOCKER** = TTHW in Red Flag tier (> 10 min), any pass ≤ 2, or a friction point that ends the persona's first session → REVISE. **MAJOR** = any pass below 6, magical moment missing from the plan, error paths without problem+cause+fix → APPROVE-WITH-CHANGES. **MINOR** = polish and nice-to-haves (scores 6-7).
+* A pass scored `CND` carries no severity itself — it is neither a pass nor a finding — but it must never disappear. Tag it `DECISION NEEDED` in the report so a human confirms whether the plan can be approved without that evidence; never let a `CND` silently round into APPROVE.
+* **Decisions Needed:** a consolidated list of every item tagged `DECISION NEEDED` — ambiguous persona/tier/mode inferences from Step 0 (per the Non-interactive execution rule) and any pass scored `CND` — collected here even though each also appears inline where it occurs; state "none" if empty. A `DECISION NEEDED` tag left only in per-pass prose, with nothing surfacing it here, is incomplete.
 * **Verdict:** APPROVE / APPROVE-WITH-CHANGES / REVISE.

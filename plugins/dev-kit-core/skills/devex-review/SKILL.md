@@ -107,7 +107,10 @@ README walkthrough, CHANGELOG, config files. NOT directly testable: email verifi
 requiring real credentials, IDE integration.
 
 For untestable dimensions, mark scores as INFERRED from artifacts. Never guess. **State your
-evidence source for every score.**
+evidence source for every score.** If a dimension has neither live-test access nor any artifact
+to infer from, do not force a number: mark that row's Method as **COULD NOT DETERMINE** and its
+Score cell as `N/A` in the scorecard — a dimension you couldn't check is not the same as one you
+checked and found scored 0 ("Not addressed").
 
 ## Calibration Reference
 
@@ -241,6 +244,11 @@ compilation + cache"). Score the inner loop 0-10 with evidence.
 +====================================================================+
 ```
 
+Method may also read **COULD NOT DETERMINE** for any row above, with its Score cell as `N/A`,
+when neither live testing nor an artifact was available for that dimension (see Scope
+declaration above) — never collapse a genuinely indeterminate dimension into a scored 0 or
+into TESTED/PARTIAL/INFERRED.
+
 ## Gate Verdict
 
 This scorecard is a ship-blocking gate, not just a report — it needs an explicit pass/fail
@@ -261,7 +269,9 @@ a REVISE from either skill means the same thing to whoever's gating on it.
 ## Next Steps
 
 After the audit, recommend:
-- The specific, actionable fixes for the gaps found — ordered by (adoption impact ÷ effort)
+- The specific, actionable fixes for the gaps found — ordered by (adoption impact ÷ effort), each
+  tagged with its severity (**BLOCKER** / **MAJOR** / **MINOR**) from the Gate Verdict mapping
+  above, so severity is visible per finding and not only in the rolled-up Verdict
 - The single "magical moment" opportunity, if one emerged
 - Re-run devex-review after fixes to verify improvement
 

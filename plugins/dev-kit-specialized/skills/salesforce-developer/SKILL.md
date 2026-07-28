@@ -23,6 +23,8 @@ metadata:
 5. **Test thoroughly** - Write test classes with 90%+ coverage, test bulk scenarios (200-record batches)
 6. **Deploy** - Use Salesforce DX, scratch orgs, CI/CD for metadata deployment
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

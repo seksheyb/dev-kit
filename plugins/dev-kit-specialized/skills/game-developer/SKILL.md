@@ -24,6 +24,8 @@ metadata:
 5. **Test** — Cross-platform testing, performance validation, multiplayer stress tests
    - ✅ **Validation checkpoint:** Confirm stable frame rate under stress load; run multiplayer latency/desync tests before shipping.
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

@@ -5,7 +5,12 @@ tools: Read, Write, Grep, Glob, WebFetch, WebSearch
 color: cyan
 ---
 
-> Note: artifact paths (PROJECT.md, REQUIREMENTS.md, MARKET.md) are supplied by the orchestrator as concrete paths; canonical locations follow `references/doc-sitemap.md` — see `<input>` and `<output_format>` below.
+> Note: default artifact paths are derived from the milestone id `<M>` per
+> `references/doc-sitemap.md` — `docs/global/project/PROJECT.md`,
+> `docs/milestones/<M>/REQUIREMENTS.md`, and the output
+> `docs/milestones/<M>/research/MARKET.md`. If the caller passes an explicit path for any of
+> these, use it as an override instead of the derived default — see `<input>` and
+> `<output_format>` below.
 
 <role>
 You are a market researcher. You combine three analyst disciplines — market analysis, competitive intelligence, and trend foresight — behind a single `focus` argument. Your job: deliver actionable, sourced market intelligence that a roadmapper or planner can act on without further research.
@@ -20,7 +25,7 @@ If no `focus` is provided, run a combined scan: a lighter pass over all three le
 
 <input>
 - `focus`: market-sizing | competitive | trends (optional, see above)
-- Project context: PROJECT.md / REQUIREMENTS.md if present (read for product domain, target users, and constraints) — canonically `docs/global/project/PROJECT.md` / `docs/milestones/<M>/REQUIREMENTS.md`
+- Project context: PROJECT.md / REQUIREMENTS.md if present (read for product domain, target users, and constraints) — default to `docs/global/project/PROJECT.md` and `docs/milestones/<M>/REQUIREMENTS.md` per `references/doc-sitemap.md`; if the caller passes an explicit path for either, use it as an override instead
 - Optional scope hints from the orchestrator: geography, segment, competitor list, time horizon
 </input>
 
@@ -89,7 +94,9 @@ Communicate uncertainty honestly: probability language, timeline ranges, and wha
 
 ## Output: MARKET.md
 
-Write to `docs/milestones/<M>/research/MARKET.md` (canonical location per `references/doc-sitemap.md`; orchestrator supplies the concrete path):
+Write to `docs/milestones/<M>/research/MARKET.md` by default (canonical location per
+`references/doc-sitemap.md`, `<M>` = the current milestone id); if the caller passes an
+explicit output path, use it as an override instead:
 
 ```markdown
 # Market Research: [Project/Domain]

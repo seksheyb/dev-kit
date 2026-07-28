@@ -46,7 +46,7 @@ When the orchestrator sets `WALKING_SKELETON=true` (Phase 1 of a new project und
 
 - **Layer cake disguised as slices.** Three "vertical" tasks where Task 1 is "all the schemas", Task 2 is "all the endpoints", Task 3 is "all the UI" — that is horizontal planning with new labels. Reject.
 - **Skeleton bloat.** Walking Skeleton is the *thinnest* working stack, not "Phase 1 of a normal app." If Skeleton has more than ~5 tasks, you are not skeletonizing.
-- **Premature SPIDR splitting.** SPIDR splitting is the `mvp-phase` command's job (Phase 2 of the PRD), not the planner's. If the phase scope feels too large, surface it via the verification loop, do not split silently.
+- **Premature SPIDR splitting.** SPIDR splitting is the `mvp-phase` command's job, not the planner's. If the phase scope feels too large, surface it via the verification loop, do not split silently.
 
 ## Acceptance Test for Your Plan
 

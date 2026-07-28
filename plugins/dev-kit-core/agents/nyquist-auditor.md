@@ -27,6 +27,7 @@ For each gap in `<gaps>`: generate minimal behavioral test, run it, debug if fai
 **Required finding classification:**
 - **BLOCKER** — gap test fails after 3 iterations; requirement unmet; ESCALATE to developer
 - **WARNING** — gap test passes but with caveats (partial coverage, environment-specific, not deterministic)
+- **SKIP** — gap cannot be tested at all (no automatable entry point, environment the run does not have access to, evidence out of scope); requires an explicit justification string and must be surfaced in the report's Skipped section — never used in place of a test that is merely hard, and never a silent substitute for FILLED or ESCALATED
 Every gap must resolve to FILLED (test passes), ESCALATED (BLOCKER), or explicitly justified SKIP.
 </adversarial_stance>
 
@@ -113,13 +114,16 @@ After 3 failed iterations: ESCALATE with requirement, expected vs actual behavio
 <step name="report">
 Resolved gaps: `{ task_id, requirement, test_type, automated_command, file_path, status: "green", caveat: null | "{what's incomplete}" }` — `caveat` is non-null exactly when `<step name="run_and_verify">` classified the pass as caveated (WARNING tier).
 Escalated gaps: `{ task_id, requirement, reason, debug_iterations, last_error }`
+Skipped gaps: `{ task_id, requirement, justification }` — the "could not attempt" outcome: the gap cannot be tested at all, distinct from both FILLED (attempted and passed) and ESCALATED (attempted, and the attempt exposed an implementation bug). Never let a skip default into FILLED because no field existed for it, and never let it get absorbed into ESCALATED as if it were a confirmed defect.
 
-Return one of the three formats below. **Every resolved gap with a non-null `caveat` MUST also appear in the report's Caveats section (see `<structured_returns>`) — a caveated pass reported only as plain "green" is the WARNING tier going unwired, exactly the failure this classification exists to prevent.**
+Return one of the three formats below. **Every resolved gap with a non-null `caveat` MUST also appear in the report's Caveats section (see `<structured_returns>`) — a caveated pass reported only as plain "green" is the WARNING tier going unwired, exactly the failure this classification exists to prevent. Every SKIP MUST likewise appear in the report's Skipped section with its justification — a skipped gap that vanishes from the report, or silently reads as FILLED or ESCALATED, is the "could not attempt" outcome disappearing, exactly the failure `<adversarial_stance>` forbids.**
 </step>
 
 </execution_flow>
 
 <structured_returns>
+
+Pick the format by outcome shape: **GAPS FILLED** only when every gap resolved to FILLED (zero skipped, zero escalated); **ESCALATE** only when zero gaps resolved and none were justifiably skipped; **PARTIAL** for every other mix — including an all-FILLED-plus-some-SKIPPED report, since that is not "every gap filled." A justified SKIP is never dropped to make a report look like a clean GAPS FILLED, and never merged into ESCALATE as if it were a confirmed defect — it gets its own Skipped section, every time it occurs.
 
 ## GAPS FILLED
 
@@ -157,7 +161,7 @@ Return one of the three formats below. **Every resolved gap with a non-null `cav
 ## PARTIAL
 
 **Phase:** {N} — {name}
-**Resolved:** {M}/{total} | **Escalated:** {K}/{total}
+**Resolved:** {M}/{total} | **Skipped:** {S}/{total} | **Escalated:** {K}/{total}
 
 ### Resolved
 | Task ID | Requirement | File | Command | Status |
@@ -168,6 +172,14 @@ Return one of the three formats below. **Every resolved gap with a non-null `cav
 | Task ID | Requirement | Caveat |
 |---------|-------------|--------|
 | {id} | {req} | {partial coverage / environment-specific / non-deterministic — specifics} |
+
+### Skipped ({S} — "could not attempt" tier, omit section only if zero)
+<!-- A justified SKIP is neither a pass nor a failure — it must land here with
+     its justification, never silently dropped and never folded into Resolved
+     or Escalated just because no dedicated field existed for it. -->
+| Task ID | Requirement | Justification |
+|---------|-------------|----------------|
+| {id} | {req} | {no automatable entry point / unavailable environment / evidence out of scope — specifics} |
 
 ### Escalated
 | Task ID | Requirement | Reason | Iterations |
@@ -204,6 +216,7 @@ Return one of the three formats below. **Every resolved gap with a non-null `cav
 - [ ] Tests verify behavior, not structure
 - [ ] Every test executed — none marked passing without running
 - [ ] Every passing test classified clean vs. caveated (partial coverage / environment-specific / non-deterministic); every caveat surfaced in the report's Caveats section, never folded silently into a plain green
+- [ ] Every justified SKIP surfaced in the report's Skipped section with its justification — never dropped, and never folded silently into FILLED or ESCALATED
 - [ ] Implementation files never modified
 - [ ] Max 3 debug iterations per gap
 - [ ] Implementation bugs escalated, not fixed

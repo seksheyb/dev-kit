@@ -22,6 +22,8 @@ metadata:
 4. **Validate** — Test security controls with explicit checkpoints (see below)
 5. **Document** — Record significant security decisions as ADRs (`docs/global/architecture/adr/NNNN-<slug>.md`; see `architecture-designer`)
 
+> If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ### Validation Checkpoints
 
 After each implementation step, verify:

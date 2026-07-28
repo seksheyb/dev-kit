@@ -41,7 +41,7 @@ Then verify each level against the actual plan text.
 
 Throughout, `PHASE` = `docs/milestones/<M>/phases/<NN>-<slug>/`.
 
-Read whatever exists of: the plan file(s) (`PHASE/<NN>-<MM>-PLAN.md`); the goal statement (the phase goal in `PHASE/CONTEXT.md`, the roadmap entry in `docs/milestones/<M>/ROADMAP.md`, an issue description, or the plan's own objective section); any decisions/context document recording user decisions — `PHASE/CONTEXT.md`, `PHASE/DISCOVERY.md`, or `docs/global/project/PROJECT.md` (locked decisions, discretion areas, deferred ideas); project CLAUDE.md; requirements docs (`docs/global/project/PROJECT.md`, `docs/milestones/<M>/ROADMAP.md`, the feature spec at `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`, or `docs/global/requirements/PRD.md`); research/patterns docs if present (`PHASE/RESEARCH.md`, `PHASE/PATTERNS.md`). Follow project conventions found in CLAUDE.md throughout.
+Read whatever exists of: the plan file(s) (`PHASE/<NN>-<MM>-PLAN.md`); the goal statement (the phase goal in `PHASE/CONTEXT.md`, the roadmap entry in `docs/milestones/<M>/ROADMAP.md`, an issue description, or the plan's own objective section); any decisions/context document recording user decisions — `PHASE/CONTEXT.md`, `PHASE/DISCOVERY.md`, or `docs/global/project/PROJECT.md` (locked decisions, discretion areas, deferred ideas); project CLAUDE.md; requirements docs (`docs/global/project/PROJECT.md`, `docs/milestones/<M>/ROADMAP.md`, the milestone requirements rollup at `docs/milestones/<M>/REQUIREMENTS.md`, or the feature spec at `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md` — there is no PRD at any tier; `docs/global/requirements/PRD.md` is a retired path, see `references/doc-sitemap.md`); research/patterns docs if present (`PHASE/RESEARCH.md`, `PHASE/PATTERNS.md`). Follow project conventions found in CLAUDE.md throughout.
 
 ## Verification Dimensions
 
@@ -123,7 +123,7 @@ For each mapped file: does the plan's action reference the analog, and does the 
 6. **Check key links** (Dimension 4) — for each planned connection, confirm a task's action actually implements it.
 7. **Assess scope** (Dimension 5) against the thresholds.
 8. **Verify success-criteria derivation** (Dimension 6).
-9. **Run Dimensions 7-12** where their inputs exist; output "SKIPPED (no <input> found)" where they don't.
+9. **Run Dimensions 7-12** where their inputs exist; output "SKIPPED (no <input> found)" where they don't. Carry every SKIPPED dimension into the `### Skipped Dimensions` section of the final report (below) — a dimension that could not be attempted must never be silently absorbed into an unqualified PASSED verdict.
 10. **Determine overall status:** `passed` (all checks pass) or `issues_found` (one or more blockers/warnings).
 
 ## Issue Format
@@ -156,7 +156,15 @@ issue:
 | Unit | Tasks | Files | Wave | Status |
 |------|-------|-------|------|--------|
 
-Plans verified. Ready for execution.
+### Suggestions (info)
+{list each info-level issue as `**N. [{dimension}] {description}**` with Unit/Fix, or "None"}
+
+### Skipped Dimensions
+{dimension}: SKIPPED (no <input> found) — {or "None" if every applicable dimension ran}
+
+Plans verified. Ready for execution. {If any dimension is skipped, say so plainly:
+"N dimension(s) could not be attempted (see Skipped Dimensions) — this verdict covers
+only what was checked."}
 ```
 
 **ISSUES FOUND:**
@@ -172,6 +180,15 @@ Plans verified. Ready for execution.
 
 ### Warnings (should fix)
 ...
+
+### Suggestions (info)
+**1. [{dimension}] {description}**
+- Unit: {unit} / Task: {task}
+- Fix: {fix_hint}
+{or "None"}
+
+### Skipped Dimensions
+{dimension}: SKIPPED (no <input> found) — {or "None"}
 
 ### Recommendation
 {N} blocker(s) require revision before execution. {If scope reduction was

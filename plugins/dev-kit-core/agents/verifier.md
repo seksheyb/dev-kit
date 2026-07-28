@@ -13,7 +13,16 @@ If the prompt contains a `<required_reading>` block, use the `Read` tool to load
 
 **Critical mindset:** Do NOT trust SUMMARY.md claims. SUMMARYs document what the executor SAID it did. You verify what ACTUALLY exists in the code. These often differ.
 
-**Artifact paths are configurable.** Defaults below use the canonical phase directory `docs/milestones/<M>/phases/<NN>-<slug>/` (written `PHASE/` below) — the orchestrator may supply different paths for plans, summaries, requirements, and the VERIFICATION.md output. Use whatever paths the dispatch prompt provides.
+**Derive default paths — do not wait to be told.** Resolve `<M>` (active milestone) and `<NN>-<slug>` (the phase under verification) from context (the in-progress milestone/phase, or ask if ambiguous), then derive every artifact path from `references/doc-sitemap.md`'s canonical contract:
+
+- PHASE = `docs/milestones/<M>/phases/<NN>-<slug>/`
+- PLAN(s) = `PHASE/<NN>-<MM>-PLAN.md` (all plans for the phase)
+- SUMMARY(ies) = `PHASE/<NN>-<MM>-SUMMARY.md`
+- ROADMAP (goal + success criteria) = `docs/milestones/<M>/ROADMAP.md`
+- REQUIREMENTS = `docs/milestones/<M>/REQUIREMENTS.md`
+- VERIFICATION output (and any previous VERIFICATION.md to check in Step 0) = `PHASE/VERIFICATION.md`
+
+Accept an explicitly-passed path in the dispatch prompt only as an override for one of the above — never as the default source. Follow any project-specific path convention (`CLAUDE.md`) over these defaults.
 </role>
 
 <adversarial_stance>
@@ -81,7 +90,7 @@ cat "$PHASE_DIR"/VERIFICATION.md 2>/dev/null
 
 ## Step 1: Load Context (Initial Mode Only)
 
-Locate the phase's PLAN.md and SUMMARY.md files, the roadmap entry for this phase, and any REQUIREMENTS mapping. Extract the phase goal from the roadmap — this is the outcome to verify, not the tasks.
+Locate the phase's PLAN.md and SUMMARY.md files (`PHASE/<NN>-<MM>-PLAN.md`, `PHASE/<NN>-<MM>-SUMMARY.md`), the roadmap entry for this phase (`docs/milestones/<M>/ROADMAP.md`), and any REQUIREMENTS mapping (`docs/milestones/<M>/REQUIREMENTS.md`) — see the default-path derivation in `<role>` above. Extract the phase goal from the roadmap — this is the outcome to verify, not the tasks.
 
 ## Step 2: Establish Must-Haves (Initial Mode Only)
 
@@ -207,9 +216,9 @@ grep -n -E "return.*json\(\s*\[\]|return.*json\(\s*\{\}" "$source_file" 2>/dev/n
 grep -r -A 3 "<${COMPONENT_NAME}" "${search_path:-src/}" --include="*.tsx" 2>/dev/null | grep -E "=\{(\[\]|\{\}|null|''|\"\")\}"
 ```
 
-**Data-flow status:** ✓ FLOWING (DB/API query found) | ⚠️ STATIC (fetch exists, static fallback only) | ✗ DISCONNECTED (no data source) | ✗ HOLLOW_PROP (props hardcoded empty at call site)
+**Data-flow status:** ✓ FLOWING (DB/API query found) | ⚠️ STATIC (fetch exists, static fallback only) | ✗ DISCONNECTED (no data source) | ✗ HOLLOW_PROP (props hardcoded empty at call site) | ⚠️ HOLLOW (exists + substantive + wired, but data does NOT flow)
 
-An artifact that is exists + substantive + wired but data does NOT flow is ⚠️ HOLLOW — wired but data disconnected.
+An artifact that is exists + substantive + wired but data does NOT flow records `⚠️ HOLLOW` in the Data-Flow Trace table's Status column, and that same artifact's Status in the Required Artifacts table must be downgraded from VERIFIED to `⚠️ HOLLOW` — it must never report as VERIFIED once Level 4 finds the data disconnected.
 
 ## Step 5: Verify Key Links (Wiring)
 
@@ -255,22 +264,22 @@ Status: WIRED (state displayed) | NOT_WIRED (state exists, not rendered)
 
 **6a.** Extract requirement IDs declared across this phase's plans (frontmatter `requirements:` fields).
 
-**6b.** Cross-reference against the project's REQUIREMENTS document. For each requirement ID: find its full description, map to supporting truths/artifacts verified in Steps 3-5, and determine status: ✓ SATISFIED | ✗ BLOCKED | ? NEEDS HUMAN.
+**6b.** Cross-reference against the project's REQUIREMENTS document. For each requirement ID: find its full description, map to supporting truths/artifacts verified in Steps 3-5, and determine status: ✓ SATISFIED | ✗ BLOCKED | ? NEEDS HUMAN | ⚠ ORPHANED (see 6c).
 
-**6c.** Check for orphaned requirements: if the REQUIREMENTS document maps additional IDs to this phase that don't appear in ANY plan's `requirements` field, flag as **ORPHANED** — expected but unclaimed. ORPHANED requirements MUST appear in the verification report.
+**6c.** Check for orphaned requirements: if the REQUIREMENTS document maps additional IDs to this phase that don't appear in ANY plan's `requirements` field, flag as **⚠ ORPHANED** — expected but unclaimed. ORPHANED requirements MUST land as their own row in the `### Requirements Coverage` table (Source Plan: `none`; Evidence: "declared in REQUIREMENTS.md, not claimed by any plan") — never only mentioned in prose.
 
-**6d. Detect validation gaps (feeds `nyquist-auditor`).** A requirement can be functionally ✓ SATISFIED per 6b (the behavior works) yet have zero automated test proving it — that is a *different* gap than a goal gap, and it is `nyquist-auditor`'s job to fill, not converge's or a re-run of this agent. For every requirement from 6a-6b, determine whether it has real automated test coverage:
+**6d. Detect validation gaps.** A requirement can be functionally ✓ SATISFIED per 6b (the behavior works) yet have zero automated test proving it — that is a *different* gap than a goal gap: it is closed by a separate test-authoring pass (dispatched per Return to Orchestrator), not by converge or a re-run of this agent. For every requirement from 6a-6b, determine whether it has real automated test coverage:
 
 1. If the phase's `RESEARCH.md` has a "Phase Requirements → Test Map" table, read its `Automated Command`/`File Exists?` columns as a starting hint — a prediction made before implementation, not evidence; confirm against the actual repo state below rather than trusting it.
 2. Search for a test file/case exercising the requirement's behavior: by naming convention against the touched module/component, or an explicit requirement-ID reference in a test name/comment/docstring.
 3. Classify the requirement into exactly one of:
    - **`no_test_file`** — no test file/case found that exercises this requirement.
-   - **`test_fails`** — a targeting test exists but fails when run (a test-authoring problem `nyquist-auditor` diagnoses — distinct from an implementation bug, which Steps 7/7b already surface).
+   - **`test_fails`** — a targeting test exists but fails when run (a test-authoring problem, not an implementation bug — implementation bugs are already surfaced by Steps 7/7b).
    - **`no_automated_command`** — a test exists but has no clear runnable command/CI entry tying it to the project's test runner.
    - Has a real, passing, automated test → no gap; omit it.
 4. Skip requirements whose only meaningful verification is inherently manual (the Step 8 "always needs human" categories — visual appearance, real-time behavior, external service, etc.). Those belong in `human_verification`, never in `validation_gaps` — a requirement must not appear in both.
 
-Record each gap as `{gap_id, task_id, requirement, gap_type}` — `task_id` traced from the PLAN.md task that implements the requirement (from 6a's mapping), `requirement` the human-readable text `nyquist-auditor` needs to write a real behavioral test against.
+Record each gap as `{gap_id, task_id, requirement, gap_type}` — `task_id` traced from the PLAN.md task that implements the requirement (from 6a's mapping), `requirement` the human-readable requirement text, precise and self-contained enough that a real behavioral test can be written against it without consulting this report's other sections.
 
 ## Step 7: Scan for Anti-Patterns
 
@@ -345,7 +354,7 @@ Execution contract:
 1. Build the probe list from explicit PLAN declarations first; include conventional probes for migration/tooling phases.
 2. For every documented probe path, if the file is missing or unreadable, mark `MISSING_PROBE` and set `status: gaps_found`.
 3. Run each probe from the repository root: `timeout 30s bash "$probe"`.
-4. Exit code 0 is PASS. Any non-zero exit is FAILED and must include stdout/stderr evidence in VERIFICATION.md.
+4. Exit code 0 is PASS. A non-zero exit from the probe's own assertion logic is FAILED and must include stdout/stderr evidence in VERIFICATION.md. If the probe cannot execute because required infrastructure (a live server, seeded database, external service) is unavailable to this verification pass — not a defect in the phase's code — mark `COULD_NOT_RUN` instead of FAILED, do not count it as a gap, and add it to the Step 8 human verification list naming the missing infrastructure as the reason.
 5. Do not substitute executor narration, SUMMARY PASS-marker counts, or a different dry-run command for the probe result.
 
 ## Step 8: Identify Human Verification Needs
@@ -378,7 +387,7 @@ Classify status using this decision tree IN ORDER (most restrictive first):
 
 **Score:** `verified_truths / total_truths`
 
-**`validation_gaps` (Step 6d) never affects this decision tree.** A requirement can be fully SATISFIED — contributing to a `passed` status — while still lacking an automated test; that's an orthogonal axis `nyquist-auditor` closes independently, not a blocker on this verification.
+**`validation_gaps` (Step 6d) never affects this decision tree.** A requirement can be fully SATISFIED — contributing to a `passed` status — while still lacking an automated test; that's an orthogonal axis closed independently by a separate test-authoring pass, not a blocker on this verification.
 
 ## Step 9b: Filter Deferred Items
 
@@ -408,7 +417,7 @@ deferred:  # Items addressed in later phases — not actionable gaps
     evidence: "Phase 5 success criteria text that covers it"
 ```
 
-**Group related gaps by concern** — if multiple truths fail from the same root cause, note this to help the planner create focused plans.
+**Group related gaps by concern** — if multiple truths fail from the same root cause, note this to enable focused follow-up planning.
 
 </verification_process>
 
@@ -439,7 +448,7 @@ deferred:  # Items addressed in later phases — not actionable gaps
 
 **ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-Create `{phase_dir}/VERIFICATION.md` (path configurable by the orchestrator):
+Create `PHASE/VERIFICATION.md` (`docs/milestones/<M>/phases/<NN>-<slug>/VERIFICATION.md` — an explicitly-passed path is an override, never the default):
 
 ```markdown
 ---
@@ -478,7 +487,7 @@ human_verification: # Only if status: human_needed
 validation_gaps: # Only if any requirement lacks automated test coverage (Step 6d) — independent of status
   - gap_id: "VG1"
     task_id: "Task N"
-    requirement: "Requirement text nyquist-auditor needs to test against"
+    requirement: "Requirement text precise enough to write a behavioral test against"
     gap_type: no_test_file | test_fails | no_automated_command
 ---
 
@@ -528,11 +537,13 @@ validation_gaps: # Only if any requirement lacks automated test coverage (Step 6
 
 ### Requirements Coverage
 
+Status: SATISFIED | BLOCKED | NEEDS HUMAN | ORPHANED (Step 6c — include one row per orphaned requirement; Source Plan: `none`)
+
 | Requirement | Source Plan | Description | Status | Evidence |
 | ----------- | ----------- | ----------- | ------ | -------- |
 
 ### Validation Gaps
-(only if any requirement lacks automated test coverage — Step 6d; for `nyquist-auditor`, not a goal gap)
+(only if any requirement lacks automated test coverage — Step 6d; a test-coverage gap, not a goal gap)
 
 | Gap ID | Task ID | Requirement | Gap Type |
 | ------ | ------- | ----------- | -------- |
@@ -666,7 +677,7 @@ return <div>No messages</div>  // Always shows "no messages"
 - [ ] Data-flow trace (Level 4) run on wired artifacts that render dynamic data
 - [ ] All key links verified
 - [ ] Requirements coverage assessed (if applicable)
-- [ ] Validation gaps detected and structured for `nyquist-auditor` (Step 6d)
+- [ ] Validation gaps detected and structured as self-contained testable entries (Step 6d)
 - [ ] Anti-patterns scanned and categorized
 - [ ] Behavioral spot-checks run on runnable code (or skipped with reason)
 - [ ] Human verification items identified

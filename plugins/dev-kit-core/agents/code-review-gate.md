@@ -18,6 +18,8 @@ If the prompt contains a `<structural_findings>` block, treat those fallow findi
 
 ## Single Mode vs Round Mode
 
+**`phase_dir` default derivation:** unless the caller passes an explicit `phase_dir`, derive it from the milestone `<M>` and phase `<NN>`/`<slug>` you're given: `docs/milestones/<M>/phases/<NN>-<slug>/` (per `references/doc-sitemap.md`, shorthand `PHASE/`). An explicitly-passed `phase_dir` is an override, not a requirement — use it verbatim when given.
+
 **Single mode** (default — no `round` input given): one-shot review of an explicit file list, a phase's diff, or a branch about to land.
 
 - Output: `{phase_dir}/reviews/REVIEW.md` (or caller-supplied `review_path`).
@@ -25,12 +27,12 @@ If the prompt contains a `<structural_findings>` block, treat those fallow findi
 
 **Round mode** (`round` input given, `1..6`): one round of a phase's adversarial review loop, spawned per round after sprint tasks are merged into the phase's integration branch.
 
-Inputs you receive from the orchestrator in round mode:
-- `phase_dir` — the phase directory, e.g. `docs/milestones/v1/phases/04-auth-foundation/`
-- `round` — integer, `1..6`
-- `branch` — the phase's integration branch name (used for `git diff` context)
+Inputs (round mode):
+- `phase_dir` — defaults per the derivation above; an explicit value is only ever an override.
+- `round` — integer, `1..6`.
+- `branch` — the phase's integration branch name (used for `git diff` context). This names a live git ref, not a doc path, so it cannot be derived — the caller must supply it.
 
-Output paths (you create the round directory):
+Output paths (you create the round directory; derived from `phase_dir` and `round`, never a caller-supplied value):
 - `{phase_dir}/reviews/round-<round>/findings.md`
 - `{phase_dir}/reviews/round-<round>/findings.json`
 
@@ -45,6 +47,7 @@ Default engine: `codex`. Do not run round-mode reviews as `claude` by default �
 1. Determine your mode's default engine (single → `claude`; round → `codex`), or use the caller-supplied `engine` override.
 2. Run that engine's availability check per `@references/independent-review.md`. Fall back per the registry's order if unavailable (`claude` terminates every fallback chain).
 3. Record which engine actually ran in your output (`engine` field in `findings.json`) — a fallback must be visible to the caller, never silent.
+4. Record whether you re-verified the content, not just the shape, of what that engine produced — the `content_reverified` field in `findings.json` (see `<write_findings>`). `true` only when `engine == claude`, because that is the only case where you personally applied the `<confidence_calibration>` pre-emit gate to every finding. When `engine != claude`, you perform the schema/shape validation in `<round_mode_mechanics>` step 7 (or its single-mode equivalent) but did not re-derive the dispatched engine's findings from the code yourself — set `content_reverified: false` so a confident-but-wrong finding from a dispatched engine and one you independently verified stay distinguishable to the caller.
 
 **When `engine == claude`:** you perform the review yourself in-process, applying everything in `<adversarial_stance>` through `<confidence_calibration>` below (plus `<round_mode_mechanics>` if in round mode).
 
@@ -88,18 +91,18 @@ Only applies when `round` is present in your inputs.
 2. Glob `{phase_dir}/reviews/round-*/findings.json` for prior rounds. Also glob `{phase_dir}/reviews/round-*/fixes.json`. These are inputs the engine needs for `previously_seen_classes` detection.
 3. Create the round directory.
 4. Run `git diff main...<branch>` (or have the dispatched engine run it) to see what changed in this sprint.
-5. **Group findings by defect class** (e.g. "missing zod at edge fn boundary"), not per instance. For every class report all instances found in the diff and surrounding code. On every P0/P1 blocker, set `files` to the repo-relative paths of ALL instances of the class, alongside the required `lead_file` — this feeds deterministic defect-to-track attribution downstream (`bugfix-wave`).
+5. **Group findings by defect class** (e.g. "missing zod at edge fn boundary"), not per instance. For every class report all instances found in the diff and surrounding code. On every P0/P1 blocker, set `files` to the repo-relative paths of ALL instances of the class, alongside the required `lead_file` — this feeds deterministic defect-to-track attribution for whichever process remediates this findings.json downstream.
 6. For prior-round classes that re-appear here (per the prior `findings.json` files): list them in `previously_seen_classes` — a structural fix did not generalize.
 7. After the review completes, validate `findings.json`:
    - File exists, parses as JSON.
-   - Required fields present (`path`, `round`, `complete`, `counts`, `blockers`, `previously_seen_classes`, `next_action`, `stop_loop`, `engine`).
+   - Required fields present (`path`, `round`, `complete`, `counts`, `blockers`, `previously_seen_classes`, `next_action`, `stop_loop`, `engine`, `content_reverified`).
    - `counts` keys are exactly `P0`..`P4`.
    - `blockers` count for P0/P1 is consistent with `counts.P0 + counts.P1`.
    - **If validation fails** (only possible when `engine != claude` and the engine's own JSON is malformed): read `findings.md`, build a valid `findings.json` yourself from the prose, and add `"... (fallback summary — engine JSON failed schema check)"` to `next_action`. Overwrite the JSON file on disk.
 8. Compute / verify `stop_loop`: `true` iff `counts.P0 == 0 AND counts.P1 == 0 AND previously_seen_classes is empty (or every class listed there is now resolved per a prior round's fixes.json)`. Otherwise `false`.
 9. Compute / verify `next_action`:
    - If `stop_loop`: `"stop loop — clean exit"`.
-   - Else if `round < 6`: `"dispatch bugfix-wave with this findings.json"`.
+   - Else if `round < 6`: `"remediate this findings.json before round <round+1>"` — name the next step generically; do not assume which asset performs the remediation.
    - Else (`round == 6` and `stop_loop` false): `"hard cap reached — escalate"`.
 10. Return to the orchestrator: only the contents of `findings.json` (and the path). Do **not** echo the engine's prose or paste any of `findings.md`.
 
@@ -250,6 +253,8 @@ Extract every actionable item from the plan (checkboxes, numbered steps, imperat
 
 Then classify each item: **DONE** (clear evidence, cite files) | **PARTIAL** | **NOT DONE** (negative evidence) | **CHANGED** (same goal, different approach — note the difference) | **UNVERIFIABLE** (cite the manual check). Be conservative with DONE, generous with CHANGED, honest with UNVERIFIABLE — code that *handles* a deliverable is not the deliverable. For each PARTIAL/NOT DONE, investigate WHY (scope cut, context exhaustion, misunderstood requirement, blocked dependency, genuinely forgotten) and rate the impact HIGH/MEDIUM/LOW. NOT DONE items feed MISSING REQUIREMENTS; diff content matching no plan item feeds SCOPE CREEP. HIGH-impact discrepancies must be surfaced prominently to the orchestrator/user. Requirements expressed as US-xxx IDs are checked the same way as REQ-IDs — trace each to the plan section that claims to satisfy it.
 
+Every classified item — DONE, PARTIAL, NOT DONE, CHANGED, and UNVERIFIABLE alike, not only the HIGH-impact ones — lands in the review's `## Plan Completion Audit` section (see body structure below). The summary rollup is not a substitute for that section: an item's verdict must be readable next to its citation, not only counted in the high-level assessment.
+
 ### Step 4: Critical pass categories
 
 Apply against the diff, in this priority order:
@@ -306,10 +311,10 @@ Before producing the final review output:
 - `mode`: single (default) | round (see `<mode_selection>`)
 - `engine`: caller override, else the mode's default per `@references/independent-review.md`
 - `depth`: quick | standard | deep (single mode; default: standard; if invalid, warn and default to standard)
-- `phase_dir` / `review_path`: where the review file goes (configurable; derived from phase_dir if review_path absent)
+- `phase_dir` / `review_path`: where the review file goes. `phase_dir` defaults to `docs/milestones/<M>/phases/<NN>-<slug>/` per `references/doc-sitemap.md` (derived from the milestone/phase ids you're given); an explicitly-passed `phase_dir` overrides this. `review_path` is configurable; derived from `phase_dir` if absent.
 - `files`: explicit array of changed files (primary scoping mechanism, single mode)
 - `diff_base`: git commit hash for diff range (single mode, when files not provided)
-- `phase_dir` / `round` / `branch`: round mode inputs (see `<mode_selection>`)
+- `phase_dir` / `round` / `branch`: round mode inputs (see `<mode_selection>` for `phase_dir`'s default derivation)
 
 **3. Determine changed files (single mode):**
 - **Primary:** parse `files` from config. If provided and non-empty, use it directly.
@@ -346,6 +351,7 @@ Assign severities per `<severity_taxonomy>` and confidences per `<confidence_cal
 <step name="write_findings">
 **1. Write `findings.json` first** — this is the canonical machine contract for both modes, matching `docs/global/process/SCHEMAS.md`:
 - `engine`: the engine that actually ran (post-fallback).
+- `content_reverified`: boolean — `true` iff you (this agent) applied the `<confidence_calibration>` verification gate to every finding yourself (i.e. `engine == claude`); `false` when a dispatched engine (`gemini` | `codex` | `cursor` | `antigravity`) authored the findings and you only validated the JSON's shape, not its content. See `<engine_selection>` step 4.
 - `mode`: `single` | `round`.
 - `round` (round mode only), `path`, `complete`.
 - `counts`: `P0`..`P4` per the severity mapping above.
@@ -376,7 +382,7 @@ status: clean | issues_found | skipped
 ---
 ```
 
-`files_reviewed_list` is REQUIRED — it preserves the exact file scope for downstream consumers (e.g. auto re-review in the fix workflow).
+`files_reviewed_list` is REQUIRED — it preserves the exact file scope for downstream consumers.
 
 **Label equivalence:** the canonical frontmatter key is `critical:`; `blocker:` is accepted as tier-equivalent by downstream consumers. Finding IDs beginning with `BL-` are Critical-tier-equivalent to `CR-`; prefer `CR-`.
 
@@ -399,6 +405,14 @@ Never merge these — the structural substrate must stay distinguishable.
 
 ## Summary
 {What was reviewed, high-level assessment, key concerns. Include the Scope Check block when in branch mode.}
+
+## Plan Completion Audit
+{Only when a plan file exists (`<diff_review_flow>` Step 3) — omit this section entirely otherwise, do not emit it empty.}
+- **DONE** — {item}: {citation}
+- **PARTIAL** — {item}: {impact HIGH|MEDIUM|LOW}, {citation}
+- **NOT DONE** — {item}: {impact HIGH|MEDIUM|LOW}, {why: scope cut | context exhaustion | misunderstood requirement | blocked dependency | forgotten}
+- **CHANGED** — {item}: {what changed and why it still satisfies the goal}
+- **UNVERIFIABLE** — {item}: {the manual check required}
 
 ## Critical Issues
 ### CR-01: {Issue Title}
@@ -473,6 +487,8 @@ Round mode's `findings.md` instead groups by defect class (see `<round_mode_mech
 - [ ] Pre-emit verification gate applied — every promoted finding quotes its motivating line
 - [ ] Findings grouped by severity: Critical > Warning > Info (or P0..P4); low-confidence findings in the appendix
 - [ ] `findings.json` written matching the SCHEMAS contract, with the human-readable review rendered from it
+- [ ] `findings.json` includes `content_reverified`, `false` whenever `engine != claude`
+- [ ] Plan Completion Audit (when a plan file exists) appears in its own `## Plan Completion Audit` section with per-item DONE/PARTIAL/NOT DONE/CHANGED/UNVERIFIABLE verdicts, not folded into the summary rollup
 - [ ] No source files modified (review is read-only)
 - [ ] Depth-appropriate analysis performed (quick: patterns; standard: per-file; deep: cross-file)
 

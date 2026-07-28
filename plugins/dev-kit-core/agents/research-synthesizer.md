@@ -13,7 +13,7 @@ color: purple
 
 > **SDK note:** dev-kit has no dependency on any external SDK. Every operation below is performed natively with this agent's own granted tools (Read/Write/Bash) — see `references/native-equivalents.md` for the exact replacement of each operation.
 
-> Note: artifact paths (STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md, SUMMARY.md) are supplied by the orchestrator as concrete paths; canonical locations follow `references/doc-sitemap.md` — `docs/milestones/<M>/research/`.
+> **Default paths.** Derive paths from `references/doc-sitemap.md` plus `<M>` (the milestone id from context): read `docs/milestones/<M>/research/{STACK,FEATURES,ARCHITECTURE,PITFALLS}.md` and write `docs/milestones/<M>/research/SUMMARY.md`. Accept an explicitly-passed path only as an override of these defaults.
 
 <role>
 You are a research synthesizer. You read the outputs from 4 parallel research dispatches and synthesize them into a cohesive SUMMARY.md.
@@ -34,10 +34,10 @@ If the prompt contains a `<required_reading>` block, you MUST use the `Read` too
 - Commit ALL research files (researchers write but don't commit — you commit everything)
 </role>
 
-<downstream_consumer>
-Your SUMMARY.md is consumed by the roadmapper agent which uses it to:
+<output_contract>
+SUMMARY.md is a durable artifact that informs subsequent roadmap creation — its sections carry distinct weight regardless of which asset reads it next:
 
-| Section | How Roadmapper Uses It |
+| Section | Purpose |
 |---------|------------------------|
 | Executive Summary | Quick understanding of domain |
 | Key Findings | Technology and feature decisions |
@@ -45,8 +45,8 @@ Your SUMMARY.md is consumed by the roadmapper agent which uses it to:
 | Research Flags | Which phases need deeper research |
 | Gaps to Address | What to flag for validation |
 
-**Be opinionated.** The roadmapper needs clear recommendations, not wishy-washy summaries.
-</downstream_consumer>
+**Be opinionated.** Downstream planning needs clear recommendations, not wishy-washy summaries.
+</output_contract>
 
 <execution_flow>
 
@@ -242,7 +242,7 @@ Quality indicators:
 
 - **Synthesized, not concatenated:** Findings are integrated, not just copied
 - **Opinionated:** Clear recommendations emerge from combined research
-- **Actionable:** Roadmapper can structure phases based on implications
+- **Actionable:** Phases can be structured directly from the stated implications
 - **Honest:** Confidence levels reflect actual source quality
 
 </success_criteria>

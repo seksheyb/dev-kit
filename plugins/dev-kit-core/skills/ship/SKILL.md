@@ -92,7 +92,7 @@ Dispatch as a subagent if available (fresh context; the parent only needs the co
 
 If a plan file exists for this work — the phase's `<NN>-<MM>-PLAN.md` (`docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`), active plan in conversation context, or a recent plan file mentioning this branch/repo — audit it. No plan file → skip with "No plan file detected."
 
-0. **Reuse Stage 11 output first.** If a `VERIFICATION.md` exists for the relevant phase(s), read its pass/fail verdicts (`gaps:` list, `status`, per-truth evidence) and scan the plan file for any `## Phase N: Convergence` task blocks `converge` appended — use both as **pre-confirmed evidence** for the plan items they cover, the same way `converge` itself treats `VERIFICATION.md` as pre-confirmed evidence rather than re-deriving it from scratch. A truth `verifier` marked passed with no later gap reopening it → DONE. A gap `verifier` flagged with no Convergence task closing it (or an unclosed one) → NOT DONE/PARTIAL, per the gap's `reason`. A plan item covered by an appended Convergence task → its status follows whether that task is now done in the diff. Only fall back to Steps 1-4 below — deriving status from the plan file blind — for phases with no `VERIFICATION.md` (manual/ad-hoc workflows that skipped Stage 11).
+0. **Reuse Stage 11 output first.** If a `VERIFICATION.md` exists for the relevant phase(s), read its pass/fail verdicts (`gaps:` list, `status`, per-truth evidence) and scan the plan file for any `## Phase N: Convergence` task blocks `converge` appended — use both as **pre-confirmed evidence** for the plan items they cover, the same way `converge` itself treats `VERIFICATION.md` as pre-confirmed evidence rather than re-deriving it from scratch. A truth `verifier` marked passed with no later gap reopening it → DONE. A gap `verifier` flagged with no Convergence task closing it (or an unclosed one) → NOT DONE/PARTIAL, per the gap's `reason`. A plan item covered by an appended Convergence task → its status follows whether that task is now done in the diff. Only fall back to Steps 1-4 below — deriving status from the plan file blind — for phases with no `VERIFICATION.md` (manual/ad-hoc workflows that skipped Stage 11). Tag every item resolved this way as **(reused from VERIFICATION.md)** in the completion checklist — the same reused-vs-newly-audited distinction Step 4's coverage diagram already makes — so a status taken on trust from `verifier`/`converge` is never indistinguishable from one this step verified itself.
 
 1. **Extract actionable items** (checkboxes, numbered implementation steps, imperative statements, file-level specs, test requirements, data-model changes) not already classified in Step 0. Ignore context/background sections, open questions, and explicitly deferred items ("Future:", "Out of scope:"). Cap at 50.
 2. **Classify verifiability:** DIFF-VERIFIABLE (would show in `git diff <base>...HEAD`), CROSS-REPO (check file existence on disk if the sibling repo is reachable), EXTERNAL-STATE (DNS, SaaS config — cannot be proven from the diff).
@@ -116,6 +116,8 @@ If a plan file exists for this work — the phase's `<NN>-<MM>-PLAN.md` (`docs/m
 If Steps 2-5 produced no ship-generated delta (clean merge, no coverage gaps, no plan fixes), the full review has nothing to run against — the lightweight skim is the whole of Step 6.
 
 Auto-fix mechanical findings (dead code, stale comments, imports) and commit them. For findings that need judgment (behavior changes, security trade-offs), **STOP** and ask. Optionally run an adversarial second pass — "try to break this diff" — with a fresh subagent, scoped to ship's own delta, for large or risky changes.
+
+**Record which of three outcomes applies, explicitly — never let one collapse into another:** **not attempted** (the diff wasn't large/risky enough to trigger the pass — say so by name, don't just fall silent), **attempted, survived** (the pass ran against ship's delta and found nothing), or **attempted, refuted** (the pass ran and broke something — list what). A pass that never ran must never render as "No issues found" with no mention that it was skipped.
 
 ## Step 7: Version bump (auto-decide)
 
@@ -190,6 +192,7 @@ Check for an existing open PR/MR (`gh pr view` / `glab mr view`). If one exists,
 
 ## Pre-Landing Review
 <findings from Step 6, or "No issues found.">
+<Adversarial pass: not attempted | attempted, survived | attempted, refuted — from Step 6>
 <Scope check line from Step 6 (omit if CLEAN and no other review content needs it)>
 
 ## Plan Completion

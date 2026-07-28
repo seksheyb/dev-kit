@@ -86,8 +86,8 @@ Every finding MUST include a confidence score (1-10):
 | 9-10 | Verified by reading specific code; concrete bug demonstrated | Show normally |
 | 7-8 | High-confidence pattern match | Show normally |
 | 5-6 | Moderate; could be a false positive | Show with caveat: "Medium confidence, verify" |
-| 3-4 | Suspicious pattern, may be fine | Appendix only |
-| 1-2 | Speculation | Only report if severity would be critical |
+| 3-4 | Suspicious pattern, may be fine | Appendix only — lands in the **Appendix — Low-Confidence Findings** output (see Required Outputs), not inline in its section |
+| 1-2 | Speculation | Only report if severity would be critical — if so, it lands inline in its section with a `SPECULATIVE, VERIFY` caveat, never silently dropped |
 
 **Finding format:** `[SEVERITY] (confidence: N/10) file:line — description`
 
@@ -151,6 +151,7 @@ Evaluate: N+1 queries and database access patterns; memory-usage concerns; cachi
 
 * **"NOT in scope"** — work considered and explicitly deferred, one-line rationale each.
 * **"What already exists"** — existing code/flows that partially solve sub-problems, and whether the plan reuses or unnecessarily rebuilds them.
+* **Appendix — Low-Confidence Findings** — every confidence 3-4 finding (`[SEVERITY] (confidence: N/10) file:line — description`), collected here instead of inline in its section. Emit the heading even when empty ("No low-confidence findings").
 * **Diagrams** — ASCII diagrams for any non-trivial data flow, state machine, or pipeline; plus which implementation files should get inline diagram comments.
 * **Failure modes** — for each new codepath in the test diagram, one realistic production failure (timeout, nil reference, race, stale data) and whether (1) a test covers it, (2) error handling exists, (3) the user sees a clear error or a silent failure. No test AND no handling AND silent → **CRITICAL GAP**.
 * **Worktree parallelization strategy** — skip (state "Sequential implementation, no parallelization opportunity") if all steps touch the same primary module or there are <2 independent workstreams. Otherwise produce: (1) dependency table (Step | Modules touched | Depends on — module/directory level, not file level); (2) parallel lanes (no shared modules + no dependency → separate lanes; shared module → same lane sequential; dependent steps → later lanes); (3) execution order (which lanes launch in parallel, which wait); (4) conflict flags where parallel lanes touch the same module directory.
@@ -162,7 +163,7 @@ Evaluate: N+1 queries and database access patterns; memory-usage concerns; cachi
     - Verify: <test command or check>
   ```
   P1 blocks ship; P2 lands same branch; P3 is a follow-up TODO. If a section had zero findings, note "No new tasks from <section>."
-* **Retrospective note** — if git history shows a prior review cycle touching the same areas, note it and review those areas more aggressively.
+* **Retrospective note** — if git history or a prior round's report (e.g. `PHASE/reviews/`) shows an earlier review cycle (this lens or another) touching the same areas, record, per carried-over item: which round/reviewer raised it, and whether this pass re-verified it (`re-verified` / `not re-checked` / `could not verify`) — a prior finding or "resolved" claim is a floor for this review, never a ceiling; review those areas more aggressively rather than accepting the earlier disposition at face value.
 
 ## Completion Summary
 

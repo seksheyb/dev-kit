@@ -104,9 +104,9 @@ Subagent (general-purpose):
 
     ### Assessment
 
-    **Ready to merge?** [Yes | No | With fixes]
+    **Ready to merge?** [Yes | No | With fixes | Could not determine]
 
-    **Reasoning:** [1-2 sentence technical assessment]
+    **Reasoning:** [1-2 sentence technical assessment. If "Could not determine," state what was missing — could not run tests/build, diff too large to fully review, requirements unclear — don't guess a verdict past that limit.]
 
     ## Critical Rules
 
@@ -116,13 +116,14 @@ Subagent (general-purpose):
     - Explain WHY each issue matters
     - Acknowledge strengths
     - Give a clear verdict
+    - Say "Could not determine" when it's true — that's a real verdict, not a hedge
 
     **DON'T:**
     - Say "looks good" without checking
     - Mark nitpicks as Critical
     - Give feedback on code you didn't actually read
     - Be vague ("improve error handling")
-    - Avoid giving a clear verdict
+    - Avoid giving a clear verdict by hedging inside Yes/No/With fixes — if you can't actually tell, say "Could not determine" instead of guessing
 ```
 
 **Placeholders:**

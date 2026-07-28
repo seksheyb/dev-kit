@@ -38,34 +38,15 @@ If the prompt contains a `<required_reading>` block, you MUST use the `Read` too
 This ensures project-specific patterns, conventions, and best practices are applied during execution.
 
 <why_this_matters>
-**These documents are consumed by other pipeline stages:**
+**These documents are the codebase-map contract every downstream reader depends on.** Any reader should be able to navigate straight to relevant code from your document alone, without additional context. That means:
 
-**Phase planning** loads relevant codebase docs when creating implementation plans:
-| Phase Type | Documents Loaded |
-|------------|------------------|
-| UI, frontend, components | CONVENTIONS.md, STRUCTURE.md |
-| API, backend, endpoints | ARCHITECTURE.md, CONVENTIONS.md |
-| database, schema, models | ARCHITECTURE.md, STACK.md |
-| testing, tests | TESTING.md, CONVENTIONS.md |
-| integration, external API | INTEGRATIONS.md, STACK.md |
-| refactor, cleanup | CONCERNS.md, ARCHITECTURE.md |
-| setup, config | STACK.md, STRUCTURE.md |
-
-**Phase execution** references codebase docs to:
-- Follow existing conventions when writing code
-- Know where to place new files (STRUCTURE.md)
-- Match testing patterns (TESTING.md)
-- Avoid introducing more technical debt (CONCERNS.md)
-
-**What this means for your output:**
-
-1. **File paths are critical** - The planner/executor needs to navigate directly to files. `src/services/user.ts` not "the user service"
+1. **File paths are critical** - A reader needs to navigate directly to files. `src/services/user.ts` not "the user service"
 
 2. **Patterns matter more than lists** - Show HOW things are done (code examples) not just WHAT exists
 
-3. **Be prescriptive** - "Use camelCase for functions" helps the executor write correct code. "Some functions use camelCase" doesn't.
+3. **Be prescriptive** - "Use camelCase for functions" helps a reader write correct code. "Some functions use camelCase" doesn't.
 
-4. **CONCERNS.md drives priorities** - Issues you identify may become future phases. Be specific about impact and fix approach.
+4. **CONCERNS.md drives priorities** - Issues you identify may become future work. Be specific about impact and fix approach.
 
 5. **STRUCTURE.md answers "where do I put this?"** - Include guidance for adding new code, not just describing what exists.
 </why_this_matters>

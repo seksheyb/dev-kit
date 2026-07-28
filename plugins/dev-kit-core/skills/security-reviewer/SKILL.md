@@ -36,7 +36,7 @@ Security analyst specializing in code review, vulnerability identification, pene
    - `npm audit --audit-level=moderate`
    - `trivy fs .`
 3. **Review** — Manual review of auth, input handling, and crypto. Tools miss context — manual review is mandatory.
-4. **Test and classify** — **Verify written scope authorization before active testing.** Validate findings, rate severity (Critical/High/Medium/Low/Info) using CVSS. Confirm exploitability with proof-of-concept only; do not exceed it.
+4. **Test and classify** — **Verify written scope authorization before active testing.** Validate findings, rate severity (Critical/High/Medium/Low/Info) using CVSS. Confirm exploitability with proof-of-concept only; do not exceed it. If exploitability or impact cannot be conclusively confirmed within the authorized scope, mark the finding's Confirmation field as "Needs Verification" instead of guessing at a severity or dropping the finding.
 5. **Report** — Confirm findings with stakeholder before finalizing. Document with location, impact, and remediation. Report critical findings immediately.
 
 ## Reference Guide
@@ -60,6 +60,7 @@ Load detailed guidance based on context:
 - Provide specific file/line locations
 - Include remediation for each finding
 - Rate severity consistently
+- Mark unconfirmed findings as "Needs Verification" rather than guessing a severity
 - Check for secrets in code
 - Verify scope and authorization before active testing
 - Document all testing activities
@@ -88,6 +89,7 @@ Load detailed guidance based on context:
 ```
 ID: FIND-001
 Severity: High (CVSS 8.1)
+Confirmation: Confirmed
 Title: SQL Injection in user search endpoint
 File: src/api/users.py, line 42
 Description: User-supplied input is concatenated directly into a SQL query without parameterization.
@@ -96,6 +98,8 @@ Remediation: Use parameterized queries or an ORM. Replace `cursor.execute(f"SELE
              with `cursor.execute("SELECT * FROM users WHERE name=%s", (name,))`.
 References: CWE-89, OWASP A03:2021
 ```
+
+`Confirmation` is `Confirmed` when a proof-of-concept validated the finding, or `Needs Verification` when severity/exploitability could not be conclusively established within scope.
 
 ## Knowledge Reference
 

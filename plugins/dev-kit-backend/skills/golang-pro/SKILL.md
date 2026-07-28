@@ -25,6 +25,8 @@ Senior Go developer with deep expertise in Go 1.24+, concurrent programming, and
 5. **Optimize** — Profile with pprof, write benchmarks, eliminate allocations; rely on Go 1.25's container-aware `GOMAXPROCS` (respects cgroup CPU limits) instead of manually tuning it for containerized deployments
 6. **Test** — Table-driven tests with `-race` flag, fuzzing, `testing/synctest` for deterministic concurrent-code tests, 80%+ coverage; confirm race detector passes before committing
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

@@ -15,6 +15,44 @@ interrogate (below), then resolve remaining ambiguity as the final phase of the 
 (the **Clarification Pass**). Both halves can also be invoked independently — "clarify the
 spec" on an already-written spec re-enters at the Clarification Pass directly.
 
+## Intake — where the feature description comes from
+
+**Every milestone enters through this skill the same way. Milestone 1 is not a special case.**
+The input is always a description you consume directly; there is no requirements document to
+wait for and none to write.
+
+| Milestone | Primary input |
+|---|---|
+| **1** (new project) | The operator's raw input — what they typed, or the approved design `brainstorming` hands off |
+| **2+** | `docs/global/requirements/BACKLOG.md`'s Now/Next items — the top items `spec-review-cpo` and `backlog-grooming` wrote there last milestone. Carry forward any `US-xxx` ID an item already has; never re-mint one |
+
+**Optional seed material** *(fold in when the file exists — never require it, never block on it)*:
+if a Stage 0 recovery or ingest path ran, its output is additional raw input to this same
+intake, not a separate authority.
+
+- `docs/state/intel/recovered-requirements.md` — requirements `gate-reverse-engineer`
+  recovered from legacy code
+- `docs/state/intel/requirements.md` and `docs/state/intel/SYNTHESIS.md` — requirements
+  `doc-synthesizer` extracted from an ingested pile of external docs
+
+Treat seed material exactly like operator prose: **unvalidated candidate requirements.** It
+gets the same interview, the same EARS phrasing, the same Clarification Pass, and the same
+`[NEEDS CLARIFICATION]` budget as anything else. Do not copy it forward verbatim, and do not
+treat "it was recovered from the code" or "it was in an existing PRD" as evidence a
+requirement is correct or still wanted. If `docs/state/intel/SYNTHESIS.md` reports unresolved
+blockers or competing variants, surface them as clarification questions rather than silently
+picking a variant.
+
+**There is no PRD.** dev-kit has no `docs/global/requirements/PRD.md` and no milestone- or
+phase-scoped PRD — the path is retired (see `references/doc-sitemap.md`, "Retired paths").
+`docs/global/project/PROJECT.md` owns "what is this product, why, for whom" at the global
+tier; `SPEC/spec.md` plus the milestone's `docs/milestones/<M>/REQUIREMENTS.md` rollup are
+the milestone-scoped requirements artifact — and producing the first of those is this skill's
+job. Never stall waiting for a requirements document to appear, never ask the operator to
+supply one, and never author one. If the operator hands you a PRD-shaped file of their own,
+read it as input material like any other description — do not copy it into the repo's doc
+tree.
+
 ## File Locations
 
 Specs live under the active milestone at `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`,
@@ -118,8 +156,11 @@ Given the feature description, do this:
    features; this is an accelerant, not a requirement.
 
 7. Follow this execution flow:
-    1. Parse the user's feature description
-       If empty: ERROR "No feature description provided"
+    1. Parse the feature description assembled by **Intake** above — the operator's raw
+       input (milestone 1) or `docs/global/requirements/BACKLOG.md`'s Now/Next items
+       (milestone 2+), plus any seed material under `docs/state/intel/`
+       If empty: ERROR "No feature description provided" — ask the operator to describe
+       what they want built. Do NOT ask for a requirements document or a PRD.
     2. Extract key concepts from description (PM Hat + Dev Hat)
        Identify: actors, actions, data, constraints, security/error-handling implications
     3. For unclear aspects:
@@ -255,6 +296,11 @@ d. **Update Checklist**: After each validation iteration, update the checklist f
 - Ask for clarification on ambiguous requirements rather than guessing silently
 
 ### MUST NOT DO
+- **Wait for, request, or write a PRD** (or any other pre-spec requirements document). Milestone
+  1's input is the operator's raw description; milestone 2+'s is `BACKLOG.md`'s Now/Next items.
+  `SPEC/spec.md` is the requirements artifact this pass produces — nothing precedes it.
+- **Promote seed material from `docs/state/intel/` into the spec unexamined.** Recovered or
+  ingested requirements are candidate input, not settled requirements.
 - Generate a spec without conducting the interview/interrogation
 - Accept vague requirements ("make it fast") without pushing for a metric
 - Skip security considerations or error handling

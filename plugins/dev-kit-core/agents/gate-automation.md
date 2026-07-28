@@ -10,8 +10,12 @@ Your job: ensure every primary user flow added or materially changed in the spri
 
 ## Inputs you receive from the orchestrator
 
-- `phase_dir` — the phase directory, e.g. `docs/milestones/v1/phases/04-auth-foundation/`
-- `branch` — the phase's integration branch name
+- `phase_dir` — default derivation: unless the caller passes an explicit `phase_dir`, derive it
+  from the milestone `<M>` and phase `<NN>`/`<slug>` you're given:
+  `docs/milestones/<M>/phases/<NN>-<slug>/` (per `references/doc-sitemap.md`, shorthand `PHASE/`).
+  An explicitly-passed `phase_dir` is an override, not a requirement — use it verbatim when given.
+- `branch` — the phase's integration branch name. This names a live git ref, not a doc path, so
+  it cannot be derived — the caller must supply it.
 
 ## Output paths
 
@@ -44,22 +48,37 @@ Your job: ensure every primary user flow added or materially changed in the spri
 6. Run the new flows locally:
    - Playwright: use the project's runner script (`package.json` scripts) — typically `npx playwright test <files>`.
    - Maestro: use the project's existing Maestro runner script on the available simulator or tethered device — check `package.json` scripts and any `e2e/maestro/` README before guessing the command.
+   - If a flow cannot be executed at all — no simulator/device available, the runner tool isn't
+     installed, etc. — that is **not** the same as the flow failing. Do not record a plain
+     `false`; mark that flow **could not determine** in the report with the reason, distinct from
+     an executed-and-failed flow.
 
 7. Check for an on-demand E2E CI job:
    - Discover it: grep `.github/workflows/` for `playwright` / `maestro` / `e2e` jobs and note the workflow + any PR label that triggers it.
    - If such a workflow exists, use `gh pr list` / `gh run list` to check for a green run against a PR carrying its trigger label; set `ci_label_run` accordingly.
    - If **no** E2E workflow exists, set `ci_label_run: false` and state in the report that the project has no on-demand E2E CI job yet — the orchestrator surfaces this so the user can add one.
+   - If a workflow exists but the check itself cannot be completed — `gh` unavailable or
+     unauthenticated, no network access, API error — that is **could not determine**, not a
+     `false`. Never treat a check you could not run as a check that found nothing; state the
+     reason plainly in the report rather than silently collapsing it into pass or fail.
 
 8. Write `authoring-report.md` with:
    - The detected automation surface(s) and how they were determined.
-   - One section per flow added (path, surface, what it covers, pass/fail locally).
+   - One section per flow added (path, surface, what it covers, pass/fail locally, or **could
+     not determine** with reason if it couldn't be executed at all).
    - One section listing flows considered but not authored, with a one-line rationale each.
-   - The CI run reference (workflow name, PR number, run id) or the "no E2E workflow" note.
+   - The CI run reference (workflow name, PR number, run id), the "no E2E workflow" note, or the
+     **could not determine** reason if the check itself couldn't be completed.
 
 9. Write `authoring-report.json` matching the SCHEMAS contract:
    - `flows_added` — every flow file written this sprint.
    - `missing_coverage` — primary user flows changed in the sprint that did not get a flow, with a one-line `reason` per item.
    - `local_pass`, `ci_label_run`, `gate_passed` per the SCHEMAS rules.
+   - When a flow's local run (step 6) or the CI check (step 7) could not be completed at all,
+     carry that **could not determine** state into the JSON too — never write a bare `false` for
+     `local_pass`/`ci_label_run` in that case. Represent it per the SCHEMAS contract's
+     indeterminate value (or, absent one, a sibling `*_reason` field) so the reason survives and
+     `gate_passed` does not silently read as a fail when the check itself never ran.
 
 10. Return to the orchestrator: only the JSON contents (and the path). Do **not** include the report prose.
 

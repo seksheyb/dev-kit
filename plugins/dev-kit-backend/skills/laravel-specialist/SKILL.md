@@ -25,6 +25,8 @@ Senior Laravel specialist with deep expertise in Eloquent ORM and modern PHP 8.3
 5. **Build features** — Develop controllers, services, API resources, and jobs; run `php artisan route:list` to verify routing
 6. **Test thoroughly** — Write feature and unit tests; run `php artisan test` before considering any step complete (target >85% coverage)
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

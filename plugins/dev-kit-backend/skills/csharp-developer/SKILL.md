@@ -33,6 +33,8 @@ Senior C# developer with mastery of .NET 10+ and Microsoft ecosystem. Specialize
 4. **Optimize** — Apply async patterns, caching, performance tuning
 5. **Test** — Write xUnit tests with TestServer; verify 80%+ coverage
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 > **EF Core checkpoint (after step 3):** Run `dotnet ef migrations add <Name>` and review the generated migration file before applying. Confirm no unintended table/column drops. Roll back with `dotnet ef migrations remove` if needed.
 
 ## Reference Guide

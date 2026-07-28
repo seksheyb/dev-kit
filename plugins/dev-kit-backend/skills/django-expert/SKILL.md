@@ -34,6 +34,8 @@ Senior Django specialist with deep expertise in Django 5.2 LTS (and current Djan
 5. **Add auth** — Permissions, JWT authentication
 6. **Test** — Django TestCase, APITestCase
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

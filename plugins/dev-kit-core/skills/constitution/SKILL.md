@@ -1,15 +1,15 @@
 ---
 name: constitution
-description: Create or update the project constitution — the durable memory of project principles that every later SDD phase (specify, analyze, converge) checks against. Use when the user says "create a constitution", "project principles", "update the constitution", "set project ground rules", "governance rules", or when starting spec-driven development on a project that has no constitution yet.
+description: Create or update the project constitution — the durable memory of project principles that every later SDD phase checks against. Use when the user says "create a constitution", "project principles", "update the constitution", "set project ground rules", "governance rules", or when starting spec-driven development on a project that has no constitution yet.
 ---
 
 # Constitution — Project Principles Memory
 
 You are creating or amending the project constitution: a short, versioned document of
 non-negotiable principles that governs every downstream artifact (specs, plans, tasks,
-implementation). Later SDD phases treat the constitution as **non-negotiable authority** —
-`analyze` flags any conflict with a MUST principle as CRITICAL, and `converge` emits
-constitution-violation remediation tasks first. Precision here pays off everywhere else.
+implementation). Downstream SDD phases treat the constitution as **non-negotiable authority** —
+a conflict with a MUST principle is treated as CRITICAL, and constitution-violation
+remediation is prioritized first. Precision here pays off everywhere else.
 
 ## File Location
 
@@ -80,7 +80,7 @@ This is a bounded pass, not an open-ended interview:
 | `[PROJECT_NAME]` | Usually inferable from the repo or directory name — infer and confirm in passing rather than spending a question. |
 | `[PRINCIPLE_N_NAME]` / `[PRINCIPLE_N_DESCRIPTION]` | **One question for the whole principle set**, never one per principle: which engineering rules are non-negotiable here? Offer a recommended starter set (test-first, simplicity/YAGNI, observability, contract/versioning stability, security-by-default) and let the user select, drop, or add. Spend a second question only if what "non-negotiable" means in practice is left ambiguous. |
 | `[SECTION_2_NAME]` / `[SECTION_2_CONTENT]` | What hard constraints does the project operate under — stack, compliance, performance, deployment targets? |
-| `### Documentation Standard` / `[DOCUMENTATION_STANDARD]` | **Always ask this.** Which docstring format per language, what must carry documentation, and which paths are excluded? Offer the language-conventional defaults (Google for Python, TSDoc/JSDoc for TypeScript/JavaScript) as options. The `code-documenter` skill reads this named slot to resolve its format; leaving it unasked silently downgrades that skill to sampling the codebase. |
+| `### Documentation Standard` / `[DOCUMENTATION_STANDARD]` | **Always ask this.** Which docstring format per language, what must carry documentation, and which paths are excluded? Offer the language-conventional defaults (Google for Python, TSDoc/JSDoc for TypeScript/JavaScript) as options. Downstream tooling reads this named slot to resolve the project's documentation format; leaving it unasked silently downgrades that tooling to sampling the codebase instead. |
 | `[SECTION_3_NAME]` / `[SECTION_3_CONTENT]` | What does the development workflow require — review, testing gates, deployment approval? |
 | `[GOVERNANCE_RULES]` | How are amendments made and compliance verified? Propose the standard rule set and ask for confirmation rather than asking open-ended. |
 | `[RATIFICATION_DATE]` | Today, unless the user says the principles were adopted earlier. Confirm in passing; do not spend a question on it. |
@@ -111,12 +111,11 @@ when the run has no interactive channel, or when the caller said to run unattend
 5. State it in the final summary: which slots are deferred, and that the constitution is
    **partially unfilled** until they are answered.
 
-This degrades safely by design. Downstream skills already treat a missing, unfilled, or
-partially unfilled constitution as **not fatal**: `analyze` and `converge` skip their
-constitution passes and note it, `specify` loads it only if present, and `code-documenter`
-treats an unreplaced `[DOCUMENTATION_STANDARD]` as silent and falls through to sampling the
-codebase. A deferred slot degrades gracefully; a fabricated principle does not — `analyze` and
-`converge` will enforce it as CRITICAL on the strength of nothing.
+This degrades safely by design. Downstream consumers already treat a missing, unfilled, or
+partially unfilled constitution as **not fatal**: constitution passes are skipped and noted,
+the file is loaded only if present, and an unreplaced `[DOCUMENTATION_STANDARD]` is treated as
+silent, falling through to sampling the codebase instead. A deferred slot degrades gracefully;
+a fabricated principle does not — it is enforced as CRITICAL on the strength of nothing.
 
 Whichever path ran — amendment, inference, elicitation, or deferral — the consistency
 propagation checklist (Outline step 4) and the Sync Impact Report (step 5) still run in full.

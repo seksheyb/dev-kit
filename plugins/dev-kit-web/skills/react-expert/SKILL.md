@@ -35,6 +35,8 @@ Senior React specialist with deep expertise in React 19, Server Components, and 
 5. **Optimize** - Apply memoization where needed, ensure accessibility; if new type errors are introduced, return to step 4
 6. **Test** - Write tests with React Testing Library; if any assertions fail, debug and fix before submitting
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

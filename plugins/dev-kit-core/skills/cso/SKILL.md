@@ -51,9 +51,9 @@ both gated on real code already being present:
   Resolved/Persistent/New findings are visible milestone over milestone.
 
 Both invocations write the same `docs/milestones/<M>/reports/security/<date>-<HHMMSS>.json` format (Phase 14) —
-`planner`'s Stage 7 threat-modeling step and `sdd-review-cto`'s Stage 2 review both consult the latest entry when
-one exists. `cso` can also be run standalone/ad hoc at any time outside these two scheduled points — nothing below
-changes based on who invoked it.
+a single stable, versioned report at a canonical path, so any later stage that needs the latest security posture
+reads the same entry rather than re-deriving one. `cso` can also be run standalone/ad hoc at any time outside these
+two scheduled points — nothing below changes based on who invoked it.
 
 ## Phase 0: Architecture Mental Model + Stack Detection
 

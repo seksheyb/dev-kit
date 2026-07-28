@@ -179,8 +179,8 @@ Each entry becomes a finding with a recommendation + WHY + alternatives. Deferre
 
 * **"NOT in scope"** — design decisions considered and explicitly deferred, one-line rationale each.
 * **"What already exists"** — existing design system, UI patterns, and components the plan should reuse.
-* **Design debt items** — missing a11y, unresolved responsive behavior, deferred empty states; each with What / Why / Pros / Cons / Context / Depends-on-or-blocked-by.
-* **Unresolved decisions** — from Pass 7, with consequences.
+* **Design debt items** — missing a11y, unresolved responsive behavior, deferred empty states; each with What / Why / Pros / Cons / Context / Depends-on-or-blocked-by / Severity (BLOCKER/MAJOR/MINOR, per the Lens Verdict mapping below).
+* **Unresolved decisions** — from Pass 7, with consequences. Each is `DECISION NEEDED` and counts as MAJOR per the Lens Verdict mapping below.
 
 ## Completion Summary
 

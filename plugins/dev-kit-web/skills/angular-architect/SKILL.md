@@ -25,6 +25,8 @@ Senior Angular architect specializing in Angular 21+ with standalone components,
 5. **Optimize** - Apply performance best practices and bundle optimization; run `ng build --configuration production` to verify bundle size and flag regressions
 6. **Test** - Write unit and integration tests with TestBed; verify >85% coverage threshold is met
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

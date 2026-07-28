@@ -36,6 +36,8 @@ Modern Python specialist focused on type-safe, async-first, production-ready cod
    - If tests fail: debug assertions, update fixtures, and iterate until green
    - If ruff/black reports issues: apply auto-fixes, then re-validate
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

@@ -25,6 +25,8 @@ Senior NLP engineer specializing in transformer architectures, text processing p
 5. **Evaluate** — Task-appropriate metrics (F1, BLEU/COMET, exact-match, perplexity), error analysis, bias and robustness checks, human evaluation for generation tasks
 6. **Optimize for production** — Quantize/distill/ONNX-export as needed, add monitoring for drift and latency, document the API contract
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Task Patterns
 
 **Named Entity Recognition** — model/entity-type selection, active learning loop for scarce labels, domain adaptation, confidence scoring, post-processing rules to reconcile overlapping spans.

@@ -6,9 +6,8 @@ description: >
   Decision Record on the spec before any plan is written. This is the pipeline's single
   product/strategy gate — nothing downstream re-litigates scope once it has run. Use when
   reviewing a spec for strategy, scope, and product value — after `specify` (including its
-  clarification pass), before
-  writing-plans/planner — or when asked for a "CPO review", "product review of the spec", "is
-  this worth building", "scope call before we plan".
+  clarification pass), before any plan is written — or when asked for a "CPO review", "product
+  review of the spec", "is this worth building", "scope call before we plan".
 ---
 
 # Spec Review — CPO Lens (Product & Strategy, Pre-Plan)
@@ -129,7 +128,11 @@ an automatic BLOCKER, same as `analyze`'s rule), and `docs/milestones/<M>/resear
 `market-researcher` has already run (don't re-derive sourced market data it already gathered —
 consume it). If `assumption-mapping` has already produced a VUBF-scored assumption table for
 this idea, treat it as input evidence for the premise challenge below rather than re-deriving
-assumptions from scratch.
+assumptions from scratch. Either input is a floor, not a ceiling: if the market read looks
+stale or an assumption's confidence score looks thin or is contradicted by anything found in
+this review's own pass, say so and weigh the premise verdict accordingly instead of inheriting
+the upstream figure at face value — name the source and whether this review corroborated or
+merely carried it forward in the Premise verdict line below.
 
 **Landscape check (only if no MARKET.md exists and the user wants it):** synthesize three
 layers — [Layer 1] the tried-and-true approach in this space; [Layer 2] what current
@@ -145,6 +148,12 @@ wrong? Feed into the Premise Challenge below.
    solving a proxy problem?
 3. What would happen if we did nothing? Real pain point or hypothetical?
 
+**If the evidence needed to answer 1-3 doesn't exist** (no MARKET.md, no user data, no
+assumption-mapping output, and none can be gathered now), do not force a VALIDATED or REJECTED
+call — record the premise verdict as **INSUFFICIENT EVIDENCE** instead. That is itself a
+finding (missing prioritization evidence), not a pass, and it must still be carried into the
+Scope Decision Record below rather than silently defaulting to VALIDATED.
+
 **If the framing itself looks inherited-by-convention rather than reasoned** (the spec's
 justification for *why this approach* boils down to "that's how we've always done it," or the
 premise survives questions 1-3 above only weakly) — escalate with a first-principles pass
@@ -153,7 +162,11 @@ before continuing: load `references/first-principles.md` and run the full 5-step
 rebuild from scratch). For concrete operational problems (a metric drop, an adoption
 failure) the same reference carries the 5D structured-problem-solving method and a
 common-problem-patterns table. Feed the rebuilt framing into 0C-bis below as an
-additional candidate solution framing.
+additional candidate solution framing. **If the rebuild yields a materially different
+framing than the spec's stated premise, record the premise verdict as REFRAMED rather than
+VALIDATED or REJECTED** — the original premise was neither confirmed nor simply rejected,
+it was replaced, and the Scope Decision Record below must say so explicitly and name the
+rebuilt framing.
 
 ### 0B. Existing-Solution Leverage
 1. What existing product surface, feature, or competitor offering already solves each
@@ -230,9 +243,10 @@ skills share one convention:
 `BL-<NNN>` is a flat, global, never-reused counter — same discipline as `US-xxx` in `specify`.
 Append only; never delete or renumber existing entries (`backlog-grooming` owns archival of
 stale ones, per its own 90-day rule). This file is the seed for the **next** milestone's Stage
-1 — when a new milestone starts, `specify` reads `docs/global/requirements/BACKLOG.md`'s
-Now/Next items as its primary input instead of (or alongside) a fresh PRD, and this skill runs
-again against whatever didn't fit into `spec.md` this time.
+1 — when a new milestone starts, its Now/Next items become the primary input for requirements
+gathering (the same way milestone 1's requirements gathering reads the operator's raw input —
+there is no PRD at any tier), and this skill runs again against whatever didn't fit into
+`spec.md` this time.
 
 ## Required Outputs — the Scope Decision Record
 
@@ -244,7 +258,9 @@ overwrite existing spec content):
 ## CPO Review
 
 **Posture:** EXPANSION / SELECTIVE EXPANSION / HOLD SCOPE / SCOPE REDUCTION — [one-line why]
-**Premise verdict:** VALIDATED / REFRAMED / REJECTED — [one-line why]
+**Premise verdict:** VALIDATED / REFRAMED / REJECTED / INSUFFICIENT EVIDENCE — [one-line why;
+  if resting on MARKET.md or an assumption-mapping VUBF score, name that source and whether
+  this review corroborated it or is carrying it forward as-is]
 **What already exists:** [existing solutions considered, reused vs. not]
 **Alternatives considered:** [Framing A/B/C summary + recommendation]
 **Prioritization:** RICE/Kano/JTBD scores, North Star metric named
@@ -254,6 +270,11 @@ overwrite existing spec content):
   deferred to a future milestone must also appear in `docs/global/requirements/BACKLOG.md` with
   the same ID; this list is the spec-local pointer, `docs/global/requirements/BACKLOG.md` is the
   durable record]
+**Completeness score (0-10):** [score] — [one-line why, per the Lens Verdict scale below]
+**Findings:** [one line per finding, each tagged BLOCKER / MAJOR / MINOR per the Lens Verdict
+  severity scale below], or "None"
+**Verdict:** APPROVE / APPROVE-WITH-CHANGES / REVISE — [one-line why; REVISE whenever any
+  Finding above is tagged BLOCKER]
 
 **LOCK:** This Scope Decision Record is binding — this spec's scope does not get re-litigated
 downstream (no plan-stage review re-opens posture or premise) unless the user explicitly
@@ -270,4 +291,9 @@ reopens this review.
   REVISE), **MAJOR** (real prioritization/alternatives gap, fixable in-spec —
   APPROVE-WITH-CHANGES), **MINOR** (polish/deferred).
 * **Verdict:** APPROVE / APPROVE-WITH-CHANGES / REVISE. A premise failure (0A) is always at
-  least one BLOCKER — the spec should not proceed to `writing-plans`/`planner` until resolved.
+  least one BLOCKER — the spec should not proceed to the next pipeline stage until resolved.
+* Record the Completeness score, the severity-tagged Findings list, and the overall Verdict in
+  the spec's own `## CPO Review` section (the **Completeness score**, **Findings**, and
+  **Verdict** fields above) — not only in this report to whoever invoked the review — so a
+  REVISE/BLOCKER (and the evidencing score behind it) persists on the spec itself and can't
+  silently disappear once the review session ends.

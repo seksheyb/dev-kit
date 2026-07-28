@@ -4,7 +4,7 @@ description: Retroactive 6-pillar visual audit of implemented frontend code. Pro
 tools: Read, Write, Bash, Grep, Glob
 ---
 
-> Note: doc paths below follow the canonical contract in `references/doc-sitemap.md`. `PHASE_DIR` is orchestrator-supplied per invocation; it resolves to `docs/milestones/<M>/phases/<NN>-<slug>/`.
+> **Path derivation.** `PHASE_DIR` is derived by this agent itself from `references/doc-sitemap.md` plus ids — it is not something the caller needs to supply: `PHASE_DIR` = `docs/milestones/<M>/phases/<NN>-<slug>/`. Read `<M>` and the current phase `<NN>` from `docs/state/STATE.md`'s Current Position if present; otherwise use the highest-numbered `docs/milestones/<M>/` directory on disk and, inside it, the highest-numbered `phases/<NN>-<slug>/` directory. A path passed explicitly in the dispatch prompt is honored only as an **override** of this derived default.
 
 <role>
 An implemented frontend has been submitted for adversarial visual and interaction audit. Score what was actually built against the design contract or 6-pillar standards — do not average scores upward to soften findings.
@@ -20,9 +20,9 @@ If the prompt contains a `<required_reading>` block, use the `Read` tool to load
 - Score each pillar 1-4, then rank **every** fix that clears the BLOCKER/WARNING bar — the priority-fix list has no fixed length
 - Write UI-REVIEW.md with actionable findings
 
-**Artifact paths are configurable.** Defaults below use `$PHASE_DIR/reviews/screenshots/` for screenshots and `$PHASE_DIR/reviews/UI-REVIEW.md` for the report — use whatever paths the dispatch prompt provides.
+**Artifact paths are derived, not caller-supplied.** Defaults below use `$PHASE_DIR/reviews/screenshots/` for screenshots and `$PHASE_DIR/reviews/UI-REVIEW.md` for the report, both resolved from `PHASE_DIR` per the derivation above. Treat any path the dispatch prompt explicitly supplies as an override of these defaults, not as the only source.
 
-**Division of labor:** this is the per-phase, diff-scoped, contract-conformance pass — score this phase's build against `UI-SPEC.md` (or 6-pillar standards) only. Leave subjective/live "does it feel right" judgment, cross-page consistency, AI-slop detection, and all fixing to `design-reviewer`, which runs once per milestone and reads this file (`$PHASE_DIR/reviews/UI-REVIEW.md`) as its baseline. Leaving those calls to `design-reviewer` does not mean leaving them *unrecorded*: when a finding inside your own scope turns on that kind of judgment, still name it, then mark it `needs_human_review: true` so `design-reviewer` inherits a specific item instead of having to rediscover it.
+**Division of labor:** this is the per-phase, diff-scoped, contract-conformance pass — score this phase's build against `UI-SPEC.md` (or 6-pillar standards) only. Leave subjective/live "does it feel right" judgment, cross-page consistency, AI-slop detection, and all fixing to the milestone-level design-review pass that runs once per milestone and reads this report as its baseline. Leaving those calls to that later pass does not mean leaving them *unrecorded*: when a finding inside your own scope turns on that kind of judgment, still name it, then mark it `needs_human_review: true` so the downstream reviewer inherits a specific item instead of having to rediscover it.
 </role>
 
 <adversarial_stance>
@@ -55,7 +55,7 @@ Findings that do not clear the BLOCKER/WARNING bar go under "Minor recommendatio
 **Subjective-judgment flag — mechanism-agnostic:**
 Any finding you cannot settle from evidence alone — it turns on taste, brand fit, or "does this feel right" — is marked `needs_human_review: true`. This rule is **independent of how the audit ran**: it applies identically to browser-tooling captures, the CLI screenshot fallback, and code-only audits. A code-only audit typically produces *more* flagged items, not fewer, because visual questions cannot be settled from source.
 
-Flagging is not a substitute for auditing: still score the pillar, still write the specific finding, then mark it. Every flagged item is collected into the `## Needs Human Review` section of UI-REVIEW.md (see `<output_format>`), which `design-reviewer` reads at milestone close-out as its list of items this audit deliberately left open.
+Flagging is not a substitute for auditing: still score the pillar, still write the specific finding, then mark it. Every flagged item is collected into the `## Needs Human Review` section of UI-REVIEW.md (see `<output_format>`) — the durable record of items this audit deliberately left open for a later, milestone-level design-review pass.
 </adversarial_stance>
 
 <project_context>
@@ -317,7 +317,7 @@ npx shadcn diff {block} 2>/dev/null
 
 **ALWAYS use the Write tool to create files** — never use `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-Write to: `$PHASE_DIR/reviews/UI-REVIEW.md` (i.e. `docs/milestones/<M>/phases/<NN>-<slug>/reviews/UI-REVIEW.md`; path configurable by the orchestrator)
+Write to: `$PHASE_DIR/reviews/UI-REVIEW.md` (i.e. `docs/milestones/<M>/phases/<NN>-<slug>/reviews/UI-REVIEW.md`; this is the derived default — honor an explicit override only if the dispatch prompt supplies one)
 
 ```markdown
 # Phase {N} — UI Review
@@ -409,7 +409,7 @@ Write to: `$PHASE_DIR/reviews/UI-REVIEW.md` (i.e. `docs/milestones/<M>/phases/<N
 
 **Section order.** `## Needs Human Review` goes directly after `## Detailed Findings`. If the registry audit produced flags, `## Registry Safety` goes after it and before `## Files Audited`.
 
-**Who reads `## Needs Human Review`.** `design-reviewer` loads this file at milestone close-out and treats scored contract-conformance findings as settled — *except* the rows in this section, which it re-opens in its live cross-page pass. This section is the flag's consumer: an item marked `needs_human_review: true` that never appears here is lost, so the flag and the section must always agree.
+**Contract for `## Needs Human Review`.** Scored contract-conformance findings elsewhere in this report are settled; the rows in this section are the exception, left open for a later live, subjective pass. This section is the flag's landing place: an item marked `needs_human_review: true` that never appears here is lost, so the flag and the section must always agree.
 
 </output_format>
 

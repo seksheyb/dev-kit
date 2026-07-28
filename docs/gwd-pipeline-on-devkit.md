@@ -1,6 +1,6 @@
 # The GWD Pipeline on dev-kit
 
-**What this is.** A single ordered walkthrough of dev-kit's *complete* delivery pipeline — PRD → shipped,
+**What this is.** A single ordered walkthrough of dev-kit's *complete* delivery pipeline — idea → shipped,
 test-covered, reviewed milestone — expressed entirely in `dev-kit` skills, agents, and commands. It is the
 canonical map of **which asset fires at each stage, and in what order.**
 
@@ -30,15 +30,19 @@ the operate/learn cycle. Conditional stages are marked *(if …)*.
 
 **A milestone is the whole pipeline, not a phase.** One full Stage 0→15 traversal delivers one milestone. A new
 milestone is **not** a special continuation path — it re-enters Stage 0 and runs the entire pipeline again,
-treated exactly like a new project. The only thing that changes is where Stage 1 gets its requirements from: a
-first milestone starts from a PRD; every milestone after that starts from `docs/global/requirements/BACKLOG.md` — the durable,
-cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it descopes something. See
+treated exactly like a new project. The only thing that changes is where Stage 1 gets its raw description from: a
+first milestone starts from the operator's own input (whatever they typed, or `brainstorming`'s approved design);
+every milestone after that starts from `docs/global/requirements/BACKLOG.md`'s Now/Next items — the durable,
+cross-milestone backlog `spec-review-cpo` (Stage 1) writes to every time it descopes something. Either way
+`specify` consumes a description directly and `SPEC/spec.md` is the first requirements artifact that exists;
+**there is no PRD at any tier** (`docs/global/requirements/PRD.md` is a retired path — see
+[`SITEMAP.md`](SITEMAP.md), "Retired paths"). See
 [New milestone = new project](#new-milestone--new-project) below.
 
 | # | Stage | Primary dev-kit assets | In → Out |
 |---|-------|------------------------|----------|
-| **0** | Bootstrap & governance | `constitution` · *(legacy)* `spec-miner` → `gate-reverse-engineer` · *(existing docs)* `doc-classifier` → `doc-synthesizer` · *(existing code)* `cso` · `graphify` | repo/PRD → `docs/global/project/constitution.md`, `docs/global/project/PROJECT.md`, recovered SDD/PRD/ADRs, `docs/milestones/<M>/reports/security/`, `docs/state/graphs/graph.json` |
-| **1** | Requirements & product framing | `brainstorming` · `specify` (generate + clarify) · `assumption-mapping` → `backlog-grooming` · `market-researcher` · `spec-review-cpo` | PRD (or `docs/global/requirements/BACKLOG.md` for milestone 2+) → `SPEC/spec.md` (+ `US-xxx` story bank) + `SPEC/checklists/requirements.md` + locked Scope Decision Record + updated `docs/global/requirements/BACKLOG.md` |
+| **0** | Bootstrap & governance | `constitution` · *(legacy)* `spec-miner` → `gate-reverse-engineer` · *(existing docs)* `doc-classifier` → `doc-synthesizer` · *(existing code)* `cso` · `graphify` | repo → `docs/global/project/constitution.md`, `docs/global/project/PROJECT.md`, recovered SDD + ADRs, `docs/state/intel/` seed requirements, `docs/milestones/<M>/reports/security/`, `docs/state/graphs/graph.json` |
+| **1** | Requirements & product framing | `brainstorming` · `specify` (generate + clarify) · `assumption-mapping` → `backlog-grooming` · `market-researcher` · `spec-review-cpo` | operator's raw input (or `docs/global/requirements/BACKLOG.md`'s Now/Next for milestone 2+), plus any `docs/state/intel/` seed → `SPEC/spec.md` (+ `US-xxx` story bank) + `SPEC/checklists/requirements.md` + locked Scope Decision Record + updated `docs/global/requirements/BACKLOG.md` |
 | **2** | Architecture & tech stack | `architecture-designer` · `diagram` · `sdd-review-cto` | requirements → `docs/global/architecture/SDD.md` + ADRs |
 | **3** | Research & roadmap | `project-researcher` ×4 → `research-synthesizer` · `roadmapper` | requirements + research → `docs/milestones/<M>/ROADMAP.md` (vertical slices) + `docs/milestones/<M>/REQUIREMENTS.md` + `docs/state/STATE.md` |
 | **4** | Design system *(if UI)* | `design-consultation` → `design-html`[^plan-review-design] | product → `docs/global/design/DESIGN.md` |
@@ -80,7 +84,8 @@ dev-kit supplies the assets, not the branch logic.)
    - *Greenfield* (first milestone, no code, no docs) → skip the legacy and existing-docs sub-paths entirely; run
      only `constitution` (+ `graphify` once code exists). `cso` also skips — there's nothing in the repo yet for
      it to scan.
-   - *Legacy / inherited / undocumented code* → run `spec-miner` → `gate-reverse-engineer` to recover SDD/PRD/ADRs
+   - *Legacy / inherited / undocumented code* → run `spec-miner` → `gate-reverse-engineer` to recover the SDD and
+     ADRs, plus `docs/state/intel/recovered-requirements.md` as Stage 1 seed input (not a doc of record),
      before Stage 1, and run `cso` for a full security baseline of the codebase being onboarded (secrets in git
      history, dependency supply chain, CI/CD, infra — all of it pre-dates this pipeline's own tracking).
    - *Existing planning docs* (a pile of ADRs/PRDs/specs) → run `doc-classifier` → `doc-synthesizer` to ingest them.
@@ -155,11 +160,16 @@ Establish the rules of the game before any spec exists, and recover ground truth
    what the project is, who it's for, the milestone's success definition, hard constraints — consumed downstream by
    `market-researcher` (Stage 1, as project context) and `roadmapper` (Stage 3, as a required input).
 2. **Legacy path** *(inherited/undocumented repo)* — **`spec-miner`** reverse-engineers observed requirements in
-   EARS format from the code itself; **`gate-reverse-engineer`** promotes that into a "Legacy SDD", "Legacy PRD",
-   and retrospective ADRs the rest of the pipeline can plan against.
+   EARS format from the code itself; **`gate-reverse-engineer`** promotes that into a "Legacy SDD" and
+   retrospective ADRs the rest of the pipeline can plan against, plus
+   `docs/state/intel/recovered-requirements.md` — *candidate* requirements with `file.ts:12-25` citations, written
+   as **Stage 1 seed input** for `specify` to interview against, never as a requirements doc of record.
 3. **Existing-docs path** *(a pile of ADRs/PRDs/specs already exists)* — **`doc-classifier`** (one per doc,
    parallel) types each as ADR/PRD/SPEC/DOC; **`doc-synthesizer`** merges them under precedence rules into
    `docs/state/tmp/INGEST-CONFLICTS.md` + per-type intel, hard-blocking on LOCKED-vs-LOCKED contradictions.
+   Requirements extracted from ingested PRDs stop at `docs/state/intel/requirements.md` — same status as the
+   legacy path's output: seed input for Stage 1, not a project doc. **Neither exception path writes a PRD into
+   the doc tree.** `PRD` is a type of *incoming* document; dev-kit maintains none of its own.
 4. **`cso`** *(existing-code path — Legacy entry, or a Continuing-milestone entry at milestone 2+)* — a full
    15-phase Chief-Security-Officer audit of whatever code is already in the repo, saved to
    `docs/milestones/<M>/reports/security/`. Skipped on a true first-milestone Greenfield entry — there's no code yet to scan.
@@ -171,9 +181,20 @@ Establish the rules of the game before any spec exists, and recover ground truth
 
 ### Stage 1 — Requirements & product framing
 
-Turn a PRD/idea into a validated, unambiguous, testable spec with a numbered story bank. **First milestone:**
-input is a fresh PRD. **Every milestone after that:** input is `docs/global/requirements/BACKLOG.md`'s Now/Next items — see
-[New milestone = new project](#new-milestone--new-project).
+Turn an idea into a validated, unambiguous, testable spec with a numbered story bank. **Every milestone enters
+here the same way — milestone 1 is not a special case.** The input is a description `specify` consumes directly:
+for **milestone 1**, the operator's raw input (what they typed, or `brainstorming`'s approved design); for
+**every milestone after that**, `docs/global/requirements/BACKLOG.md`'s Now/Next items — see
+[New milestone = new project](#new-milestone--new-project). If a Stage 0 exception path ran, its
+`docs/state/intel/` output folds into the same intake as additional raw material, treated as unvalidated
+candidate requirements rather than settled ones.
+
+**There is no PRD, at any tier.** `docs/global/requirements/PRD.md` is a retired path (see
+[`SITEMAP.md`](SITEMAP.md), "Retired paths") and there is no milestone- or phase-scoped replacement:
+`docs/global/project/PROJECT.md` already owns "what is this product, why, for whom" at the global tier, and
+`SPEC/spec.md` plus the milestone's `docs/milestones/<M>/REQUIREMENTS.md` rollup (written by `roadmapper` at
+Stage 3) are the milestone-scoped requirements artifact. `SPEC/spec.md` is the *first* requirements document the
+pipeline produces — nothing precedes it, and no stage waits for one.
 
 1. **`brainstorming`** — the hard gate: no implementation may begin until a design is explored and approved.
    Pure ideation — explores context, interviews one question at a time, proposes 2-3 approaches, gets
@@ -188,7 +209,8 @@ input is a fresh PRD. **Every milestone after that:** input is `docs/global/requ
    first-principles decomposition (strip to assumptions, challenge each, rebuild from fundamental truths; plus the
    5D operational-problem method) — the complete methodology lives in `spec-review-cpo`'s
    `references/first-principles.md`.
-2. **`specify`** — convert the description (the PRD, or `docs/global/requirements/BACKLOG.md`'s top items for milestone 2+) into a
+2. **`specify`** — convert the description (the operator's raw input at milestone 1, or
+   `docs/global/requirements/BACKLOG.md`'s top items for milestone 2+, plus any `docs/state/intel/` seed) into a
    structured `SPEC/spec.md` (WHAT/WHY only), allocating global, never-renumbered **`US-xxx`** story IDs
    (Theme→Pillar→Story-bank hierarchy) — carrying forward any ID a backlog item already had, never re-minting one.
    Interviews from PM Hat (value/goals) and Dev Hat (feasibility/security/edge cases), requires EARS-format
@@ -590,8 +612,9 @@ Archiving a milestone doesn't end the pipeline; it decides whether to loop. Chec
 - **Now/Next items exist** → start the next milestone by re-entering **Stage 0**, run the entire pipeline again.
   Treat it exactly like a new project — same `constitution` check (now in update mode per the "Continuing
   milestone" entry-path branch), same `graphify` (incremental), same Stage 0 → 15 sequence. The only structural
-  difference from milestone 1 is Stage 1's input: `specify` reads `docs/global/requirements/BACKLOG.md`'s top items instead of
-  waiting for a fresh PRD, and `spec-review-cpo` runs again against whatever didn't fit last time — posture,
+  difference from milestone 1 is where Stage 1's description comes from: `specify` reads
+  `docs/global/requirements/BACKLOG.md`'s top items instead of the operator's raw input — same intake, same
+  treatment, just a different source — and `spec-review-cpo` runs again against whatever didn't fit last time — posture,
   premise, and prioritization all get re-evaluated fresh for this milestone, not inherited from the last one.
 - **Backlog is empty, or only Later/Icebox items remain** → the project is genuinely done for now. Terminal state,
   same as before.

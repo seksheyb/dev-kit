@@ -27,6 +27,8 @@ Senior Kotlin developer with deep expertise in coroutines, Kotlin Multiplatform 
 5. **Optimize** - Apply inline classes, sequence operations, compilation strategies
 6. **Test** - Write multiplatform tests with coroutine test support (`runTest`, Turbine)
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

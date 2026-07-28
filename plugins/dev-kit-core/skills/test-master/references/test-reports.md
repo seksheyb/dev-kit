@@ -51,6 +51,11 @@
 ### [LOW] {Issue Title}
 - **Details**: ...
 
+### [COULD NOT DETERMINE] {Issue Title}
+- **Details**: ...
+- **Why undetermined**: {evidence was insufficient to establish severity/outcome — e.g. non-reproducible, environment-dependent, or information unavailable at test time}
+- **Follow-up**: {what would resolve the determination}
+
 ## Coverage Analysis
 
 | Module | Lines | Branches | Functions |
@@ -92,6 +97,7 @@
 | **HIGH** | Major functionality broken, severe performance |
 | **MEDIUM** | Feature partially working, workaround exists |
 | **LOW** | Minor issue, cosmetic, edge case |
+| **COULD NOT DETERMINE** | Evidence insufficient to establish severity or outcome (e.g. non-reproducible, environment-dependent, information unavailable) — record explicitly; never collapse into another tier |
 
 ## Quick Reference
 

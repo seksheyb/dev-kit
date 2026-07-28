@@ -70,7 +70,7 @@ of a `PLAN.md` file. You MUST NOT:
 - rewrite, renumber, reorder, or delete any existing `<task>` block (including tasks from a
   prior Convergence section);
 - modify, create, or delete any application code — completing the appended tasks is the job
-  of the implementation pass (`sprint-execution`).
+  of a subsequent implementation pass.
 
 When the codebase already satisfies everything, leave every `PLAN.md` file
 **byte-for-byte unchanged** (no empty Convergence header) and report a clean result.
@@ -160,6 +160,11 @@ For each item in the intent inventory, inspect the current code in scope and pro
 - **`unrequested`**: the code contains work not called for by the spec, plan, or tasks
   (surfaced for awareness — converge does **not** delete code, it only appends a task to
   review/justify or remove it).
+- **`undetermined`**: static inspection cannot conclusively establish whether the item is
+  satisfied (e.g. correctness turns on runtime behavior, external system state, or evidence
+  outside the code-scope map). Never silently resolve this to "satisfied" by omission — it
+  must still produce a `Finding` so it survives into Step 7, where it becomes a task whose
+  `<action>` calls for the specific verification (not implementation) needed to resolve it.
 
 Each `Finding` records: a stable id, the `source-ref` it traces to, the `gap-type`, a
 severity, the target `PLAN.md` file it belongs to, and a short human-readable description
@@ -170,6 +175,8 @@ with the evidence (the file/area observed).
 - **Little or no code yet**: treat the entire specified scope as `missing` remaining work
   rather than failing.
 - **Nothing remains**: produce zero findings and follow the converged branch in Step 7.
+- **Cannot determine from static reading alone**: classify as `undetermined` (above) rather
+  than letting the item quietly drop out of the sweep as if it were satisfied.
 
 ### 5. Assign Severity
 
@@ -177,9 +184,12 @@ with the evidence (the file/area observed).
   that blocks baseline functionality of a P1 user story.
 - **HIGH**: a `missing` or `partial` gap on a core functional requirement or acceptance
   criterion.
-- **MEDIUM**: a `partial` gap on a secondary requirement, or an `unrequested` addition with
-  unclear justification.
+- **MEDIUM**: a `partial` gap on a secondary requirement, an `unrequested` addition with
+  unclear justification, or an `undetermined` item on a secondary requirement.
 - **LOW**: minor partial gaps, polish, or low-risk `unrequested` additions.
+- An `undetermined` item on a core functional requirement, acceptance criterion, or a
+  constitution principle is **HIGH** (or **CRITICAL** if the principle is a MUST) — treat
+  "can't tell" on load-bearing scope with the same urgency as a confirmed gap, never lower.
 
 ### 6. Present the In-Session Findings Summary
 
@@ -197,7 +207,7 @@ Before appending anything, output a compact, severity-graded summary (no file wr
 - Plan decisions checked
 - Constitution principles checked (or "skipped — template")
 - Pre-confirmed findings carried over from VERIFICATION.md (or "none — no VERIFICATION.md")
-- Findings by gap type (missing / partial / contradicts / unrequested)
+- Findings by gap type (missing / partial / contradicts / unrequested / undetermined)
 - Findings by severity
 
 ### 7. Append Convergence Tasks (or report converged)
@@ -214,11 +224,13 @@ file, per the append contract:
 2. Write a single new section header `## Phase N: Convergence` at the end of the file.
 3. Emit one `<task type="auto">` block per actionable finding targeting this file, ordered
    CRITICAL/HIGH first, numbering `<name>` continuing from `M+1, M+2, …` across the whole
-   phase (never reused across files):
+   phase (never reused across files), and carrying forward each finding's Step 5 severity
+   tier into the task's own `<severity>` field so it survives past the in-session summary:
 
    ```markdown
    <task type="auto">
      <name>Task {M+1}: {imperative description}</name>
+     <severity>{CRITICAL|HIGH|MEDIUM|LOW — the tier assigned in Step 5}</severity>
      <files>
        - Create/Modify: `exact/path/to/file`
      </files>
@@ -227,7 +239,9 @@ file, per the append contract:
        Produces: [what it adds/changes]
      </interfaces>
      <action>{Specific implementation instructions per <source-ref> (<gap-type>) — name
-     the identifiers, signatures, and behavior. No fenced code blocks here.}</action>
+     the identifiers, signatures, and behavior. For gap-type `undetermined`, give
+     verification instructions instead (what to run/inspect to resolve the unknown), not
+     implementation instructions. No fenced code blocks here.}</action>
      <verify>{A specific command that proves the gap is closed, under ~60s}</verify>
      <done>{Acceptance criteria tracing back to the source requirement}</done>
      <complexity_signals>files: [...]; novelty: none|low|high; logic: low|medium|high; ambiguity: low|medium|high; tests: none|existing|new</complexity_signals>
@@ -238,7 +252,7 @@ file, per the append contract:
    `FR-003`, `SC-002`, `US1/AC2`, `plan: storage decision`, `Constitution II`,
    `verifier: <truth>` (for findings carried over from VERIFICATION.md).
 
-   `<gap-type>` is one of `missing`, `partial`, `contradicts`, `unrequested`.
+   `<gap-type>` is one of `missing`, `partial`, `contradicts`, `unrequested`, `undetermined`.
 
    Constitution-violation tasks MUST be emitted first and described as `CRITICAL`.
 4. Never reuse or renumber existing task numbers or `## Phase N` headers. If a prior
@@ -255,7 +269,7 @@ file, per the append contract:
 
 - On `tasks_appended`: state how many tasks were appended, under which `## Phase N:
   Convergence` header(s), and in which `PLAN.md` file(s); recommend running an
-  implementation pass (`sprint-execution`) to complete them; note that a follow-up converge
+  implementation pass to complete them; note that a follow-up converge
   run will find fewer or no remaining items.
 - On `converged`: recommend proceeding to `verify` (if not already run) or review/PR. No
   further implementation pass is needed for this phase's specified scope.

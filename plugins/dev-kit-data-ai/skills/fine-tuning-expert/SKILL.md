@@ -28,6 +28,8 @@ Senior ML engineer specializing in LLM fine-tuning, parameter-efficient methods,
    - Checkpoint: collect perplexity, task-specific metrics (BLEU/ROUGE), and latency numbers
 5. **Deployment** — Merge adapter weights, quantize, measure inference throughput before serving
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 For alignment/preference tasks, default to DPO or GRPO over vanilla PPO-based RLHF — lighter-weight
 and the current standard for instruction-following and reasoning post-training; reserve full RLHF
 for cases that specifically need an online reward model.

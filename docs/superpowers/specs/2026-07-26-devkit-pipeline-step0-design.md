@@ -186,13 +186,13 @@ the `STATE.md` template reads from it, but no stage in the blueprint ever writes
 its natural owner — project identity is bootstrap-time by definition.
 
 **Step 0 does no requirements intake.** An earlier draft had Step 0 place a PRD and gate on
-Step 1 having an input. That was wrong. Only five files in `dev-kit` mention `PRD.md`, and
-three of them are consumers, not authors: `gate-reverse-engineer` *recovers* a Legacy PRD on
-the legacy path, `doc-synthesizer` *classifies* PRDs that already exist, and
-`plan-review-goal-backward` *reads* one if present. `specify` and `brainstorming` do not
-mention PRDs at all — Step 1's chain is `brainstorming` → `specify` → **`spec.md`**, and the
-spec is the requirements artifact. `PRD.md` is only ever a user-supplied input file or a
-recovered legacy artifact. Nothing in Step 0 gates on it.
+Step 1 having an input. That was wrong. `docs/global/requirements/PRD.md` is a retired path —
+no asset authors or requires one: on the legacy path `gate-reverse-engineer` writes recovered
+requirements to `docs/state/intel/recovered-requirements.md` as **seed input** for `specify`'s
+milestone-1 intake, and `doc-synthesizer` folds any ingested "PRD" into that same intake
+rather than persisting it. Step 1's chain is `brainstorming` → `specify` → **`spec.md`**, and
+the spec is the requirements artifact. A "PRD" is only ever operator-supplied raw input or a
+recovered legacy seed — never a live pipeline artifact. Nothing in Step 0 gates on it.
 
 ## State and contract
 
@@ -277,7 +277,7 @@ All must hold before `position.step` advances to 1:
 ✓ docs/global/project/PROJECT.md exists and is non-stub
 ✓ entry-path branch artifact present:
     greenfield    → docs/global/project/constitution.md
-    legacy        → recovered SDD + PRD + ADRs
+    legacy        → recovered SDD + recovered-requirements seed + ADRs
     existing-docs → INGEST-CONFLICTS.md, zero unresolved LOCKED blockers
     continuing    → constitution.md amended (version bumped)
 ✓ if code exists → security report + graph.json present, OR flagged as degraded

@@ -4,14 +4,14 @@ description: Verifies threat mitigations from the plan's threat model exist in i
 tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 
-> Note: doc paths below follow the canonical contract in `references/doc-sitemap.md`. `PHASE` is orchestrator-supplied per invocation; it resolves to `docs/milestones/<M>/phases/<NN>-<slug>/`.
+> **Path derivation.** `PHASE` is derived by this agent itself from `references/doc-sitemap.md` plus ids — it is not something the caller needs to supply: `PHASE` = `docs/milestones/<M>/phases/<NN>-<slug>/`. Read `<M>` and the current phase `<NN>` from `docs/state/STATE.md`'s Current Position if present; otherwise use the highest-numbered `docs/milestones/<M>/` directory on disk and, inside it, the highest-numbered `phases/<NN>-<slug>/` directory. A path passed explicitly in the dispatch prompt is honored only as an **override** of this derived default.
 
 <role>
 An implemented phase has been submitted for security audit. Verify that every declared threat mitigation is present in the code — do not accept documentation or intent as evidence.
 
 **Methodology home: load `skills/security-reviewer/SKILL.md`** before running the fieldwork pass. That skill owns the general audit methodology — Scope → Scan → Review → Test-and-classify → Report, the tool list, the MUST/MUST NOT constraints, and the report format. Do not restate it; apply it. This agent adds threat-register-disposition verification and SECURITY.md's structured returns on top of it.
 
-Primary job: does NOT scan blindly for new vulnerabilities. Verifies each threat in `<threat_model>` by its declared disposition (mitigate / accept / transfer). Reports gaps. Writes SECURITY.md — canonically `PHASE/reviews/SECURITY.md`; path configurable by the orchestrator. When dispatched without a threat model, fall back to `security-reviewer`'s methodology directly.
+Primary job: does NOT scan blindly for new vulnerabilities. Verifies each threat in `<threat_model>` by its declared disposition (mitigate / accept / transfer). Reports gaps. Writes SECURITY.md — canonically `PHASE/reviews/SECURITY.md`, resolved from the derived `PHASE` above; a path passed explicitly in the dispatch prompt is honored only as an override of this default. When dispatched without a threat model, fall back to `security-reviewer`'s methodology directly.
 
 **Proactive threat modeling is not this agent's job.** Building the threat model — STRIDE analysis, OWASP Top 10 coverage, attack-surface mapping — lives in `skills/cso`. This agent verifies that the mitigations a threat model declared actually exist in the implementation. `cso` is a scheduled pipeline asset in its own right (Stage 0 full audit on an existing-code entry, Stage 12 `--diff` per phase) — check `docs/milestones/<M>/reports/security/` for its latest entry first and treat it as available scan-tool evidence for the Fieldwork step, rather than re-running tools `cso` already ran this phase. If no entry exists there and no threat model exists either, recommend running `cso` directly.
 
@@ -33,7 +33,8 @@ Primary job: does NOT scan blindly for new vulnerabilities. Verifies each threat
 **Required finding classification:**
 - **BLOCKER** — `OPEN_THREATS`: a declared mitigation is absent in implemented code; phase must not ship
 - **WARNING** — `unregistered_flag`: new attack surface appeared during implementation with no threat mapping
-Every threat must resolve to CLOSED, OPEN (BLOCKER), or documented accepted risk.
+- **COULD_NOT_VERIFY** — the cited files don't exist, the codebase is inaccessible, or the mitigation pattern is too ambiguous to search for, so verification was never actually attempted or could not be completed. Record the blocking reason. An unattempted check must never read as a confirmed vulnerability — never fold this into OPEN, and never fold it into CLOSED either.
+Every threat must resolve to CLOSED, OPEN (BLOCKER), COULD_NOT_VERIFY, or documented accepted risk.
 </adversarial_stance>
 
 <audit_methodology>
@@ -84,15 +85,15 @@ Classify each threat before verification. Record classification for every threat
 </step>
 
 <step name="verify_and_write">
-For each `mitigate` threat: grep for the declared mitigation pattern in cited files → found (at all entry points) = `CLOSED`, not found = `OPEN`.
+For each `mitigate` threat: grep for the declared mitigation pattern in cited files → found (at all entry points) = `CLOSED`, not found = `OPEN`. If verification could not actually be attempted — the cited files don't exist, the codebase is inaccessible, or the mitigation pattern is too ambiguous to search for — classify as `COULD_NOT_VERIFY` instead of `OPEN` and record the blocking reason.
 For `accept` threats: check the SECURITY.md accepted risks log → entry present = `CLOSED`, absent = `OPEN`.
 For `transfer` threats: check for transfer documentation → present = `CLOSED`, absent = `OPEN`.
 
 For each `threat_flag` in SUMMARY.md `## Threat Flags`: if it maps to an existing threat ID → informational. If no mapping → log as `unregistered_flag` in SECURITY.md (not a blocker).
 
-Additionally run the audit methodology fieldwork pass (tools + manual auth/input/crypto review) over the phase's changed files; new findings that map to no threat ID are recorded as findings in the report and flagged as candidate threat-register additions for the cso skill.
+Additionally run the audit methodology fieldwork pass (tools + manual auth/input/crypto review) over the phase's changed files; new findings that map to no threat ID are recorded as findings in the report (Threat ID `unregistered`) and flagged as candidate threat-register additions.
 
-Write SECURITY.md. Set `threats_open` count. Return structured result.
+Write SECURITY.md. Set `threats_open` and `threats_could_not_verify` counts. If `threats_could_not_verify` is nonzero, return `OPEN_THREATS` — even when `threats_open` is 0 — since the `SECURED` template below carries no field for Could-Not-Verify entries and returning it here would silently drop them. Return `SECURED` only when every threat resolved to `CLOSED`. Return structured result.
 </step>
 
 </execution_flow>
@@ -112,6 +113,10 @@ Follow `security-reviewer`'s report template — executive summary with risk ass
 <structured_returns>
 
 ## SECURED
+
+<!-- Use SECURED only when every threat is CLOSED — no OPEN and no COULD_NOT_VERIFY. This
+     template has no field for Could-Not-Verify entries; if any exist, return OPEN_THREATS
+     instead so they land in its Could Not Verify table rather than being silently dropped. -->
 
 ```markdown
 ## SECURED
@@ -137,7 +142,7 @@ SECURITY.md: {path}
 ## OPEN_THREATS
 
 **Phase:** {N} — {name}
-**Closed:** {M}/{total} | **Open:** {K}/{total}
+**Closed:** {M}/{total} | **Open:** {K}/{total} | **Could Not Verify:** {J}/{total}
 **ASVS Level:** {1/2/3}
 
 ### Closed
@@ -150,7 +155,12 @@ SECURITY.md: {path}
 |-----------|----------|---------------------|----------------|
 | {id} | {category} | {pattern not found} | {file paths} |
 
-Next: Implement mitigations or document as accepted in the SECURITY.md accepted risks log, then re-run the security phase.
+### Could Not Verify
+| Threat ID | Category | Blocking Reason | Action Needed |
+|-----------|----------|------------------|----------------|
+| {id} | {category} | {cited file missing / codebase inaccessible / pattern too ambiguous} | {re-run verification with corrected inputs} |
+
+Next: Implement mitigations for Open threats, resolve the blocker and re-verify Could-Not-Verify threats, or document Open threats as accepted in the SECURITY.md accepted risks log, then re-run the security phase.
 
 SECURITY.md: {path}
 ```
@@ -175,6 +185,7 @@ SECURITY.md: {path}
 - [ ] All `<required_reading>` loaded before any analysis
 - [ ] Threat register extracted from PLAN.md `<threat_model>` block (or absence noted, with a cso-skill recommendation)
 - [ ] Each threat verified by disposition type (mitigate / accept / transfer)
+- [ ] Threats where verification could not actually be attempted are recorded as `COULD_NOT_VERIFY` with a blocking reason — never silently folded into OPEN or CLOSED
 - [ ] Mitigations confirmed at ALL entry points, not just one
 - [ ] Automated tools run where available; manual auth/input/crypto review performed regardless
 - [ ] Threat flags from SUMMARY.md `## Threat Flags` incorporated
@@ -182,4 +193,5 @@ SECURITY.md: {path}
 - [ ] Implementation files never modified
 - [ ] SECURITY.md written to the configured path with executive summary, findings table, detailed findings, and prioritized recommendations
 - [ ] Structured return: SECURED / OPEN_THREATS / ESCALATE
+- [ ] `SECURED` returned only when every threat is CLOSED — any nonzero `threats_could_not_verify` returns `OPEN_THREATS` instead, so Could-Not-Verify entries always land in that template's table and never vanish
 </success_criteria>

@@ -14,7 +14,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 This skill is the **single source of truth for how a plan is authored and what a `PLAN.md` task looks like.** It is used two ways:
 
 - **Standalone / interactive** — you invoke it directly to write one plan for a feature or task.
-- **Pipeline-dispatched** — the `planner` agent invokes this skill's methodology and task format to author each plan it produces, then adds the pipeline-specific wrapping (multi-plan wave/track decomposition, frontmatter, file naming, git). When the `planner` drives, it supplies the paths and frontmatter; this skill supplies the authoring discipline and the `<task>` format below. Both paths produce the same task format, so both flow through `gate-plan-review` and `sprint-execution` unchanged.
+- **Pipeline-dispatched** — the `planner` agent invokes this skill's methodology and task format to author each plan it produces, then adds the pipeline-specific wrapping (multi-plan wave/track decomposition, frontmatter, file naming, git). When the `planner` drives, it supplies the frontmatter (and may override the default path — see Where the plan is written below); this skill supplies the authoring discipline and the `<task>` format below. Both paths produce the identical task format described below, so the same format and quality bar apply unchanged regardless of how the plan was authored.
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
 
@@ -22,12 +22,11 @@ This skill is the **single source of truth for how a plan is authored and what a
 
 ## Where the plan is written
 
-Every plan — standalone or pipeline — lives at its canonical path (shorthand `PHASE/` = `docs/milestones/<M>/phases/<NN>-<slug>/`):
+Every plan — standalone or pipeline — lives at its canonical sitemap path (shorthand `PHASE/` = `docs/milestones/<M>/phases/<NN>-<slug>/`): **`PHASE/<NN>-<MM>-PLAN.md`** — `<NN>` is the phase number and `<slug>` its name (from the milestone/phase you were invoked for), `<MM>` the next unused plan number in that phase directory.
 
-- **Standalone:** `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md` — `<NN>` is the phase number, `<MM>` the plan number within it (user preferences for plan location override this default).
-- **Pipeline:** the `planner` agent supplies the same path — `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md` — and the plan-set frontmatter. Follow what the agent passes; do not invent a competing path or filename.
+Derive this default yourself from those ids whether standalone or pipeline-dispatched — do not wait to be handed a path. Accept an explicitly-passed path (a user's own location preference, or a plan-set name the `planner` agent assigns for multi-plan waves/tracks) only as an override of this default; never invent a third, competing path or filename when no override is given.
 
-Either way the plan is executed by the **`sprint-execution`** skill (see Execution Handoff).
+Either way, execution follows the plan's own execution contract (see Execution Handoff).
 
 ## Scope Check
 
@@ -88,8 +87,8 @@ owns. The header and task format below are the same regardless.
 
 ## Task Format (canonical)
 
-Each task is a `<task>` block. This is the format `sprint-execution` executes and
-`gate-plan-review` scores — emit it whether authoring standalone or via the planner.
+Each task is a `<task>` block — the canonical format below, emit it whether authoring
+standalone or via the planner.
 
 ````markdown
 <task type="auto">
@@ -117,7 +116,7 @@ Each task is a `<task>` block. This is the format `sprint-execution` executes an
 </task>
 ````
 
-- **`<complexity_signals>` is mandatory on every task** (canonical vocabulary: `@references/complexity-signals.md`). Emit them honestly from the task's actual work — `gate-plan-review` and `sprint-execution` read them to validate or select model/effort. Never derive a model/effort first and back-fill signals to match.
+- **`<complexity_signals>` is mandatory on every task** (canonical vocabulary: `@references/complexity-signals.md`). Emit them honestly from the task's actual work — they are read downstream to validate the plan and select model/effort. Never derive a model/effort first and back-fill signals to match.
 - **TDD is the default execution contract.** The plan declares the behavior and the verify command; the executor writes the failing test first, watches it fail, implements, watches it pass, commits (per the `test-driven-development` skill, which `sprint-execution` invokes). For a code-producing task, make the expected behavior explicit in `<action>`/`<verify>` so the test can be written before the implementation.
 - **Grep-gate hygiene:** `grep -c` counts comment lines too. Use `grep -v '^#' | grep -c token`; a bare `== 0` gate on an unfiltered file is forbidden.
 
@@ -129,7 +128,7 @@ Derive what must be TRUE for the goal to be achieved, not just what to build. Fo
 - **artifacts** — the specific files that must exist for those truths, with what each provides.
 - **key_links** — the critical connections between artifacts (component → API, API → DB), where breakage cascades.
 
-These are what `plan-review-goal-backward` and `verifier` check against — a plan whose artifacts are all created but never wired together does not achieve its goal.
+These must hold for the goal to be achieved — a plan whose artifacts are all created but never wired together does not achieve its goal.
 
 ## No Placeholders
 

@@ -108,4 +108,4 @@ Deliver:
 - Statistical significance verdict
 - Effect size interpretation (practical significance)
 - Guardrail metrics status
-- Ship / No-ship / Iterate recommendation with clear rationale
+- Ship / No-ship / Iterate / Inconclusive recommendation with clear rationale

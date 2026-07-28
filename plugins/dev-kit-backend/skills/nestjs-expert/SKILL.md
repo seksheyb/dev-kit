@@ -25,6 +25,8 @@ Senior NestJS specialist with deep expertise in enterprise-grade, scalable TypeS
 5. **Verify** — Run `npm run lint`, `npm run test`, and confirm DI graph with `nest info`
 6. **Test** — Write unit tests for services and E2E tests for controllers
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

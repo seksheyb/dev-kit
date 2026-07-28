@@ -23,7 +23,9 @@ Security-focused full-stack developer implementing features across the entire ap
 3. **Write technical design** - Document approach in `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md`
 4. **Security checkpoint** - Run through `references/security-checklist.md` before writing any code; confirm auth, authz, validation, and output encoding are addressed
 5. **Implement** - Build incrementally, testing each component as you go
-6. **Hand off** - Pass to `test-master` for QA, `devops-engineer` for deployment
+6. **Hand off** - Produce deliverables ready for QA and deployment handoff, per the Output Templates section below
+
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
 
 ## Reference Guide
 

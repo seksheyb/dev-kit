@@ -86,19 +86,27 @@ machine-readable output is required at the end.
 
 ### Mode 2 — `findings.json` path (structured)
 
-Caller provides a path to a `findings.json` file matching a published schema (e.g.
-`docs/global/process/SCHEMAS.md` in caller-side projects). Read that file at the start of Phase 1.
+**Default path** (per the doc-sitemap's canonical review-round row): `PHASE/reviews/round-<n>/
+findings.json`, where `PHASE` = `docs/milestones/<M>/phases/<NN>-<slug>/`. Derive `<M>`/`<NN>`/
+`<slug>` from the active phase — the phase named in your context, the most recently modified
+`docs/milestones/*/phases/*/` directory, or by asking — and `<n>` from the round number you were
+given (or the highest existing `round-*/` directory under that phase's `reviews/` if no round
+number was named). Read the resolved file at the start of Phase 1.
+
+**If the caller passes an explicit `findings.json` path instead, that is an override**: use it
+verbatim and skip derivation entirely.
 
 In this mode:
 - Every entry in `blockers` represents a **defect class** with one or more instances. Treat it
   as a class, not a single bug.
 - The structural-fix mandate in §1.5 is **required** for every entry — find all instances of
   the class, fix them all in one commit per class, and add a regression guard.
-- After the final wave merges, you **must** emit a `fixes.json` summary at a caller-supplied
-  path (see Phase 4).
+- After the final wave merges, you **must** emit a `fixes.json` summary at the resolved or
+  overridden path (see Phase 4).
 
-The caller may provide the schema path explicitly (e.g. `SCHEMAS.md`); read it before authoring
-the output JSON so the shape matches exactly.
+The findings.json shape follows the schema at `docs/global/process/SCHEMAS.md` by default —
+read it before authoring the output JSON so the shape matches exactly. An explicitly-passed
+schema path overrides that default.
 
 ## Phase 1: Classify and Partition
 
@@ -232,7 +240,9 @@ per §1.5).
 Read the actual source at the cited location (±10 lines minimum), confirm the code matches
 what the finding describes, and adapt the fix to the real current state. If the code has
 changed so much the fix no longer applies, skip with reason "code context differs from
-finding" — do not force a broken fix.
+finding" and record it under **Findings not cleanly fixed** in the close handover (§2.3) — this
+is a could-not-attempt outcome, not a silent drop, and it must still reach the fixes.json
+summary. Do not force a broken fix.
 
 **Verify before committing (3 tiers):**
 - *Tier 1 (always):* re-read the modified section; confirm the fix is present and the
@@ -247,12 +257,17 @@ finding" — do not force a broken fix.
 **Rollback on failure.** Before editing, note every file you're about to touch. If
 verification fails or the commit fails, revert with `git checkout -- <file>` for each touched
 file (safe — the fix isn't committed yet, and prior findings' commits are untouched), then
-mark the finding "skipped: fix caused errors, rolled back" with details. Never use a file
+mark the finding "skipped: fix caused errors, rolled back" with details and record it under
+**Findings not cleanly fixed** in the close handover (§2.3) — an outcome that never reaches
+that field vanishes from the fixes.json summary instead of being reported. Never use a file
 rewrite for rollback, and never leave uncommitted changes behind.
 
 **Logic-bug caveat.** Tiers 1-2 verify syntax, not semantics. For findings classified as
-logic errors (wrong condition, off-by-one, bad state handling), report the fix in the close
-handover as `fixed: requires human verification` so the orchestrator can flag it.
+logic errors (wrong condition, off-by-one, bad state handling), report the fix under
+**Findings not cleanly fixed** in the close handover as `requires human verification` so the
+orchestrator can flag it — the commit still lands (syntax is confirmed), but semantic
+correctness was never attempted, and that gap must reach the summary rather than reading as a
+plain `fixed`.
 
 **Why this matters:** per-fix commits make partial failure safe by design — if a subagent
 dies mid-track, every commit already made is self-contained, correct, and revertable on its
@@ -521,12 +536,13 @@ better than forcing a merge you are not sure about.
    you touched, ignore pre-existing errors elsewhere; if no checker exists for the file
    type, the re-read suffices.
 6. **If verification fails:** roll back with `git checkout -- <file>` for every file you
-   touched for that fix, mark it "skipped: fix caused errors, rolled back", and move on.
-   Never leave uncommitted changes.
+   touched for that fix, mark it "skipped: fix caused errors, rolled back" under **Findings
+   not cleanly fixed** in the close handover, and move on. Never leave uncommitted changes.
 7. **Commit each fix atomically** — one commit per bug/class, message format
    `fix: {id} {short description}`, body listing every file touched; class fixes end with
    `structural fix — applied to N call sites`. For logic-error findings (wrong condition,
-   off-by-one, state handling), report `fixed: requires human verification` in the handover.
+   off-by-one, state handling), report `requires human verification` under **Findings not
+   cleanly fixed** in the handover.
 8. Run the merge protocol above, then return the close handover below.
 
 ## Boundaries
@@ -549,6 +565,8 @@ Classes fixed:
     files: [list every file modified for this class]
     regression_guard: {file + rule/test name + one-line description}
 Unresolved classes: {class name — one-line rationale} | none
+Findings not cleanly fixed: {id — non-issue | requires human verification | rolled back: fix
+  caused errors | skipped: code context differs from finding — one-line detail} | none
 Conflicts handed off: {file — description} | none
 ```
 ```
@@ -648,6 +666,14 @@ Walk every track's close handover. Collect:
   - `files` (deduplicated union of modified files for this class)
   - `regression_guard` (verbatim from the responsible track; if multiple guards combine, list them)
 - `unresolved`: every class any track marked unresolved, with the one-line rationale.
+- `not_cleanly_fixed`: every entry any track reported under **Findings not cleanly fixed**
+  (§2.3) — non-issue, requires-human-verification, rolled-back, or skipped-for-drift — each
+  carrying its id, outcome tag, and one-line detail verbatim. This is a distinct bucket from
+  `unresolved` (whole-class structural-fix failures, §1.5): a finding here may belong to a
+  class that otherwise landed cleanly in `classes_fixed`. Never drop an entry here to keep
+  `classes_fixed` or the overall run looking cleaner than it was — an indeterminate or rejected
+  finding that disappears from this list is worse than one reported honestly, and it must not
+  be counted as fixed.
 
 ### 4.2 — Validate against the contract
 
@@ -662,14 +688,19 @@ guard or move the class to `unresolved` with an explicit rationale before writin
 
 ### 4.3 — Write the file
 
-The caller specifies the output path (or asks you to derive it from the input findings.json
-path). Write JSON matching the schema referenced by the caller (typically
-`docs/global/process/SCHEMAS.md` — the `fixes.json` shape).
+**Default path** (per the doc-sitemap's canonical review-round row): the same round directory
+the input findings.json resolved to (§ Input modes, Mode 2), with the filename swapped —
+`PHASE/reviews/round-<n>/fixes.json`. Derive it from the resolved input path rather than
+re-deriving `<M>`/`<NN>`/`<slug>`/`<n>` from scratch. If the caller passes an explicit output
+path, that is an override — use it verbatim. Write JSON matching the schema at
+`docs/global/process/SCHEMAS.md` (the `fixes.json` shape), or an explicitly-passed schema path
+if one was given.
 
 ### 4.4 — Compute next_action
 
-- If `unresolved` is empty: `"dispatch code-review-gate in round mode (round <K+1>)"` (or
-  caller-specified follow-up).
+- If `unresolved` is empty: `"re-run round <K+1> verification"` (or a caller-specified
+  follow-up — bugfix-wave names the next step generically; it does not assume which asset
+  performs it).
 - Else: `"escalate <count> unresolved classes"`.
 
 ### 4.5 — Return to caller
@@ -733,8 +764,11 @@ followed a rejection.
 **Subagent can't delete its branch**: expected — it is checked out in the track's own
 worktree. The orchestrator deletes it in Phase 3.1 step 6, after the worktree is removed.
 
-**Bug turns out to be a non-issue or unfixable**: The subagent should report this in its handover
-rather than making a wrong fix. The orchestrator relays this to the user.
+**Bug turns out to be a non-issue or unfixable**: The subagent should report this under
+**Findings not cleanly fixed** (tag: `non-issue`) in its close handover rather than making a
+wrong fix or letting the finding quietly disappear. The orchestrator relays this to the user,
+and in Mode 2 it reaches Phase 4.1's `not_cleanly_fixed` aggregation rather than vanishing from
+`fixes.json`.
 
 **Circular dependency between bugs**: Put them in the same track. If they're in different
 subsystems, pick the one with fewer file touches to go first.

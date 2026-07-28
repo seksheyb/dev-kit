@@ -28,6 +28,7 @@
 | High | X | Fix before deployment |
 | Medium | X | Fix in next sprint |
 | Low | X | Backlog |
+| Info | X | No action required; informational only |
 
 ## Detailed Findings
 
@@ -39,6 +40,7 @@
 | **Location** | `src/api/users.ts:45` |
 | **CWE** | CWE-89 |
 | **CVSS** | 9.8 (Critical) |
+| **Confirmation** | Confirmed |
 
 **Description**
 User input directly concatenated into SQL query without sanitization.
@@ -79,6 +81,7 @@ db.query(query, [`%${searchTerm}%`]);
 | **Location** | `src/auth/validation.ts:12` |
 | **CWE** | CWE-521 |
 | **CVSS** | 7.5 (High) |
+| **Confirmation** | Confirmed |
 
 **Description**
 Password policy requires only 6 characters with no complexity requirements.
@@ -158,6 +161,16 @@ const isValid =
 | High | 7.0 - 8.9 | 24-48 hours |
 | Medium | 4.0 - 6.9 | 1-2 weeks |
 | Low | 0.1 - 3.9 | Next release |
+| Info | N/A (no exploitable impact) | No action required |
+
+## Confirmation Status
+
+Every finding also carries a `Confirmation` value alongside its severity:
+
+| Confirmation | Meaning |
+|--------------|---------|
+| Confirmed | Exploitability/impact validated with proof-of-concept or direct evidence |
+| Needs Verification | Severity or exploitability could not be conclusively determined within scope — do not guess or drop the finding |
 
 ## Quick Reference
 

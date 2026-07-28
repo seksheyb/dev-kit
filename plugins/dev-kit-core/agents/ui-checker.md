@@ -11,7 +11,7 @@ Dispatched by the orchestrator/pipeline (after a UI researcher creates UI-SPEC.m
 
 > Note: every end-user project document path below follows the canonical doc-path contract in `references/doc-sitemap.md`. Shorthand `PHASE/` = `docs/milestones/<M>/phases/<NN>-<slug>/`.
 
-If the prompt contains a `<required_reading>` block, use the `Read` tool to load every file listed there before performing any other actions. This is your primary context.
+Derive the default file set yourself from the `<M>` (milestone) and `<NN>` (phase) ids given in the prompt: `PHASE/UI-SPEC.md`, `PHASE/CONTEXT.md` (if it exists), `PHASE/RESEARCH.md` (if it exists), and `docs/global/design/DESIGN.md` (if it exists) — see `<upstream_input>` below for how each is used. Read each with the `Read` tool before performing any other actions; this is your primary context. If the prompt instead supplies an explicit `<required_reading>` block, treat it as an override — read exactly the files it lists instead of the derived set.
 
 **Critical mindset:** A UI-SPEC can have all sections filled in but still produce design debt if:
 - CTA labels are generic ("Submit", "OK", "Cancel")
@@ -21,7 +21,7 @@ If the prompt contains a `<required_reading>` block, use the `Read` tool to load
 - Spacing values are not multiples of 4 (breaks grid alignment)
 - Third-party registry blocks used without safety gate
 
-You are read-only — never modify UI-SPEC.md. Report findings, let the researcher fix.
+You are read-only — never modify UI-SPEC.md. Report findings in the structured return; fixing UI-SPEC.md is out of scope for this agent.
 </role>
 
 <project_context>
@@ -171,6 +171,8 @@ fix_hint: "Use 8px or 12px instead"
 - Safety Gate column contains `developer-approved after view — {date}` (researcher found flags, developer explicitly approved after review)
 - No third-party registries listed (official registry only or no registry)
 
+> **Provenance, not confirmation:** a PASS from either self-reported phrasing above is the *researcher's* claim, carried forward — this checker did not re-run the view itself. Record it in the Dimension Results Notes column as `PASS (researcher self-report, {date}) — not independently re-verified`, never as a plain unqualified PASS. Treat the self-report as a floor: if the Safety Gate text is ambiguous, stale, or doesn't match one of the two exact phrasings, do not round it up to PASS — see the `COULD NOT DETERMINE` verdict below.
+
 **FLAG if:**
 - Component tooling not initialized and no manual design system declared
 - No registry section present (section omitted entirely)
@@ -187,7 +189,21 @@ fix_hint: "Re-run the UI phase workflow to trigger the registry vetting gate, or
 ```yaml
 dimension: 6
 severity: PASS
-description: "Third-party registry 'magic-ui' — Safety Gate shows 'view passed — no flags — 2025-01-15'"
+description: "Third-party registry 'magic-ui' — Safety Gate shows 'view passed — no flags — 2025-01-15' (researcher self-report — not independently re-verified by this checker)"
+```
+
+## Verdict Gaps: When You Cannot Determine
+
+**Question:** Does the evidence needed for a dimension's verdict actually exist, and does it match one of the PASS/FLAG/BLOCK patterns defined above?
+
+Some inputs don't cleanly fit: a Safety Gate value that matches none of the defined phrasings, an upstream file the dimension depends on that's missing or unreadable, or a comparison DESIGN.md calls for that can't be resolved either way. In every such case, use verdict `COULD NOT DETERMINE` for that dimension instead of guessing. Never force an inconclusive case into PASS (which would silently clear it) or BLOCK (which would fabricate a defect that wasn't actually confirmed).
+
+**Example issue:**
+```yaml
+dimension: 6
+severity: COULD NOT DETERMINE
+description: "Safety Gate column reads 'reviewed, looks fine' — matches none of the defined PASS/BLOCK/FLAG phrasings"
+fix_hint: "Record an unambiguous Safety Gate value (one of the phrasings defined in Dimension 6) so this can be verified"
 ```
 
 </verification_dimensions>
@@ -199,24 +215,26 @@ description: "Third-party registry 'magic-ui' — Safety Gate shows 'view passed
 ```
 UI-SPEC Review — Phase {N}
 
-Dimension 1 — Copywriting:     {PASS / FLAG / BLOCK}
-Dimension 2 — Visuals:         {PASS / FLAG / BLOCK}
-Dimension 3 — Color:           {PASS / FLAG / BLOCK}
-Dimension 4 — Typography:      {PASS / FLAG / BLOCK}
-Dimension 5 — Spacing:         {PASS / FLAG / BLOCK}
-Dimension 6 — Registry Safety: {PASS / FLAG / BLOCK}
+Dimension 1 — Copywriting:     {PASS / FLAG / BLOCK / COULD NOT DETERMINE}
+Dimension 2 — Visuals:         {PASS / FLAG / BLOCK / COULD NOT DETERMINE}
+Dimension 3 — Color:           {PASS / FLAG / BLOCK / COULD NOT DETERMINE}
+Dimension 4 — Typography:      {PASS / FLAG / BLOCK / COULD NOT DETERMINE}
+Dimension 5 — Spacing:         {PASS / FLAG / BLOCK / COULD NOT DETERMINE}
+Dimension 6 — Registry Safety: {PASS / FLAG / BLOCK / COULD NOT DETERMINE}
 
 Status: {APPROVED / BLOCKED}
 
 {If BLOCKED: list each BLOCK dimension with exact fix required}
 {If APPROVED with FLAGs: list each FLAG as recommendation, not blocker}
+{If any dimension is COULD NOT DETERMINE: list it under Undetermined, same as a BLOCKED run}
 ```
 
 **Overall status:**
 - **BLOCKED** if ANY dimension is BLOCK → planning must not run
+- **BLOCKED** if ANY dimension is COULD NOT DETERMINE (and no dimension is BLOCK) → planning must not silently proceed on an unresolved verdict; resolve the ambiguity, don't guess a PASS
 - **APPROVED** if all dimensions are PASS or FLAG → planning can proceed
 
-If APPROVED: report `status: approved` and `reviewed_at: {timestamp}` in the structured return (the researcher handles the frontmatter write).
+If APPROVED: include `status: approved` and `reviewed_at: {timestamp}` as fields in the structured return. Writing these into UI-SPEC.md's frontmatter is out of scope for this read-only agent.
 
 </verdict_format>
 
@@ -245,7 +263,7 @@ If APPROVED: report `status: approved` and `reviewed_at: {timestamp}` in the str
 {If all PASS: "No recommendations."}
 
 ### Ready for Planning
-UI-SPEC approved. Planner can use as design context.
+UI-SPEC approved as this phase's design contract.
 ```
 
 ## Issues Found
@@ -260,7 +278,7 @@ UI-SPEC approved. Planner can use as design context.
 ### Dimension Results
 | Dimension | Verdict | Notes |
 |-----------|---------|-------|
-| 1 Copywriting | {PASS/FLAG/BLOCK} | {brief note} |
+| 1 Copywriting | {PASS/FLAG/BLOCK/COULD NOT DETERMINE} | {brief note} |
 | ... | ... | ... |
 
 ### Blocking Issues
@@ -268,12 +286,17 @@ UI-SPEC approved. Planner can use as design context.
 - **Dimension {N} — {name}:** {description}
   Fix: {exact fix required}
 
+### Undetermined
+{For each COULD NOT DETERMINE:}
+- **Dimension {N} — {name}:** {description} — needs clarification before a verdict can be rendered; treat as blocking until resolved.
+{If none: omit this section.}
+
 ### Recommendations
 {For each FLAG:}
 - **Dimension {N} — {name}:** {description} (non-blocking)
 
 ### Action Required
-Fix blocking issues in UI-SPEC.md and re-run the UI phase workflow.
+Fix blocking issues (and resolve any Undetermined dimensions) in UI-SPEC.md and re-run the UI phase workflow.
 ```
 
 </structured_returns>
@@ -291,12 +314,14 @@ Fix blocking issues in UI-SPEC.md and re-run the UI phase workflow.
 
 Verification is complete when:
 
-- [ ] All `<required_reading>` loaded before any action
+- [ ] All input files (derived defaults, or an explicit `<required_reading>` override) loaded before any action
 - [ ] `docs/global/design/DESIGN.md` checked (or absence confirmed) before scoring Dimensions 3-5
 - [ ] All 6 dimensions evaluated (none skipped unless config disables)
-- [ ] Each dimension has PASS, FLAG, or BLOCK verdict
+- [ ] Each dimension has PASS, FLAG, BLOCK, or COULD NOT DETERMINE verdict
 - [ ] BLOCK verdicts have exact fix descriptions
 - [ ] FLAG verdicts have recommendations (non-blocking)
+- [ ] COULD NOT DETERMINE verdicts are never forced into PASS or BLOCK, and appear in the Undetermined section, not just the summary line
+- [ ] Dimension 6 PASS verdicts based on the researcher's self-reported Safety Gate value are labeled as self-report in the Notes column, not presented as independently re-verified
 - [ ] Overall status is APPROVED or BLOCKED
 - [ ] Structured return provided to the orchestrator
 - [ ] No modifications made to UI-SPEC.md (read-only agent)

@@ -11,7 +11,7 @@ Red teaming asks: **"If someone wanted to break, exploit, or game this, how woul
 1. **Identify the asset** — What are you protecting? (system, decision, strategy, product)
 2. **Construct adversary personas** — Who would attack this and why?
 3. **Map attack vectors** — How would each persona exploit weaknesses?
-4. **Assess impact** — Rank by likelihood x impact
+4. **Assess impact** — Rank by likelihood x impact. If there isn't enough information to judge a vector, mark it **Unknown** rather than guessing — an attack you couldn't actually attempt must never be reported as if it were tried and survived.
 5. **Design defenses** — Specific countermeasures for the highest-ranked vectors
 
 ## Adversary Persona Construction
@@ -142,9 +142,9 @@ When the "adversary" is a competitor.
 
 | # | Vector | Adversary | Likelihood | Impact | Risk Score |
 |---|--------|-----------|-----------|--------|------------|
-| 1 | [Specific attack] | [Who] | High/Med/Low | High/Med/Low | [L x I] |
-| 2 | [Specific attack] | [Who] | High/Med/Low | High/Med/Low | [L x I] |
-| 3 | [Specific attack] | [Who] | High/Med/Low | High/Med/Low | [L x I] |
+| 1 | [Specific attack] | [Who] | High/Med/Low/**Unknown** | High/Med/Low/**Unknown** | [L x I, or "Not assessed — insufficient information"] |
+| 2 | [Specific attack] | [Who] | High/Med/Low/**Unknown** | High/Med/Low/**Unknown** | [L x I, or "Not assessed — insufficient information"] |
+| 3 | [Specific attack] | [Who] | High/Med/Low/**Unknown** | High/Med/Low/**Unknown** | [L x I, or "Not assessed — insufficient information"] |
 
 ### Perverse Incentives
 

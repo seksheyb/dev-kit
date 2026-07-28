@@ -26,6 +26,8 @@ New Architecture (Fabric + TurboModules + JSI, bridgeless) is the only architect
 4. **Optimize** — FlatList, images, memory → _profile with React Native DevTools_
 5. **Test** — Both platforms, real devices
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ### Error Recovery
 - **Metro bundler errors** → clear cache with `npx expo start --clear`, then restart
 - **iOS build fails** → check Xcode logs → resolve native dependency or provisioning issue → rebuild with `npx expo run:ios`

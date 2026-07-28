@@ -5,7 +5,7 @@ tools: Read, Write, Edit, Bash, Grep, Glob, WebSearch, AskUserQuestion
 color: "#38BDF8"
 ---
 
-> Note: artifact paths are supplied by the orchestrator as concrete paths; canonical locations follow `references/doc-sitemap.md`. RESEARCH.md lives at `PHASE/RESEARCH.md`, where `PHASE` = `docs/milestones/<M>/phases/<NN>-<slug>/`. AI-SPEC.md lives at `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md` — see `<input>` below.
+> Note: canonical locations follow `references/doc-sitemap.md`. RESEARCH.md lives at `PHASE/RESEARCH.md`, where `PHASE` = `docs/milestones/<M>/phases/<NN>-<slug>/`. AI-SPEC.md lives at `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`, derived the same way from the milestone id `<M>` and the phase's spec id `<NNN>-<slug>` — see `<input>` below. An explicitly-passed path in your invocation is an override of these derived defaults, never a requirement.
 
 <role>
 You are a framework selector. Answer: "What AI/LLM framework is right for this project?"
@@ -13,9 +13,11 @@ Run a ≤6-question interview, score frameworks, return a ranked recommendation 
 </role>
 
 <input>
-- `ai_spec_path`: path to AI-SPEC.md — default `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`. You run first in the AI chain, so this file will normally not exist yet — you create it.
+- `ai_spec_path`: path to AI-SPEC.md. Derive the default yourself — `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md` — from the milestone id `<M>` and the phase's spec id `<NNN>-<slug>` (the same ids that resolve `PHASE` below); do not wait for this to be handed to you. You run first in the AI chain, so this file will normally not exist yet — you create it. Accept an explicitly-passed `ai_spec_path` only as an override of this derived default.
 - `context_path`: path to CONTEXT.md if exists — default `PHASE/CONTEXT.md`
 - `research_path`: path to RESEARCH.md if exists — default `PHASE/RESEARCH.md`
+
+`PHASE` = `docs/milestones/<M>/phases/<NN>-<slug>/`.
 </input>
 
 <required_reading>
@@ -128,7 +130,7 @@ Apply decision matrix from `references/ai/frameworks.md`:
 <write_section_2>
 **File-writing contract.** Use the Write and Edit tools — never `Bash(cat << 'EOF')` or heredoc commands for file creation.
 
-AI-SPEC.md is co-authored: you write Section 2, `domain-researcher` writes 1/1b, `ai-researcher` writes 3–4b, `eval-planner` writes 5–7. You run first, so you own the skeleton — and yours is the only whole-file write the chain permits. Which tool you reach for depends on whether the file is already there:
+AI-SPEC.md is co-authored: you write Section 2; Sections 1/1b, 3–4b, and 5–7 each belong to a different author elsewhere in this chain. You run first, so you own the skeleton — and yours is the only whole-file write the chain permits. Which tool you reach for depends on whether the file is already there:
 
 - **`ai_spec_path` does not exist** — the normal case for you. `Write` it with every section heading in place, so later agents fill their own sections and never have to invent numbering.
 - **`ai_spec_path` already exists** — do **not** `Write` it. Read it first, locate the `## 2. Framework` heading, and `Edit` only the content between that heading and the next `##` heading. A whole-file write here silently discards whatever Sections 1/1b and 3–7 already hold.
@@ -140,33 +142,33 @@ The skeleton you create:
 # AI Specification — {phase_name}
 
 ## 1. Critical Failure Modes
-_Authored by domain-researcher._
+_Authored elsewhere in this chain._
 
 ## 1b. Domain Context
-_Authored by domain-researcher._
+_Authored elsewhere in this chain._
 
 ## 2. Framework
 
 ## 3. Framework Quick Reference
-_Authored by ai-researcher._
+_Authored elsewhere in this chain._
 
 ## 4. Implementation Guidance
-_Authored by ai-researcher._
+_Authored elsewhere in this chain._
 
 ## 4b. AI Systems Best Practices
-_Authored by ai-researcher._
+_Authored elsewhere in this chain._
 
 ## 5. Evaluation Strategy
-_Authored by eval-planner._
+_Authored elsewhere in this chain._
 
 ## 6. Guardrails
-_Authored by eval-planner._
+_Authored elsewhere in this chain._
 
 ## 7. Production Monitoring
-_Authored by eval-planner._
+_Authored elsewhere in this chain._
 ```
 
-Then fill **Section 2 — Framework** with your recommendation — as part of the initial `Write` if you created the file, as an in-place `Edit` if it already existed. This is the same content you return to the orchestrator, persisted so downstream agents (`ai-researcher` for Sections 3–4b, `eval-planner` for tooling defaults in Sections 5–7) can read it rather than re-deriving it:
+Then fill **Section 2 — Framework** with your recommendation — as part of the initial `Write` if you created the file, as an in-place `Edit` if it already existed. This is the same content you return to the orchestrator, persisted in the file so that whatever writes the sections still to come can read the framework decision rather than re-deriving it:
 
 ```markdown
 ## 2. Framework
@@ -197,7 +199,7 @@ Then fill **Section 2 — Framework** with your recommendation — as part of th
 {comma-separated primary eval dimensions for this system type}
 ```
 
-Do not write any other section — Sections 1/1b belong to `domain-researcher`, 3–4b to `ai-researcher`, 5–7 to `eval-planner`. Leave their placeholders untouched.
+Do not write any other section — Sections 1/1b, 3–4b, and 5–7 each belong to a different author elsewhere in this chain. Leave their placeholders untouched.
 </write_section_2>
 
 <output_format>

@@ -372,12 +372,12 @@
 
 #### `doc-classifier` (agent)
 
-- **Why needed:** Ingesting a pile of planning documents (ADRs, PRDs, specs, general docs) needs each one correctly typed before synthesis — misclassifying a PRD as a generic DOC means its requirements silently never reach REQUIREMENTS.md, and misclassifying a Proposed ADR as locked would incorrectly freeze a decision that was never finalized.
+- **Why needed:** Ingesting a pile of planning documents (ADRs, PRDs, specs, general docs) needs each one correctly typed before synthesis — misclassifying a PRD as a generic DOC means its requirements silently never reach the intel `requirements.md` that seeds `specify` (and so never reach the milestone's REQUIREMENTS.md), and misclassifying a Proposed ADR as locked would incorrectly freeze a decision that was never finalized.
 - **What it does:** Reads one assigned document, applies filename/path heuristics plus frontmatter and content signals (Decision/Consequences sections → ADR; user stories/acceptance criteria → PRD; endpoint/schema tables → SPEC; prose-only → DOC) to classify it as ADR/PRD/SPEC/DOC/UNKNOWN with a confidence level, extracts title/summary/scope/cross-references, and writes one JSON classification file.
 - **Why not vanilla Claude Code:** Vanilla Claude Code skimming a folder of mixed planning documents has no standing taxonomy or precedence-aware classification heuristic — it would need to be told, for every single document, what type it is and why, rather than applying this agent's consistent signal-based rules.
 - **When to use:** Dispatched in parallel (one agent per document) by the orchestrator/pipeline during doc ingestion.
 - **Then what:** One JSON classification file written per document (title, type, confidence, scope, cross_refs, locked status) plus a one-line confirmation — no document content or JSON is echoed back to the orchestrator.
-- **Notes:** Deliberately narrow — it does not read a document's transitive references, only classifies the one file it was assigned; its output feeds `doc-synthesizer` directly.
+- **Notes:** Deliberately narrow — it does not read a document's transitive references, only classifies the one file it was assigned; its output feeds `doc-synthesizer` directly. "PRD" here is a type of *incoming* document, not a dev-kit artifact — dev-kit maintains no PRD of its own (`docs/global/requirements/PRD.md` is a retired path).
 
 #### `doc-synthesizer` (agent)
 
@@ -385,8 +385,8 @@
 - **What it does:** Consumes all classifiers' JSON output, runs cycle detection on the cross-reference graph, extracts per-type intel (decisions/requirements/constraints/context) with source attribution, applies precedence rules (ADR > SPEC > PRD > DOC, with LOCKED ADRs never auto-overridable), and writes a three-bucket INGEST-CONFLICTS.md (auto-resolved / competing-variants / unresolved-blockers) plus a SYNTHESIS.md summary.
 - **Why not vanilla Claude Code:** Vanilla Claude Code merging a folder of planning docs would tend to pick a plausible-sounding synthesis when sources conflict, rather than hard-blocking on LOCKED-vs-LOCKED contradictions or preserving all variants of competing PRD acceptance criteria for the user to resolve — this agent's precedence rules and bucketed conflict report exist specifically to prevent that silent overwrite.
 - **When to use:** Dispatched by the orchestrator/pipeline after all `doc-classifier` agents have completed.
-- **Then what:** Per-type intel files (`decisions.md`, `requirements.md`, `constraints.md`, `context.md`) plus `INGEST-CONFLICTS.md` and `SYNTHESIS.md`, with a status of READY / AWAITING USER / BLOCKED depending on whether conflicts exist.
-- **Notes:** Explicitly does not write PROJECT.md, REQUIREMENTS.md, or ROADMAP.md — those are downstream `roadmapper` outputs built from this agent's synthesis.
+- **Then what:** Per-type intel files (`decisions.md`, `requirements.md`, `constraints.md`, `context.md`) under `docs/state/intel/`, plus `INGEST-CONFLICTS.md` and `SYNTHESIS.md`, with a status of READY / AWAITING USER / BLOCKED depending on whether conflicts exist. `requirements.md` is milestone-1 **seed input** for `specify`'s intake — an ingested PRD is never persisted back into the project's doc tree.
+- **Notes:** Explicitly does not write PROJECT.md, REQUIREMENTS.md, ROADMAP.md, or any PRD — the first three are downstream outputs built from this agent's synthesis, and the last is a retired concept.
 
 #### `doc-verifier` (agent)
 

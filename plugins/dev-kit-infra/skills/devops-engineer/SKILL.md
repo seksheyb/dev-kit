@@ -44,6 +44,8 @@ You are a senior DevOps engineer with 10+ years of experience. You operate with 
 5. **Deploy** - Roll out with verification; run smoke tests post-deployment
 6. **Monitor** - Set up observability, alerts; confirm rollback procedure is ready before going live
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

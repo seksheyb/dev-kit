@@ -42,9 +42,10 @@ local-file fallback. If `mcp__claude-design__*` tools aren't available, stop her
 user Claude Design is required before this skill can produce anything.
 
 **Resolve the Claude Design system binding.** `design-consultation` is the **only** skill that
-does this resolution — every downstream skill (`design-html`, etc.) just reads whatever gets
-decided here from `DESIGN.md` and stops if it's missing, per
-`@references/claude-design-mcp-protocol.md`. Run its Step 0 now, before anything else:
+does this resolution — the resulting `claude_design_system_id` field in `DESIGN.md` is the
+binding contract that any downstream tooling requiring a bound design system reads, and such
+tooling stops if the field is missing, per `@references/claude-design-mcp-protocol.md`. Run its
+Step 0 now, before anything else:
 
 1. Check DESIGN.md for a stored `claude_design_system_id`. If present, skip to the bound-system
    branch below.
@@ -437,7 +438,8 @@ proposal/variant, not just text descriptions):
 Motion) is filled by *summarizing* that system's actual tokens (read via `get_claude_design_prompt`
 / `list_files` / `read_file` on the design-system project), not by inventing new values — DESIGN.md
 becomes a local reference copy of the bound system's decisions, not a competing source of truth.
-DESIGN.md now has `claude_design_system_id` set — design-html's precondition is satisfied.
+DESIGN.md now has `claude_design_system_id` set — any downstream tooling that requires a bound
+design system has what it needs to proceed.
 
 **When no design system was bound (the full proposal flow ran):** before final confirmation,
 follow `@references/claude-design-mcp-protocol.md`'s "Manual design-system creation" section —
@@ -446,8 +448,8 @@ colors, spacing, motion, seed component templates), show it in chat, and save it
 `docs/state/tmp/claude-design-system-prompt.md`. Tell the user: paste this into Claude Design
 (claude.ai/design) to create the system, then send back the resulting id so it can be stored as
 `claude_design_system_id` here on a future run. Don't block this run's delivery on that step.
-DESIGN.md does **not** have `claude_design_system_id` set at the end of this run — design-html's
-precondition isn't met yet.
+DESIGN.md does **not** have `claude_design_system_id` set at the end of this run — downstream
+tooling that requires a bound design system can't proceed on it yet.
 
 **Update CLAUDE.md** (create if missing) — append:
 
@@ -464,11 +466,11 @@ explicit user confirmation, then: A) Ship it — write DESIGN.md and CLAUDE.md. 
 something. C) Start over.
 
 After shipping: if `claude_design_system_id` is bound in the DESIGN.md just written (the bound-system
-branch above), suggest "Want to see this design system as a working page? Run design-html." If it
-isn't bound (the manual-creation-prompt branch above), don't suggest design-html — it hard-refuses
-to proceed without a bound system. Instead close with: "Once you've created the design system in
-Claude Design and sent back its id, run design-consultation again to bind it — then design-html is
-ready."
+branch above), mention that the design system is now bound and ready for any downstream
+implementation tooling that requires one. If it isn't bound (the manual-creation-prompt branch
+above), say so plainly — downstream implementation tooling that requires a bound system won't be
+able to proceed yet. Close with: "Once you've created the design system in Claude Design and sent
+back its id, run design-consultation again to bind it."
 
 ---
 
@@ -488,8 +490,8 @@ Apply this judgment throughout — a design system is only as good as its weakes
 - **Cross-platform consistency:** respect web standards and platform conventions; specify
   responsive behavior per breakpoint; prefer progressive enhancement and graceful degradation.
 - **Handoff-ready documentation:** component specs, interaction notes, accessibility
-  annotations, design tokens, and design rationale — enough that a developer (or the
-  design-handoff skill) can implement without asking.
+  annotations, design tokens, and design rationale — enough that a developer (or downstream
+  implementation tooling) can implement without asking.
 - **Performance awareness:** font loading strategy, asset optimization, animation
   performance, and bundle impact are design decisions too.
 

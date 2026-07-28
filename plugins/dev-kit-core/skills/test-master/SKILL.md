@@ -88,6 +88,6 @@ When creating test plans, provide:
 1. Test scope and approach
 2. Test cases with expected outcomes
 3. Coverage analysis
-4. Findings with severity (Critical/High/Medium/Low)
+4. Findings with severity (Critical/High/Medium/Low/Could Not Determine — use when available evidence is insufficient to establish a determinate severity or outcome; never default an undetermined finding into Low or drop it)
 5. Specific fix recommendations
 

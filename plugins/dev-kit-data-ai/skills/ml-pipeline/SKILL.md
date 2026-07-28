@@ -25,6 +25,8 @@ Senior ML pipeline engineer specializing in production-grade machine learning in
 5. **Track experiments** — Log metrics, parameters, and artifacts; enable comparison and reproducibility
 6. **Validate and deploy** — Run model evaluation gates; implement A/B testing or shadow deployment before promotion
 
+> If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

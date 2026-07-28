@@ -34,7 +34,6 @@ docs/
 │   │   ├── constitution.md              # versioned project principles
 │   │   └── quickstart.md
 │   ├── requirements/
-│   │   ├── PRD.md
 │   │   ├── BACKLOG.md                   # cross-milestone backlog
 │   │   └── TODOS.md                     # deferred work & known limitations
 │   ├── architecture/
@@ -99,6 +98,7 @@ docs/
     ├── baselines/                       # cross-milestone trend data
     │   ├── design-baseline.json · qa-baseline.json · health-history.jsonl
     ├── intel/                           # doc-ingest synthesis (SYNTHESIS.md, decisions.md, …)
+    │                                    #   requirements.md, recovered-requirements.md
     ├── graphs/                          # graph.json, GRAPH_REPORT.md
     ├── debug/                           # knowledge-base.md, <slug>.md, resolved/
     ├── sprint/                          # progress.md, task-N-brief.md, task-N-report.md
@@ -127,7 +127,6 @@ docs/
 | `SDD.md`, `docs/architecture/SDD.md` | `docs/global/architecture/SDD.md` |
 | `ARCHITECTURE.md` (repo root) | `docs/global/architecture/ARCHITECTURE.md` |
 | `docs/adr/*`, `docs/architecture/ADRs/*` | `docs/global/architecture/adr/NNNN-<slug>.md` |
-| `docs/requirements/PRD.md` | `docs/global/requirements/PRD.md` |
 | `docs/BACKLOG.md` | `docs/global/requirements/BACKLOG.md` |
 | `TODOS.md` | `docs/global/requirements/TODOS.md` |
 | `docs/constitution.md` | `docs/global/project/constitution.md` |
@@ -178,3 +177,12 @@ docs/
 | `.planning/tmp/*`, `.planning/INGEST-CONFLICTS.md` | `docs/state/tmp/*` |
 | `.github/workflows/ci-cd.yml` | unchanged (CI config, not a doc) |
 | `.claude/learnings.jsonl`, `.claude/design/screens.json` | unchanged (tool state) |
+
+## Retired paths
+
+These are **not** canonical paths and must not be re-introduced. No asset may create, read,
+or migrate anything to them.
+
+| Retired path | Why | What owns the role instead |
+|---|---|---|
+| `docs/global/requirements/PRD.md` (and any `docs/requirements/PRD.md`, `PRD.md`, milestone- or phase-scoped "PRD" variant) | A global, project-lifetime PRD duplicated `PROJECT.md`'s role, and nothing in the pipeline authored it — it was only ever an operator-supplied input, live exactly once | **Global tier:** `docs/global/project/PROJECT.md` owns "what is this product, why, for whom." **Milestone tier:** `docs/milestones/<M>/specs/<NNN>-<slug>/spec.md` plus the `docs/milestones/<M>/REQUIREMENTS.md` rollup are the milestone's requirements artifact. **Intake:** milestone 1 starts from the operator's raw input, milestone 2+ from `docs/global/requirements/BACKLOG.md` Now/Next — both consumed by `specify`. Requirements recovered from legacy code or an ingested doc pile land as seed input under `docs/state/intel/`, never as a persisted PRD |

@@ -24,6 +24,8 @@ Observability and performance specialist implementing comprehensive monitoring, 
 4. **Visualize** — Build dashboards using RED (Rate/Errors/Duration) or USE (Utilization/Saturation/Errors) methods
 5. **Alert** — Define threshold and anomaly alerts on critical paths; validate no false-positive flood before shipping
 
+> If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Quick-Start Examples
 
 ### Structured Logging (Node.js / Pino)

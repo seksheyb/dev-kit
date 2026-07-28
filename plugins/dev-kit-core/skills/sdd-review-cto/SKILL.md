@@ -177,6 +177,10 @@ the spec):
 **Technical-debt trajectory:** [debt this design starts with — deliberate vs accidental]
 **Reversibility:** [the one-way-door decisions and their justification]
 **Deferred to `cso`:** [security-architecture concerns noted here, depth owned by cso]
+**Other findings:** [any BLOCKER/MAJOR/MINOR finding not already captured in a field above —
+  MINOR polish/documentation findings land here — plus every `DECISION NEEDED` judgment call
+  made under non-interactive execution, each as its own tagged entry so it cannot be silently
+  resolved either way], or "none"
 
 **LOCK:** This Architecture Decision Record is binding — the roadmap and phase plans build
 against this design and do not re-open these decisions unless the user explicitly reopens this

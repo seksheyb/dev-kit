@@ -71,7 +71,13 @@ const LENS_RESULT_SCHEMA = {
   type: "object",
   properties: {
     reportPath: { type: "string" },
-    verdict: { type: "string", enum: ["APPROVE", "APPROVE-WITH-CHANGES", "REVISE"] },
+    // BLOCKED is a distinct verdict in `plan-reviewer`'s own output contract — the review
+    // could not be performed at all (unresolved `PHASE`, missing lens skill file), not a
+    // quality judgment. It MUST be a valid enum value here: rejecting it at the schema
+    // boundary would make a lens's "I could not determine this" collapse into the generic
+    // "COVERAGE GAP: agent failed or was skipped" path below, which is exactly the kind of
+    // silent indeterminate-outcome loss this contract exists to prevent.
+    verdict: { type: "string", enum: ["APPROVE", "APPROVE-WITH-CHANGES", "REVISE", "BLOCKED"] },
     completeness: { type: "string" },
     counts: {
       type: "object",
@@ -188,7 +194,10 @@ phase("Consolidate");
 // model call here would only restate what the numbers already say, and the user-facing
 // verdict and next step belong to the caller anyway, not to this script.
 const SEVERITY_RANK = { BLOCKER: 0, MAJOR: 1, MINOR: 2 };
-const VERDICT_RANK = { REVISE: 0, "APPROVE-WITH-CHANGES": 1, APPROVE: 2 };
+// BLOCKED outranks REVISE as "worst": a blocked lens means that lens's finding-quality is
+// unknown, not merely bad, so it must dominate the aggregate rather than be out-ranked by
+// (and disappear behind) an ordinary REVISE from another lens.
+const VERDICT_RANK = { BLOCKED: -1, REVISE: 0, "APPROVE-WITH-CHANGES": 1, APPROVE: 2 };
 
 const totals = { BLOCKER: 0, MAJOR: 0, MINOR: 0 };
 for (const r of reviews) {
@@ -207,11 +216,19 @@ const findings = reviews
   .flatMap((r) => r.topFindings.map((f) => ({ ...f, lens: r.lens })))
   .sort((a, b) => SEVERITY_RANK[a.severity] - SEVERITY_RANK[b.severity]);
 
+const blockedLenses = reviews.filter((r) => r.verdict === "BLOCKED").map((r) => r.lens);
+
 const out = [
   `# Plan Review — consolidated (${reviews.length}/${lenses.length} lenses)`,
   `Plan: ${plan}`,
   `Aggregate verdict: ${aggregateVerdict}`,
   `Findings: ${totals.BLOCKER} BLOCKER / ${totals.MAJOR} MAJOR / ${totals.MINOR} MINOR`,
+  ...(blockedLenses.length > 0
+    ? [
+        `BLOCKED lenses (dispatch defect, not reviewed): ${blockedLenses.join(", ")} — ` +
+          "see each one's Verdict paragraph in its report file for the exact defect.",
+      ]
+    : []),
   "",
   "## Per lens",
   ...reviews.map(
@@ -237,6 +254,10 @@ return {
   totals,
   coverage: { requested: lenses.length, returned: reviews.length },
   missingLenses: lenses.filter((l) => !reviews.some((r) => r.lens === l)),
+  // Distinct from `missingLenses`: a missing lens never returned; a BLOCKED lens returned
+  // and reported that it could not review at all (dispatch defect). Both must read as "do
+  // not trust this panel as clean" — neither may collapse into the other.
+  blockedLenses,
   lenses: reviews.map((r) => ({
     lens: r.lens,
     verdict: r.verdict,

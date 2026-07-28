@@ -11,7 +11,7 @@ color: "#A78BFA"
 #           command: "echo 'AI-SPEC domain section written' 2>/dev/null || true"
 ---
 
-> Note: artifact paths (AI-SPEC.md, CONTEXT.md, REQUIREMENTS.md, RESEARCH.md, ROADMAP.md) are supplied by the orchestrator as concrete paths; canonical locations follow `references/doc-sitemap.md` — see `<input>` below.
+> **Path defaults.** Derive `ai_spec_path`, `context_path`, `requirements_path`, and `research_path` from the milestone/spec/phase ids below, per `references/doc-sitemap.md`'s canonical locations — accept an explicitly-passed path only as an override. See `<input>` below.
 
 <role>
 You are a domain researcher. Answer: "What do domain experts actually care about when evaluating this AI system?"
@@ -48,10 +48,11 @@ Read `references/ai/evals.md` — specifically the rubric design and domain expe
 <input>
 - `system_type`: RAG | Multi-Agent | Conversational | Extraction | Autonomous | Content | Code | Hybrid
 - `phase_name`, `phase_goal`: from ROADMAP.md (`docs/milestones/<M>/ROADMAP.md`)
-- `ai_spec_path`: path to AI-SPEC.md (partially written) — canonically `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`
-- `context_path`: path to CONTEXT.md if exists — canonically `docs/milestones/<M>/phases/<NN>-<slug>/CONTEXT.md`
-- `requirements_path`: path to REQUIREMENTS.md if exists — canonically `docs/milestones/<M>/REQUIREMENTS.md`
-- `research_path`: path to RESEARCH.md if exists — canonically `docs/milestones/<M>/phases/<NN>-<slug>/RESEARCH.md`. Stage 5's `phase-researcher` may already have surfaced domain-adjacent findings (e.g. a compliance-heavy pitfall, a don't-hand-roll item relevant to evaluation) for this same phase; do not re-derive what it already found
+- `milestone` (`<M>`), `spec_id` (`<NNN>-<slug>`), `phase_id` (`<NN>-<slug>`): identifiers for deriving the default paths below
+- `ai_spec_path` (override; default `docs/milestones/<M>/specs/<NNN>-<slug>/AI-SPEC.md`): path to AI-SPEC.md (partially written)
+- `context_path` (override; default `docs/milestones/<M>/phases/<NN>-<slug>/CONTEXT.md`): path to CONTEXT.md, if it exists
+- `requirements_path` (override; default `docs/milestones/<M>/REQUIREMENTS.md`): path to REQUIREMENTS.md, if it exists
+- `research_path` (override; default `docs/milestones/<M>/phases/<NN>-<slug>/RESEARCH.md`): path to RESEARCH.md, if it exists. Stage 5's `phase-researcher` may already have surfaced domain-adjacent findings (e.g. a compliance-heavy pitfall, a don't-hand-roll item relevant to evaluation) for this same phase; do not re-derive what it already found
 
 **If prompt contains `<required_reading>`, read every listed file before doing anything else.**
 </input>
@@ -61,6 +62,8 @@ Read `references/ai/evals.md` — specifically the rubric design and domain expe
 <step name="extract_domain_signal">
 Read AI-SPEC.md, CONTEXT.md, REQUIREMENTS.md, and RESEARCH.md (if `research_path` was provided). Extract: industry vertical, user population, stakes level, output type. Note any pitfalls or compliance-relevant findings RESEARCH.md already surfaced — treat them as a starting point, not something to re-research from zero.
 If domain is unclear, infer from phase name and goal — "contract review" → legal, "support ticket" → customer service, "medical intake" → healthcare.
+
+**Upstream findings are a floor, not a ceiling.** RESEARCH.md's findings carry `phase-researcher`'s own confidence tag (HIGH/MEDIUM/LOW, `[VERIFIED]`/`[ASSUMED]`/`[SUS]`). "Do not re-derive" means do not redo the research legwork — it does not mean take the finding on trust. When a RESEARCH.md finding feeds a Section 1 row or a Section 1b Source, carry its original confidence/tag forward in that row's Source/`Why It Matters Here` text (e.g. "per RESEARCH.md, MEDIUM confidence — not independently re-verified here") rather than presenting it as a domain-researcher-confirmed rating in its own right.
 </step>
 
 <step name="research_domain">
@@ -79,7 +82,7 @@ Produce 3-5 domain-specific rubric building blocks. Format each as:
 Dimension: {name in domain language, not AI jargon}
 Good (domain expert would accept): {specific description}
 Bad (domain expert would flag): {specific description}
-Stakes: Critical / High / Medium
+Stakes: Critical / High / Medium / Unclear
 Source: {practitioner knowledge, regulation, or research}
 ```
 
@@ -118,7 +121,7 @@ Promote the sharpest 3-5 of the domain failure modes you researched into system-
 
 | # | Failure Mode | What It Looks Like | Why It Matters Here | Severity |
 |---|--------------|--------------------|--------------------|----------|
-| 1 | {short name} | {observable bad output} | {consequence in this domain} | Critical / High / Medium |
+| 1 | {short name} | {observable bad output} | {consequence in this domain} | Critical / High / Medium / Unclear |
 
 **Non-Negotiables:** {1-2 sentences — the behaviours that must never ship, in the user's language}
 ```
@@ -134,7 +137,7 @@ Minimum 3 rows. Domain-specific, not generic "it hallucinates" — the generic l
 
 **Industry Vertical:** {vertical}
 **User Population:** {who uses this}
-**Stakes Level:** Low | Medium | High | Critical
+**Stakes Level:** Low | Medium | High | Critical | Unclear
 **Output Consequence:** {what happens downstream when the AI output is acted on}
 
 ### What Domain Experts Evaluate Against
@@ -168,6 +171,7 @@ Minimum 3 rows. Domain-specific, not generic "it hallucinates" — the generic l
 - Regulatory context: only what is directly relevant — do not list every possible regulation
 - If domain genuinely unclear, write a minimal section noting what to clarify with domain experts
 - Do not fabricate criteria — only surface research or well-established practitioner knowledge
+- Severity (Section 1) and Stakes Level/Stakes (Section 1b) are not always determinable from the research available — when the domain signal is too thin to confidently rate a specific failure mode or rubric ingredient, mark it `Unclear` rather than guessing a Critical/High/Medium/Low tier it doesn't support
 </quality_standards>
 
 <success_criteria>

@@ -321,7 +321,7 @@ Exceptions where `tdd="true"` is not needed: `type="checkpoint:*"` tasks, config
 3. Second task: thinnest UI → API → DB slice that makes the test pass (stubs allowed for non-critical branches).
 4. Third+ tasks: replace stubs with real implementations, add validation, error states, polish.
 
-**Mode is all-or-nothing per phase** (PRD decision Q1). Do not produce a plan that mixes vertical-slice tasks with horizontal layer tasks within the same phase.
+**Mode is all-or-nothing per phase.** Do not produce a plan that mixes vertical-slice tasks with horizontal layer tasks within the same phase.
 
 **Walking Skeleton mode** (`WALKING_SKELETON=true`, set by orchestrator for Phase 1 + new project under `--mvp`): The first deliverable is a Walking Skeleton — the thinnest possible end-to-end stack. In addition to `PLAN.md`, produce `SKELETON.md` using the template at `@references/planning/skeleton-template.md`. `SKELETON.md` records architectural decisions (framework, DB, auth, deployment, directory layout) that subsequent phases will build on without renegotiating.
 
@@ -338,7 +338,7 @@ For each external service, determine:
 2. **Account setup** — Does user need to create an account?
 3. **Dashboard config** — What must be configured in external UI?
 
-Record in `user_setup` frontmatter. Only include what Claude literally cannot do. Do NOT surface in planning output — execute-plan handles presentation.
+Record in `user_setup` frontmatter. Only include what Claude literally cannot do. Do NOT surface it in planning output — the frontmatter field is the only carrier; presentation of setup steps happens later, at execution time.
 
 </task_breakdown>
 
@@ -443,7 +443,8 @@ Output: [Artifacts created]
 </objective>
 
 <execution_context>
-Invoke the `sprint-execution` skill to execute this plan (plugins/dev-kit-core/skills/sprint-execution/SKILL.md).
+This plan is an executable prompt: work its tasks in order, honouring each task's `<verify>` and
+`<done>` before moving on, and emit the phase summary in the format below.
 @references/summary-template.md
 </execution_context>
 
@@ -513,27 +514,26 @@ Create `docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-SUMMARY.md` when done
 | `user_setup` | No | Human-required setup items |
 | `must_haves` | Yes | Goal-backward verification criteria |
 
-Wave numbers are pre-computed during planning. Execute-phase reads `wave` directly from frontmatter.
+Wave numbers are pre-computed during planning and carried in frontmatter. The `wave` field is authoritative: it must be readable straight from frontmatter, without re-deriving the dependency graph.
 
 Every task also emits a `<complexity_signals>` block (see the task template above) using
 the canonical vocabulary in `@references/complexity-signals.md` — `files` (complete,
 including files the task CREATES), `novelty`, `logic`, `ambiguity`, `tests`. These signals
-are what `gate-plan-review` and `sprint-execution` use to validate or select model/effort;
-emit them honestly rather than deriving model/effort first and back-filling signals to match.
+are the sole basis on which model/effort is later validated or selected; emit them honestly
+rather than deriving model/effort first and back-filling signals to match.
 
 ## Parallel Execution Map
 
 Per-plan frontmatter tells one plan its own `wave`, `depends_on` and `files_modified`. The
 `## Parallel Execution Map` is the **plan-set** view of the same data: every track in one table,
-so `gate-plan-review` can score it and `sprint-execution` can dispatch waves from it without
-opening every plan file. It is not optional — a plan set without a map cannot be reviewed or
-dispatched.
+so the whole set can be scored and its waves dispatched from that one table without opening every
+plan file. It is not optional — a plan set without a map cannot be reviewed or dispatched.
 
 **One track = one plan.** This agent produces one PLAN.md per track, so each map row is exactly
 one plan of this phase. Track name = `track-<short-slug>` derived from the plan's objective
 (`track-auth-model`, `track-billing-api`, `track-ui`) — short, subsystem-shaped, unique within
-the phase. `sprint-execution` builds each track's branch name (`sprint/w<N>-<track-name>`) from
-this column, so it must be filesystem-safe: lowercase, hyphens, no spaces or slashes.
+the phase. Each track's branch name is built from this column as `sprint/w<N>-<track-name>`, so
+the value must be filesystem-safe: lowercase, hyphens, no spaces or slashes.
 
 **Where it goes.** Emit it **once per phase**, in the lowest-numbered plan of the set
 (`PHASE/<NN>-01-PLAN.md`), between the frontmatter and `<objective>`. Every other plan in the
@@ -579,7 +579,7 @@ pointer. A single-plan phase still emits a real map, with one row.
 | **Depends On** | plan frontmatter `depends_on` | Plan IDs, comma-separated, or `none`. Must be identical to the frontmatter list. |
 | **Files Owned** | plan frontmatter `files_modified` | The **complete** list, including files the plan CREATES. Backtick each path. |
 | **Model** / **Effort** | track-level aggregation | The **highest** model and effort of any task in the plan, derived from that task's `<complexity_signals>` via the model and effort axes in `@references/complexity-signals.md`. One `opus`/`high` task pulls the whole track up. Write `inherit` in **Model** only when the track should run on the orchestrator's model. |
-| **Track complexity** | task `<complexity_signals>` | One bullet per track: `files` is the deduplicated union of its tasks' file lists; each enum is the highest value any of its tasks declared. `gate-plan-review` step 0 recomputes Model/Effort from this bullet and fails the gate on a mismatch — so derive the columns from the bullet, never the reverse. |
+| **Track complexity** | task `<complexity_signals>` | One bullet per track: `files` is the deduplicated union of its tasks' file lists; each enum is the highest value any of its tasks declared. Model/Effort are recomputed from this bullet during plan review and any mismatch fails that gate — so derive the columns from the bullet, never the reverse. |
 
 ### Deriving the map
 
@@ -598,9 +598,9 @@ owns plan grouping. Build the map from their output, then check it:
 3. **If either check fails, the map is not the thing to fix.** A same-wave file collision or a
    same-wave dependency means `assign_waves` was applied incorrectly — return to it, bump the
    later plan to the next wave, update that plan's frontmatter, and re-render. Never resolve a
-   collision by editing the map alone: `sprint-execution` dispatches from the map but each track
-   commits against its own frontmatter, so a map that disagrees with frontmatter silently
-   dispatches two tracks onto the same file.
+   collision by editing the map alone: dispatch reads the map but each track commits against its
+   own frontmatter, so a map that disagrees with frontmatter silently dispatches two tracks onto
+   the same file.
 4. **Directory-level care.** Two tracks that generate files into the same directory under a
    pattern (`src/api/*.ts`) do not conflict as long as the concrete paths differ — list the
    concrete paths, never a glob. A glob in **Files Owned** makes the disjointness check

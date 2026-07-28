@@ -24,6 +24,8 @@ Senior Apache Spark engineer specializing in high-performance distributed data p
 4. **Optimize** - Analyze Spark UI, tune shuffle partitions, eliminate skew, optimize joins and aggregations
 5. **Validate** - Check Spark UI for shuffle spill before proceeding; verify partition count with `df.rdd.getNumPartitions()`; if spill or skew detected, return to step 4; test with production-scale data, monitor resource usage, verify performance targets
 
+If this project's constitution (`docs/global/project/constitution.md`) declares a Test-First/TDD principle, load `test-driven-development` and defer to its red-green ordering — write the failing test for each unit before implementing it, superseding this workflow's own Test-step position. Otherwise, follow the order below as written.
+
 ## Reference Guide
 
 Load detailed guidance based on context:

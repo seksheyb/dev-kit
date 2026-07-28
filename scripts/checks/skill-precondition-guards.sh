@@ -21,24 +21,32 @@ cd "$REPO_ROOT" || exit 1
 
 fail=0
 
-echo "== Check 1: design-consultation's design-html suggestion is gated =="
+echo "== Check 1: design-consultation's downstream-readiness closer is gated on a bound system =="
 DC_FILE="plugins/dev-kit-core/skills/design-consultation/SKILL.md"
 if [ ! -f "$DC_FILE" ]; then
   echo "FAIL: $DC_FILE not found"
   fail=1
 else
-  # The line recommending design-html must appear together with a conditional on
-  # claude_design_system_id being bound, in the same paragraph — not as a bare,
-  # unconditional suggestion.
-  if grep -n "Run design-html" "$DC_FILE" >/dev/null; then
-    if grep -B4 "Run design-html" "$DC_FILE" | grep -qE "if .?claude_design_system_id.? is bound"; then
-      echo "PASS: design-html suggestion is conditioned on claude_design_system_id being bound"
-    else
-      echo "FAIL: found a 'Run design-html' suggestion in $DC_FILE with no nearby bound-system gate"
-      fail=1
-    fi
+  # Post-sweep (Q2 consumer decoupling) the closer no longer names design-html; the invariant
+  # it protected survives in consumer-agnostic form: downstream readiness must be conditioned
+  # on claude_design_system_id being bound, the unbound branch must warn that bound-system-
+  # requiring tooling can't proceed, and no named downstream consumer may reappear.
+  dc_fail=0
+
+  grep -qE "if .?claude_design_system_id.? is bound" "$DC_FILE" || {
+    echo "FAIL: closer no longer conditions downstream readiness on claude_design_system_id being bound"; dc_fail=1; }
+
+  grep -qE "requires a bound (design )?system (can't|cannot|won't)" "$DC_FILE" || {
+    echo "FAIL: unbound branch no longer warns that bound-system-requiring tooling can't proceed"; dc_fail=1; }
+
+  if grep -qn "design-html" "$DC_FILE"; then
+    echo "FAIL: named downstream consumer 'design-html' has reappeared in $DC_FILE (Q2 consumer-agnostic contract)"
+    dc_fail=1
+  fi
+
+  if [ "$dc_fail" -eq 0 ]; then
+    echo "PASS: downstream readiness is gated on claude_design_system_id, unbound branch warns, no named consumer"
   else
-    echo "FAIL: expected a 'Run design-html' suggestion in $DC_FILE — has the closer been removed or reworded?"
     fail=1
   fi
 fi

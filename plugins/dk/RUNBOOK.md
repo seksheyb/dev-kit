@@ -31,6 +31,10 @@ asset. Enforced by `scripts/checks/pipeline-command-guards.sh`.
 (steps 12–15). Steps marked *(only if …)* are conditional. **Session boundary** means:
 `context-save`, then `/clear` — and the next step opens with `context-restore`.
 
+Driving by hand, and under `--manual` / `--auto`, a boundary is a **stop**. Under `--sleep` it is
+not: state is written and the run continues through it on automatic compaction, because parking at
+every boundary — a milestone has several — would end the unattended run before it got anywhere.
+
 ## The three gate classes
 
 Every conditional below is one of three kinds. This is what `/dk:run` acts on.

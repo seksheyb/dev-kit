@@ -79,7 +79,7 @@ Then pick how you want to drive it:
 | `/dk:status` | Where an **orchestrator-driven** run left off — stage, phase, last verdict, open gates. Reads `.dk-state`, which only `/dk:run` writes, so a hand-driven project has none and this points you back to `/dk:runbook` |
 | `/dk:run --manual` | Walks the runbook and **stops at every step** — shows you the command, waits for `run / skip / edit / stop` |
 | `/dk:run --auto` | Walks it, stopping only at operator-judgment gates |
-| `/dk:run --sleep` | Unattended. Reads gate answers from `.claude/dk-policy.yml`; **stops** at any gate it has no answer for |
+| `/dk:run --sleep` | Unattended. Runs **through** session boundaries on automatic compaction, and reads gate answers from `.claude/dk-policy.yml`; **stops** at any gate it has no answer for |
 
 Or type the commands yourself — `/dk:requirements:specify`, `/dk:plan:gate 03`,
 `/dk:final:security`. Ordering lives in RUNBOOK.md and nowhere else — no command names its

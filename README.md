@@ -89,6 +89,46 @@ works. The orchestrator is additive, never load-bearing, and
 `scripts/checks/pipeline-command-guards.sh` enforces that: only `/dk:run` and `/dk:status`
 may read state.
 
+### Brownfield — adopting an existing repo
+
+Same pipeline, same commands. Only stage 0 differs: instead of scaffolding an empty
+project, it *recovers* the SDD, ADRs and security baseline the repo never wrote down, so
+stages 1–15 have something real to plan against.
+
+```bash
+cd existing-repo && claude
+/dk:bootstrap:init --here          # adopt in place — never overwrites, reports instead
+/dk:bootstrap:constitution 1
+```
+
+> **Enable `dev-kit-backend` before `/dk:bootstrap:legacy`, not at stage 2.** `spec-miner`
+> needs the lane skills to read the codebase it is mining. Stage 2 is where lanes are
+> normally chosen, and by then the mining has already run thin. This is the one ordering
+> mistake that silently degrades a brownfield run rather than failing loudly.
+
+Then three **independent** sub-paths — a repo can trigger all three, some, or none:
+
+| Command | Fires when | What it does |
+|---|---|---|
+| `/dk:bootstrap:legacy` | Undocumented existing code | `spec-miner` → `gate-reverse-engineer` promotes what it mined → `legacy-modernizer` records its migration-strategy choice as an ADR |
+| `/dk:bootstrap:ingest-docs` | ADRs/PRDs/specs outside the canonical locations | Fans out one `doc-classifier` per document, then a single `doc-synthesizer` barrier |
+| `/dk:bootstrap:baseline` | Anything to index — that doc corpus, or code | `graphify`, then `cso` **with no flags** — the full audit, not `--diff`. One per turn; neither fans out |
+
+**`legacy` assesses and plans; it does not build.** Stage 3 sequences the modernization
+work into phases, stage 8 builds it. Treating its output as a to-do list to execute
+immediately skips the roadmap that makes it a milestone.
+
+**Brownfield adoption is not the same as milestone 2+.** Both re-enter stage 0 — "is this
+repo still greenfield?" is re-asked every milestone — but a *continuing* project answers
+`continuing`: `constitution` runs in update mode, `graphify` runs incremental, and neither
+`legacy` nor `ingest-docs` fires, because the project's own docs are already current.
+`baseline` still runs the **full** `cso` audit, since the repo now carries every prior
+milestone's shipped code, and stage 12's `--diff` pass is scoped to this milestone only.
+
+In `--auto` and `--sleep`, all three sub-paths are Class A — `/dk:run` evaluates each
+`precondition:` against the repo and skips what does not apply. Driving by hand, the
+`asks:` line in each is the question to answer yourself.
+
 ### The three gate classes
 
 Stages are conditional, and the condition's *kind* decides whether a mode can resolve it.

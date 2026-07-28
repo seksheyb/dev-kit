@@ -1,0 +1,13 @@
+{
+  "enabledPlugins": {
+    "dev-kit-core@dev-kit": true
+  },
+  "extraKnownMarketplaces": {
+    "dev-kit": {
+      "source": {
+        "source": "github",
+        "repo": "seksheyb/dev-kit"
+      }
+    }
+  }
+}

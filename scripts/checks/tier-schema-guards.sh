@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Regression guard for "clause 1"-class findings-contract fixes surfaced by the QA
-# findings-contract audit (docs/audits/kickoff-duplication-audit/
-# roadmap-shortlisted-workflow.md, item 6): a declared tier must have a field to
+# findings-contract audit (shortlist item 6, recorded in
+# docs/audits/kickoff-duplication-audit/ROADMAP.md): a declared tier must have a field to
 # land in — an enum value, schema field, or template slot in the asset's OWN
 # output. Each check below asserts one such fixed state so it cannot silently
 # regress back to an implicit-pass collapse (a tier that exists in prose but has

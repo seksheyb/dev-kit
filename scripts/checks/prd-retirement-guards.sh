@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Regression guard for the PRD-retirement contract change.
 #
-# Item 2 of docs/audits/kickoff-duplication-audit/roadmap-shortlisted-workflow.md:
+# Shortlist item 2 of the kickoff-duplication audit (recorded in
+# docs/audits/kickoff-duplication-audit/ROADMAP.md; the shortlist doc itself was
+# removed once Milestones 1-5 closed):
 # `docs/global/requirements/PRD.md` was filed as a global, project-lifetime doc but
 # duplicated `docs/global/project/PROJECT.md`'s role and was authored by nothing in
 # the pipeline — it was only ever an operator-supplied input, live exactly once.

@@ -12,7 +12,7 @@
 #      embedded from it in sync in either direction, so the two copies could
 #      silently diverge the first time either side was edited.
 #
-# Extended for item 2.18 (roadmap-shortlisted-workflow audit), fixed on
+# Extended for item 2.18 (kickoff-duplication audit; see ROADMAP.md), fixed on
 # bugfix/w2-track-rag-diagram: four more skills named a diagram as a required
 # deliverable without routing to the `diagram` skill — cloud-architect,
 # microservices-architect, rag-architect, and growth-loops. Each now invokes

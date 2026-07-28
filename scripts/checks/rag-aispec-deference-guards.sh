@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Regression guard for the defect found in the roadmap-shortlisted-workflow audit
-# (item 2.14), fixed on bugfix/w2-track-rag-diagram:
+# Regression guard for the defect found in the kickoff-duplication audit
+# (item 2.14; see docs/audits/kickoff-duplication-audit/ROADMAP.md), fixed on
+# bugfix/w2-track-rag-diagram:
 #
 #   rag-architect's Core Workflow step 2 ("Vector Store Design") and step 4
 #   ("Retrieval Pipeline") ran unconditionally, re-deriving a vector store /

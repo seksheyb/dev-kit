@@ -107,6 +107,35 @@ while read -r f; do
 done < <(step_commands)
 [ $g5 -eq 0 ] && note "ok"
 
+# ---------------------------------------------------------------------------
+# Guard 6 — state-key discipline. `.dk-state` is a slim resume marker with a closed key set
+# (references/state-contract.md). The failure mode it guards against is key-creep: a `note:` here,
+# a `wave_progress:` there, until the resume head has become the journal and every resume pays to
+# read it. CI cannot inspect a runtime .dk-state, but it CAN check that the two commands allowed to
+# touch it never name a key the contract does not define.
+# ---------------------------------------------------------------------------
+echo "Guard 6: state-key discipline"
+CONTRACT="$DK/references/state-contract.md"
+g6=0
+if [ ! -f "$CONTRACT" ]; then
+  bad "references/state-contract.md is missing — /dk:run and /dk:status both cite it"; g6=1
+else
+  # keys are the `foo:` lines inside the contract's fenced schema block
+  allowed=$(awk '/^```$/{f=!f; next} f' "$CONTRACT" | grep -oE '^#? *[a-z_]+:' | tr -d '# :' | sort -u)
+  # frontmatter keys are not state keys — run.md necessarily names them when explaining gates
+  frontmatter=$(printf '%s\n' gate precondition on asks blocking description argument-hint exclusive-with)
+  for c in run status; do
+    f="$CMDS/$c.md"
+    used=$(grep -oE '`[a-z_-]+:`' "$f" | tr -d '`:' | sort -u)
+    for k in $used; do
+      grep -qx "$k" <<<"$allowed" && continue
+      grep -qx "$k" <<<"$frontmatter" && continue
+      bad "commands/$c.md names state key '$k', which state-contract.md does not define"; g6=1
+    done
+  done
+fi
+[ $g6 -eq 0 ] && note "ok"
+
 echo
 if [ $fail -eq 0 ]; then echo "pipeline-command-guards: PASS ($(step_commands | wc -l) step commands)"; else echo "pipeline-command-guards: FAIL"; fi
 exit $fail

@@ -149,7 +149,25 @@ orchestrator's logic derive from one fact.
 
 ### State
 
-`/dk:run` writes three tiers so it can resume across the `/clear` at each session
-boundary: `.dk-state` (resume head), `docs/state/STATE.md` (boundaries), and
-`docs/state/journal/<NN>-<slug>.md` (append-only, for diagnosing an overnight sleep run).
-Driving by hand writes none of them.
+`/dk:run` writes three tiers so it can resume across the `/clear` at each session boundary.
+They are split by **how often each is read**, not by topic — putting them in one file is
+what makes resume expensive:
+
+| What | Where | Read |
+|---|---|---|
+| Next action, loop position | `.dk-state` | **every resume** |
+| Progress across stages | `docs/state/STATE.md` | stage/phase boundaries |
+| Wave, gate and round history | `docs/state/journal/<NN>-<slug>.md` | **on demand only** |
+
+`.dk-state` is a **slim marker, not a journal** — closed key set, ≤15 lines, overwritten
+every step and never appended. Its `next:` line is a *pointer, not a payload*: one
+imperative for the next step, naming a journal file when history is needed. On resume the
+orchestrator acts on `next:` directly rather than re-deriving position by walking
+RUNBOOK.md — re-deriving a mid-loop position like "round 3 of 6" from a linear spine is
+exactly where a resume goes wrong.
+
+Full schema: [`plugins/dk/references/state-contract.md`](plugins/dk/references/state-contract.md).
+Guard 6 fails CI if `/dk:run` or `/dk:status` ever names a key it doesn't define — key-creep
+is how a resume head silently becomes the journal.
+
+Driving by hand writes none of these files.

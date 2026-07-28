@@ -2,8 +2,14 @@
 description: The orchestrator — walk the RUNBOOK from the current position. Manual stops at every step; auto stops at operator gates; sleep stops at nothing.
 argument-hint: "[--manual | --auto | --sleep] [--from <stage>]"
 ---
-Walk `${CLAUDE_PLUGIN_ROOT}/RUNBOOK.md` from the position in `.dk-state`. Parse `$ARGUMENTS` for the
-mode; absent one, use the mode recorded in `.dk-state`, defaulting to `--manual`.
+Read `.dk-state` and act on its `next:` line — that is the resume path, and it needs no walk of
+RUNBOOK.md. Only when `next:` is missing or unparseable, locate `stage`/`phase` in
+`${CLAUDE_PLUGIN_ROOT}/RUNBOOK.md` and re-resolve the gate from frontmatter instead. Parse
+`$ARGUMENTS` for the mode; absent one, use the mode recorded in `.dk-state`, defaulting to
+`--manual`.
+
+`${CLAUDE_PLUGIN_ROOT}/references/state-contract.md` is the schema for all three state files —
+closed key set, ≤15 lines, overwritten never appended. Follow it exactly; do not invent keys.
 
 **Resolve the next step's gate from its command frontmatter, never from RUNBOOK prose:**
 
@@ -27,7 +33,9 @@ mode; absent one, use the mode recorded in `.dk-state`, defaulting to `--manual`
 | `--sleep` | nothing — read the answer for each `gate: operator` from `.claude/dk-policy.yml`; if a gate has no entry there, **stop**, do not assume |
 
 **After each step**, append the command, its verdict and the timestamp to
-`docs/state/journal/<NN>-<slug>.md`, and update `.dk-state`.
+`docs/state/journal/<NN>-<slug>.md`, and rewrite `.dk-state` — including a fresh `next:` naming the
+step you just decided on. Keep `next:` a pointer: when acting on it needs history, name the journal
+file rather than inlining the history.
 
 **At a session boundary**, always write `docs/state/STATE.md` and run `context-save` first — in
 every mode, so a crash or a manual stop resumes identically. Then:

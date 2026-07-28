@@ -1,0 +1,50 @@
+{
+  "_comment": "Tunables for complexity-score.mjs. Copied to .claude/bin/ by /dk:bootstrap:init. Edit per project; re-run the scorer after any change. Every model name here must appear in modelBands, and every effort level in effortBands — the scorer validates this on startup and exits 2 if it does not hold.",
+
+  "sensitivePaths": {
+    "critical": ["**/auth/**", "**/payments/**", "**/billing/**", "**/security/**", "**/*secret*", "**/*credential*", "**/*token*"],
+    "sensitive": ["**/migrations/**", "**/infra/**", "**/terraform/**", "**/db/**", "**/.github/workflows/**"],
+    "adjacent": ["**/api/**", "**/middleware/**"]
+  },
+
+  "reversibility": {
+    "destructive": ["**/*drop*", "**/*destroy*", "**/*delete*", "**/*backfill*", "**/*purge*"],
+    "schema": ["**/migrations/**", "**/*schema*"]
+  },
+
+  "_bands_comment": "Both axes run 0-12 on dev-kit's 3-value enum vocabulary (see references/complexity-signals.md). Capability = novelty + logic + ambiguity + breadth + fanout. Risk = sensitivity + blast + reversibility + tests + ambiguity.",
+
+  "modelBands": [
+    { "min": 0, "max": 2, "model": "haiku" },
+    { "min": 3, "max": 7, "model": "sonnet" },
+    { "min": 8, "max": 12, "model": "opus" }
+  ],
+
+  "effortBands": [
+    { "min": 0, "max": 3, "effort": "low" },
+    { "min": 4, "max": 7, "effort": "medium" },
+    { "min": 8, "max": 12, "effort": "high" }
+  ],
+
+  "_floors_comment": "capabilityFloors are evaluated on the RAW declared enums, never on calibrated scores — a calibration adjustment must not be able to suppress a floor. These three encode complexity-signals.md's own prose: 'Use opus for anything with cross-cutting concerns or genuinely ambiguous requirements, regardless of file count.'",
+
+  "capabilityFloors": [
+    { "signal": "novelty", "atLeast": "high", "model": "opus" },
+    { "signal": "logic", "atLeast": "high", "model": "opus" },
+    { "signal": "ambiguity", "atLeast": "high", "model": "opus" }
+  ],
+
+  "_effortFloors_comment": "The effort axis needs floors for the same reason the model axis does: bands are a sum, and a sum lets one maxed-out signal be averaged away by low ones. These three encode complexity-signals.md's own effort table verbatim — 'high: ...cross-cutting scope, or ambiguity: high' and 'low: Execute literally. Trivial fix, no judgment calls — ambiguity: low AND logic: low'. Without them a track declaring ambiguity:high scores 3/12 and bands to low, which the doc explicitly forbids.",
+
+  "effortFloors": [
+    { "signal": "ambiguity", "atLeast": "high", "effort": "high" },
+    { "signal": "ambiguity", "atLeast": "medium", "effort": "medium" },
+    { "signal": "logic", "atLeast": "medium", "effort": "medium" }
+  ],
+
+  "criticalEffortFloor": "high",
+
+  "haikuFileBumpThreshold": 5,
+
+  "_no_minModelForEffort": "Deliberately absent. ADD-SDD raises the model to match a high effort band; dev-kit must not, because references/complexity-signals.md states the axes are independent — 'a mechanical-but-risky task can be haiku/high'. Adding an effort-driven model floor here would contradict that documented invariant."
+}

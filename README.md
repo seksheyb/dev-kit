@@ -1,6 +1,7 @@
 # dev-kit
 
-A Claude Code **marketplace of 8 lane-scoped plugins** — the merged best-of-breed of six
+A Claude Code **marketplace of 8 lane-scoped plugins plus `dk`, the orchestration layer** —
+the merged best-of-breed of six
 upstream libraries (superpowers, spec-kit, gstack, get-shit-done, claude-skills,
 awesome-claude-code-subagents), de-duplicated into a single architecture.
 See [ATTRIBUTION.md](ATTRIBUTION.md).
@@ -33,7 +34,9 @@ Lane presets (matching the GWD bootstrap lanes):
   used only where fresh context, distinct model/effort, or parallel fan-out is needed.
   Agents *reference* skills, never restate them. Models are set at dispatch time.
 - **Commands** are logic-free stubs dispatching an agent or skill for manual use.
-  Orchestration lives in the (separate) pipeline.
+- **Orchestration** — the cross-session sequencer that walks the stages, survives a
+  `/clear`, and governs manual/auto/sleep modes — is the `dk` plugin. See
+  [Running the pipeline](#running-the-pipeline-dk).
 
 ### Lens-based plan review (in core)
 
@@ -52,3 +55,58 @@ gate-reverse-engineer + spec-miner, and the vendored GSD references
 
 Add this repo as a marketplace in Claude Code, then install `dev-kit-core` plus the
 lane plugins you need.
+
+Install **`dk` at user level, always on** — unlike the lane plugins, which are enabled
+per project. It has to be available before a project exists, because `/dk:bootstrap:init`
+is what creates one.
+
+## Running the pipeline (`dk`)
+
+`dk` walks a project from idea to shipped milestone. The stages live in
+[`plugins/dk/RUNBOOK.md`](plugins/dk/RUNBOOK.md); every prompt is its own command.
+
+```bash
+# any session, anywhere — dk is user-level
+/dk:bootstrap:init myProject       # or --here, to adopt an existing repo
+cd myProject && claude
+```
+
+Then pick how you want to drive it:
+
+| | What it does |
+|---|---|
+| `/dk:runbook` | Print the map — all 16 stages, every command, every condition |
+| `/dk:status` | Where you are, what ran, what's next, which gates are open |
+| `/dk:run --manual` | Walks the runbook and **stops at every step** — shows you the command, waits for `run / skip / edit / stop` |
+| `/dk:run --auto` | Walks it, stopping only at operator-judgment gates |
+| `/dk:run --sleep` | Unattended. Reads gate answers from `.claude/dk-policy.yml`; **stops** at any gate it has no answer for |
+
+Or type the commands yourself — `/dk:requirements:specify`, `/dk:plan:gate 03`,
+`/dk:final:security`. Each ends by naming its successor, so the manual path guides you too.
+
+**Every command runs standalone.** Cold session, no state files, out of order — always
+works. The orchestrator is additive, never load-bearing, and
+`scripts/checks/pipeline-command-guards.sh` enforces that: only `/dk:run` and `/dk:status`
+may read state.
+
+### The three gate classes
+
+Stages are conditional, and the condition's *kind* decides whether a mode can resolve it.
+Each command declares its own in frontmatter, so the runbook's prose and the
+orchestrator's logic derive from one fact.
+
+| Class | Declared as | Example | Auto / sleep |
+|---|---|---|---|
+| **A** — repo predicate | `gate: auto` + `precondition:` | "no design system exists yet" | Resolves it |
+| **B** — prior verdict | `gate: verdict` + `on:` | "verify came back `gaps_found`" | Resolves it |
+| **C** — operator judgment | `gate: operator` + `asks:` | "is a product-direction call genuinely open?" | **Stops and asks** (sleep: policy, or stop) |
+
+`blocking: true` halts every mode, sleep included — a `REVISE`, `UNSOUND`,
+`gate_passed: false` or `human_needed` verdict never gets walked past.
+
+### State
+
+`/dk:run` writes three tiers so it can resume across the `/clear` at each session
+boundary: `.dk-state` (resume head), `docs/state/STATE.md` (boundaries), and
+`docs/state/journal/<NN>-<slug>.md` (append-only, for diagnosing an overnight sleep run).
+Driving by hand writes none of them.

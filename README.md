@@ -76,14 +76,16 @@ Then pick how you want to drive it:
 | | What it does |
 |---|---|
 | `/dk:runbook` | Print the map — all 16 stages, every command, every condition |
-| `/dk:status` | Where you are, what ran, what's next, which gates are open |
+| `/dk:status` | Where an **orchestrator-driven** run left off — stage, phase, last verdict, open gates. Reads `.dk-state`, which only `/dk:run` writes, so a hand-driven project has none and this points you back to `/dk:runbook` |
 | `/dk:run --manual` | Walks the runbook and **stops at every step** — shows you the command, waits for `run / skip / edit / stop` |
 | `/dk:run --auto` | Walks it, stopping only at operator-judgment gates |
 | `/dk:run --sleep` | Unattended. Reads gate answers from `.claude/dk-policy.yml`; **stops** at any gate it has no answer for |
 
 Or type the commands yourself — `/dk:requirements:specify`, `/dk:plan:gate 03`,
-`/dk:final:security`. Ordering lives in RUNBOOK.md and nowhere else, so ask `/dk:status`
-what comes next rather than reading it off the command you just ran.
+`/dk:final:security`. Ordering lives in RUNBOOK.md and nowhere else — no command names its
+own successor — so `/dk:runbook` is what tells you where you are in the sequence. Nothing
+tracks your position on this path, by design: driving by hand writes no state, and
+`/dk:status` will tell you as much and send you to the map.
 
 **Every command runs standalone.** Cold session, no state files, out of order — always
 works. The orchestrator is additive, never load-bearing, and

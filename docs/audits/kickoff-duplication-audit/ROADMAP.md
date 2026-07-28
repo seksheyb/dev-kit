@@ -13,6 +13,19 @@ defective or currently refuses to own its path. Those are asset bugs, not guide 
 roadmap fixes the assets first, which converts the keep-list into cut-list, then rewrites
 KICKOFF down to the irreducible operator layer.
 
+**Execution record (2026-07-28):** Milestones 3–5 — plus `roadmap-shortlisted-workflow.md`
+items 1–6 and the leftover Milestone 1 items 1.2/1.4/1.7 — were executed in one phase-gated run
+of `phased-sweep.workflow.js` (run `wf_861ac8fe-984`; ~190 assets swept, 81 changed, every file
+change adversarially verified; gate failures hand-fixed between resumes). Outcomes: the Q1–Q5
+per-asset sweep landed (sitemap-derived default paths, no named output-consumers, the
+constitution-deference line across the implementation lanes, findings-contract clauses closed);
+`docs/global/requirements/PRD.md` retired from the contract with a clean repo-wide closure;
+KICKOFF.md rewritten **1,393 → 398 lines** with the six-category preamble on top, and a final
+standalone verification passed all five Milestone 5 exit criteria. Guards:
+`tier-schema-guards.sh` (the three unguarded clause-1 fixes + the sweep's ~54 Q5 checks) and
+`prd-retirement-guards.sh` joined `scripts/checks/`. **Milestone 6 (verify and lock) remains
+open.** 1.14 (graphify) was deliberately skipped — personal skill outside this repo.
+
 ---
 
 ## The end-state contract: what a KICKOFF stage may say
@@ -48,12 +61,12 @@ hostage. Sources: REPORT.md §1 (D-findings that are skill-side) + §4b HIGH tab
 | # | Asset | Fix | Status |
 |---|---|---|---|
 | 1.1 | `agents/planner.md` | Phase-context loader must ingest `PHASE/PATTERNS.md`, `PHASE/UI-SPEC.md`, `SPEC/AI-SPEC.md` (when present). Also close the `## Parallel Execution Map` template gap (§3.5 risk 2). | ✅ **Done** — map placement is a contract decision; review gate in Milestone 4 item 2 |
-| 1.2 | `agents/pattern-mapper.md` | Fix the mis-named consumer claim (`:67`) — the real consumer today is `plan-review-goal-backward`; add planner once 1.1 ships. Add a non-empty-input precondition guard. | ⬜ Open — unblocked now that 1.1 has shipped |
+| 1.2 | `agents/pattern-mapper.md` | Fix the mis-named consumer claim (`:67`) — the real consumer today is `plan-review-goal-backward`; add planner once 1.1 ships. Add a non-empty-input precondition guard. | ✅ **Done** (2026-07-28 sweep) — non-empty-input precondition guard added; the consumer-rename half was subsumed by the Q2 consumer-agnostic rewrite (no named consumer remains) |
 | 1.3 | `agents/project-researcher.md` | Add an assigned-file dispatch input so four parallel researchers stop overwriting each other. | ✅ **Done** — `assigned_axis` |
-| 1.4 | `agents/roadmapper.md` | Must *create* `REQUIREMENTS.md` (traceability section included), not just update it. Remove the Setup→…→Polish worked example under "Good Phase Patterns" (D5). | ⬜ Open |
+| 1.4 | `agents/roadmapper.md` | Must *create* `REQUIREMENTS.md` (traceability section included), not just update it. Remove the Setup→…→Polish worked example under "Good Phase Patterns" (D5). | ✅ **Done** (2026-07-28 sweep) — creates REQUIREMENTS.md at the sitemap-derived path, traceability included; worked example removed. PRD retirement (shortlist item 2) landed on top of it |
 | 1.5 | `skills/finishing-a-development-branch` | "Push and Create PR" must actually run `gh pr create`. | ✅ **Done** — ported from `ship:176` |
 | 1.6 | `skills/devex-review` | Define pass/fail threshold, emit a verdict; add read-only/no-commit restraint (also §4b MEDIUM). | ✅ **Done** |
-| 1.7 | D2 — 4 lane skills (`python-pro`, `flutter-expert`, `django-expert`, +grep for others) | Reconcile code-first internal workflows with TDD: one line deferring test ordering to `test-driven-development` when co-loaded. | ⬜ Open — superseded in scope by `roadmap-shortlisted-workflow.md` item 3 |
+| 1.7 | D2 — 4 lane skills (`python-pro`, `flutter-expert`, `django-expert`, +grep for others) | Reconcile code-first internal workflows with TDD: one line deferring test ordering to `test-driven-development` when co-loaded. | ✅ **Done** (2026-07-28 sweep, as shortlist item 3) — canonical constitution-deference line inserted across the implementation-lane skills (25 confirmed inserts; 15 re-verified not-needed) |
 | 1.8 | D4 `skills/design-consultation` | Gate the Phase 6 "run design-html" closer on `claude_design_system_id` being bound. | ✅ **Done** |
 | 1.9 | D6 `skills/code-documenter` | Remove the interactive "ask for format preference" requirement (`SKILL.md:25,120,129`); resolve docstring format from `docs/global/project/constitution.md` (same default path/fallback pattern as `analyze`/`converge`/`specify` — missing/unfilled constitution is not fatal), then existing codebase convention, then language default. No human turn required. | ✅ **Done** — full 3-tier, ask removed |
 | 1.10 | D3 `agents/codebase-mapper` | Either drop the hard `Today's date:` requirement or make the date self-derivable; stop requiring an input no dispatch convention supplies. | ✅ **Done** — Bash `date` fallback |
@@ -153,7 +166,9 @@ vanished entirely), `nyquist-auditor` (a "caveated pass" indistinguishable from 
 WIRED/BROKEN), plus `ui-auditor` itself (1.15). Five instances across two unrelated sweeps is a
 class, not a coincidence. All five are fixed, but only `ui-auditor`/`design-reviewer` and `cso`
 are guarded — **the other three fixes are unguarded**, and no sweep has asked the question
-repo-wide. Worth scheduling as its own item.
+repo-wide. Worth scheduling as its own item. **Shipped as shortlist item 6 (2026-07-28):** the
+repo-wide Q5 sweep asked the question everywhere; the three formerly-unguarded fixes and every
+new Q5 fix are now asserted by `tier-schema-guards.sh`.
 
 **Sweeps that came back clean** (recorded so they are not re-run): the only genuine dangling
 skill route in the repo was `gate-automation`→`test-master`; `qa.md` and `health-reporter.md`
@@ -188,7 +203,9 @@ paths itself and accepts an explicit path only as an override.*
   is silent (e.g. `PHASE/reviews/round-<n>/`), extend the sitemap — the contract grows, the
   guide does not.
 
-**Exit criterion:** no KICKOFF prompt needs to contain a path string. Ids only.
+**Exit criterion:** no KICKOFF prompt needs to contain a path string. Ids only. **Met
+(2026-07-28)** — executed as the item-4 per-asset sweep (Q1/Q2 axes together); 3 sitemap rows
+were added so the contract grew, not the guide.
 
 ## Milestone 4 — Ship the seven drafted rewrites (repo: devkit-pipeline)
 
@@ -233,7 +250,10 @@ The ~100-line down payment, already drafted in `rewrites/`. Order per REPORT §6
    grep the shipped KICKOFF.md for "grades the working diff" — zero hits confirms closure.
 
 **Exit criterion:** KICKOFF ≈ 1,300 lines and every rewrite's "pair with skill fix" condition
-is satisfied, not skipped.
+is satisfied, not skipped. **Closed (2026-07-28), absorbed into Milestone 5** rather than shipped
+separately: the two clean drafts (step 11/15) were used as base, the five stale drafts were
+re-derived post-sweep as required, and the 1.12 exit check passes — grep of the shipped KICKOFF
+for "grades the working diff" returns zero hits.
 
 ## Milestone 5 — Thin-KICKOFF full rewrite (repo: devkit-pipeline)
 
@@ -251,7 +271,10 @@ gap-compensation and path text all come out.
 - Put the end-state contract itself at the top of KICKOFF as a short "what this file may
   contain" preamble — that is the regression guard against restatement creeping back.
 
-**Exit criterion:** ≤400 lines; every prompt block passes the six-category test.
+**Exit criterion:** ≤400 lines; every prompt block passes the six-category test. **Met
+(2026-07-28)** — 398 lines after the per-step rewrites plus one whole-file thin-collapse pass;
+six-category preamble sits at the top; a final standalone read-only verification passed all five
+criteria and spot-checked the surviving factual claims against the live assets.
 
 ## Milestone 6 — Verify and lock (both repos)
 
@@ -277,7 +300,15 @@ gap-compensation and path text all come out.
    `scripts/checks/{planning-agent-guards,skill-precondition-guards,skill-pr-promise-guards}.sh`
    were added by the Milestone 1 fix wave and each was verified to fail against the pre-fix
    tree at `04c5cbf` and pass against the fix. They are run-by-hand today because this repo has
-   no CI; they are the only mechanical regression guards the audit has produced.
+   no CI; they are the only mechanical regression guards the audit has produced. *(Count update
+   2026-07-28: the family has grown — `tier-schema-guards.sh` and `prd-retirement-guards.sh`
+   joined during the phased sweep; the runner should pick up everything in `scripts/checks/`.)*
+6. **New from the M5 exit verification (2026-07-28):** `legacy-modernizer` never emits the
+   migration-strategy ADR its KICKOFF block asks the operator to record (the skill has zero
+   "ADR" occurrences). Move the ADR-recording duty into the skill's output contract, then drop
+   the clause from KICKOFF. Also worth a one-word tweak while there: KICKOFF step 6's
+   "then domain-researcher and ai-researcher" is strictly ordered — "then …, then …" would
+   remove the co-dispatch ambiguity.
 
 **Exit criterion:** audit-clean + at least stages 0–3 executed successfully from the thin prompts.
 

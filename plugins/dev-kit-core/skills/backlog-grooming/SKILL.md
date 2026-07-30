@@ -1,0 +1,176 @@
+---
+name: backlog-grooming
+description: Use when grooming, refining, or cleaning up a product backlog — estimating stories, writing acceptance criteria, pruning zombie items, and preparing sprint-ready work. Also covers agile ceremony essentials (planning, standup, review, retrospective). Triggers on "groom backlog", "backlog refinement", "backlog grooming", "clean up backlog", "refine stories", "sprint refinement", "backlog management".
+license: MIT
+metadata:
+  version: "1.0.0"
+  domain: product-management
+  triggers: backlog grooming, backlog refinement, story points, estimation, definition of ready, sprint planning, acceptance criteria, planning poker, retrospective
+  role: product-owner
+  scope: process
+  output-format: document
+  related-skills: assumption-mapping, specify
+---
+
+# Backlog Grooming
+
+Backlog refinement methodology. Keep product backlogs healthy — well-estimated, well-defined, prioritized, and sprint-ready. A healthy backlog accelerates delivery; an unhealthy one buries a team.
+
+## Healthy Backlog Standards
+
+A healthy backlog means:
+- Top 2 sprints are detailed, estimated, and sprint-ready
+- Next 2-3 sprints are roughly estimated with clear intent
+- Everything beyond is directional, not detailed
+- No zombie stories older than 90 days without a decision
+- Each item has: owner, priority, acceptance criteria, definition of done
+
+## Grooming Session Structure (60-90 min, every sprint)
+
+### Part 1: Backlog Hygiene (20 min)
+- Archive or delete stories >90 days old without action
+- Flag stories in "ready" for 3+ sprints — why aren't they being built?
+- Merge duplicate stories
+- Ensure priorities reflect current strategy, not last quarter's
+
+### Part 2: Story Refinement (40 min)
+For each candidate story (top 5-8 per session):
+1. Read the story aloud — does everyone understand it?
+2. Acceptance criteria — are they specific and testable?
+3. Questions / unknowns — what do we need to know before building?
+4. Dependencies — does this block or get blocked by something?
+5. Estimate — relative sizing (t-shirt or story points)
+
+### Parallel refinement
+
+Refining is per-story work — one story's acceptance criteria, dependencies and estimate
+never depend on another candidate story's. That makes a session's batch (2-8 stories,
+per "top 5-8 per session" above) a fan-out: one read-only refinement agent per story, run
+in parallel, applying the five steps above and the Story Readiness Checklist to its own
+ONE story. Agents never touch `BACKLOG.md` — they return structured results, and the one
+merge write back into it happens here, in this session, because `BACKLOG.md` is a single
+shared file and two concurrent writers would corrupt it. Part 1 (Backlog Hygiene) and
+Part 3 (Priority Review) are whole-file passes and always stay in the main session,
+regardless of batch size.
+
+**Route by batch size. This is not a preference.**
+
+| Stories in the batch | Route |
+|---|---|
+| **2 or more** | **Workflow script — mandatory.** `@references/workflows/backlog-groom.workflow.mjs` |
+| Exactly 1 | Plain inline `Agent` call — a Workflow for one agent is pure overhead |
+
+**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the `story-refiner` role, surface "workflow", profile `writing`, signals declared per that doc's profile tables; write it keyed by role to a temp JSON; run `node plugins/dk/bin/model-route.mjs --caller backlog-grooming --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
+
+```
+Workflow({
+  // scriptPath needs a real filesystem path — resolve <dev-kit-core> to the installed
+  // plugin dir (e.g. "plugins/dev-kit-core") rather than pasting this placeholder verbatim
+  scriptPath: "<dev-kit-core>/references/workflows/backlog-groom.workflow.mjs",
+  args: {
+    stories: [{                           // required, 2-8 entries
+      id: "US-042",                       // required — the merge join key back into BACKLOG.md
+      title: "...",                       // required
+      currentText: "...",                 // current backlog entry verbatim, or omit for a new candidate
+      category: "Next",                   // current Now/Next/Later/Icebox/Won't Do bucket
+    }],
+    backlogPath: "docs/global/requirements/BACKLOG.md", // required — read-only context, never a write target
+    estimationMethod: "story-points",     // optional — "story-points" | "t-shirt"
+    contextPaths: ["docs/milestones/<M>/ROADMAP.md"], // optional
+  }
+})
+```
+
+The call returns a runId immediately and runs in the background; you are notified on
+completion. It returns `{ refined, droppedStories }`. Merge every entry in `refined` into
+`BACKLOG.md` in the one write this session owns, re-sorting Now/Next/Later/Icebox/Won't Do
+per "## Backlog Categories" above. Treat every entry in `droppedStories` as still
+unrefined — never mark it sprint-ready, and leave its existing entry untouched until it is
+re-run. A dead run resumes via `Workflow({ scriptPath, resumeFromRunId: "<runId>" })`.
+
+### Part 3: Priority Review (10-20 min)
+- Do top items reflect current priorities?
+- Did anything change this week that should reorder the backlog?
+- Are there items to promote from "next" to "now"?
+
+## Estimation Methods
+
+### Story Points (Fibonacci: 1, 2, 3, 5, 8, 13, 21)
+- Relative sizing, not time
+- 1 = trivially small; 13+ = too big, break it down
+- 21 = epic, not a story
+
+### T-Shirt Sizing (XS, S, M, L, XL)
+- Faster, less precise
+- Good for roadmap-level estimation
+- Convert to points when sprint-ready
+
+### Planning Poker Rules
+- Everyone votes simultaneously (prevent anchoring)
+- Outliers explain their reasoning
+- Re-vote after discussion if needed
+- Don't average — reach consensus
+
+## Story Readiness Checklist (Definition of Ready)
+
+A story is sprint-ready when:
+- [ ] Acceptance criteria are clear and testable
+- [ ] Design is available (if UI work)
+- [ ] Dependencies identified and resolved
+- [ ] Estimated by the team
+- [ ] Fits within one sprint
+- [ ] Test scenarios drafted
+- [ ] If the project uses the Theme→Pillar→US-xxx hierarchy, the story carries its
+      global US-xxx ID and Pillar (see the specify skill)
+
+## Backlog Categories
+
+The durable record is `docs/global/requirements/BACKLOG.md` — one file, one taxonomy, shared
+with any other skill that appends candidate or descoped items to it:
+
+- **Now** — sprint-ready, estimated, detailed
+- **Next** — roughly defined, next 2-3 sprints
+- **Later** — directional intent, not detailed
+- **Icebox** — parked, revisit quarterly
+- **Won't Do** — explicitly rejected, with reason noted
+
+This skill owns the file: apply Backlog Hygiene directly against it, append new entries under
+the right category, and archive or delete zombie entries per the 90-day rule.
+
+## Ceremonies
+
+Essentials for running the agile ceremonies that surround refinement:
+
+### Sprint Planning
+- Set a single, clear sprint goal before pulling stories
+- Plan against real capacity (holidays, support rotation), not ideal velocity
+- Break stories into tasks; confirm definition of done for each
+- Identify risks and dependencies before committing, not after
+
+### Daily Standup
+- Time-box hard (15 min); focus on progress toward the sprint goal, not status theater
+- Capture impediments and assign follow-up outside the standup
+- Watch for patterns: a story stuck 3+ days is a signal, not an update
+
+### Sprint Review
+- Demo the working increment against acceptance criteria
+- Collect stakeholder feedback and feed it directly back into the backlog
+- Note what was accepted vs. carried over, and why
+
+### Retrospective
+- Create a safe space; vary the format to keep it honest
+- Root-cause the top 1-2 issues rather than listing everything
+- Generate few, owned, trackable action items — and verify follow-through next retro
+
+### Impediment Removal
+- Identify blockers daily; target resolution < 48h
+- Escalate with a clear path when the team can't resolve locally
+- Track recurring impediments and fix the process, not just the instance
+
+## Output Format
+
+Deliver:
+- Updated `docs/global/requirements/BACKLOG.md` (Now/Next/Later/Icebox/Won't Do re-sorted)
+- Stories ready for sprint vs. needs more work
+- Items archived or deleted, with reason
+- Refinement agenda for next session

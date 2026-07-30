@@ -1,0 +1,87 @@
+{
+  "_comment": "Tunables for complexity-score.mjs and model-route.mjs. Copied to .claude/bin/ by /dk:bootstrap:init. Edit per project; re-run the scorer after any change. Every model name here must appear in modelBands, and every effort level in effortBands — both tools validate this on startup and exit 2 if it does not hold.",
+
+  "sensitivePaths": {
+    "critical": ["**/auth/**", "**/payments/**", "**/billing/**", "**/security/**", "**/*secret*", "**/*credential*", "**/*token*"],
+    "sensitive": ["**/migrations/**", "**/infra/**", "**/terraform/**", "**/db/**", "**/.github/workflows/**"],
+    "adjacent": ["**/api/**", "**/middleware/**"]
+  },
+
+  "reversibility": {
+    "destructive": ["**/*drop*", "**/*destroy*", "**/*delete*", "**/*backfill*", "**/*purge*"],
+    "schema": ["**/migrations/**", "**/*schema*"]
+  },
+
+  "_bands_comment": "Both axes run 0-12 on dev-kit's 3-value enum vocabulary (see references/complexity-signals.md). Capability = novelty + logic + ambiguity + breadth + fanout. Risk = sensitivity + blast + reversibility + tests + ambiguity.",
+
+  "modelBands": [
+    { "min": 0, "max": 2, "model": "haiku" },
+    { "min": 3, "max": 7, "model": "sonnet" },
+    { "min": 8, "max": 12, "model": "opus" }
+  ],
+
+  "_effortBands_comment": "Five levels, because the dispatch surfaces accept five. The old three-level ladder could not express xhigh or max at all, so any risk above 8 collapsed into 'high' and the top of the range was unreachable. The three original names keep their meaning at the bottom of the ladder; xhigh and max split what used to be one wide band. Declared efforts written against the three-level ladder still validate — the names did not change, only the boundaries and the ceiling.",
+
+  "effortBands": [
+    { "min": 0, "max": 2, "effort": "low" },
+    { "min": 3, "max": 5, "effort": "medium" },
+    { "min": 6, "max": 7, "effort": "high" },
+    { "min": 8, "max": 9, "effort": "xhigh" },
+    { "min": 10, "max": 12, "effort": "max" }
+  ],
+
+  "_floors_comment": "capabilityFloors are evaluated on the RAW declared enums, never on calibrated scores — a calibration adjustment must not be able to suppress a floor. These three encode complexity-signals.md's own prose: 'Use opus for anything with cross-cutting concerns or genuinely ambiguous requirements, regardless of file count.'",
+
+  "capabilityFloors": [
+    { "signal": "novelty", "atLeast": "high", "model": "opus" },
+    { "signal": "logic", "atLeast": "high", "model": "opus" },
+    { "signal": "ambiguity", "atLeast": "high", "model": "opus" }
+  ],
+
+  "_effortFloors_comment": "The effort axis needs floors for the same reason the model axis does: bands are a sum, and a sum lets one maxed-out signal be averaged away by low ones. These three encode complexity-signals.md's own effort table verbatim — 'high: ...cross-cutting scope, or ambiguity: high' and 'low: Execute literally. Trivial fix, no judgment calls — ambiguity: low AND logic: low'. Without them a track declaring ambiguity:high scores 3/12 and bands to low, which the doc explicitly forbids.",
+
+  "effortFloors": [
+    { "signal": "ambiguity", "atLeast": "high", "effort": "high" },
+    { "signal": "ambiguity", "atLeast": "medium", "effort": "medium" },
+    { "signal": "logic", "atLeast": "medium", "effort": "medium" }
+  ],
+
+  "criticalEffortFloor": "high",
+
+  "haikuFileBumpThreshold": 5,
+
+  "_effortParamSupport_note": "VERIFIED EMPIRICALLY 2026-07-30 by a 15-cell live probe (3 model tiers x 5 effort levels, each dispatched as a real Workflow agent(prompt, {model, effort}) call): 15/15 accepted. haiku's former empty list was an ADD-SDD carryover the probe falsified — every tier expresses every effort as a real Workflow parameter. CONSEQUENCE: under this config every banded effort is expressible on the workflow surface, so onInexpressibleEffort and the §6 prompt-text fallback only actually fire on surface 'agent' (hardcoded-inexpressible in routing-engine.mjs, because the Agent tool has no effort parameter in its signature for any model — a property of the tool, not a per-project tunable), or under a future config that deliberately NARROWS one of these lists. The table stays because it is the mechanism by which a project CAN narrow support — e.g. a fork pinned to an older surface, or a model whose effort opt is withdrawn — and a wrong list here never produces a wrong ROUTING decision (model and effort are decided before this is consulted), only a wrong claim about how the effort is transmitted.",
+
+  "effortParamSupport": {
+    "haiku": ["low", "medium", "high", "xhigh", "max"],
+    "sonnet": ["low", "medium", "high", "xhigh", "max"],
+    "opus": ["low", "medium", "high", "xhigh", "max"]
+  },
+
+  "_onInexpressibleEffort_note": "What to do when the routed effort cannot be passed as a real parameter to the routed model. The default 'prompt-text' is where the axes-independence invariant survives: complexity-signals.md states the two axes are independent — 'a mechanical-but-risky task can be haiku/high' — so a transport gap must not become a model change. prompt-text keeps the decision intact and moves the effort into the prompt body instead. The alternative, 'bump-model', is the opt-in per-project deviation: it raises the model to the cheapest one whose effortParamSupport list contains the effort, and if no model supports it (the opus ceiling) it falls through to prompt-text with that reason recorded. Under neither setting is effort ever lowered to fit a model — that would let plumbing rewrite a routing decision, which is the exact failure this design exists to prevent, and it is why the old ADD-SDD-style minModelForEffort is still deliberately absent.",
+
+  "onInexpressibleEffort": "prompt-text",
+
+  "_agents_note": "Machine-readable mirror of plugins/dev-kit-core/references/agent-model-tiers.md's effort side only. Model pinning was removed from this block by operator decision: every agent's model, gate-feeding or not, is scored from its dispatch descriptor's real signals via routing-engine.mjs — no agent name ever short-circuits the capability axis. The reasoning (agent-model-tiers.md, 'all agents perform judgment-shaped work; a name-based override is not a better signal than the descriptor's own novelty/logic/ambiguity') and the removed T1-haiku / operator-sonnet entries' history live in that doc, not here. What remains: effortFloor on the 15 gate-feeding/adversarial agents, so their effort axis cannot be scored down even on a descriptor whose capability signals are legitimately low. tests/agents-config-consistency.test.sh enforces both halves of this: no agents.* entry may carry a model key, and every effortFloor entry must be one of these 15 names.",
+
+  "agents": {
+    "_never_downgrade_note": "The 15 gate-feeding/adversarial agents from agent-model-tiers.md's 'Never downgrade' list (2026-07-29). Only effortFloor is pinned — CONVERSIONS.md's stored recommendation for gate-adjacent judgment (rows 1-3), applied here since these agents ARE the named gate-adjacent judgment roles that recommendation was written for. Model carries no entry: it is scored from the descriptor like every other agent.",
+    "code-review-gate": { "effortFloor": "high" },
+    "security-auditor": { "effortFloor": "high" },
+    "penetration-tester": { "effortFloor": "high" },
+    "compliance-auditor": { "effortFloor": "high" },
+    "gate-automation": { "effortFloor": "high" },
+    "gate-plan-review": { "effortFloor": "high" },
+    "gate-reverse-engineer": { "effortFloor": "high" },
+    "ui-checker": { "effortFloor": "high" },
+    "verifier": { "effortFloor": "high" },
+    "integration-checker": { "effortFloor": "high" },
+    "nyquist-auditor": { "effortFloor": "high" },
+    "design-reviewer": { "effortFloor": "high" },
+    "ui-auditor": { "effortFloor": "high" },
+    "eval-auditor": { "effortFloor": "high" },
+    "plan-reviewer": { "effortFloor": "high" },
+
+    "_note": "CONVERSIONS.md rows 4-9's stored effort-medium recommendations (assumption-map, adr-draft, design-batch, design-variants, slo-review, ship-audit-pair) apply to generic per-call dispatch roles inside Workflow scripts, not to named agents in this repo's agents/ directories — they are applied at call-site descriptors (wave 3), not here. The former T1 haiku pins (doc-classifier, doc-verifier, health-reporter, retro) and operator sonnet overrides (advisor-researcher, pattern-mapper, doc-synthesizer, codebase-mapper) are removed for the same reason as the never-downgrade models above — see agent-model-tiers.md for the history of why they were once pinned and why the pin was later dropped."
+  }
+}

@@ -1,0 +1,86 @@
+# {{PROJECT_NAME}}
+
+This project is built with the **dev-kit** asset layer — skills, agents, and `/dev-kit-core:*`
+commands, enabled in `.claude/settings.json`.
+
+## Doc-path contract
+
+`docs/SITEMAP.md` is the canonical doc-path contract. **Read it before creating any document.**
+Every doc goes at the path SITEMAP gives it; no asset invents a path or a new top-level
+directory. Four tiers, by lifetime:
+
+| Lifetime | Path |
+|---|---|
+| Whole project | `docs/global/` |
+| One milestone | `docs/milestones/<M>/` |
+| One phase | `docs/milestones/<M>/phases/<NN>-<slug>/` |
+| Machine state | `docs/state/` |
+
+Repo root holds ecosystem files only — `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `LICENSE`,
+`VERSION`, `CLAUDE.md`. Tool state stays under `.claude/`. Nothing else lives at the root.
+
+## Project Constraints
+
+Durable constraints that must hold on every turn — environment gotchas, tooling pins, standing
+decisions. Loaded every session, so keep it a curated list, not a running log: one line each,
+deleted when it stops being true. Narrative belongs in the docs it came from.
+
+<!-- Add project constraints below. Keep them short; this section is read every turn. -->
+
+_(none yet)_
+
+## Requirement Scope
+
+**Requirement Scope:** _(none yet — auto-detected from the repo if empty; gate-automation
+cross-checks against the repo and trusts repo evidence over this line on any conflict)_
+
+## Review Tier Default
+
+_(operator-facing only — no dev-kit asset reads this automatically. Set the default plan-review
+tier here once instead of deciding per phase: the everyday minimum bar
+(gate-plan-review + plan-review-goal-backward) or the full four-lens set.)_
+
+## Discovery Calibration
+
+**Calibration tier:** standard
+
+_(How deep the phase-discovery agents go. Read by `/dk:discover:map` and `/dk:discover:research`,
+which pass it to `assumptions-analyzer` and every `advisor-researcher`. Unlike the review tier
+above, this line IS read — leave the heading in place. Three values:_
+
+- `full_maturity` — 3-5 assumption areas, 2-3 alternatives each, line-level evidence. A mature
+  codebase where the cost of a wrong assumption is high and there is enough code to cite precisely.
+- `standard` — 3-4 areas, 2 alternatives, file-path evidence. **The default**, and the right
+  answer for most phases.
+- `minimal_decisive` — 2-3 areas, one decisive recommendation each, key paths only. Greenfield or
+  throwaway work, where breadth of options costs more than it returns.
+
+_Delete the value (not the heading) to fall back to `standard`.)_
+
+## Test Coverage
+
+_(none yet — no Minimum/Target values set, so the ship gate defaults to Minimum 60% / Target 80%)_
+
+<!--
+A few other dev-kit assets branch on whether a heading EXISTS in this file, not on what's under
+it — for those, an empty placeholder heading is worse than no heading at all: it flips the asset
+to a "configured, nothing here" state instead of its normal auto-detect/wizard fallback. Add the
+real heading, with real content, only when you have something to put under it, and check the
+cited asset's own file for its exact expected format first — do not add a bare heading as a
+placeholder:
+
+  - Health Stack commands (type-check / lint / test / dead-code / shell-lint) — read by
+    health-reporter, which skips auto-detection entirely the moment the heading exists.
+    plugins/dev-kit-core/agents/health-reporter.md
+  - A Testing section (run command, house rules) — qa only ever fills this in when it's fully
+    absent; plan-review-eng and ship treat it as authoritative over real repo detection the
+    moment it exists, even empty.
+    plugins/dev-kit-core/agents/qa.md, skills/ship/SKILL.md, skills/plan-review-eng/SKILL.md
+  - A Deploy Configuration section — populated automatically by land-and-deploy's first-run
+    setup wizard; an empty heading here would silently cancel that wizard before it ever runs.
+    plugins/dev-kit-core/skills/land-and-deploy/SKILL.md
+-->
+
+---
+
+<sub>Scaffolded by devkit-pipeline {{PIPELINE_VERSION}} ({{PIPELINE_SHA}}).</sub>

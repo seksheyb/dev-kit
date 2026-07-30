@@ -1,0 +1,269 @@
+---
+name: ship
+description: Fully automated ship workflow — merge base, run tests with failure triage, audit test coverage and plan completion, review the diff, bump version, write the CHANGELOG, split bisectable commits, push, and create/update the PR. Non-interactive by default; the user says /ship and the next thing they see is the PR URL. Use when asked to "ship", "ship it", "create a PR", or "prepare this branch for merge".
+---
+
+# /ship — Fully Automated Ship Workflow
+
+This is a **non-interactive, fully automated** workflow. Do NOT ask for confirmation at any step. The user said `/ship` which means DO IT. Run straight through and output the PR URL at the end.
+
+**Only stop for:**
+- On the base branch (abort)
+- Merge conflicts that can't be auto-resolved
+- In-branch test failures (pre-existing failures are triaged, not auto-blocking)
+- Review findings that need user judgment
+- MINOR or MAJOR version bump needed (ask)
+- Coverage below the minimum threshold (hard gate with user override)
+- Plan items NOT DONE with no user override
+
+**Never stop for:**
+- Uncommitted changes (always include them)
+- MICRO/PATCH version bump choice (auto-pick)
+- CHANGELOG content (auto-generate from diff)
+- Commit message approval (auto-commit)
+- Multi-file changesets (auto-split into bisectable commits)
+- Auto-fixable review findings (dead code, stale comments — fix them)
+
+**Re-run behavior (idempotency):** re-running `/ship` means "run the whole checklist again." Every verification step runs on every invocation. Only *actions* are idempotent: skip the version bump if already bumped, skip the push if already pushed, update the PR body instead of creating a duplicate PR. Never skip a verification step because a prior run performed it.
+
+## Step 0: Detect platform and base branch
+
+Detect the git hosting platform from `git remote get-url origin`:
+- URL contains "github.com" → **GitHub**; contains "gitlab" → **GitLab**
+- Otherwise: `gh auth status` succeeds → GitHub (covers Enterprise); `glab auth status` succeeds → GitLab; neither → unknown (git-native commands only)
+
+Determine the base branch (the branch the PR targets, or the repo default):
+- **GitHub:** `gh pr view --json baseRefName -q .baseRefName`, else `gh repo view --json defaultBranchRef -q .defaultBranchRef.name`
+- **GitLab:** `glab mr view -F json` → `target_branch`, else `glab repo view -F json` → `default_branch`
+- **Git-native fallback:** `git symbolic-ref refs/remotes/origin/HEAD | sed 's|refs/remotes/origin/||'`; else check `origin/main`, then `origin/master`; else `main`.
+
+Print the detected base branch. Substitute it wherever the steps below say `<base>`.
+
+## Step 1: Pre-flight
+
+1. If on the base branch or the repo default branch, **abort**: "You're on the base branch. Ship from a feature branch."
+2. `git status` — uncommitted changes are always included, no need to ask.
+3. `git diff <base>...HEAD --stat` and `git log <base>..HEAD --oneline` to understand what's being shipped.
+4. If the diff is >200 lines, note that an architecture-level review before shipping is recommended — but do not block. Ship runs its own diff review in Step 6.
+5. If the diff introduces a new standalone artifact (CLI binary, library package, tool — not a web service with existing deployment), check for a release/publish CI workflow (`.github/workflows/*release*`, `*publish*`, `*dist*`, or the GitLab CI equivalent). None found → ask: add a release workflow now, defer it as a `docs/global/requirements/TODOS.md` item, or confirm it's not needed (internal/web-only, existing deployment covers it). Workflow exists, or no new artifact detected → continue silently.
+
+## Step 2: Merge the base branch (BEFORE tests)
+
+```bash
+git fetch origin <base> && git merge origin/<base> --no-edit
+```
+
+Auto-resolve simple conflicts (VERSION, lockfiles, CHANGELOG ordering). If conflicts are complex or ambiguous, **STOP** and show them. If already up to date, continue silently.
+
+## Step 3: Run tests (on merged code)
+
+Detect the test command: read CLAUDE.md's Testing section first; otherwise detect from the project (package.json scripts, Makefile, pytest/cargo/go conventions). If the project has no test framework, offer to bootstrap one (pick the ecosystem standard — vitest/jest for Node, pytest for Python, minitest/rspec for Ruby, stdlib for Go/Rust — install, configure, write 3-5 real tests for recently-changed high-risk code, add a CI workflow) or record the user's decline and continue without tests.
+
+Run the full suite. **If any test fails, do NOT immediately stop — triage ownership first:**
+
+1. **Classify each failure:** get the branch's changed files (`git diff <base>...HEAD --name-only`). A failure is **in-branch** if the failing test file or the code it tests was modified on this branch, or the failure traces to a branch change. Otherwise it's **likely pre-existing**. When ambiguous, default to in-branch — it's safer to stop the developer than to ship a broken test.
+2. **In-branch failures: STOP.** These are your failures. Fix before shipping.
+3. **Pre-existing failures:** ask the user — A) investigate and fix now (commit the fix separately: `fix: pre-existing test failure in <file>`), B) add as a P0 item to `docs/global/requirements/TODOS.md` and continue, C) create an issue assigned to whoever last touched the production code under test (`git log --format="%an" -1 -- <source-file>`), or D) skip and note it in the output.
+4. After triage: any unfixed in-branch failure → **STOP**. All pre-existing failures handled → continue.
+
+If the diff touches prompt/LLM files and the project has an eval suite, run the affected evals too — a failing eval blocks the same way a failing test does.
+
+Steps 4 and 5 dispatch together as a pair. Step 4 is the only writer of the pair — generated coverage tests, `test:` commits; Step 5 is read-only over the plan file, `VERIFICATION.md`, and the diff, and the two share no files.
+
+| Audit subagents | Dispatch |
+| --- | --- |
+| **2 or more** | **Workflow script — mandatory.** `@references/workflows/ship-audit-pair.workflow.mjs` |
+| Exactly 1 | Plain inline `Agent` call — a Workflow for one agent is pure overhead |
+
+**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor per agent role — `coverage-auditor`, `plan-verifier` — surface "workflow", profile `review`, signals declared per that doc's profile tables; write them keyed by role to a temp JSON; run `node plugins/dk/bin/model-route.mjs --caller ship --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
+
+The pair is always 2, so this is always the Workflow path. Render both subagent prompts in full yourself first — the residual scope Step 0 leaves, the base branch and diff range, the plan path, the coverage thresholds, every instruction each member follows — then pass them through:
+
+```js
+Workflow({ scriptPath: "<dev-kit-core>/references/workflows/ship-audit-pair.workflow.mjs", args: {
+  step4Prompt, step5Prompt } })   // both required — complete, pre-rendered; the script writes no prompt text
+```
+
+`scriptPath` resolves `<dev-kit-core>` to the installed plugin dir; a dead run resumes via `Workflow({ scriptPath, resumeFromRunId: "<runId>" })`.
+
+The script is a barrier only — it returns both results verbatim and re-checks nothing. Join before Step 6: nothing in Step 6's review scope is settled until both are back, and Step 6 must review Step 4's committed tests as ship-generated delta. At the join, in your own turn, re-check any Step 5 item judged NOT DONE solely for a missing test against what Step 4 just committed, because Step 5 read the diff as it stood at dispatch.
+
+## Step 4: Test Coverage Audit
+
+Dispatch as one of the two Step 4+5 subagents described above (fresh context; the parent only needs the conclusion). This is a **final whole-branch safety net, not a first-pass audit** — on the common path, `nyquist-auditor` already did this exact job per-phase at Stage 11 (one real behavioral test per gap in `verifier`'s `validation_gaps` list). Don't silently re-do that work.
+
+0. **Reuse Stage 11 output first.** For each phase this branch covers, check for a `VERIFICATION.md` (`docs/milestones/<M>/phases/<NN>-<slug>/VERIFICATION.md`) with a `validation_gaps` list. For every gap already resolved there — `nyquist-auditor` reported it FILLED (a passing test exists for it now) or explicitly justified as SKIP — trust that result; do not re-derive it. Narrow everything below to only:
+   - gaps that were ESCALATED and never subsequently resolved, and
+   - code changed since the last `VERIFICATION.md`/`nyquist-auditor` pass — hotfixes made directly during Stage 13, or phases/workflows with no `VERIFICATION.md` at all (ad-hoc work, manual branches, or projects that skip the full per-phase loop).
+
+   If every phase this branch touches has a `VERIFICATION.md` with all gaps FILLED or justified-SKIP, and no code has changed since, there is no residual scope — output "Coverage already audited by `nyquist-auditor` for this branch's phase(s); no residual gaps" and skip straight to the Step 7 coverage gate below.
+
+100% coverage is the goal for whatever residual scope Step 0 leaves — evaluate what was ACTUALLY coded (the diff), not what was planned.
+
+1. **Trace every changed codepath in the residual scope.** Read each changed file in full. Follow the data: where does input come from, what transforms it, where does it go, what can go wrong (null, invalid input, network failure, empty collection)? Map every conditional branch, error path, and call into helpers with their own branches.
+2. **Map user flows and error states in the residual scope.** Double-click/rapid resubmit, navigate-away mid-operation, stale data, slow connection, concurrent tabs; for every handled error, what does the user actually see, and can they recover? Empty/zero/boundary states.
+3. **Check each branch against existing tests.** Both true AND false paths of each conditional; a test that triggers each specific error; integration/E2E for flows spanning 3+ components and for auth/payment/data-destruction paths. Quality scale: ★★★ behavior + edge + error, ★★ happy path, ★ smoke check.
+4. **REGRESSION RULE (mandatory):** if the diff modifies existing behavior and no test covers the changed path, write the regression test immediately — no asking, no skipping. Commit as `test: regression test for {what broke}`.
+5. **Output an ASCII coverage diagram** (code paths + user flows, TESTED/GAP per branch, overall percentage) — mark which entries were reused from `nyquist-auditor`'s prior pass vs. newly audited here. All paths covered → "All new code paths have test coverage ✓" and continue.
+6. **Generate tests for uncovered paths.** Error handlers and edge cases first. Match the project's test conventions (read 2-3 existing tests). Run each generated test: passes → commit as `test: coverage for {feature}`; fails → fix once; still fails → revert and note the gap. Caps apply to the residual scope only: ~30 paths analyzed, ~20 tests generated.
+7. **Coverage gate:** use CLAUDE.md's `## Test Coverage` Minimum/Target if present, else Minimum 60% / Target 80%. At or above target → pass. Between → ask: generate more tests (recommended) / ship anyway / mark paths intentionally uncovered. Below minimum → ask: generate more (max 2 passes) / explicit override. Test-only diffs or undeterminable percentage → skip the gate.
+
+**Return, when dispatched via the Step 4+5 pair:**
+
+```json
+{ "coverageDiagram": "<the ASCII diagram from #5, or its documented substitute>",
+  "coverageGate": "pass" | "ask" | "skipped",
+  "gateQuestion": "<only when coverageGate is 'ask': the exact question, with measured/required %>",
+  "testCommits": ["<test: ... commit>", "..."],
+  "remainingGaps": ["<path left uncovered>", "..."] }
+```
+
+## Step 5: Plan Completion Audit
+
+If a plan file exists for this work — the phase's `<NN>-<MM>-PLAN.md` (`docs/milestones/<M>/phases/<NN>-<slug>/<NN>-<MM>-PLAN.md`), active plan in conversation context, or a recent plan file mentioning this branch/repo — audit it. No plan file → skip with "No plan file detected."
+
+0. **Reuse Stage 11 output first.** If a `VERIFICATION.md` exists for the relevant phase(s), read its pass/fail verdicts (`gaps:` list, `status`, per-truth evidence) and scan the plan file for any `## Phase N: Convergence` task blocks `converge` appended — use both as **pre-confirmed evidence** for the plan items they cover, the same way `converge` itself treats `VERIFICATION.md` as pre-confirmed evidence rather than re-deriving it from scratch. A truth `verifier` marked passed with no later gap reopening it → DONE. A gap `verifier` flagged with no Convergence task closing it (or an unclosed one) → NOT DONE/PARTIAL, per the gap's `reason`. A plan item covered by an appended Convergence task → its status follows whether that task is now done in the diff. Only fall back to Steps 1-4 below — deriving status from the plan file blind — for phases with no `VERIFICATION.md` (manual/ad-hoc workflows that skipped Stage 11). Tag every item resolved this way as **(reused from VERIFICATION.md)** in the completion checklist — the same reused-vs-newly-audited distinction Step 4's coverage diagram already makes — so a status taken on trust from `verifier`/`converge` is never indistinguishable from one this step verified itself.
+
+1. **Extract actionable items** (checkboxes, numbered implementation steps, imperative statements, file-level specs, test requirements, data-model changes) not already classified in Step 0. Ignore context/background sections, open questions, and explicitly deferred items ("Future:", "Out of scope:"). Cap at 50.
+2. **Classify verifiability:** DIFF-VERIFIABLE (would show in `git diff <base>...HEAD`), CROSS-REPO (check file existence on disk if the sibling repo is reachable), EXTERNAL-STATE (DNS, SaaS config — cannot be proven from the diff).
+3. **Classify each item:** DONE (clear evidence, cite files), PARTIAL, NOT DONE, CHANGED (same goal via different approach — note the difference), UNVERIFIABLE (cite the specific manual check the user must perform). Mark an item `missingTestOnly` when the ONLY reason it's NOT DONE/PARTIAL is an absent test — this is the flag the join re-check (Step 3, above) reads against Step 4's `test:` commits before Step 6, so a test Step 4 committed while this audit was running can flip the item to DONE without re-deriving it from scratch.
+4. **Honesty rules:** be conservative with DONE — code that *handles* a deliverable is not the deliverable. Be generous with CHANGED. Prefer UNVERIFIABLE over silently assuming DONE.
+5. Items NOT DONE → **STOP** and ask: finish now, defer explicitly (list them in the PR body), or drop. Include the completion checklist in the PR body.
+
+**Return, when dispatched via the Step 4+5 pair:**
+
+```json
+{ "planFound": true | false,
+  "planPath": "<the plan file audited, when planFound is true>",
+  "items": [
+    { "item": "<the actionable plan item, as written>",
+      "status": "DONE" | "PARTIAL" | "NOT DONE" | "CHANGED" | "UNVERIFIABLE",
+      "verifiability": "DIFF-VERIFIABLE" | "CROSS-REPO" | "EXTERNAL-STATE",
+      "evidence": "<cited files, the difference, the manual check, or the reason>",
+      "missingTestOnly": true | false,
+      "reusedFromVerification": true | false }
+  ],
+  "completionChecklist": "<the rendered checklist for the PR body's ## Plan Completion section>" }
+```
+
+`planFound: false` (no plan file detected) is a real, complete result — `items` is empty and `completionChecklist` may be omitted.
+
+## Step 6: Pre-landing review
+
+**Scope check (informational, non-blocking):** before the quality pass, compare stated intent (commit messages, `docs/global/requirements/TODOS.md` entries, the plan file from Step 5 if one was found) against what the diff actually touches. Flag two kinds of drift: files/changes unrelated to the stated intent ("while I was in there..." creep) and stated requirements the diff doesn't address. Report one line — `Scope check: CLEAN` or `Scope check: DRIFT — <files/behavior not tied to stated intent>` / `Scope check: MISSING — <requirement not addressed>` — in the PR body; never blocks shipping.
+
+**Scope the review — don't re-review what already went through Stage 10/12.** On the common path, `code-review-gate` (Stage 10) and `security-auditor`/`cso` (Stage 12) already adversarially reviewed the pre-existing diff. Split the diff before reviewing:
+
+- **Ship's own generated delta** — anything `ship` itself wrote or changed in Steps 2-5: auto-resolved merge conflicts (Step 2), fixes committed while triaging test failures (Step 3), generated coverage tests (Step 4), and any fixes made completing plan items (Step 5). This code was never seen by Stage 10 or 12, so it gets the **full mandatory review** below, dispatched as a subagent if available:
+  - Correctness: logic errors, off-by-one, unhandled null/error paths, race conditions
+  - Security: injection, secrets in the diff, authz gaps on new endpoints
+  - Performance: N+1 queries, unbounded loops, missing indexes for new query patterns
+  - Hygiene: dead code, debug leftovers, stale comments, unused imports
+- **The rest of the diff** — everything that already went through Stage 10/12's adversarial review — gets a **lightweight sanity skim only**: scan for anything glaring (a broken import, a leftover debug statement, a merge artifact), not a full Correctness/Security/Performance/Hygiene pass. Do not re-derive findings those gates already cleared.
+
+If Steps 2-5 produced no ship-generated delta (clean merge, no coverage gaps, no plan fixes), the full review has nothing to run against — the lightweight skim is the whole of Step 6.
+
+Auto-fix mechanical findings (dead code, stale comments, imports) and commit them. For findings that need judgment (behavior changes, security trade-offs), **STOP** and ask. Optionally run an adversarial second pass — "try to break this diff" — with a fresh subagent, scoped to ship's own delta, for large or risky changes.
+
+**Record which of three outcomes applies, explicitly — never let one collapse into another:** **not attempted** (the diff wasn't large/risky enough to trigger the pass — say so by name, don't just fall silent), **attempted, survived** (the pass ran against ship's delta and found nothing), or **attempted, refuted** (the pass ran and broke something — list what). A pass that never ran must never render as "No issues found" with no mention that it was skipped.
+
+## Step 7: Version bump (auto-decide)
+
+If the project keeps a VERSION file and/or a version field in its manifest (package.json etc.):
+
+1. **Classify state:** compare the branch's VERSION against `<base>`'s (`git show origin/<base>:VERSION`). Already bumped → skip the bump but verify VERSION and manifest agree; a mismatch means the two drifted (a partial merge, a failed release script, a revert, or a manual edit) — check `git log` for the last write to each and reconcile before continuing.
+2. **Decide the bump level from the diff:** MICRO/PATCH — bug fixes, small additive changes (auto-pick). MINOR — new capability, migration, new module, or a large diff (**ASK**). MAJOR — breaking changes or milestones (**ASK**). The level communicates what kind of release this is; don't undersell a big diff as a PATCH.
+3. **Write the bump** to VERSION and the manifest together — never just one of them.
+
+Projects with no version tracking: skip this step silently.
+
+## Step 8: CHANGELOG (auto-generate)
+
+1. Read the CHANGELOG header to learn the format.
+2. **Enumerate every commit on the branch:** `git log <base>..HEAD --oneline`. This list is your checklist.
+3. **Read the full diff** (`git diff <base>...HEAD`) to see what each commit actually changed.
+4. **Group commits by theme** (features, performance, fixes, cleanup, infrastructure, refactoring) before writing.
+5. **Write one unified entry** for the new version, dated today. If earlier branch-internal entries exist that never landed on the base branch, collapse them into this one — readers see one release, not a branch diary. Sections: `### Added` / `### Changed` / `### Fixed` / `### Removed`.
+6. **Voice:** lead with what the user can now DO that they couldn't before. Plain language, not implementation details. Never mention internal tracking, branch history, or mid-branch fixes — the entry is the diff between base and this branch, not how the branch got there.
+7. **Cross-check:** every commit from step 2 must map to at least one bullet. Do NOT ask the user to describe changes — infer from the diff.
+
+## Step 9: TODOS.md (auto-update)
+
+If the repo keeps a `docs/global/requirements/TODOS.md`, cross-reference it against the diff and commit messages. Mark items complete only with clear evidence in the diff (be conservative), move them to a `## Completed` section with the version and date, and summarize (`N items marked complete, M remaining`). Missing or disorganized file → offer once to create/reorganize, otherwise skip. Never fail the ship over a TODOS write error.
+
+## Step 10: Commit (bisectable chunks)
+
+**Goal:** small, logical commits that work with `git bisect` and make the history readable.
+
+1. Group changes into logical commits — one coherent change each, not one file each.
+2. **Ordering:** infrastructure (migrations, config, routes) → models/services (+ their tests) → controllers/views/components (+ their tests) → VERSION + CHANGELOG + `docs/global/requirements/TODOS.md` always in the final commit.
+3. A unit and its test file go in the same commit. Migrations get their own commit or ride with the model they support. Diffs under ~50 lines across <4 files can be a single commit.
+4. **Each commit must be independently valid** — no broken imports, no references to code that doesn't exist yet.
+5. Messages: `<type>: <summary>` (feat/fix/chore/refactor/docs/test) plus a brief body. The final version-bump commit carries the version tag.
+
+If the branch contains WIP checkpoint commits, squash them into their logical commits first — but NEVER `git reset --soft` past non-WIP commits (that destroys landed work); only reset-soft when the branch is verified to be all-WIP.
+
+## Step 11: Verification Gate
+
+**IRON LAW: no completion claims without fresh verification evidence.**
+
+1. If ANY code changed after Step 3's test run (review fixes, generated tests), re-run the test suite and paste fresh output. Stale output is not acceptable.
+2. If the project has a build step, run it.
+3. Rationalization prevention: "should work now" → RUN IT. "I'm confident" → confidence is not evidence. "I tested earlier" → code changed since then. "It's trivial" → trivial changes break production.
+
+Tests fail here → **STOP**, do not push. Fix and return to Step 3.
+
+## Step 12: Push
+
+Idempotency check: compare `git rev-parse HEAD` with `git rev-parse origin/<branch>` after a fetch. Already pushed → skip. Otherwise `git push -u origin <branch>`. Never force push.
+
+Before pushing, eyeball the outgoing diff for credentials (API keys, tokens, private keys) — a leaked secret in a pushed commit is an incident, not a cleanup. (Requires wiring for automated scanning: gitleaks or a pre-push hook.)
+
+**You are NOT done** — PR creation is a mandatory final step.
+
+## Step 13: Create or update the PR/MR
+
+Check for an existing open PR/MR (`gh pr view` / `glab mr view`). If one exists, **update** its body — always regenerated from this run's fresh results, never reused stale content. If none exists, create it (`gh pr create --base <base>` / `glab mr create -b <base>`).
+
+**Title format:** `v<VERSION> <type>: <summary>` when the project tracks a version (version first, always), else `<type>: <summary>`.
+
+**Body sections:**
+
+```
+## Summary
+<group every substantive commit into logical sections; enumerate git log <base>..HEAD
+ and check every commit is represented — the version-bump commit excepted>
+
+## Test Coverage
+<coverage diagram from Step 4, or "All new code paths have test coverage.">
+<Tests: {before} → {after} (+{delta} new)>
+
+## Pre-Landing Review
+<findings from Step 6, or "No issues found.">
+<Adversarial pass: not attempted | attempted, survived | attempted, refuted — from Step 6>
+<Scope check line from Step 6 (omit if CLEAN and no other review content needs it)>
+
+## Plan Completion
+<checklist summary from Step 5, deferred items listed; or "No plan file detected.">
+
+## TODOS
+<completed items with version, or omit>
+
+## Test plan
+- [x] <suite>: N passed, 0 failed
+```
+
+If neither `gh` nor `glab` is available: print the branch name and remote URL and tell the user to open the PR via the web UI — the code is pushed and ready.
+
+**Output the PR/MR URL.** Use `/land-and-deploy` next to merge the PR, deploy the changes, and verify production health.
+
+## Important Rules
+
+- **Never skip tests.** If tests fail (in-branch), stop.
+- **Never force push.**
+- **Never ask for trivial confirmations** ("ready to push?", "create PR?"). DO stop for MINOR/MAJOR bumps and review findings that need judgment.
+- **Split commits for bisectability** — each commit = one logical change.
+- **TODOS completion detection must be conservative.**
+- **Never push without fresh verification evidence.**
+- **Generated coverage tests must pass before committing.** Never commit failing tests.
+- **The goal:** the user says `/ship`, the next thing they see is the review summary + PR URL.

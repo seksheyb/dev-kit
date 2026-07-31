@@ -13,11 +13,9 @@ The phase-researcher already ran in wave 1. For phase <NN>, fan out one advisor-
 **Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor per agent role — `advisor-researcher`, `pattern-mapper` — surface "workflow", profile research, signals declared per that doc's profile tables; write them keyed by role to a temp JSON; run `model-route.mjs --caller discover:research --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it. Neither `advisor-researcher` nor `pattern-mapper` has a config or frontmatter model pin — both are scored from their descriptor's signals like every other agent.
 
 ```
-Workflow({ scriptPath: "<dev-kit-core>/references/workflows/discovery-research.workflow.mjs", args: {
+Workflow({ scriptPath: "<dev-kit-core>/references/workflows/discovery-research.workflow.mjs", args: {   // real fs path: run the bare command dev-kit-core-root and substitute its output for <dev-kit-core>
   grayAreas: [{ name, description }], phaseContext, projectContext, phase: "<NN>",   // all required
   calibrationTier: "standard" } })   // optional — from CLAUDE.md's Discovery Calibration section
 ```
-
-`scriptPath` needs a real filesystem path — run the bare command `dev-kit-core-root` and substitute its output for `<dev-kit-core>`.
 
 Pre-cap the gray areas at 5 yourself, highest blast radius first (architecture/security/payments/auth, then whatever a wrong call is most expensive to unwind), folding the remainder into one combined advisor or a follow-up wave — the script rejects more than 5.

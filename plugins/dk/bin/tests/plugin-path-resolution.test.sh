@@ -102,8 +102,10 @@ check "'node model-route.mjs' genuinely fails from a foreign cwd (the trap this 
 # ---------------------------------------------------------------------------
 cd "$ROOT" || exit 2
 
-# plugin-paths.md is excluded from both scans below: it is the document that names these broken
-# forms in order to forbid them, so it is the one file allowed to contain them.
+# plugin-paths.md and scaffold-contract.md are excluded from the scans below: they are the two
+# documents that name these paths in order to forbid vendoring them, so they are the files allowed
+# to contain them. Everything else that names a `.claude/bin/` script is instructing someone to run
+# one, which is the thing being forbidden.
 BAD_NODE="$(grep -rn 'node plugins/[a-z-]*/bin/' --include='*.md' plugins/ 2>/dev/null \
   | grep -v 'plugin-paths.md' || true)"
 check "no command/agent/skill markdown invokes 'node plugins/<plugin>/bin/…'" \
@@ -112,6 +114,7 @@ check "no command/agent/skill markdown invokes 'node plugins/<plugin>/bin/…'" 
 BAD_VENDOR="$(grep -rn '\.claude/bin/[a-z-]*\.mjs' --include='*.md' plugins/ 2>/dev/null \
   | grep -v 'plugins/dk/commands/bootstrap/' \
   | grep -v 'plugin-paths.md' \
+  | grep -v 'scaffold-contract.md' \
   | grep -v 'never' || true)"
 check "no markdown instructs running a vendored .claude/bin/ script" \
   "$([ -z "$BAD_VENDOR" ] && echo 0 || echo 1)" "$BAD_VENDOR"

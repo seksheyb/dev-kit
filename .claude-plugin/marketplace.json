@@ -29,7 +29,7 @@
     {
       "name": "dev-kit-web",
       "description": "Web frontend knowledge packs: React, Next.js, Vue, Angular, TypeScript, Playwright, Shopify, WordPress, Electron",
-      "version": "2.0.0",
+      "version": "1.0.0",
       "source": "./plugins/dev-kit-web",
       "author": {
         "name": "sekshey",
@@ -39,7 +39,7 @@
     {
       "name": "dev-kit-mobile",
       "description": "Mobile knowledge packs: Flutter, React Native, Swift, Kotlin",
-      "version": "2.0.0",
+      "version": "1.0.0",
       "source": "./plugins/dev-kit-mobile",
       "author": {
         "name": "sekshey",
@@ -49,7 +49,7 @@
     {
       "name": "dev-kit-backend",
       "description": "Backend and language knowledge packs: Java/Spring, Python, Node, Go, Rust, PHP, Ruby, .NET, Elixir, SQL/Postgres, API/GraphQL/microservices design",
-      "version": "2.0.0",
+      "version": "1.0.0",
       "source": "./plugins/dev-kit-backend",
       "author": {
         "name": "sekshey",
@@ -59,7 +59,7 @@
     {
       "name": "dev-kit-data-ai",
       "description": "Data and AI packs plus the 4 AI-lane agents: RAG, LLM architecture, prompt engineering, ML/MLOps, NLP, data engineering, evals",
-      "version": "2.0.0",
+      "version": "1.0.0",
       "source": "./plugins/dev-kit-data-ai",
       "author": {
         "name": "sekshey",
@@ -69,7 +69,7 @@
     {
       "name": "dev-kit-infra",
       "description": "Infrastructure knowledge packs: Kubernetes, Terraform, Docker, cloud architecture, Azure, networking, SRE, monitoring, PowerShell, Microsoft ops",
-      "version": "2.0.0",
+      "version": "1.0.0",
       "source": "./plugins/dev-kit-infra",
       "author": {
         "name": "sekshey",
@@ -79,7 +79,7 @@
     {
       "name": "dev-kit-specialized",
       "description": "Specialized domain packs: embedded, games, Salesforce, CLI/MCP/devtools, Slack, Atlassian, and niche industries (blockchain, fintech, payments, healthcare, legal, SEO)",
-      "version": "2.0.0",
+      "version": "1.0.0",
       "source": "./plugins/dev-kit-specialized",
       "author": {
         "name": "sekshey",
@@ -89,7 +89,7 @@
     {
       "name": "dev-kit-product",
       "description": "Product analytics and compliance: A/B testing, cohort analysis, growth loops, GDPR/CCPA, HIPAA",
-      "version": "2.0.0",
+      "version": "1.0.0",
       "source": "./plugins/dev-kit-product",
       "author": {
         "name": "sekshey",

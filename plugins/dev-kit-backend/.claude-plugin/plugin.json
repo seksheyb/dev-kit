@@ -1,7 +1,7 @@
 {
   "name": "dev-kit-backend",
   "description": "Backend and language knowledge packs: Java/Spring, Python, Node, Go, Rust, PHP, Ruby, .NET, Elixir, SQL/Postgres, API/GraphQL/microservices design",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "author": { "name": "sekshey", "email": "sekshey@gmail.com" },
   "homepage": "https://github.com/seksheyb/dev-kit",
   "repository": "https://github.com/seksheyb/dev-kit",

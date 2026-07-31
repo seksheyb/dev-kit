@@ -37,13 +37,25 @@ check() { if [ "$2" = "0" ]; then pass "$1"; else fail "$1${3:+ ($3)}"; fi; }
 # 1. init.md vendors nothing into .claude/bin/. The copy list is the thing that was wrong in both
 #    directions; the fix was to delete it, so assert it stays deleted.
 # ---------------------------------------------------------------------------
-COPY_LINES="$(grep -n 'to `\.claude/bin/`\|copy .*\.claude/bin' "$DK/commands/bootstrap/init.md" 2>/dev/null \
-  | grep -iv 'no executables\|do not touch\|earlier versions' || true)"
-check "init.md no longer instructs copying anything into .claude/bin/" \
-  "$([ -z "$COPY_LINES" ] && echo 0 || echo 1)" "$COPY_LINES"
+# The old copy list read `${CLAUDE_PLUGIN_ROOT}/bin/<file>` — that is the affirmative instruction
+# this asserts is gone. Matching on the phrase ".claude/bin" instead would catch the *prohibition*
+# ("copy nothing into .claude/bin/") as readily as the instruction, and would have to be loosened
+# every time the wording changed until it asserted nothing.
+COPY_SRC="$(grep -n 'CLAUDE_PLUGIN_ROOT}/bin/' "$DK/commands/bootstrap/init.md" 2>/dev/null || true)"
+check "init.md names no plugin bin/ file as a copy source" \
+  "$([ -z "$COPY_SRC" ] && echo 0 || echo 1)" "$COPY_SRC"
 
-grep -q 'plugin-paths.md' "$DK/commands/bootstrap/init.md"
-check "init.md points at the path convention that replaced the copies" "$?"
+grep -qE 'Copy nothing into `\.claude/bin/`' "$DK/commands/bootstrap/init.md"
+check "init.md states the prohibition explicitly" "$?"
+
+# init.md is a thin dispatcher (pipeline-command-guards caps its body at 12 lines), so the contract
+# lives one hop away. Assert the whole chain resolves, not just the first link.
+grep -q 'scaffold-contract.md' "$DK/commands/bootstrap/init.md"
+check "init.md points at the scaffold contract" "$?"
+[ -f "$DK/references/scaffold-contract.md" ]
+check "the scaffold contract exists where init.md says it does" "$?"
+grep -q 'plugin-paths.md' "$DK/references/scaffold-contract.md"
+check "the scaffold contract points at the path convention that replaced the copies" "$?"
 
 # The hooks copy DOES survive, with its own independent reason. Assert both halves are still named
 # together — a copy list that names one without the other is the original bug's shape.

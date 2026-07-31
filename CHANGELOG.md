@@ -4,10 +4,26 @@ All notable changes to dev-kit are recorded here. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-Every plugin in this marketplace ships on one coordinated version — installing a lane
-never means reasoning about which core it pairs with.
+**Plugins version independently.** A release moves only the plugins it actually changed, so a
+lane sitting at an older version than `dev-kit-core` means that lane did not change — not that it
+is behind. Each release below lists the versions it publishes and leaves the rest alone.
 
-## [2.0.0] — 2026-07-31
+The one thing this costs is that mixed versions are now reachable, so each release states what it
+requires of the plugins it does *not* ship. The standing rule: `dev-kit-core` and the lanes carry
+no executables of their own and route through whatever `dk` has installed, so **`dk` is the one
+plugin whose version can gate another's behavior.** Keep it at or above the newest
+`dev-kit-core` you have installed.
+
+## 2026-07-31 — `dk` 2.0.0, `dev-kit-core` 2.0.0
+
+| Plugin | Version | |
+|---|---|---|
+| `dk` | **2.0.0** | was 1.0.0 |
+| `dev-kit-core` | **2.0.0** | was 1.0.0 |
+| `dev-kit-web`, `dev-kit-mobile`, `dev-kit-backend`, `dev-kit-data-ai`, `dev-kit-infra`, `dev-kit-specialized`, `dev-kit-product` | 1.0.0 | unchanged — not republished |
+
+The seven lanes are byte-identical to their 1.0.0 trees; they ship no executables and reference
+none, so nothing in this release reaches them.
 
 Major because how dev-kit reaches its own executables changed, and that is visible from
 outside: the plan gate and model router are no longer invoked at a path, projects are no
@@ -16,6 +32,16 @@ longer expected to carry copies of them, and a project that had adopted its own 
 the routing arithmetic, the band ladders, or any agent's behavior changed — the shipped
 `complexity-score.mjs`, `routing-engine.mjs` and `complexity.config.json` are byte-identical
 to 1.0.0.
+
+**Mixed versions.** Both directions were checked rather than assumed:
+
+- `dev-kit-core` 2.0.0 with `dk` 1.0.0 — **works.** dk 1.0.0 already ships `model-route.mjs` and
+  `complexity-score.mjs` in its `bin/`, so the bare commands resolve. Only `/dk:bootstrap:converge`
+  is missing, so convergence has to be done by hand.
+- `dk` 2.0.0 with `dev-kit-core` 1.0.0 — **degraded, not broken.** dev-kit-core 1.0.0's
+  `gate-plan-review` still runs `node .claude/bin/complexity-score.mjs`, which is gone once a
+  project has converged; it falls back to its documented manual signal check and says so. Upgrade
+  `dev-kit-core` to restore the deterministic check.
 
 ### BREAKING
 

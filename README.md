@@ -126,7 +126,7 @@ Stage-by-stage detail: **[docs/guide/pipeline.md](docs/guide/pipeline.md)**.
 | [docs/guide/architecture.md](docs/guide/architecture.md) | Skills, agents, commands, model routing, state files |
 | [docs/catalog/README.md](docs/catalog/README.md) | Every skill and agent, by plugin and by role |
 | [plugins/dk/RUNBOOK.md](plugins/dk/RUNBOOK.md) | The operational map — order, conditions, gates, loop structure |
-| [CHANGELOG.md](CHANGELOG.md) | Release history; every plugin ships on one coordinated version |
+| [CHANGELOG.md](CHANGELOG.md) | Release history; plugins version independently, so each entry lists what it publishes |
 
 ## License and attribution
 

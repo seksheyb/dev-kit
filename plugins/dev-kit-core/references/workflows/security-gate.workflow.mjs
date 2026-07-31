@@ -93,7 +93,7 @@
  * agentType   string   optional. Subagent type to dispatch. Default "security-auditor".
  *                      See AGENT RESOLUTION below.
  * routing     object   optional. `{ 'security-auditor': {model?, effort?} }` — decided
- *                      caller-side by `plugins/dk/bin/model-route.mjs --batch` and
+ *                      caller-side by `model-route.mjs --batch` and
  *                      forwarded verbatim. A missing key or a missing `routing` arg leaves
  *                      `model`/`effort` absent entirely (inherit the session model), never
  *                      defaulted. This may itself be invoked as a child workflow by

@@ -73,6 +73,13 @@ step and shows you the command before it runs, `/dk:runbook` prints the whole ma
 `/dk:status` reports where an orchestrator-driven run left off. Full path, including
 brownfield adoption: **[docs/guide/getting-started.md](docs/guide/getting-started.md)**.
 
+**After updating the plugins** (`/plugin update`, `/reload-plugins`), run
+`/dk:bootstrap:converge` in each project you have scaffolded. Projects created on 1.0.0 or
+earlier vendored a copy of the complexity scorer and its config into `.claude/bin/`; a vendored
+config takes precedence over the plugin's own, so a stale one silently pins scaffold-day
+defaults. `--check` is read-only and reports per-file status; `--apply` fixes what is safe to fix
+and stops on anything needing a decision.
+
 ## What's inside
 
 | Plugin | Skills | Agents | Install when |

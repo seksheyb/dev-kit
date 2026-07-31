@@ -362,7 +362,7 @@ Same quality bar as the Phase 5 preview.
 - **2 or more confirmed concepts:** dispatch is mandatory via the workflow script — first, per
   references/model-routing.md § The routing step, build one descriptor for the `variant-builder`
   role (surface "workflow", profile `coding`, signals per that doc's profile tables), run
-  `node plugins/dk/bin/model-route.mjs --caller design-consultation --batch <file>`, and forward
+  `model-route.mjs --caller design-consultation --batch <file>`, and forward
   the output as `args.routing`. Precedence: the operator's own Step-1 model choice
   (`operatorModel`) beats `args.routing`, which beats `inherit` — the router call still runs
   regardless, filling in whatever the operator didn't decide (effort, and model only when the
@@ -372,7 +372,7 @@ Same quality bar as the Phase 5 preview.
     variants: [{ name, prompt }, ...],   // required, 2..8 — one per confirmed concept
     operatorModel } })   // always passed — the Step-1 answer, or "sonnet" when non-interactive
   ```
-  `scriptPath` resolves `<dev-kit-core>` to the installed plugin dir; a dead run resumes via
+  `scriptPath` resolves `<dev-kit-core>` by running the bare command `dev-kit-core-root` and substituting its output; a dead run resumes via
   `Workflow({ scriptPath, resumeFromRunId: "<runId>" })`. The script does no judgment of its
   own — it only fans the rendered prompts out in parallel and reports back which variants came
   back clean (`variants`), which self-reported blocked on their own quality gate (`blocked`),

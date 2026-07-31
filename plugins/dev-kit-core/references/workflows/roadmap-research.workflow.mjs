@@ -39,7 +39,7 @@
  *   routing                object   optional. `{ 'project-researcher': {model?, effort?},
  *                                  'research-synthesizer': {model?, effort?}, roadmapper:
  *                                  {model?, effort?} }` — decided caller-side by
- *                                  `plugins/dk/bin/model-route.mjs --batch` and forwarded
+ *                                  `model-route.mjs --batch` and forwarded
  *                                  verbatim. Each opts builder spreads its key's entry
  *                                  before setting `agentType`; a missing key or a missing
  *                                  `routing` arg leaves `model`/`effort` absent entirely

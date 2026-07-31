@@ -55,7 +55,7 @@
  * Returns: { drafted, blocked, dropped, totals } — see the bottom of this file.
  *
  * MODEL/EFFORT ROUTING (Surface B). model/effort routing is decided caller-side by
- * `plugins/dk/bin/model-route.mjs` and arrives as `args.routing` data — this script never
+ * `model-route.mjs` and arrives as `args.routing` data — this script never
  * picks a model or effort itself. `args.routing?.['adr-drafter']` (optional `{model, effort}`)
  * is spread into every drafting agent's opts before the always-set `label`/`phase`/`schema`
  * keys; an absent `routing` or an absent `adr-drafter` entry leaves both keys absent, which

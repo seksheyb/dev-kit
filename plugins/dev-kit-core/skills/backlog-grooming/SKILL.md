@@ -60,12 +60,13 @@ regardless of batch size.
 | **2 or more** | **Workflow script — mandatory.** `@references/workflows/backlog-groom.workflow.mjs` |
 | Exactly 1 | Plain inline `Agent` call — a Workflow for one agent is pure overhead |
 
-**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the `story-refiner` role, surface "workflow", profile `writing`, signals declared per that doc's profile tables; write it keyed by role to a temp JSON; run `node plugins/dk/bin/model-route.mjs --caller backlog-grooming --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
+**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the `story-refiner` role, surface "workflow", profile `writing`, signals declared per that doc's profile tables; write it keyed by role to a temp JSON; run `model-route.mjs --caller backlog-grooming --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
 
 ```
 Workflow({
-  // scriptPath needs a real filesystem path — resolve <dev-kit-core> to the installed
-  // plugin dir (e.g. "plugins/dev-kit-core") rather than pasting this placeholder verbatim
+  // scriptPath needs a real filesystem path — run the bare command dev-kit-core-root and
+  // substitute its output for <dev-kit-core>. Never a "plugins/…" path: that exists only
+  // inside the dev-kit repo, not in a consuming project.
   scriptPath: "<dev-kit-core>/references/workflows/backlog-groom.workflow.mjs",
   args: {
     stories: [{                           // required, 2-8 entries

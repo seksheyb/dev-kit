@@ -81,9 +81,9 @@ only a fallback for a track whose plan row carries no declared value.
 
 ```
 Workflow({
-  // absolute path to the script shipped with this plugin, under the same
-  // references/ root as this skill's other @references citations
-  scriptPath: "<dev-kit-core plugin root>/references/workflows/sprint-execution.workflow.mjs",
+  // absolute path to the script shipped with this plugin: run the bare command
+  // dev-kit-core-root and substitute its output for <dev-kit-core>
+  scriptPath: "<dev-kit-core>/references/workflows/sprint-execution.workflow.mjs",
   args: {
     integrationBranch: "main",              // required — source branch; tracks cut from it
     planPath: "PHASE/<NN>-<MM>-PLAN.md",    // required — path only, never pasted text

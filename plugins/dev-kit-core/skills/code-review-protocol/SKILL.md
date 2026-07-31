@@ -363,7 +363,7 @@ Then dispatch by roster size:
 | **2 or more** | **Workflow script — mandatory.** `@references/workflows/review-finders.workflow.mjs` |
 | Exactly 1 | Plain inline `Agent` call — a Workflow for one agent is pure overhead |
 
-**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor per agent role — the round's active lens set (`code-review-gate`, `qa`, `security-auditor`, `verifier`, `ui-auditor` when rostered) — surface "workflow", profile `review`, signals declared per that doc's profile tables; write them keyed by role to a temp JSON; run `node plugins/dk/bin/model-route.mjs --caller code-review-protocol --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
+**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor per agent role — the round's active lens set (`code-review-gate`, `qa`, `security-auditor`, `verifier`, `ui-auditor` when rostered) — surface "workflow", profile `review`, signals declared per that doc's profile tables; write them keyed by role to a temp JSON; run `model-route.mjs --caller code-review-protocol --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
 
 Round 1 always rosters every eligible lens, so round 1 is always the Workflow:
 
@@ -387,8 +387,8 @@ Workflow({
 })
 ```
 
-`scriptPath` takes a real filesystem path, not an `@references/…` citation — resolve `<dev-kit-core>` to the
-installed plugin directory before calling. A run that dies mid-flight resumes with
+`scriptPath` takes a real filesystem path, not an `@references/…` citation — run `dev-kit-core-root` (a bare command on `PATH`)
+and substitute its output for `<dev-kit-core>`. A run that dies mid-flight resumes with
 `Workflow({ scriptPath, resumeFromRunId: "<runId>" })`. The script returns the consolidated verdict —
 `stopLoop`, `needsConfirmingRound`, `needsOperatorDecision`, the `blockingOpen` / `advisoryOpen` /
 `indeterminateOpen` totals — alongside `lenses`, `missingLenses`, and the `cleanLenses` / `activeLenses`

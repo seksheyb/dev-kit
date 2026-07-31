@@ -13,8 +13,9 @@
  * WHY EXACTLY TWO MEMBERS — and why the complexity check is NOT a third
  * -----------------------------------------------------------------------------
  * `agents/gate-plan-review.md` is dispatched UNCHANGED. Its step 0 is a deterministic
- * complexity-column check (`.claude/bin/complexity-score.mjs --gate --json`, with a
- * documented manual fallback when the scorer is not installed), and its own step 4 already
+ * complexity-column check (`complexity-score.mjs --gate --json` — a bare command, resolved
+ * off the `dk` plugin's `bin/` on `PATH`, with a documented manual fallback when that
+ * plugin is not enabled), and its own step 4 already
  * folds that result into `complexity_ok`, `severity_counts.HIGH`, `blockers` and
  * `gate_passed`. Lifting it out into a third member here would either duplicate the check
  * (two runs, two chances to disagree about the same plan) or force a restructuring of a

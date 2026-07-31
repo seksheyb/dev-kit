@@ -46,7 +46,7 @@
  *     ui-auditor        { uiSpecPath }   — optional; omit to let the agent fall back to the
  *                       6-pillar standards per `agents/ui-auditor.md`.
  * routing      object   optional. `{ <lens>: {model?, effort?} }` — decided caller-side by
- *                       `plugins/dk/bin/model-route.mjs --batch` and forwarded verbatim.
+ *                       `model-route.mjs --batch` and forwarded verbatim.
  *                       KEYED PER LENS, by the lens's own bare agentType — exactly the five
  *                       names `lens` itself takes: `code-review-gate`, `qa`,
  *                       `security-auditor`, `verifier`, `ui-auditor`. These are five

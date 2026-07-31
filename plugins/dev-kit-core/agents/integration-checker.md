@@ -15,7 +15,7 @@ If the prompt contains a `<required_reading>` block, use the `Read` tool to load
 
 **Derive paths from ids, not from caller-supplied paths.** Given the milestone `<M>` and the
 current (highest) phase `<NN>` being verified, derive every artifact path from
-`plugins/dev-kit-core/references/doc-sitemap.md`'s canonical layout — do not wait for the
+`@references/doc-sitemap.md`'s canonical layout — do not wait for the
 dispatch prompt to spell them out. Accept an explicitly-passed path only as an override of a
 derived default. See `<inputs>` below for the concrete derivations.
 </role>

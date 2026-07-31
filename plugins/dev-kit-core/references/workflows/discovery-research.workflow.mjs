@@ -126,7 +126,7 @@
  * pattern-mapper did not come back at all.
  *
  * MODEL/EFFORT ROUTING (Surface B). model/effort routing is decided caller-side by
- * `plugins/dk/bin/model-route.mjs` and arrives as `args.routing` data — this script never
+ * `model-route.mjs` and arrives as `args.routing` data — this script never
  * picks a model or effort itself. `args.routing?.['advisor-researcher']` /
  * `args.routing?.['pattern-mapper']` (optional `{model, effort}` each) are spread into
  * their respective opts alongside the always-set keys (`agentType`/`schema`/`label`/

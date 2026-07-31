@@ -57,7 +57,7 @@
  * routing           object   optional. `{ 'domain-researcher': {model?, effort?},
  *                            'ai-researcher': {model?, effort?}, 'ui-checker': {model?,
  *                            effort?} }` — decided caller-side by
- *                            `plugins/dk/bin/model-route.mjs --batch` and forwarded
+ *                            `model-route.mjs --batch` and forwarded
  *                            verbatim. Each opts builder spreads its key's entry before
  *                            `agentType`; a missing key or a missing `routing` arg leaves
  *                            `model`/`effort` absent entirely (inherit the session model),

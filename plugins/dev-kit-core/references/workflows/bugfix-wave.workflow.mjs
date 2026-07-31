@@ -81,7 +81,7 @@
  * MODEL/EFFORT ROUTING — SURFACE C (plan-driven track). Per-track `model`/`effort` above are
  * declared by the Phase 1 classification/plan and are AUTHORITATIVE at dispatch time — there
  * is no second router call here (model-routing.md §7 Surface C). `args.routing?.['bugfix-track']`
- * (optional `{model, effort}`, itself decided caller-side by `plugins/dk/bin/model-route.mjs`)
+ * (optional `{model, effort}`, itself decided caller-side by `model-route.mjs`)
  * is spread in only as the FALLBACK arm, before the track-declared `model`/`effort`, so a track
  * that omits either value inherits the router's computed one instead of this script guessing.
  */

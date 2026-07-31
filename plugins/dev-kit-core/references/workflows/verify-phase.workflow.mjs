@@ -79,7 +79,7 @@
  *                          {model?, effort?}, 'integration-checker': {model?, effort?},
  *                          converge: {model?, effort?}, 'nyquist-auditor': {model?,
  *                          effort?} }` — decided caller-side by
- *                          `plugins/dk/bin/model-route.mjs --batch` and forwarded verbatim.
+ *                          `model-route.mjs --batch` and forwarded verbatim.
  *                          Each opts builder spreads its member's key first; a missing key
  *                          or a missing `routing` arg leaves `model`/`effort` absent
  *                          entirely (inherit the session model), never defaulted.

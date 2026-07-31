@@ -19,7 +19,7 @@ below.**
 **2026-07-30 — superseded by the model router.** The sentence struck above no longer holds.
 The abstract model router (`references/model-routing.md`) now delivers `model`/`effort` as
 DATA, via `args.routing = { role: {model?, effort?} }`, decided caller-side by
-`plugins/dk/bin/model-route.mjs --batch` before the `Workflow` call (`model-routing.md` §7,
+`model-route.mjs --batch` before the `Workflow` call (`model-routing.md` §7,
 Surface B). Every script in this table still pins **nothing** itself — the routing value is
 spread into each opts builder, and an absent `routing` (or absent role key) still leaves
 `model`/`effort` absent, i.e. "inherit," exactly as before. Two things stay unchanged and

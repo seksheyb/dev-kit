@@ -1,0 +1,15 @@
+{
+  "_comment": "sha256 of every version of a vendorable plugin artifact dk has ever shipped, keyed by the plugin-relative path. dk-converge.mjs uses this to answer one question: 'is this copy in a project something I shipped, or something I have never seen?' A copy matching an entry here is a plugin artifact — safe to remove or refresh mechanically. A copy matching nothing here is a migration with consequences: dk-converge stops and surfaces it rather than overwriting it. The CURRENT version is never listed; dk-converge hashes its own live sibling files for that, so this file only has to grow when a release changes one of these artifacts.",
+  "_maintenance": "On any release that changes one of these files, append the OUTGOING version's sha256 here before shipping the new one. plugins/dk/bin/tests/dk-converge.test.sh asserts the current shipped hashes are NOT present, which is what keeps this file honest about which side of the line each hash is on.",
+  "files": {
+    "bin/complexity-score.mjs": {
+      "48586f5f38b406134eec8bb6718219bf0243b8f40b17ae55bee8f7668a08773d": "0.1.0"
+    },
+    "bin/routing-engine.mjs": {},
+    "bin/complexity.config.json": {
+      "47cdac6d61bfd5c5f64d381544b1a3b99a65014cbda734fd3a3e80760c6850da": "0.1.0"
+    },
+    "hooks/dk-context.js": {},
+    "hooks/lib/dk-common.js": {}
+  }
+}

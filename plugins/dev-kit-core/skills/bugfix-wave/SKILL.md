@@ -410,7 +410,8 @@ full, then hand **every wave** over in one call:
 
 ```
 Workflow({
-  scriptPath: "plugins/dev-kit-core/references/workflows/bugfix-wave.workflow.mjs",
+  // run the bare command dev-kit-core-root and substitute its output for <dev-kit-core>
+  scriptPath: "<dev-kit-core>/references/workflows/bugfix-wave.workflow.mjs",
   args: {
     context: "round 3 findings",
     sourceBranch: "main",          // required — branch tracks cut from AND merge back into

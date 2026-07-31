@@ -1,0 +1,44 @@
+#!/usr/bin/env sh
+# dev-kit-core-root — print the absolute path of this plugin's installed root.
+#
+# WHY THIS EXISTS
+# ---------------
+# Claude Code puts every enabled plugin's `bin/` on the Bash tool's PATH, so an *executable*
+# that a plugin ships is reachable from anywhere as a bare command. A plain *file* — a
+# reference doc, a workflow script handed to `Workflow({ scriptPath })` — is not: it needs a
+# real filesystem path, and the install path is version-stamped
+# (~/.claude/plugins/cache/<marketplace>/dev-kit-core/<version>/), so it cannot be hardcoded.
+#
+# This is the bridge. It is on PATH like any other plugin executable, and it prints the one
+# thing PATH alone cannot give you: the directory it was installed into. That makes the
+# `<dev-kit-core>` placeholder used throughout this plugin's skills a resolvable value rather
+# than an instruction to go looking:
+#
+#   scriptPath: "$(dev-kit-core-root)/references/workflows/plan-review.workflow.mjs"
+#
+# See references/plugin-paths.md for the full convention.
+#
+# EXIT CODES
+#   0  the path was printed
+#   2  could not resolve own location (should not happen when invoked via PATH)
+
+self=$0
+# A bare-command invocation gives an absolute $0 on every shell that execve()s the shebang,
+# but fall back to a PATH lookup rather than assume it.
+case $self in
+  */*) ;;
+  *) self=$(command -v -- "$self") || { echo "dev-kit-core-root: cannot locate self" >&2; exit 2; } ;;
+esac
+
+dir=$(cd -P -- "$(dirname -- "$self")/.." 2>/dev/null && pwd) || {
+  echo "dev-kit-core-root: cannot resolve plugin root from $self" >&2
+  exit 2
+}
+
+# Sanity: the root must actually look like this plugin, not some other bin/ that shadowed us.
+if [ ! -d "$dir/references" ]; then
+  echo "dev-kit-core-root: $dir does not look like the dev-kit-core plugin root (no references/)" >&2
+  exit 2
+fi
+
+printf '%s\n' "$dir"

@@ -66,11 +66,12 @@ From any session, anywhere, since `dk` is user-level:
 This scaffolds the project directory and writes `CLAUDE.md`, `.gitignore`,
 `.claude/settings.json`, `docs/SITEMAP.md`, and the three documentation tiers from
 `dk`'s templates, never overwriting a file that already exists; it reports instead.
-It also copies the plan gate's complexity scorer to `.claude/bin/` and the
-status-line hook to `.claude/hooks/`, both under the new project, so they work
-without depending on the plugin's own directory (which gets replaced on every
-`dk` update). Only `dev-kit-core` is enabled at this point — lane plugins come later,
-at stage 2.
+It also copies the status-line hook to `.claude/hooks/`, because a `statusLine`
+in `settings.json` cannot interpolate a plugin path and the plugin's own
+directory is replaced on every `dk` update. That hook is the only thing it
+vendors — executables like the plan gate's complexity scorer need no copy at all,
+since Claude Code puts every enabled plugin's `bin/` on the Bash tool's `PATH`.
+Only `dev-kit-core` is enabled at this point — lane plugins come later, at stage 2.
 
 ```bash
 cd myProject && claude
@@ -156,8 +157,9 @@ whatever it flagged. `/dk:plan:gate` is **blocking**: Wave 1 of the build does n
 start until it returns `gate_passed: true`.
 
 Before the independent review engine even runs, the gate runs a deterministic
-check: `complexity-score.mjs`, installed at `.claude/bin/` by
-`/dk:bootstrap:init`, recomputes each track's model and effort tier from the
+check: `complexity-score.mjs` — a bare command, resolved off the `dk` plugin's
+`bin/` on `PATH`, with nothing installed into the project — recomputes each
+track's model and effort tier from the
 `complexity:` signals the plan already declares (novelty, logic, ambiguity,
 sensitivity, blast radius, and so on) and compares that computed tier against
 the `Model`/`Effort` columns the planner wrote by hand. A track declared *below*

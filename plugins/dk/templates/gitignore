@@ -8,6 +8,12 @@ docs/state/tmp/
 # committed; the queue itself is per-machine and drains as notes are written.
 .claude/dk-wiki-pending
 
+# Model-routing audit log — model-route.mjs appends one line per decision on every
+# routing call, so it grows on every dispatch. It records what THIS machine routed,
+# and the decisions themselves are reproducible from the descriptors, so it is a
+# local artifact rather than a project record.
+.claude/routing-log.jsonl
+
 # OS / editor noise
 .DS_Store
 Thumbs.db

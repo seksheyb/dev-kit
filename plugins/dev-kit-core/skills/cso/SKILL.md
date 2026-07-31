@@ -267,11 +267,11 @@ Mark each finding `VERIFIED` (confirmed via code tracing), `UNVERIFIED` (pattern
 | **2 or more** | **Workflow script — mandatory.** `@references/workflows/cso-verify.workflow.mjs` |
 | Exactly 1 | Plain inline `Agent` call — a Workflow for one agent is pure overhead |
 
-**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the `finding-verifier` role, surface "workflow", profile `review`, signals declared per that doc's profile tables; write it keyed by role to a temp JSON; run `node plugins/dk/bin/model-route.mjs --caller cso --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
+**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the `finding-verifier` role, surface "workflow", profile `review`, signals declared per that doc's profile tables; write it keyed by role to a temp JSON; run `model-route.mjs --caller cso --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
 
 ```
 Workflow({
-  // resolve <dev-kit-core> to this plugin's installed filesystem path
+  // run the bare command dev-kit-core-root and substitute its output for <dev-kit-core>
   scriptPath: "<dev-kit-core>/references/workflows/cso-verify.workflow.mjs",
   args: {
     findings: [                    // required, 2 or more — candidates surviving hard exclusions

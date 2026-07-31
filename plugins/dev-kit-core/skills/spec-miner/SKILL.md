@@ -87,12 +87,12 @@ that comes back into a single spec (or, for `gate-reverse-engineer`'s callers, a
 retrospective ADRs, and a recovered-requirements seed file) stays in the caller's turn, after
 every module has returned.
 
-**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the `spec-miner` role — the key `legacy-explore.workflow.mjs` looks up, and the same methodology each dispatched module pass self-injects — surface "workflow", profile `research`, signals declared per that doc's profile tables; write it keyed by role to a temp JSON; run `node plugins/dk/bin/model-route.mjs --caller spec-miner --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
+**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the `spec-miner` role — the key `legacy-explore.workflow.mjs` looks up, and the same methodology each dispatched module pass self-injects — surface "workflow", profile `research`, signals declared per that doc's profile tables; write it keyed by role to a temp JSON; run `model-route.mjs --caller spec-miner --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
 
 ```
 Workflow({
-  // scriptPath takes a real filesystem path, not an `@references/…` citation — resolve
-  // <dev-kit-core> to the installed plugin directory before calling.
+  // scriptPath takes a real filesystem path, not an `@references/…` citation — run the
+  // bare command dev-kit-core-root and substitute its output for <dev-kit-core>.
   scriptPath: "<dev-kit-core>/references/workflows/legacy-explore.workflow.mjs",
   args: {
     modules: [{                     // required, 2 or more entries — the scoping pass's output

@@ -119,7 +119,7 @@
  * so the caller never has to re-join against the original `findings` array.
  *
  * MODEL/EFFORT ROUTING (Surface B). model/effort routing is decided caller-side by
- * `plugins/dk/bin/model-route.mjs` and arrives as `args.routing` data — this script never
+ * `model-route.mjs` and arrives as `args.routing` data — this script never
  * picks a model or effort itself. `args.routing?.['finding-verifier']` (optional `{model,
  * effort}`) is spread into every verifier's opts; an absent `routing` or an absent
  * `finding-verifier` entry leaves both keys absent, which means inherit — never a guessed

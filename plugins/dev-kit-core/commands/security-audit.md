@@ -19,11 +19,11 @@ Route on how many phases the milestone shipped:
 | **2 or more** | **Workflow script — mandatory.** `@references/workflows/security-gate.workflow.mjs` |
 | Exactly 1 | Plain inline `Agent` call — a Workflow for one agent is pure overhead |
 
-**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the agent role — `security-auditor` — surface "workflow", profile review, signals declared per that doc's profile tables; write it keyed by role to a temp JSON; run `node plugins/dk/bin/model-route.mjs --caller security-audit --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. One descriptor per ROLE, not per phase: the N per-phase auditors are N instances of the one `security-auditor` role and share a single routing entry, which is the key `security-gate.workflow.mjs` looks up. `security-auditor` is on `agent-model-tiers.md`'s never-downgrade list, so its config pin is a floor the router itself applies and returns — never hand-set it here, and never skip the step to get "inherit", which is a router decision. On the exactly-1 path use the same descriptor with `surface: "agent"` and `--caller security-audit --json` on stdin, then inject the §6 effort prompt block (`effortParam` is always `null` on that surface).
+**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the agent role — `security-auditor` — surface "workflow", profile review, signals declared per that doc's profile tables; write it keyed by role to a temp JSON; run `model-route.mjs --caller security-audit --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. One descriptor per ROLE, not per phase: the N per-phase auditors are N instances of the one `security-auditor` role and share a single routing entry, which is the key `security-gate.workflow.mjs` looks up. `security-auditor` is on `agent-model-tiers.md`'s never-downgrade list, so its config pin is a floor the router itself applies and returns — never hand-set it here, and never skip the step to get "inherit", which is a router decision. On the exactly-1 path use the same descriptor with `surface: "agent"` and `--caller security-audit --json` on stdin, then inject the §6 effort prompt block (`effortParam` is always `null` on that surface).
 
 ```
 Workflow({
-  // resolve <dev-kit-core> to this plugin's installed filesystem path
+  // run the bare command dev-kit-core-root and substitute its output for <dev-kit-core>
   scriptPath: "<dev-kit-core>/references/workflows/security-gate.workflow.mjs",
   args: {
     milestone: "<M>",              // required

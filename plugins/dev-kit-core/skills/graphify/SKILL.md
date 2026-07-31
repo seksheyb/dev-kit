@@ -289,7 +289,7 @@ The route is decided by chunk count. It is not a preference, and it is not a que
 
 **IMPORTANT - subagent type:** Always use `subagent_type="general-purpose"` (the Workflow script sets `agentType: "general-purpose"` itself, on every chunk). Do NOT use `Explore` - it is read-only and cannot write chunk files to disk, which silently drops extraction results. General-purpose has Write and Bash access which the subagent needs.
 
-**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the `chunk-extractor` role, surface "workflow", profile `coding`, signals declared per that doc's profile tables; write it keyed by role to a temp JSON; run `node plugins/dk/bin/model-route.mjs --caller graphify --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
+**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the `chunk-extractor` role, surface "workflow", profile `coding`, signals declared per that doc's profile tables; write it keyed by role to a temp JSON; run `model-route.mjs --caller graphify --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
 
 **Workflow route (2+ chunks).** B0's cache filtering and B1's chunk splitting complete in your turn first — the script carries zero judgment. Render each chunk's prompt in full (FILE_LIST, CHUNK_NUM, TOTAL_CHUNKS and DEEP_MODE all substituted), then hand every chunk over in one call:
 
@@ -308,7 +308,7 @@ Workflow({
 })
 ```
 
-`scriptPath` takes a real filesystem path, not an `@references/…` citation — resolve `<dev-kit-core>` to the installed plugin directory before calling. A run that dies resumes with `Workflow({ scriptPath, resumeFromRunId: "<runId>" })`.
+`scriptPath` takes a real filesystem path, not an `@references/…` citation — run `dev-kit-core-root` (a bare command on `PATH`) and substitute its output for `<dev-kit-core>`. A run that dies resumes with `Workflow({ scriptPath, resumeFromRunId: "<runId>" })`.
 
 - The script passes each `prompt` through untouched and writes no prompt text of its own, so anything missing from your rendering is missing from the dispatch.
 - All chunks go out in one `parallel()` call. No isolation: each subagent writes one uniquely-named chunk file and commits nothing.

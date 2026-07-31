@@ -56,6 +56,12 @@ Every conditional below is one of three kinds. This is what `/dk:run` acts on.
 `/dk:bootstrap:init myProject` — or `--here` to adopt an existing repo. Then start a session in it.
 Only `dev-kit-core` is on; step 2 enables the stack lanes.
 
+*(after any `dk` plugin update, in each project you have already scaffolded)* —
+`/dk:bootstrap:converge`. Nothing else tells a project that what it vendored on scaffold day has
+gone stale, and a stale copy of a plugin artifact takes precedence over the plugin's own. Run
+`--check` first; it is read-only. Exit `3` means a file needs your decision and no flag makes it
+safe to automate.
+
 `/dk:bootstrap:constitution <M>`
 
 *(only if the repo has undocumented existing code, or ADRs/PRDs/specs outside the canonical

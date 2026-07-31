@@ -60,7 +60,7 @@
  * successful variant.
  *
  * MODEL/EFFORT ROUTING (Surface B). model/effort routing is decided caller-side by
- * `plugins/dk/bin/model-route.mjs` and arrives as `args.routing` data — this script never
+ * `model-route.mjs` and arrives as `args.routing` data — this script never
  * picks a model or effort itself. `args.routing?.['variant-builder']` (optional `{model,
  * effort}`) is spread into every variant's opts BEFORE `operatorModel`, so the operator's own
  * explicit Step-1 model choice keeps outranking the router (model-routing.md §7's precedence

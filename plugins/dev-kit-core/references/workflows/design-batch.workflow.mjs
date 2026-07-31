@@ -57,7 +57,7 @@
  * Returns: { results[], dropped[] } — see the bottom of this file.
  *
  * MODEL/EFFORT ROUTING (Surface B). model/effort routing is decided caller-side by
- * `plugins/dk/bin/model-route.mjs` and arrives as `args.routing` data — this script never
+ * `model-route.mjs` and arrives as `args.routing` data — this script never
  * picks a model or effort itself. `args.routing?.['page-builder']` (optional `{model,
  * effort}`) is spread into every page's opts BEFORE `operatorModel`, so the operator's own
  * explicit Step-0 model choice keeps outranking the router (model-routing.md §7's

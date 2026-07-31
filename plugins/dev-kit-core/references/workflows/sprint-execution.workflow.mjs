@@ -36,7 +36,7 @@
  * stagger            boolean   optional, default false. See WORKTREE PROVISIONING below.
  * wave               number    optional. Wave number for labels and logs. Defaults to 1.
  * routing            object    optional. `{ track: {model?, effort?} }` — decided
- *                              caller-side by `plugins/dk/bin/model-route.mjs --batch`
+ *                              caller-side by `model-route.mjs --batch`
  *                              and forwarded verbatim. SURFACE C FALLBACK ONLY: spread
  *                              into every track's opts before that track's own declared
  *                              `model`/`effort`, which win when present (the plan's

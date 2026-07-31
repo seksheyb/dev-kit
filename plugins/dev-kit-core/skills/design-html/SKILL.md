@@ -194,7 +194,7 @@ The route is decided by page count, the same as everywhere else in this corpus:
 | **2 or more** | **Workflow script — mandatory.** `@references/workflows/design-batch.workflow.mjs` |
 | Exactly 1 | Plain inline `Agent` call — a Workflow for one page is pure overhead |
 
-**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the `page-builder` role, surface "workflow", profile `coding`, signals declared per that doc's profile tables; run `node plugins/dk/bin/model-route.mjs --caller design-html --batch <file>`; forward the output as `args.routing`. Precedence: the operator's own Step-0 model choice (`operatorModel`) beats `args.routing`, which beats `inherit` — the router call still runs regardless, filling in whatever the operator didn't decide (effort, and model only when the operator declined to pick).
+**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the `page-builder` role, surface "workflow", profile `coding`, signals declared per that doc's profile tables; run `model-route.mjs --caller design-html --batch <file>`; forward the output as `args.routing`. Precedence: the operator's own Step-0 model choice (`operatorModel`) beats `args.routing`, which beats `inherit` — the router call still runs regardless, filling in whatever the operator didn't decide (effort, and model only when the operator declined to pick).
 
 **Workflow route.** Steps 0-2 complete in your turn first for every page — the script carries
 zero judgment. You render each page's full Step-3 Implementation Spec prompt (system id,
@@ -214,7 +214,7 @@ Workflow({
 })
 ```
 
-`scriptPath` resolves `<dev-kit-core>` to the installed plugin dir.
+`scriptPath` resolves `<dev-kit-core>` by running the bare command `dev-kit-core-root` and substituting its output.
 
 Each page-builder runs Step 3 as written and **skips Step 4's refinement loop entirely** — batch
 builds are fire-and-return, reporting the same fields Step 3 reports (`project_id`, path(s)

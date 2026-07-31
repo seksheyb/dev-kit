@@ -33,11 +33,15 @@ Let `PHASE` be the plan's own directory and `<plan-basename>` be the plan file's
 
 ## What you do
 
-0. **Deterministic complexity check (runs first, before the review engine).** `/dk:bootstrap:init` installs
-   the scorer at `.claude/bin/complexity-score.mjs`, so on any project it scaffolded, run it:
+0. **Deterministic complexity check (runs first, before the review engine).** The scorer ships in the
+   `dk` plugin's `bin/`, which Claude Code puts on the Bash tool's `PATH` whenever that plugin is
+   enabled — so it is a bare command from any cwd, on any project, with nothing vendored into the
+   repo. Run it:
    ```bash
-   node .claude/bin/complexity-score.mjs "$plan_path" --gate --json
+   complexity-score.mjs "$plan_path" --gate --json
    ```
+   Invoke it exactly like that — bare, no `node` prefix and no path. `node complexity-score.mjs` does
+   **not** work: `node` resolves its script argument against the cwd, not `PATH`.
    This validates that every track's `Model`/`Effort` columns in the `## Parallel Execution Map`
    match the bands computed from its `complexity:` signals block (capability→model, risk→effort,
    plus the context guard and effort-driven model floor). The scorer also reads the approved
@@ -57,9 +61,11 @@ Let `PHASE` be the plan's own directory and `<plan-basename>` be the plan file's
    - Exit `2` → configuration or calibration file is invalid; record `complexity_ok: false`,
      surface the stderr message as a HIGH blocker, and set `next_action: "fix complexity config/calibration and re-run scorer"`.
 
-   **No scorer installed** — a repo adopted by hand, or scaffolded before the scorer shipped, will
-   not have `.claude/bin/complexity-score.mjs`. Do not fail the gate on that alone; fall back to a
-   manual signal check, and tell the operator to run `/dk:bootstrap:init` to install it:
+   **No scorer on `PATH`** — `command -v complexity-score.mjs` comes back empty, or the run exits
+   `127`. That means the `dk` plugin is not enabled in this session; it does **not** mean the project
+   needs anything installed into it, and it is never fixed by copying the scorer into `.claude/bin/`.
+   Do not fail the gate on that alone; fall back to a manual signal check, and tell the operator to
+   enable the `dk` plugin (`/plugin`) — not to vendor a copy:
    1. Read the plan's `## Parallel Execution Map` and every track's `complexity:` block yourself.
    2. Sanity-check each track's declared `Model`/`Effort` against its stated signals using the
       canonical axes in `@references/complexity-signals.md` (the same vocabulary `bugfix-wave`
@@ -69,9 +75,9 @@ Let `PHASE` be the plan's own directory and `<plan-basename>` be the plan file's
    3. Record `complexity_ok: false` for any track that fails this manual check, phrased the same
       way as the scripted path: `track <name>: declared <x>/<y> looks too low for <reason>`.
    4. This manual pass is a judgment call, not a deterministic recomputation — say so in
-      `next_action` when it's the reason the gate failed, and point the operator at
-      `/dk:bootstrap:init` for deterministic, calibration-aware enforcement — but never block the
-      gate on the scorer's absence by itself.
+      `next_action` when it's the reason the gate failed, and point the operator at enabling the `dk`
+      plugin for deterministic, calibration-aware enforcement — but never block the gate on the
+      scorer's absence by itself.
    The plan **cannot pass** while `complexity_ok` is false — fold this into `gate_passed` (step 4).
 
 1. Read `docs/global/process/SCHEMAS.md` for the `review-summary.json` shape and the HIGH / MEDIUM / LOW classification.

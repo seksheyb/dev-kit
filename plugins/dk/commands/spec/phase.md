@@ -16,9 +16,9 @@ Two preconditions before the pair: confirm AI-SPEC.md exists (framework-selector
 | 2 or more | **Workflow — mandatory.** `@references/workflows/spec-research-pair.workflow.mjs` |
 | Exactly 1 | Plain inline `Agent` call |
 
-**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor per agent role — `domain-researcher`, `ai-researcher` at profile research, plus `ui-checker` at profile review when it rides this Workflow — surface "workflow", signals declared per that doc's profile tables; write them keyed by role to a temp JSON; run `node plugins/dk/bin/model-route.mjs --caller spec:phase --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
+**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor per agent role — `domain-researcher`, `ai-researcher` at profile research, plus `ui-checker` at profile review when it rides this Workflow — surface "workflow", signals declared per that doc's profile tables; write them keyed by role to a temp JSON; run `model-route.mjs --caller spec:phase --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
 
-`Workflow({ scriptPath: "<dev-kit-core>/references/workflows/spec-research-pair.workflow.mjs", args: { specPath, phase, includeUiChecker, uiSpecPath } })`; resume via `resumeFromRunId`.
+`Workflow({ scriptPath: "<dev-kit-core>/references/workflows/spec-research-pair.workflow.mjs", args: { specPath, phase, includeUiChecker, uiSpecPath } })`; resume via `resumeFromRunId`. `scriptPath` needs a real filesystem path — run the bare command `dev-kit-core-root` and substitute its output for `<dev-kit-core>`.
 
 Then eval-planner last and alone. Step 11's eval-auditor audits these rubrics against what actually got built.
 

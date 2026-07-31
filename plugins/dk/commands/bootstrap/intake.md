@@ -15,8 +15,8 @@ step 8 builds it.
 **Docs half.** 2 or more documents is the doc-ingest Workflow, mandatory; exactly 1 is a plain inline pair of
 Agent calls — one doc-classifier, then one doc-synthesizer next turn.
 
-**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor per agent role — `doc-classifier` at profile research, `doc-synthesizer` at profile writing — surface "workflow", signals declared per that doc's profile tables; write them keyed by role to a temp JSON; run `node plugins/dk/bin/model-route.mjs --caller bootstrap:intake --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
+**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor per agent role — `doc-classifier` at profile research, `doc-synthesizer` at profile writing — surface "workflow", signals declared per that doc's profile tables; write them keyed by role to a temp JSON; run `model-route.mjs --caller bootstrap:intake --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
 ```
-Workflow({ scriptPath: "<dev-kit-core>/references/workflows/doc-ingest.workflow.mjs",   // real fs path
+Workflow({ scriptPath: "<dev-kit-core>/references/workflows/doc-ingest.workflow.mjs",   // real fs path: run the bare command dev-kit-core-root
   args: { docs: [{ path }] } })   // required, 2+; outputDir/intelDir/mode optional overrides
 ```

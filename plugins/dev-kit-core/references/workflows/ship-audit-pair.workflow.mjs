@@ -65,7 +65,7 @@
  *
  * routing      object  optional. `{ 'coverage-auditor': {model?, effort?},
  *                       'plan-verifier': {model?, effort?} }` — decided caller-side by
- *                       `plugins/dk/bin/model-route.mjs --batch` and forwarded verbatim.
+ *                       `model-route.mjs --batch` and forwarded verbatim.
  *                       Each opts builder spreads its key's entry first; a missing key or
  *                       a missing `routing` arg leaves `model`/`effort` absent entirely
  *                       (inherit the session model), never defaulted.

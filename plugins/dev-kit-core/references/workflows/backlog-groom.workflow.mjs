@@ -80,7 +80,7 @@
  * category as if nothing happened.
  *
  * MODEL/EFFORT ROUTING (Surface B). model/effort routing is decided caller-side by
- * `plugins/dk/bin/model-route.mjs` and arrives as `args.routing` data — this script never
+ * `model-route.mjs` and arrives as `args.routing` data — this script never
  * picks a model or effort itself. `args.routing?.['story-refiner']` (optional `{model,
  * effort}`) is spread into every refiner's opts; an absent `routing` or an absent
  * `story-refiner` entry leaves both keys absent, which means inherit — never a guessed

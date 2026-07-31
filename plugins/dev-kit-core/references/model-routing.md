@@ -233,9 +233,18 @@ whenever `effortParam` is `null` (always on Surface A; conditionally on Surface 
 Every dispatch site in the corpus points at one of these three procedures — pick by unit
 count and surface, never by improvising a fourth path.
 
+**How to invoke the router.** `model-route.mjs` is a **bare command** — no `node`, no path.
+It ships in the `dk` plugin's `bin/`, which Claude Code puts on the Bash tool's `PATH`
+whenever that plugin is enabled, so it resolves from any cwd in any project with nothing
+vendored into the repo. `node model-route.mjs` does not work (`node` resolves its script
+argument against the cwd, not `PATH`), and neither does `plugins/dk/bin/model-route.mjs`
+(that path exists only inside the dev-kit repo). If the command is absent — exit `127`, or
+an empty `command -v model-route.mjs` — the `dk` plugin is not enabled; enable it. Never
+copy the router into a project's `.claude/bin/`. Full convention: `@references/plugin-paths.md`.
+
 **Surface A — exactly 1 unit → inline `Agent` call.**
 Build a descriptor with `surface: "agent"`. Run
-`node plugins/dk/bin/model-route.mjs --caller <asset> --json`, feeding the descriptor on
+`model-route.mjs --caller <asset> --json`, feeding the descriptor on
 stdin. Pass the returned `model` on the `Agent` call unless it is `"inherit"` (in which
 case omit `model` entirely — see §1's invariant on what `inherit` means). `effortParam` is
 always `null` on this surface (§5), so inject the matching effort prompt block (§6) into

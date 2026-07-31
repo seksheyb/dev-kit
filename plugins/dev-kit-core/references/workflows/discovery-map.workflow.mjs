@@ -98,7 +98,7 @@
  * at drop time); `mappers` only ever contains units that actually returned.
  *
  * MODEL/EFFORT ROUTING (Surface B). model/effort routing is decided caller-side by
- * `plugins/dk/bin/model-route.mjs` and arrives as `args.routing` data — this script never
+ * `model-route.mjs` and arrives as `args.routing` data — this script never
  * picks a model or effort itself. Each dispatch's `args.routing?.[agentType]` (keyed by the
  * same bare agentType name as `AGENT_TYPES` above — `codebase-mapper`, `assumptions-analyzer`,
  * `phase-researcher`; optional `{model, effort}`) is spread into that unit's opts; an absent

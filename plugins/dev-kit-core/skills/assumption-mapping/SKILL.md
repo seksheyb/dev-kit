@@ -91,7 +91,7 @@ requiring this exact JSON return shape: `{ assumptions: [{ assumption, importanc
 evidence: "H"|"M"|"L", source }] }` — single-letter H/M/L scores under these exact key names,
 never "High"/"Medium"/"Low" or a different nesting:
 
-**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build **one** descriptor for the single agent role this fan-out uses — `assumption-extractor` — surface "workflow", profile `research`, signals declared per that doc's profile tables. One descriptor per ROLE, not per instance: the four VUBF categories below are four instances of the same extraction role (they differ only in which prompt they receive), so they share one descriptor and one routing entry, keyed `assumption-extractor` — the same key `assumption-map.workflow.mjs` looks up. Write it keyed by role to a temp JSON; run `node plugins/dk/bin/model-route.mjs --caller assumption-mapping --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
+**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build **one** descriptor for the single agent role this fan-out uses — `assumption-extractor` — surface "workflow", profile `research`, signals declared per that doc's profile tables. One descriptor per ROLE, not per instance: the four VUBF categories below are four instances of the same extraction role (they differ only in which prompt they receive), so they share one descriptor and one routing entry, keyed `assumption-extractor` — the same key `assumption-map.workflow.mjs` looks up. Write it keyed by role to a temp JSON; run `model-route.mjs --caller assumption-mapping --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
 
 ```js
 Workflow({ scriptPath: "<dev-kit-core>/references/workflows/assumption-map.workflow.mjs", args: {
@@ -104,7 +104,7 @@ Workflow({ scriptPath: "<dev-kit-core>/references/workflows/assumption-map.workf
 } })
 ```
 
-`scriptPath` resolves `<dev-kit-core>` to the installed plugin dir; a dead run resumes via
+`scriptPath` resolves `<dev-kit-core>` by running the bare command `dev-kit-core-root` and substituting its output; a dead run resumes via
 `Workflow({ scriptPath, resumeFromRunId: "<runId>" })`. The roster is fixed at exactly these 4
 keys — the script throws on a missing, duplicate, or unknown key rather than running a partial
 VUBF pass. Re-running any subset of dropped categories (per the workflow's `missingCategories`

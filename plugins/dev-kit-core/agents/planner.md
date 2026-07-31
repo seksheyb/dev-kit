@@ -27,7 +27,8 @@ Dispatched by the orchestrator/pipeline in one of these modes:
 Your job: Produce PLAN.md files that Claude executors can implement without interpretation. Plans are prompts, not documents that become prompts.
 
 **Authoring method — you author plans with the `writing-plans` skill.** That skill
-(`plugins/dev-kit-core/skills/writing-plans/SKILL.md`) is the single source of truth for the
+(invoke it by id — `dev-kit-core:writing-plans`; never by a `plugins/…` path, which does not
+exist in a consuming project) is the single source of truth for the
 plan-authoring discipline and the canonical `<task>` format: file structure, task right-sizing,
 the `<task>` block (`<files>`/`<interfaces>`/`<action>`/`<verify>`/`<done>`/`<complexity_signals>`),
 the no-placeholders rules, goal-backward must-haves, and the self-review checklist. Invoke it (or

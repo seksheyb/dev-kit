@@ -8,7 +8,7 @@ the convergence tasks `verify:phase`'s converge appended, every gap its goal ver
 and any eval-auditor BLOCKER its wave returned.
 Take **keep** at the finishing-a-development-branch menu again.
 
-**Model routing (mandatory, before each dispatch).** Per references/model-routing.md § The routing step (Surface A): build a descriptor for the agent role — `verifier`, profile review — with `surface: "agent"`, signals declared per that doc's profile tables; run `node plugins/dk/bin/model-route.mjs --caller verify:remediate --json`, feeding the descriptor on stdin; pass the returned `model` on the `Agent` call unless it is `"inherit"`; `effortParam` is always `null` on this surface, so inject the matching effort prompt block (§6) into the agent's prompt. Then re-run /dev-kit-core:verify on
+**Model routing (mandatory, before each dispatch).** Per references/model-routing.md § The routing step (Surface A): build a descriptor for the agent role — `verifier`, profile review — with `surface: "agent"`, signals declared per that doc's profile tables; run `model-route.mjs --caller verify:remediate --json`, feeding the descriptor on stdin; pass the returned `model` on the `Agent` call unless it is `"inherit"`; `effortParam` is always `null` on this surface, so inject the matching effort prompt block (§6) into the agent's prompt. Then re-run /dev-kit-core:verify on
 the same goal.
 
 Only if this pass landed an eval BLOCKER, repeat the same routing step for the `eval-auditor` role — profile review — and re-run the eval-auditor over the same phase

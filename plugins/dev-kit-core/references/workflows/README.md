@@ -87,7 +87,7 @@ fails any line as unfinished, not stylistically different:
   `args.routing` when present — rather than defaulting them; an absent `model` still means
   "inherit the session model."** Every script's args pseudo-type documents
   `routing?: {role: {model?, effort?}}`, decided caller-side by
-  `plugins/dk/bin/model-route.mjs` per `references/model-routing.md`.
+  `model-route.mjs` per `references/model-routing.md`.
 - **`label` and `phase` on every dispatched call** — every agent in every wave/fan-out is
   individually identifiable in the progress display and in the return value.
 - **`COVERAGE GAP` logging for every dropped unit** — a unit whose agent returned nothing

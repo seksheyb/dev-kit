@@ -63,7 +63,7 @@
  * empty VUBF quadrant silently ranked as "nothing risky here" is worse than an explicit gap.
  *
  * MODEL/EFFORT ROUTING (Surface B). model/effort routing is decided caller-side by
- * `plugins/dk/bin/model-route.mjs` and arrives as `args.routing` data — this script never
+ * `model-route.mjs` and arrives as `args.routing` data — this script never
  * picks a model or effort itself. `args.routing?.['assumption-extractor']` (optional
  * `{model, effort}`) is spread into every extractor's opts; an absent `routing` or an absent
  * `assumption-extractor` entry leaves both keys absent, which means inherit — never a

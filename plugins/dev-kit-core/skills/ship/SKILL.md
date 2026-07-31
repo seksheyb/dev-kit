@@ -75,7 +75,7 @@ Steps 4 and 5 dispatch together as a pair. Step 4 is the only writer of the pair
 | **2 or more** | **Workflow script — mandatory.** `@references/workflows/ship-audit-pair.workflow.mjs` |
 | Exactly 1 | Plain inline `Agent` call — a Workflow for one agent is pure overhead |
 
-**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor per agent role — `coverage-auditor`, `plan-verifier` — surface "workflow", profile `review`, signals declared per that doc's profile tables; write them keyed by role to a temp JSON; run `node plugins/dk/bin/model-route.mjs --caller ship --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
+**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor per agent role — `coverage-auditor`, `plan-verifier` — surface "workflow", profile `review`, signals declared per that doc's profile tables; write them keyed by role to a temp JSON; run `model-route.mjs --caller ship --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
 
 The pair is always 2, so this is always the Workflow path. Render both subagent prompts in full yourself first — the residual scope Step 0 leaves, the base branch and diff range, the plan path, the coverage thresholds, every instruction each member follows — then pass them through:
 
@@ -84,7 +84,7 @@ Workflow({ scriptPath: "<dev-kit-core>/references/workflows/ship-audit-pair.work
   step4Prompt, step5Prompt } })   // both required — complete, pre-rendered; the script writes no prompt text
 ```
 
-`scriptPath` resolves `<dev-kit-core>` to the installed plugin dir; a dead run resumes via `Workflow({ scriptPath, resumeFromRunId: "<runId>" })`.
+`scriptPath` resolves `<dev-kit-core>` by running the bare command `dev-kit-core-root` and substituting its output; a dead run resumes via `Workflow({ scriptPath, resumeFromRunId: "<runId>" })`.
 
 The script is a barrier only — it returns both results verbatim and re-checks nothing. Join before Step 6: nothing in Step 6's review scope is settled until both are back, and Step 6 must review Step 4's committed tests as ship-generated delta. At the join, in your own turn, re-check any Step 5 item judged NOT DONE solely for a missing test against what Step 4 just committed, because Step 5 read the diff as it stood at dispatch.
 

@@ -8,7 +8,7 @@ There is intentionally **no `ceo`/scope lens** here: scope and product strategy 
 
 **2 or more lenses → run the Workflow. Mandatory, not an option** — the default set (all 4, or a configured subset of 2+) is always a Workflow. It fans out one `plan-reviewer` per lens in parallel and consolidates:
 
-**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the agent role — `plan-reviewer` — surface "workflow", profile review, signals declared per that doc's profile tables; write it keyed by role to a temp JSON; run `node plugins/dk/bin/model-route.mjs --caller plan-review --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
+**Model routing (mandatory, before dispatch).** Per references/model-routing.md § The routing step: build one descriptor for the agent role — `plan-reviewer` — surface "workflow", profile review, signals declared per that doc's profile tables; write it keyed by role to a temp JSON; run `model-route.mjs --caller plan-review --batch <file>`; forward the output verbatim as `args.routing` on the Workflow call. "inherit" is a router decision — never skip the step to get it.
 
 ```
 Workflow({
@@ -17,7 +17,7 @@ Workflow({
 })
 ```
 
-`scriptPath` takes a real filesystem path, not an `@references/…` citation — resolve `<dev-kit-core>` to the installed plugin directory before calling. Optional args: `context` (extra paths every reviewer should read), `reportDir`, `agentType` (see the script's header contract).
+`scriptPath` takes a real filesystem path, not an `@references/…` citation — run `dev-kit-core-root` (a bare command on `PATH`) and substitute its output for `<dev-kit-core>`. Optional args: `context` (extra paths every reviewer should read), `reportDir`, `agentType` (see the script's header contract).
 
 **Exactly 1 lens → no Workflow.** Dispatch `agents/plan-reviewer` inline with that lens; a Workflow for a single agent is pure overhead.
 

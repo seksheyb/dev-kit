@@ -1,7 +1,7 @@
 {
   "name": "dk",
   "description": "The orchestration layer: RUNBOOK.md (the stage spine) plus one thin dispatcher command per prompt unit, driven manually or by the /dk:run orchestrator in auto/sleep mode",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": { "name": "sekshey", "email": "sekshey@gmail.com" },
   "homepage": "https://github.com/seksheyb/dev-kit",
   "repository": "https://github.com/seksheyb/dev-kit",

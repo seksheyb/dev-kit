@@ -7,7 +7,34 @@ All notable changes to dev-kit are recorded here. Format follows
 Every plugin in this marketplace ships on one coordinated version — installing a lane
 never means reasoning about which core it pairs with.
 
-## [Unreleased]
+## [2.0.0] — 2026-07-31
+
+Major because how dev-kit reaches its own executables changed, and that is visible from
+outside: the plan gate and model router are no longer invoked at a path, projects are no
+longer expected to carry copies of them, and a project that had adopted its own scorer at
+`.claude/bin/complexity-score.mjs` will find the gate no longer running it. Nothing about
+the routing arithmetic, the band ladders, or any agent's behavior changed — the shipped
+`complexity-score.mjs`, `routing-engine.mjs` and `complexity.config.json` are byte-identical
+to 1.0.0.
+
+### BREAKING
+
+- **`gate-plan-review` no longer runs `node .claude/bin/complexity-score.mjs`.** It runs the
+  bare command `complexity-score.mjs`, resolved off the `dk` plugin's `bin/` on the Bash
+  tool's `PATH`. A project that vendored dev-kit's own scorer is unaffected — the same code
+  runs, from the plugin instead of the copy. A project that adopted a *different* scorer at
+  that path is affected: its scorer is no longer what the gate invokes. Decide per project
+  whether to migrate the plan format or invoke the adopted scorer explicitly by path.
+- **`/dk:bootstrap:init` no longer creates `.claude/bin/`.** Projects scaffolded by 2.0.0
+  never receive `complexity-score.mjs`, `routing-engine.mjs` or `complexity.config.json`.
+  Existing copies are not removed by `init` — run `/dk:bootstrap:converge`.
+- **A vendored `complexity.config.json` is no longer produced or refreshed.** It remains
+  *honored* when present, so an existing copy keeps overriding the plugin's config. That is
+  the failure mode this release exists to end; converge removes copies carrying no project
+  content, and reports the ones that do.
+- **`dk` must be enabled for `dev-kit-core` assets that route.** Both executables ship in
+  `dk`, and PATH only carries an enabled plugin's `bin/`. Every `/dk:*` pipeline step already
+  satisfies this; a project running `dev-kit-core` skills with `dk` disabled did not.
 
 ### Upgrading — action required for projects scaffolded on 1.0.0 or earlier
 
